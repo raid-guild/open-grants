@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/ArnaudBrousseau/grant-contracts#readme",
   "dependencies": {
-    "truffle": "^5.0.22"
+    "truffle": "^5.0.22",
+    "diff": ">=3.5.0"
   }
 }
