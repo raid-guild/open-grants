@@ -1,0 +1,30 @@
+{
+  "name": "grant-contracts",
+  "version": "1.0.0",
+  "description": "Ethereum Smart Contracts to encode grants",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArnaudBrousseau/grant-contracts.git"
+  },
+  "keywords": [
+    "ethereum",
+    "standard",
+    "eip",
+    "grants",
+    "smart",
+    "contract"
+  ],
+  "author": "Arnaud Brousseau",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ArnaudBrousseau/grant-contracts/issues"
+  },
+  "homepage": "https://github.com/ArnaudBrousseau/grant-contracts#readme",
+  "dependencies": {
+    "truffle": "^5.0.22"
+  }
+}
