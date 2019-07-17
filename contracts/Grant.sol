@@ -1,83 +1,137 @@
-pragma solidity ^0.5.9;
+pragma solidity >=0.5.10 <0.6.0;
+pragma experimental ABIEncoderV2;
 
-contract Grant is IGrant {
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./IGrant.sol";
+import "./ISignal.sol";
+
+
+/**
+ * @title Grants Spec Contract.
+ * @dev Grant request, funding, and management.
+ * @author @NoahMarconi @JFickel @ArnaudBrousseau
+ */
+contract Grant is IGrant, ISignal {
     using SafeMath for uint256;
 
-    enum States { Funding, Voting, Aborted, Finalized }
-    States _state;
 
-    // receiving unlocked funds in order of priority
-    // Each grantee has an amount associated with it.
-    mapping(address => uint256) grantees;
+    /*----------  Globals  ----------*/
 
-    // Keep track of the money in the grant
-    mapping(address=>uint256) grantors
-
-    // Keep track of the votes
-    mapping(address => uint) votes;
+    mapping(bytes32 => Grant) grants; // Grants mapped by GUID.
 
 
-    // Owner of account approves the transfer of an amount to another account
-    mapping(address => mapping (address => uint256)) allowed;
-
-    // Is that needed?
-    address currency;
-
-    uint256 expiration;
+    /*----------  Methods  ----------*/
 
     /**
-     * TODO
-     * We should really use some sort of escrow contract here:
-     * https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/crowdsale/Crowdsale.sol
-     * https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/payment/escrow/Escrow.sol
-     * Do we actually want to couple funding and voting?
-     * There's probably an argument for having separate contracts for signaling vs funding. Or maybe it needs to happen in several phases
+     * @dev Grant creation function. May be called by grantors, grantees, or any other relevant party.
+     * @param grantees Recipients of unlocked funds and their respective allocations.
+     * @param grantManagers (Optional) Weighted managers of distribution of funds.
+     * @param currency (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.
+     * @param targetFunding (Optional) Funding threshold required to release funds.
+     * @param expiration (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.
+     * @param grantType Which grant success scheme to apply to this grant.
+     * @param extraData Support for extensions to the Standard.
+     * @return GUID for this grant.
      */
-    function fund() public view returns (uint balance) {
-        // TODO: if funded correctly, transition state to "Voting"
-        _state = States.Voting;
+    function create(
+        Grantee[] calldata grantees,
+        GrantManager[] calldata grantManagers,
+        address currency,
+        uint256 targetFunding,
+        uint256 expiration,
+        GrantType grantType,
+        bytes calldata extraData
+    )
+        external
+        returns (bytes32 id)
+    {
+        bytes32 _id = keccak256(abi.encodePacked(
+            msg.sender,
+            // solium-disable-next-line security/no-block-members
+            blockhash(block.number.sub(1))
+        ));
+
+        return _id;
     }
 
     /**
-     * TODO
+     * @dev Fund a grant proposal.
+     * @param id GUID for the grant to fund.
+     * @param value Amount in WEI or GRAINS to fund.
+     * @return Cumulative funding received for this grant.
      */
-    function vote(uint voteValue) public returns (boolean) {
-        // TODO: check that the state is Voting
-    }
-
-    /**
-     * Returns a tally of votes per value
-     * This can be implemented as raw number of votes or ETH for each address
-     */
-    function votes() public view returns (mapping(uint => uint)) {
-        // for address in mapping do
-        //   call _count_vote(address, vote_value)
-        // done
-    }
-
-    /**
-     * Should be overriden if needed.
-     * This is where custom logic can be inserted to tally votes based on funds
-     * in an address.
-     */
-    function _count_vote(address voter, uint value) returns (uint) {
+    function fund(bytes32 id, uint256 value)
+        external
+        payable
+        returns (uint256 balance)
+    {
         return value;
     }
 
     /**
-     * TODO
-     * How is this triggered? What does it do exactly?
+     * @dev Pay a grantee.
+     * @param id GUID for the grant to fund.
+     * @param grantee Recipient of payment.
+     * @param value Amount in WEI or GRAINS to fund.
+     * @return Remaining funding available in this grant.
      */
-    function payout() public returns (boolean) {
-        // Check that state is Voting and that we're past the expiration
-        _state = States.Finalized;
+    function payout(bytes32 id, address grantee, uint256 value)
+        external
+        returns (uint256 balance)
+    {
+        return value;
     }
 
     /**
-     * TODO: Returns money to grantors, if any
-     * TODO: make sure this is only runnable by the contract creator
+     * @dev Refund a grantor.
+     * @param id GUID for the grant to refund.
+     * @param grantor Recipient of refund.
+     * @param value Amount in WEI or GRAINS to fund.
+     * @return True if successful, otherwise false.
      */
-    function abort() public return (boolean) {
-        _state = States.Aborted;
+    function refund(bytes32 id, address grantor, uint256 value)
+        external
+        returns (bool)
+    {
+        return true;
+    }
+
+    /**
+     * @dev Refund all grantors.
+     * @param id GUID for the grant to refund.
+     * @return True if successful, otherwise false.
+     */
+    function refundAll(bytes32 id)
+        external
+        returns (bool)
+    {
+        return true;
+    }
+
+    /**
+     * @dev Cancel grant and enable refunds.
+     * @param id GUID for the grant to refund.
+     * @return True if successful, otherwise false.
+     */
+    function cancelGrant(bytes32 id)
+        external
+        returns (bool)
+    {
+        return true;
+    }
+
+        /**
+     * @dev Voting Signal Method.
+     * @param id The ID of the grant to vote in favor for.
+     * @param token Address of token or NULL for Ether based vote.
+     * @param value Number of votes denoted in Token GRAINs or WEI.
+     * @return True if successful, otherwise false.
+     */
+    function signal(bytes32 id, address token, uint256 value)
+        external
+        payable
+        returns (bool)
+    {
+        return true;
     }
 }

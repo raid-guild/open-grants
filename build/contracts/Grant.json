@@ -1,0 +1,3626 @@
+{
+  "contractName": "Grant",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "voter",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogVote",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "grantStatus",
+          "type": "uint8"
+        }
+      ],
+      "name": "LogStatusChange",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "name": "grantor",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogFunding",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "name": "grantor",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogRefund",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "name": "grantee",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogPayment",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "components": [
+            {
+              "name": "grantee",
+              "type": "address"
+            },
+            {
+              "name": "allocation",
+              "type": "uint256"
+            },
+            {
+              "name": "received",
+              "type": "uint256"
+            }
+          ],
+          "name": "grantees",
+          "type": "tuple[]"
+        },
+        {
+          "components": [
+            {
+              "name": "grantManager",
+              "type": "address"
+            },
+            {
+              "name": "weight",
+              "type": "uint8"
+            }
+          ],
+          "name": "grantManagers",
+          "type": "tuple[]"
+        },
+        {
+          "name": "currency",
+          "type": "address"
+        },
+        {
+          "name": "targetFunding",
+          "type": "uint256"
+        },
+        {
+          "name": "expiration",
+          "type": "uint256"
+        },
+        {
+          "name": "grantType",
+          "type": "uint8"
+        },
+        {
+          "name": "extraData",
+          "type": "bytes"
+        }
+      ],
+      "name": "create",
+      "outputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "fund",
+      "outputs": [
+        {
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "name": "grantee",
+          "type": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "payout",
+      "outputs": [
+        {
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "name": "grantor",
+          "type": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "refund",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "name": "refundAll",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "name": "cancelGrant",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "signal",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b50610879806100206000396000f3fe60806040526004361061008d576000357c0100000000000000000000000000000000000000000000000000000000900480635614dc001161006b5780635614dc00146101495780635983f2f71461018657806362cfa509146101b6578063e46bbc9e146101f35761008d565b80631f52f7fa14610092578063311138a5146100cf5780634020ed141461010c575b600080fd5b34801561009e57600080fd5b506100b960048036036100b49190810190610562565b610223565b6040516100c6919061070a565b60405180910390f35b3480156100db57600080fd5b506100f660048036036100f19190810190610446565b61022f565b60405161010391906106cf565b60405180910390f35b34801561011857600080fd5b50610133600480360361012e9190810190610562565b610283565b60405161014091906106b4565b60405180910390f35b34801561015557600080fd5b50610170600480360361016b9190810190610539565b610290565b60405161017d91906106b4565b60405180910390f35b6101a0600480360361019b9190810190610562565b61029b565b6040516101ad91906106b4565b60405180910390f35b3480156101c257600080fd5b506101dd60048036036101d89190810190610539565b6102a8565b6040516101ea91906106b4565b60405180910390f35b61020d600480360361020891908101906105b1565b6102b3565b60405161021a919061070a565b60405180910390f35b60008190509392505050565b600080336102476001436102be90919063ffffffff16565b40604051602001610259929190610688565b604051602081830303815290604052805190602001209050809150509a9950505050505050505050565b6000600190509392505050565b600060019050919050565b6000600190509392505050565b600060019050919050565b600081905092915050565b600082821115610303576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016102fa906106ea565b60405180910390fd5b600082840390508091505092915050565b600081359050610323816107e1565b92915050565b60008083601f84011261033b57600080fd5b8235905067ffffffffffffffff81111561035457600080fd5b60208301915083604082028301111561036c57600080fd5b9250929050565b60008083601f84011261038557600080fd5b8235905067ffffffffffffffff81111561039e57600080fd5b6020830191508360608202830111156103b657600080fd5b9250929050565b6000813590506103cc816107f8565b92915050565b60008083601f8401126103e457600080fd5b8235905067ffffffffffffffff8111156103fd57600080fd5b60208301915083600182028301111561041557600080fd5b9250929050565b60008135905061042b8161080f565b92915050565b6000813590506104408161081f565b92915050565b60008060008060008060008060008060e08b8d03121561046557600080fd5b60008b013567ffffffffffffffff81111561047f57600080fd5b61048b8d828e01610373565b9a509a505060208b013567ffffffffffffffff8111156104aa57600080fd5b6104b68d828e01610329565b985098505060406104c98d828e01610314565b96505060606104da8d828e01610431565b95505060806104eb8d828e01610431565b94505060a06104fc8d828e0161041c565b93505060c08b013567ffffffffffffffff81111561051957600080fd5b6105258d828e016103d2565b92509250509295989b9194979a5092959850565b60006020828403121561054b57600080fd5b6000610559848285016103bd565b91505092915050565b60008060006060848603121561057757600080fd5b6000610585868287016103bd565b935050602061059686828701610314565b92505060406105a786828701610431565b9150509250925092565b600080604083850312156105c457600080fd5b60006105d2858286016103bd565b92505060206105e385828601610431565b9150509250929050565b6105fe6105f982610748565b61079a565b82525050565b61060d8161075a565b82525050565b61061c81610766565b82525050565b61063361062e82610766565b6107ac565b82525050565b6000610646601e83610725565b91507f536166654d6174683a207375627472616374696f6e206f766572666c6f7700006000830152602082019050919050565b61068281610790565b82525050565b600061069482856105ed565b6014820191506106a48284610622565b6020820191508190509392505050565b60006020820190506106c96000830184610604565b92915050565b60006020820190506106e46000830184610613565b92915050565b6000602082019050818103600083015261070381610639565b9050919050565b600060208201905061071f6000830184610679565b92915050565b600082825260208201905092915050565b600061074182610770565b9050919050565b600061075382610770565b9050919050565b60008115159050919050565b6000819050919050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000819050919050565b60006107a5826107b6565b9050919050565b6000819050919050565b60006107c1826107c8565b9050919050565b60006c0100000000000000000000000082029050919050565b6107ea81610736565b81146107f557600080fd5b50565b61080181610766565b811461080c57600080fd5b50565b6004811061081c57600080fd5b50565b61082881610790565b811461083357600080fd5b5056fea365627a7a72305820544e1e40686378f603745eb1c5615afd949738c418ece5efdcc7455048ba5a5f6c6578706572696d656e74616cf564736f6c634300050a0040",
+  "deployedBytecode": "0x60806040526004361061008d576000357c0100000000000000000000000000000000000000000000000000000000900480635614dc001161006b5780635614dc00146101495780635983f2f71461018657806362cfa509146101b6578063e46bbc9e146101f35761008d565b80631f52f7fa14610092578063311138a5146100cf5780634020ed141461010c575b600080fd5b34801561009e57600080fd5b506100b960048036036100b49190810190610562565b610223565b6040516100c6919061070a565b60405180910390f35b3480156100db57600080fd5b506100f660048036036100f19190810190610446565b61022f565b60405161010391906106cf565b60405180910390f35b34801561011857600080fd5b50610133600480360361012e9190810190610562565b610283565b60405161014091906106b4565b60405180910390f35b34801561015557600080fd5b50610170600480360361016b9190810190610539565b610290565b60405161017d91906106b4565b60405180910390f35b6101a0600480360361019b9190810190610562565b61029b565b6040516101ad91906106b4565b60405180910390f35b3480156101c257600080fd5b506101dd60048036036101d89190810190610539565b6102a8565b6040516101ea91906106b4565b60405180910390f35b61020d600480360361020891908101906105b1565b6102b3565b60405161021a919061070a565b60405180910390f35b60008190509392505050565b600080336102476001436102be90919063ffffffff16565b40604051602001610259929190610688565b604051602081830303815290604052805190602001209050809150509a9950505050505050505050565b6000600190509392505050565b600060019050919050565b6000600190509392505050565b600060019050919050565b600081905092915050565b600082821115610303576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016102fa906106ea565b60405180910390fd5b600082840390508091505092915050565b600081359050610323816107e1565b92915050565b60008083601f84011261033b57600080fd5b8235905067ffffffffffffffff81111561035457600080fd5b60208301915083604082028301111561036c57600080fd5b9250929050565b60008083601f84011261038557600080fd5b8235905067ffffffffffffffff81111561039e57600080fd5b6020830191508360608202830111156103b657600080fd5b9250929050565b6000813590506103cc816107f8565b92915050565b60008083601f8401126103e457600080fd5b8235905067ffffffffffffffff8111156103fd57600080fd5b60208301915083600182028301111561041557600080fd5b9250929050565b60008135905061042b8161080f565b92915050565b6000813590506104408161081f565b92915050565b60008060008060008060008060008060e08b8d03121561046557600080fd5b60008b013567ffffffffffffffff81111561047f57600080fd5b61048b8d828e01610373565b9a509a505060208b013567ffffffffffffffff8111156104aa57600080fd5b6104b68d828e01610329565b985098505060406104c98d828e01610314565b96505060606104da8d828e01610431565b95505060806104eb8d828e01610431565b94505060a06104fc8d828e0161041c565b93505060c08b013567ffffffffffffffff81111561051957600080fd5b6105258d828e016103d2565b92509250509295989b9194979a5092959850565b60006020828403121561054b57600080fd5b6000610559848285016103bd565b91505092915050565b60008060006060848603121561057757600080fd5b6000610585868287016103bd565b935050602061059686828701610314565b92505060406105a786828701610431565b9150509250925092565b600080604083850312156105c457600080fd5b60006105d2858286016103bd565b92505060206105e385828601610431565b9150509250929050565b6105fe6105f982610748565b61079a565b82525050565b61060d8161075a565b82525050565b61061c81610766565b82525050565b61063361062e82610766565b6107ac565b82525050565b6000610646601e83610725565b91507f536166654d6174683a207375627472616374696f6e206f766572666c6f7700006000830152602082019050919050565b61068281610790565b82525050565b600061069482856105ed565b6014820191506106a48284610622565b6020820191508190509392505050565b60006020820190506106c96000830184610604565b92915050565b60006020820190506106e46000830184610613565b92915050565b6000602082019050818103600083015261070381610639565b9050919050565b600060208201905061071f6000830184610679565b92915050565b600082825260208201905092915050565b600061074182610770565b9050919050565b600061075382610770565b9050919050565b60008115159050919050565b6000819050919050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000819050919050565b60006107a5826107b6565b9050919050565b6000819050919050565b60006107c1826107c8565b9050919050565b60006c0100000000000000000000000082029050919050565b6107ea81610736565b81146107f557600080fd5b50565b61080181610766565b811461080c57600080fd5b50565b6004811061081c57600080fd5b50565b61082881610790565b811461083357600080fd5b5056fea365627a7a72305820544e1e40686378f603745eb1c5615afd949738c418ece5efdcc7455048ba5a5f6c6578706572696d656e74616cf564736f6c634300050a0040",
+  "sourceMap": "315:3630:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;315:3630:0;;;;;;;",
+  "deployedSourceMap": "315:3630:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2440:144;;8:9:-1;5:2;;;30:1;27;20:12;5:2;2440:144:0;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;1309:527;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1309:527:0;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;2831:132;;8:9:-1;5:2;;;30:1;27;20:12;5:2;2831:132:0;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;3117:103;;8:9:-1;5:2;;;30:1;27;20:12;5:2;3117:103:0;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;3797:146;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;3386:105;;8:9:-1;5:2;;;30:1;27;20:12;5:2;3386:105:0;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;2050:141;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;2440:144;2534:15;2572:5;2565:12;;2440:144;;;;;:::o;1309:527::-;1597:10;1623:11;1677:10;1777:19;1794:1;1777:12;:16;;:19;;;;:::i;:::-;1767:30;1647:160;;;;;;;;;;;;;49:4:-1;39:7;30;26:21;22:32;13:7;6:49;1647:160:0;;;1637:171;;;;;;1623:185;;1826:3;1819:10;;;1309:527;;;;;;;;;;;;:::o;2831:132::-;2925:4;2952;2945:11;;2831:132;;;;;:::o;3117:103::-;3182:4;3209;3202:11;;3117:103;;;:::o;3797:146::-;3905:4;3932;3925:11;;3797:146;;;;;:::o;3386:105::-;3453:4;3480;3473:11;;3386:105;;;:::o;2050:141::-;2141:15;2179:5;2172:12;;2050:141;;;;:::o;1274:179:4:-;1332:7;1364:1;1359;:6;;1351:49;;;;;;;;;;;;;;;;;;;;;;1410:9;1426:1;1422;:5;1410:17;;1445:1;1438:8;;;1274:179;;;;:::o;5:130:-1:-;;85:6;72:20;63:29;;97:33;124:5;97:33;;;57:78;;;;;179:379;;;336:3;329:4;321:6;317:17;313:27;303:2;;354:1;351;344:12;303:2;387:6;374:20;364:30;;414:18;406:6;403:30;400:2;;;446:1;443;436:12;400:2;480:4;472:6;468:17;456:29;;531:3;523:4;515:6;511:17;501:8;497:32;494:41;491:2;;;548:1;545;538:12;491:2;296:262;;;;;;598:374;;;750:3;743:4;735:6;731:17;727:27;717:2;;768:1;765;758:12;717:2;801:6;788:20;778:30;;828:18;820:6;817:30;814:2;;;860:1;857;850:12;814:2;894:4;886:6;882:17;870:29;;945:3;937:4;929:6;925:17;915:8;911:32;908:41;905:2;;;962:1;959;952:12;905:2;710:262;;;;;;980:130;;1060:6;1047:20;1038:29;;1072:33;1099:5;1072:33;;;1032:78;;;;;1131:335;;;1245:3;1238:4;1230:6;1226:17;1222:27;1212:2;;1263:1;1260;1253:12;1212:2;1296:6;1283:20;1273:30;;1323:18;1315:6;1312:30;1309:2;;;1355:1;1352;1345:12;1309:2;1389:4;1381:6;1377:17;1365:29;;1439:3;1432;1424:6;1420:16;1410:8;1406:31;1403:40;1400:2;;;1456:1;1453;1446:12;1400:2;1205:261;;;;;;1474:156;;1567:6;1554:20;1545:29;;1579:46;1619:5;1579:46;;;1539:91;;;;;1637:130;;1717:6;1704:20;1695:29;;1729:33;1756:5;1729:33;;;1689:78;;;;;1774:1555;;;;;;;;;;;2131:3;2119:9;2110:7;2106:23;2102:33;2099:2;;;2148:1;2145;2138:12;2099:2;2211:1;2200:9;2196:17;2183:31;2234:18;2226:6;2223:30;2220:2;;;2266:1;2263;2256:12;2220:2;2294:102;2388:7;2379:6;2368:9;2364:22;2294:102;;;2284:112;;;;2162:240;2461:2;2450:9;2446:18;2433:32;2485:18;2477:6;2474:30;2471:2;;;2517:1;2514;2507:12;2471:2;2545:107;2644:7;2635:6;2624:9;2620:22;2545:107;;;2535:117;;;;2412:246;2689:2;2707:53;2752:7;2743:6;2732:9;2728:22;2707:53;;;2697:63;;2668:98;2797:2;2815:53;2860:7;2851:6;2840:9;2836:22;2815:53;;;2805:63;;2776:98;2905:3;2924:53;2969:7;2960:6;2949:9;2945:22;2924:53;;;2914:63;;2884:99;3014:3;3033:66;3091:7;3082:6;3071:9;3067:22;3033:66;;;3023:76;;2993:112;3164:3;3153:9;3149:19;3136:33;3189:18;3181:6;3178:30;3175:2;;;3221:1;3218;3211:12;3175:2;3249:64;3305:7;3296:6;3285:9;3281:22;3249:64;;;3239:74;;;;3115:204;2093:1236;;;;;;;;;;;;;;3336:241;;3440:2;3428:9;3419:7;3415:23;3411:32;3408:2;;;3456:1;3453;3446:12;3408:2;3491:1;3508:53;3553:7;3544:6;3533:9;3529:22;3508:53;;;3498:63;;3470:97;3402:175;;;;;3584:491;;;;3722:2;3710:9;3701:7;3697:23;3693:32;3690:2;;;3738:1;3735;3728:12;3690:2;3773:1;3790:53;3835:7;3826:6;3815:9;3811:22;3790:53;;;3780:63;;3752:97;3880:2;3898:53;3943:7;3934:6;3923:9;3919:22;3898:53;;;3888:63;;3859:98;3988:2;4006:53;4051:7;4042:6;4031:9;4027:22;4006:53;;;3996:63;;3967:98;3684:391;;;;;;4082:366;;;4203:2;4191:9;4182:7;4178:23;4174:32;4171:2;;;4219:1;4216;4209:12;4171:2;4254:1;4271:53;4316:7;4307:6;4296:9;4292:22;4271:53;;;4261:63;;4233:97;4361:2;4379:53;4424:7;4415:6;4404:9;4400:22;4379:53;;;4369:63;;4340:98;4165:283;;;;;;4455:184;4572:61;4600:32;4626:5;4600:32;;;4572:61;;;4567:3;4560:74;4554:85;;;4646:104;4723:21;4738:5;4723:21;;;4718:3;4711:34;4705:45;;;4757:113;4840:24;4858:5;4840:24;;;4835:3;4828:37;4822:48;;;4877:152;4978:45;4998:24;5016:5;4998:24;;;4978:45;;;4973:3;4966:58;4960:69;;;5037:364;;5197:67;5261:2;5256:3;5197:67;;;5190:74;;5297:66;5293:1;5288:3;5284:11;5277:87;5392:2;5387:3;5383:12;5376:19;;5183:218;;;;5409:113;5492:24;5510:5;5492:24;;;5487:3;5480:37;5474:48;;;5529:415;;5692:91;5779:3;5770:6;5692:91;;;5805:2;5800:3;5796:12;5789:19;;5819:75;5890:3;5881:6;5819:75;;;5916:2;5911:3;5907:12;5900:19;;5936:3;5929:10;;5680:264;;;;;;5951:201;;6063:2;6052:9;6048:18;6040:26;;6077:65;6139:1;6128:9;6124:17;6115:6;6077:65;;;6034:118;;;;;6159:213;;6277:2;6266:9;6262:18;6254:26;;6291:71;6359:1;6348:9;6344:17;6335:6;6291:71;;;6248:124;;;;;6379:407;;6570:2;6559:9;6555:18;6547:26;;6620:9;6614:4;6610:20;6606:1;6595:9;6591:17;6584:47;6645:131;6771:4;6645:131;;;6637:139;;6541:245;;;;6793:213;;6911:2;6900:9;6896:18;6888:26;;6925:71;6993:1;6982:9;6978:17;6969:6;6925:71;;;6882:124;;;;;7014:163;;7129:6;7124:3;7117:19;7166:4;7161:3;7157:14;7142:29;;7110:67;;;;;7185:91;;7247:24;7265:5;7247:24;;;7236:35;;7230:46;;;;7283:99;;7353:24;7371:5;7353:24;;;7342:35;;7336:46;;;;7389:85;;7462:5;7455:13;7448:21;7437:32;;7431:43;;;;7481:72;;7543:5;7532:16;;7526:27;;;;7560:121;;7633:42;7626:5;7622:54;7611:65;;7605:76;;;;7688:72;;7750:5;7739:16;;7733:27;;;;7767:103;;7839:26;7859:5;7839:26;;;7828:37;;7822:48;;;;7877:74;;7941:5;7930:16;;7924:27;;;;7958:89;;8022:20;8036:5;8022:20;;;8011:31;;8005:42;;;;8054:119;;8135:27;8128:5;8124:39;8102:61;;8096:77;;;;8181:117;8250:24;8268:5;8250:24;;;8243:5;8240:35;8230:2;;8289:1;8286;8279:12;8230:2;8224:74;;8305:117;8374:24;8392:5;8374:24;;;8367:5;8364:35;8354:2;;8413:1;8410;8403:12;8354:2;8348:74;;8429:107;8511:1;8504:5;8501:12;8491:2;;8527:1;8524;8517:12;8491:2;8485:51;;8543:117;8612:24;8630:5;8612:24;;;8605:5;8602:35;8592:2;;8651:1;8648;8641:12;8592:2;8586:74;",
+  "source": "pragma solidity >=0.5.10 <0.6.0;\npragma experimental ABIEncoderV2;\n\nimport \"openzeppelin-solidity/contracts/math/SafeMath.sol\";\nimport \"./IGrant.sol\";\nimport \"./ISignal.sol\";\n\n\n/**\n * @title Grants Spec Contract.\n * @dev Grant request, funding, and management.\n * @author @NoahMarconi @JFickel @ArnaudBrousseau\n */\ncontract Grant is IGrant, ISignal {\n    using SafeMath for uint256;\n\n\n    /*----------  Globals  ----------*/\n\n    mapping(bytes32 => Grant) grants; // Grants mapped by GUID.\n\n\n    /*----------  Methods  ----------*/\n\n    /**\n     * @dev Grant creation function. May be called by grantors, grantees, or any other relevant party.\n     * @param grantees Recipients of unlocked funds and their respective allocations.\n     * @param grantManagers (Optional) Weighted managers of distribution of funds.\n     * @param currency (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.\n     * @param targetFunding (Optional) Funding threshold required to release funds.\n     * @param expiration (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.\n     * @param grantType Which grant success scheme to apply to this grant.\n     * @param extraData Support for extensions to the Standard.\n     * @return GUID for this grant.\n     */\n    function create(\n        Grantee[] calldata grantees,\n        GrantManager[] calldata grantManagers,\n        address currency,\n        uint256 targetFunding,\n        uint256 expiration,\n        GrantType grantType,\n        bytes calldata extraData\n    )\n        external\n        returns (bytes32 id)\n    {\n        bytes32 _id = keccak256(abi.encodePacked(\n            msg.sender,\n            // solium-disable-next-line security/no-block-members\n            blockhash(block.number.sub(1))\n        ));\n\n        return _id;\n    }\n\n    /**\n     * @dev Fund a grant proposal.\n     * @param id GUID for the grant to fund.\n     * @param value Amount in WEI or GRAINS to fund.\n     * @return Cumulative funding received for this grant.\n     */\n    function fund(bytes32 id, uint256 value)\n        external\n        payable\n        returns (uint256 balance)\n    {\n        return value;\n    }\n\n    /**\n     * @dev Pay a grantee.\n     * @param id GUID for the grant to fund.\n     * @param grantee Recipient of payment.\n     * @param value Amount in WEI or GRAINS to fund.\n     * @return Remaining funding available in this grant.\n     */\n    function payout(bytes32 id, address grantee, uint256 value)\n        external\n        returns (uint256 balance)\n    {\n        return value;\n    }\n\n    /**\n     * @dev Refund a grantor.\n     * @param id GUID for the grant to refund.\n     * @param grantor Recipient of refund.\n     * @param value Amount in WEI or GRAINS to fund.\n     * @return True if successful, otherwise false.\n     */\n    function refund(bytes32 id, address grantor, uint256 value)\n        external\n        returns (bool)\n    {\n        return true;\n    }\n\n    /**\n     * @dev Refund all grantors.\n     * @param id GUID for the grant to refund.\n     * @return True if successful, otherwise false.\n     */\n    function refundAll(bytes32 id)\n        external\n        returns (bool)\n    {\n        return true;\n    }\n\n    /**\n     * @dev Cancel grant and enable refunds.\n     * @param id GUID for the grant to refund.\n     * @return True if successful, otherwise false.\n     */\n    function cancelGrant(bytes32 id)\n        external\n        returns (bool)\n    {\n        return true;\n    }\n\n        /**\n     * @dev Voting Signal Method.\n     * @param id The ID of the grant to vote in favor for.\n     * @param token Address of token or NULL for Ether based vote.\n     * @param value Number of votes denoted in Token GRAINs or WEI.\n     * @return True if successful, otherwise false.\n     */\n    function signal(bytes32 id, address token, uint256 value)\n        external\n        payable\n        returns (bool)\n    {\n        return true;\n    }\n}\n",
+  "sourcePath": "/Users/noahmarconi/dev/grant-contracts/contracts/Grant.sol",
+  "ast": {
+    "absolutePath": "/Users/noahmarconi/dev/grant-contracts/contracts/Grant.sol",
+    "exportedSymbols": {
+      "Grant": [
+        132
+      ]
+    },
+    "id": 133,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.5",
+          ".10",
+          "<",
+          "0.6",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:32:0"
+      },
+      {
+        "id": 2,
+        "literals": [
+          "experimental",
+          "ABIEncoderV2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:33:0"
+      },
+      {
+        "absolutePath": "openzeppelin-solidity/contracts/math/SafeMath.sol",
+        "file": "openzeppelin-solidity/contracts/math/SafeMath.sol",
+        "id": 3,
+        "nodeType": "ImportDirective",
+        "scope": 133,
+        "sourceUnit": 501,
+        "src": "68:59:0",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/Users/noahmarconi/dev/grant-contracts/contracts/IGrant.sol",
+        "file": "./IGrant.sol",
+        "id": 4,
+        "nodeType": "ImportDirective",
+        "scope": 133,
+        "sourceUnit": 289,
+        "src": "128:22:0",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/Users/noahmarconi/dev/grant-contracts/contracts/ISignal.sol",
+        "file": "./ISignal.sol",
+        "id": 5,
+        "nodeType": "ImportDirective",
+        "scope": 133,
+        "sourceUnit": 311,
+        "src": "151:23:0",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 6,
+              "name": "IGrant",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 288,
+              "src": "333:6:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_IGrant_$288",
+                "typeString": "contract IGrant"
+              }
+            },
+            "id": 7,
+            "nodeType": "InheritanceSpecifier",
+            "src": "333:6:0"
+          },
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 8,
+              "name": "ISignal",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 310,
+              "src": "341:7:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_ISignal_$310",
+                "typeString": "contract ISignal"
+              }
+            },
+            "id": 9,
+            "nodeType": "InheritanceSpecifier",
+            "src": "341:7:0"
+          }
+        ],
+        "contractDependencies": [
+          288,
+          310
+        ],
+        "contractKind": "contract",
+        "documentation": "@title Grants Spec Contract.\n@dev Grant request, funding, and management.\n@author @NoahMarconi @JFickel @ArnaudBrousseau",
+        "fullyImplemented": true,
+        "id": 132,
+        "linearizedBaseContracts": [
+          132,
+          310,
+          288
+        ],
+        "name": "Grant",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "id": 12,
+            "libraryName": {
+              "contractScope": null,
+              "id": 10,
+              "name": "SafeMath",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 500,
+              "src": "361:8:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_SafeMath_$500",
+                "typeString": "library SafeMath"
+              }
+            },
+            "nodeType": "UsingForDirective",
+            "src": "355:27:0",
+            "typeName": {
+              "id": 11,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "374:7:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            }
+          },
+          {
+            "constant": false,
+            "id": 16,
+            "name": "grants",
+            "nodeType": "VariableDeclaration",
+            "scope": 132,
+            "src": "430:32:0",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Grant_$191_storage_$",
+              "typeString": "mapping(bytes32 => struct IGrant.Grant)"
+            },
+            "typeName": {
+              "id": 15,
+              "keyType": {
+                "id": 13,
+                "name": "bytes32",
+                "nodeType": "ElementaryTypeName",
+                "src": "438:7:0",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes32",
+                  "typeString": "bytes32"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "430:25:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Grant_$191_storage_$",
+                "typeString": "mapping(bytes32 => struct IGrant.Grant)"
+              },
+              "valueType": {
+                "contractScope": null,
+                "id": 14,
+                "name": "Grant",
+                "nodeType": "UserDefinedTypeName",
+                "referencedDeclaration": 191,
+                "src": "449:5:0",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_Grant_$191_storage_ptr",
+                  "typeString": "struct IGrant.Grant"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 56,
+              "nodeType": "Block",
+              "src": "1613:223:0",
+              "statements": [
+                {
+                  "assignments": [
+                    38
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 38,
+                      "name": "_id",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 56,
+                      "src": "1623:11:0",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      },
+                      "typeName": {
+                        "id": 37,
+                        "name": "bytes32",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "1623:7:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 53,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 42,
+                              "name": "msg",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 515,
+                              "src": "1677:3:0",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_magic_message",
+                                "typeString": "msg"
+                              }
+                            },
+                            "id": 43,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "sender",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": null,
+                            "src": "1677:10:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            }
+                          },
+                          {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "arguments": [
+                                  {
+                                    "argumentTypes": null,
+                                    "hexValue": "31",
+                                    "id": 48,
+                                    "isConstant": false,
+                                    "isLValue": false,
+                                    "isPure": true,
+                                    "kind": "number",
+                                    "lValueRequested": false,
+                                    "nodeType": "Literal",
+                                    "src": "1794:1:0",
+                                    "subdenomination": null,
+                                    "typeDescriptions": {
+                                      "typeIdentifier": "t_rational_1_by_1",
+                                      "typeString": "int_const 1"
+                                    },
+                                    "value": "1"
+                                  }
+                                ],
+                                "expression": {
+                                  "argumentTypes": [
+                                    {
+                                      "typeIdentifier": "t_rational_1_by_1",
+                                      "typeString": "int_const 1"
+                                    }
+                                  ],
+                                  "expression": {
+                                    "argumentTypes": null,
+                                    "expression": {
+                                      "argumentTypes": null,
+                                      "id": 45,
+                                      "name": "block",
+                                      "nodeType": "Identifier",
+                                      "overloadedDeclarations": [],
+                                      "referencedDeclaration": 505,
+                                      "src": "1777:5:0",
+                                      "typeDescriptions": {
+                                        "typeIdentifier": "t_magic_block",
+                                        "typeString": "block"
+                                      }
+                                    },
+                                    "id": 46,
+                                    "isConstant": false,
+                                    "isLValue": false,
+                                    "isPure": false,
+                                    "lValueRequested": false,
+                                    "memberName": "number",
+                                    "nodeType": "MemberAccess",
+                                    "referencedDeclaration": null,
+                                    "src": "1777:12:0",
+                                    "typeDescriptions": {
+                                      "typeIdentifier": "t_uint256",
+                                      "typeString": "uint256"
+                                    }
+                                  },
+                                  "id": 47,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "memberName": "sub",
+                                  "nodeType": "MemberAccess",
+                                  "referencedDeclaration": 419,
+                                  "src": "1777:16:0",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
+                                    "typeString": "function (uint256,uint256) pure returns (uint256)"
+                                  }
+                                },
+                                "id": 49,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": false,
+                                "kind": "functionCall",
+                                "lValueRequested": false,
+                                "names": [],
+                                "nodeType": "FunctionCall",
+                                "src": "1777:19:0",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              ],
+                              "id": 44,
+                              "name": "blockhash",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 506,
+                              "src": "1767:9:0",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_blockhash_view$_t_uint256_$returns$_t_bytes32_$",
+                                "typeString": "function (uint256) view returns (bytes32)"
+                              }
+                            },
+                            "id": 50,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1767:30:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bytes32",
+                              "typeString": "bytes32"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            },
+                            {
+                              "typeIdentifier": "t_bytes32",
+                              "typeString": "bytes32"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 40,
+                            "name": "abi",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 502,
+                            "src": "1647:3:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_abi",
+                              "typeString": "abi"
+                            }
+                          },
+                          "id": 41,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "memberName": "encodePacked",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "1647:16:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_abiencodepacked_pure$__$returns$_t_bytes_memory_ptr_$",
+                            "typeString": "function () pure returns (bytes memory)"
+                          }
+                        },
+                        "id": 51,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1647:160:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes_memory_ptr",
+                          "typeString": "bytes memory"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bytes_memory_ptr",
+                          "typeString": "bytes memory"
+                        }
+                      ],
+                      "id": 39,
+                      "name": "keccak256",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 509,
+                      "src": "1637:9:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
+                        "typeString": "function (bytes memory) pure returns (bytes32)"
+                      }
+                    },
+                    "id": 52,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1637:171:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1623:185:0"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 54,
+                    "name": "_id",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 38,
+                    "src": "1826:3:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "functionReturnParameters": 36,
+                  "id": 55,
+                  "nodeType": "Return",
+                  "src": "1819:10:0"
+                }
+              ]
+            },
+            "documentation": "@dev Grant creation function. May be called by grantors, grantees, or any other relevant party.\n@param grantees Recipients of unlocked funds and their respective allocations.\n@param grantManagers (Optional) Weighted managers of distribution of funds.\n@param currency (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.\n@param targetFunding (Optional) Funding threshold required to release funds.\n@param expiration (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.\n@param grantType Which grant success scheme to apply to this grant.\n@param extraData Support for extensions to the Standard.\n@return GUID for this grant.",
+            "id": 57,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "create",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 33,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 19,
+                  "name": "grantees",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1334:27:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_Grantee_$153_calldata_$dyn_calldata_ptr",
+                    "typeString": "struct IGrant.Grantee[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "contractScope": null,
+                      "id": 17,
+                      "name": "Grantee",
+                      "nodeType": "UserDefinedTypeName",
+                      "referencedDeclaration": 153,
+                      "src": "1334:7:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Grantee_$153_storage_ptr",
+                        "typeString": "struct IGrant.Grantee"
+                      }
+                    },
+                    "id": 18,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1334:9:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_Grantee_$153_storage_$dyn_storage_ptr",
+                      "typeString": "struct IGrant.Grantee[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 22,
+                  "name": "grantManagers",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1371:37:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_GrantManager_$165_calldata_$dyn_calldata_ptr",
+                    "typeString": "struct IGrant.GrantManager[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "contractScope": null,
+                      "id": 20,
+                      "name": "GrantManager",
+                      "nodeType": "UserDefinedTypeName",
+                      "referencedDeclaration": 165,
+                      "src": "1371:12:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_GrantManager_$165_storage_ptr",
+                        "typeString": "struct IGrant.GrantManager"
+                      }
+                    },
+                    "id": 21,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1371:14:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_GrantManager_$165_storage_$dyn_storage_ptr",
+                      "typeString": "struct IGrant.GrantManager[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 24,
+                  "name": "currency",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1418:16:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 23,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1418:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26,
+                  "name": "targetFunding",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1444:21:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 25,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1444:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 28,
+                  "name": "expiration",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1475:18:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 27,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1475:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 30,
+                  "name": "grantType",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1503:19:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_GrantType_$140",
+                    "typeString": "enum IGrant.GrantType"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 29,
+                    "name": "GrantType",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 140,
+                    "src": "1503:9:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_enum$_GrantType_$140",
+                      "typeString": "enum IGrant.GrantType"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 32,
+                  "name": "extraData",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1532:24:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_calldata_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 31,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1532:5:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1324:238:0"
+            },
+            "returnParameters": {
+              "id": 36,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 35,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1597:10:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 34,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1597:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1596:12:0"
+            },
+            "scope": 132,
+            "src": "1309:527:0",
+            "stateMutability": "nonpayable",
+            "superFunction": 242,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 68,
+              "nodeType": "Block",
+              "src": "2162:29:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 66,
+                    "name": "value",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 61,
+                    "src": "2179:5:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 65,
+                  "id": 67,
+                  "nodeType": "Return",
+                  "src": "2172:12:0"
+                }
+              ]
+            },
+            "documentation": "@dev Fund a grant proposal.\n@param id GUID for the grant to fund.\n@param value Amount in WEI or GRAINS to fund.\n@return Cumulative funding received for this grant.",
+            "id": 69,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "fund",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 62,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 59,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 69,
+                  "src": "2064:10:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 58,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2064:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 61,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 69,
+                  "src": "2076:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 60,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2076:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2063:27:0"
+            },
+            "returnParameters": {
+              "id": 65,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 64,
+                  "name": "balance",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 69,
+                  "src": "2141:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 63,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2141:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2140:17:0"
+            },
+            "scope": 132,
+            "src": "2050:141:0",
+            "stateMutability": "payable",
+            "superFunction": 251,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 82,
+              "nodeType": "Block",
+              "src": "2555:29:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 80,
+                    "name": "value",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 75,
+                    "src": "2572:5:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 79,
+                  "id": 81,
+                  "nodeType": "Return",
+                  "src": "2565:12:0"
+                }
+              ]
+            },
+            "documentation": "@dev Pay a grantee.\n@param id GUID for the grant to fund.\n@param grantee Recipient of payment.\n@param value Amount in WEI or GRAINS to fund.\n@return Remaining funding available in this grant.",
+            "id": 83,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "payout",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 76,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 71,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 83,
+                  "src": "2456:10:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 70,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2456:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 73,
+                  "name": "grantee",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 83,
+                  "src": "2468:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 72,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2468:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 75,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 83,
+                  "src": "2485:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 74,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2485:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2455:44:0"
+            },
+            "returnParameters": {
+              "id": 79,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 78,
+                  "name": "balance",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 83,
+                  "src": "2534:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 77,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2534:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2533:17:0"
+            },
+            "scope": 132,
+            "src": "2440:144:0",
+            "stateMutability": "nonpayable",
+            "superFunction": 262,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 96,
+              "nodeType": "Block",
+              "src": "2935:28:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "74727565",
+                    "id": 94,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "2952:4:0",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "true"
+                  },
+                  "functionReturnParameters": 93,
+                  "id": 95,
+                  "nodeType": "Return",
+                  "src": "2945:11:0"
+                }
+              ]
+            },
+            "documentation": "@dev Refund a grantor.\n@param id GUID for the grant to refund.\n@param grantor Recipient of refund.\n@param value Amount in WEI or GRAINS to fund.\n@return True if successful, otherwise false.",
+            "id": 97,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "refund",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 90,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 85,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 97,
+                  "src": "2847:10:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 84,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2847:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 87,
+                  "name": "grantor",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 97,
+                  "src": "2859:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 86,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2859:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 89,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 97,
+                  "src": "2876:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 88,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2876:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2846:44:0"
+            },
+            "returnParameters": {
+              "id": 93,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 92,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 97,
+                  "src": "2925:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 91,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2925:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2924:6:0"
+            },
+            "scope": 132,
+            "src": "2831:132:0",
+            "stateMutability": "nonpayable",
+            "superFunction": 273,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 106,
+              "nodeType": "Block",
+              "src": "3192:28:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "74727565",
+                    "id": 104,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "3209:4:0",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "true"
+                  },
+                  "functionReturnParameters": 103,
+                  "id": 105,
+                  "nodeType": "Return",
+                  "src": "3202:11:0"
+                }
+              ]
+            },
+            "documentation": "@dev Refund all grantors.\n@param id GUID for the grant to refund.\n@return True if successful, otherwise false.",
+            "id": 107,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "refundAll",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 100,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 99,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 107,
+                  "src": "3136:10:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 98,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3136:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3135:12:0"
+            },
+            "returnParameters": {
+              "id": 103,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 102,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 107,
+                  "src": "3182:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 101,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3182:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3181:6:0"
+            },
+            "scope": 132,
+            "src": "3117:103:0",
+            "stateMutability": "nonpayable",
+            "superFunction": 280,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 116,
+              "nodeType": "Block",
+              "src": "3463:28:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "74727565",
+                    "id": 114,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "3480:4:0",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "true"
+                  },
+                  "functionReturnParameters": 113,
+                  "id": 115,
+                  "nodeType": "Return",
+                  "src": "3473:11:0"
+                }
+              ]
+            },
+            "documentation": "@dev Cancel grant and enable refunds.\n@param id GUID for the grant to refund.\n@return True if successful, otherwise false.",
+            "id": 117,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "cancelGrant",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 110,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 109,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 117,
+                  "src": "3407:10:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 108,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3407:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3406:12:0"
+            },
+            "returnParameters": {
+              "id": 113,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 112,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 117,
+                  "src": "3453:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 111,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3453:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3452:6:0"
+            },
+            "scope": 132,
+            "src": "3386:105:0",
+            "stateMutability": "nonpayable",
+            "superFunction": 287,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 130,
+              "nodeType": "Block",
+              "src": "3915:28:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "74727565",
+                    "id": 128,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "3932:4:0",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "true"
+                  },
+                  "functionReturnParameters": 127,
+                  "id": 129,
+                  "nodeType": "Return",
+                  "src": "3925:11:0"
+                }
+              ]
+            },
+            "documentation": "@dev Voting Signal Method.\n@param id The ID of the grant to vote in favor for.\n@param token Address of token or NULL for Ether based vote.\n@param value Number of votes denoted in Token GRAINs or WEI.\n@return True if successful, otherwise false.",
+            "id": 131,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "signal",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 124,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 119,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 131,
+                  "src": "3813:10:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 118,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3813:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 121,
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 131,
+                  "src": "3825:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 120,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3825:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 123,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 131,
+                  "src": "3840:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 122,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3840:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3812:42:0"
+            },
+            "returnParameters": {
+              "id": 127,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 126,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 131,
+                  "src": "3905:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 125,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3905:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3904:6:0"
+            },
+            "scope": 132,
+            "src": "3797:146:0",
+            "stateMutability": "payable",
+            "superFunction": 309,
+            "visibility": "external"
+          }
+        ],
+        "scope": 133,
+        "src": "315:3630:0"
+      }
+    ],
+    "src": "0:3946:0"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/noahmarconi/dev/grant-contracts/contracts/Grant.sol",
+    "exportedSymbols": {
+      "Grant": [
+        132
+      ]
+    },
+    "id": 133,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.5",
+          ".10",
+          "<",
+          "0.6",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:32:0"
+      },
+      {
+        "id": 2,
+        "literals": [
+          "experimental",
+          "ABIEncoderV2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:33:0"
+      },
+      {
+        "absolutePath": "openzeppelin-solidity/contracts/math/SafeMath.sol",
+        "file": "openzeppelin-solidity/contracts/math/SafeMath.sol",
+        "id": 3,
+        "nodeType": "ImportDirective",
+        "scope": 133,
+        "sourceUnit": 501,
+        "src": "68:59:0",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/Users/noahmarconi/dev/grant-contracts/contracts/IGrant.sol",
+        "file": "./IGrant.sol",
+        "id": 4,
+        "nodeType": "ImportDirective",
+        "scope": 133,
+        "sourceUnit": 289,
+        "src": "128:22:0",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/Users/noahmarconi/dev/grant-contracts/contracts/ISignal.sol",
+        "file": "./ISignal.sol",
+        "id": 5,
+        "nodeType": "ImportDirective",
+        "scope": 133,
+        "sourceUnit": 311,
+        "src": "151:23:0",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 6,
+              "name": "IGrant",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 288,
+              "src": "333:6:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_IGrant_$288",
+                "typeString": "contract IGrant"
+              }
+            },
+            "id": 7,
+            "nodeType": "InheritanceSpecifier",
+            "src": "333:6:0"
+          },
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 8,
+              "name": "ISignal",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 310,
+              "src": "341:7:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_ISignal_$310",
+                "typeString": "contract ISignal"
+              }
+            },
+            "id": 9,
+            "nodeType": "InheritanceSpecifier",
+            "src": "341:7:0"
+          }
+        ],
+        "contractDependencies": [
+          288,
+          310
+        ],
+        "contractKind": "contract",
+        "documentation": "@title Grants Spec Contract.\n@dev Grant request, funding, and management.\n@author @NoahMarconi @JFickel @ArnaudBrousseau",
+        "fullyImplemented": true,
+        "id": 132,
+        "linearizedBaseContracts": [
+          132,
+          310,
+          288
+        ],
+        "name": "Grant",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "id": 12,
+            "libraryName": {
+              "contractScope": null,
+              "id": 10,
+              "name": "SafeMath",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 500,
+              "src": "361:8:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_SafeMath_$500",
+                "typeString": "library SafeMath"
+              }
+            },
+            "nodeType": "UsingForDirective",
+            "src": "355:27:0",
+            "typeName": {
+              "id": 11,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "374:7:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            }
+          },
+          {
+            "constant": false,
+            "id": 16,
+            "name": "grants",
+            "nodeType": "VariableDeclaration",
+            "scope": 132,
+            "src": "430:32:0",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Grant_$191_storage_$",
+              "typeString": "mapping(bytes32 => struct IGrant.Grant)"
+            },
+            "typeName": {
+              "id": 15,
+              "keyType": {
+                "id": 13,
+                "name": "bytes32",
+                "nodeType": "ElementaryTypeName",
+                "src": "438:7:0",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes32",
+                  "typeString": "bytes32"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "430:25:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Grant_$191_storage_$",
+                "typeString": "mapping(bytes32 => struct IGrant.Grant)"
+              },
+              "valueType": {
+                "contractScope": null,
+                "id": 14,
+                "name": "Grant",
+                "nodeType": "UserDefinedTypeName",
+                "referencedDeclaration": 191,
+                "src": "449:5:0",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_Grant_$191_storage_ptr",
+                  "typeString": "struct IGrant.Grant"
+                }
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 56,
+              "nodeType": "Block",
+              "src": "1613:223:0",
+              "statements": [
+                {
+                  "assignments": [
+                    38
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 38,
+                      "name": "_id",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 56,
+                      "src": "1623:11:0",
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      },
+                      "typeName": {
+                        "id": 37,
+                        "name": "bytes32",
+                        "nodeType": "ElementaryTypeName",
+                        "src": "1623:7:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 53,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 42,
+                              "name": "msg",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 515,
+                              "src": "1677:3:0",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_magic_message",
+                                "typeString": "msg"
+                              }
+                            },
+                            "id": 43,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "sender",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": null,
+                            "src": "1677:10:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            }
+                          },
+                          {
+                            "argumentTypes": null,
+                            "arguments": [
+                              {
+                                "argumentTypes": null,
+                                "arguments": [
+                                  {
+                                    "argumentTypes": null,
+                                    "hexValue": "31",
+                                    "id": 48,
+                                    "isConstant": false,
+                                    "isLValue": false,
+                                    "isPure": true,
+                                    "kind": "number",
+                                    "lValueRequested": false,
+                                    "nodeType": "Literal",
+                                    "src": "1794:1:0",
+                                    "subdenomination": null,
+                                    "typeDescriptions": {
+                                      "typeIdentifier": "t_rational_1_by_1",
+                                      "typeString": "int_const 1"
+                                    },
+                                    "value": "1"
+                                  }
+                                ],
+                                "expression": {
+                                  "argumentTypes": [
+                                    {
+                                      "typeIdentifier": "t_rational_1_by_1",
+                                      "typeString": "int_const 1"
+                                    }
+                                  ],
+                                  "expression": {
+                                    "argumentTypes": null,
+                                    "expression": {
+                                      "argumentTypes": null,
+                                      "id": 45,
+                                      "name": "block",
+                                      "nodeType": "Identifier",
+                                      "overloadedDeclarations": [],
+                                      "referencedDeclaration": 505,
+                                      "src": "1777:5:0",
+                                      "typeDescriptions": {
+                                        "typeIdentifier": "t_magic_block",
+                                        "typeString": "block"
+                                      }
+                                    },
+                                    "id": 46,
+                                    "isConstant": false,
+                                    "isLValue": false,
+                                    "isPure": false,
+                                    "lValueRequested": false,
+                                    "memberName": "number",
+                                    "nodeType": "MemberAccess",
+                                    "referencedDeclaration": null,
+                                    "src": "1777:12:0",
+                                    "typeDescriptions": {
+                                      "typeIdentifier": "t_uint256",
+                                      "typeString": "uint256"
+                                    }
+                                  },
+                                  "id": 47,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "memberName": "sub",
+                                  "nodeType": "MemberAccess",
+                                  "referencedDeclaration": 419,
+                                  "src": "1777:16:0",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
+                                    "typeString": "function (uint256,uint256) pure returns (uint256)"
+                                  }
+                                },
+                                "id": 49,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": false,
+                                "kind": "functionCall",
+                                "lValueRequested": false,
+                                "names": [],
+                                "nodeType": "FunctionCall",
+                                "src": "1777:19:0",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              ],
+                              "id": 44,
+                              "name": "blockhash",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 506,
+                              "src": "1767:9:0",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_blockhash_view$_t_uint256_$returns$_t_bytes32_$",
+                                "typeString": "function (uint256) view returns (bytes32)"
+                              }
+                            },
+                            "id": 50,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1767:30:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bytes32",
+                              "typeString": "bytes32"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            },
+                            {
+                              "typeIdentifier": "t_bytes32",
+                              "typeString": "bytes32"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 40,
+                            "name": "abi",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 502,
+                            "src": "1647:3:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_abi",
+                              "typeString": "abi"
+                            }
+                          },
+                          "id": 41,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "memberName": "encodePacked",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "1647:16:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_abiencodepacked_pure$__$returns$_t_bytes_memory_ptr_$",
+                            "typeString": "function () pure returns (bytes memory)"
+                          }
+                        },
+                        "id": 51,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1647:160:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes_memory_ptr",
+                          "typeString": "bytes memory"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bytes_memory_ptr",
+                          "typeString": "bytes memory"
+                        }
+                      ],
+                      "id": 39,
+                      "name": "keccak256",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 509,
+                      "src": "1637:9:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
+                        "typeString": "function (bytes memory) pure returns (bytes32)"
+                      }
+                    },
+                    "id": 52,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1637:171:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "1623:185:0"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 54,
+                    "name": "_id",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 38,
+                    "src": "1826:3:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "functionReturnParameters": 36,
+                  "id": 55,
+                  "nodeType": "Return",
+                  "src": "1819:10:0"
+                }
+              ]
+            },
+            "documentation": "@dev Grant creation function. May be called by grantors, grantees, or any other relevant party.\n@param grantees Recipients of unlocked funds and their respective allocations.\n@param grantManagers (Optional) Weighted managers of distribution of funds.\n@param currency (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.\n@param targetFunding (Optional) Funding threshold required to release funds.\n@param expiration (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.\n@param grantType Which grant success scheme to apply to this grant.\n@param extraData Support for extensions to the Standard.\n@return GUID for this grant.",
+            "id": 57,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "create",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 33,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 19,
+                  "name": "grantees",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1334:27:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_Grantee_$153_calldata_$dyn_calldata_ptr",
+                    "typeString": "struct IGrant.Grantee[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "contractScope": null,
+                      "id": 17,
+                      "name": "Grantee",
+                      "nodeType": "UserDefinedTypeName",
+                      "referencedDeclaration": 153,
+                      "src": "1334:7:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Grantee_$153_storage_ptr",
+                        "typeString": "struct IGrant.Grantee"
+                      }
+                    },
+                    "id": 18,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1334:9:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_Grantee_$153_storage_$dyn_storage_ptr",
+                      "typeString": "struct IGrant.Grantee[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 22,
+                  "name": "grantManagers",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1371:37:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_GrantManager_$165_calldata_$dyn_calldata_ptr",
+                    "typeString": "struct IGrant.GrantManager[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "contractScope": null,
+                      "id": 20,
+                      "name": "GrantManager",
+                      "nodeType": "UserDefinedTypeName",
+                      "referencedDeclaration": 165,
+                      "src": "1371:12:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_GrantManager_$165_storage_ptr",
+                        "typeString": "struct IGrant.GrantManager"
+                      }
+                    },
+                    "id": 21,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1371:14:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_GrantManager_$165_storage_$dyn_storage_ptr",
+                      "typeString": "struct IGrant.GrantManager[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 24,
+                  "name": "currency",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1418:16:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 23,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1418:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26,
+                  "name": "targetFunding",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1444:21:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 25,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1444:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 28,
+                  "name": "expiration",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1475:18:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 27,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1475:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 30,
+                  "name": "grantType",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1503:19:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_GrantType_$140",
+                    "typeString": "enum IGrant.GrantType"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 29,
+                    "name": "GrantType",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 140,
+                    "src": "1503:9:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_enum$_GrantType_$140",
+                      "typeString": "enum IGrant.GrantType"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 32,
+                  "name": "extraData",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1532:24:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_calldata_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 31,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1532:5:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1324:238:0"
+            },
+            "returnParameters": {
+              "id": 36,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 35,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "1597:10:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 34,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1597:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1596:12:0"
+            },
+            "scope": 132,
+            "src": "1309:527:0",
+            "stateMutability": "nonpayable",
+            "superFunction": 242,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 68,
+              "nodeType": "Block",
+              "src": "2162:29:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 66,
+                    "name": "value",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 61,
+                    "src": "2179:5:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 65,
+                  "id": 67,
+                  "nodeType": "Return",
+                  "src": "2172:12:0"
+                }
+              ]
+            },
+            "documentation": "@dev Fund a grant proposal.\n@param id GUID for the grant to fund.\n@param value Amount in WEI or GRAINS to fund.\n@return Cumulative funding received for this grant.",
+            "id": 69,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "fund",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 62,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 59,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 69,
+                  "src": "2064:10:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 58,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2064:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 61,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 69,
+                  "src": "2076:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 60,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2076:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2063:27:0"
+            },
+            "returnParameters": {
+              "id": 65,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 64,
+                  "name": "balance",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 69,
+                  "src": "2141:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 63,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2141:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2140:17:0"
+            },
+            "scope": 132,
+            "src": "2050:141:0",
+            "stateMutability": "payable",
+            "superFunction": 251,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 82,
+              "nodeType": "Block",
+              "src": "2555:29:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 80,
+                    "name": "value",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 75,
+                    "src": "2572:5:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 79,
+                  "id": 81,
+                  "nodeType": "Return",
+                  "src": "2565:12:0"
+                }
+              ]
+            },
+            "documentation": "@dev Pay a grantee.\n@param id GUID for the grant to fund.\n@param grantee Recipient of payment.\n@param value Amount in WEI or GRAINS to fund.\n@return Remaining funding available in this grant.",
+            "id": 83,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "payout",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 76,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 71,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 83,
+                  "src": "2456:10:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 70,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2456:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 73,
+                  "name": "grantee",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 83,
+                  "src": "2468:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 72,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2468:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 75,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 83,
+                  "src": "2485:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 74,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2485:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2455:44:0"
+            },
+            "returnParameters": {
+              "id": 79,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 78,
+                  "name": "balance",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 83,
+                  "src": "2534:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 77,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2534:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2533:17:0"
+            },
+            "scope": 132,
+            "src": "2440:144:0",
+            "stateMutability": "nonpayable",
+            "superFunction": 262,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 96,
+              "nodeType": "Block",
+              "src": "2935:28:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "74727565",
+                    "id": 94,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "2952:4:0",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "true"
+                  },
+                  "functionReturnParameters": 93,
+                  "id": 95,
+                  "nodeType": "Return",
+                  "src": "2945:11:0"
+                }
+              ]
+            },
+            "documentation": "@dev Refund a grantor.\n@param id GUID for the grant to refund.\n@param grantor Recipient of refund.\n@param value Amount in WEI or GRAINS to fund.\n@return True if successful, otherwise false.",
+            "id": 97,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "refund",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 90,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 85,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 97,
+                  "src": "2847:10:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 84,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2847:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 87,
+                  "name": "grantor",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 97,
+                  "src": "2859:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 86,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2859:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 89,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 97,
+                  "src": "2876:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 88,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2876:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2846:44:0"
+            },
+            "returnParameters": {
+              "id": 93,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 92,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 97,
+                  "src": "2925:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 91,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2925:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2924:6:0"
+            },
+            "scope": 132,
+            "src": "2831:132:0",
+            "stateMutability": "nonpayable",
+            "superFunction": 273,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 106,
+              "nodeType": "Block",
+              "src": "3192:28:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "74727565",
+                    "id": 104,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "3209:4:0",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "true"
+                  },
+                  "functionReturnParameters": 103,
+                  "id": 105,
+                  "nodeType": "Return",
+                  "src": "3202:11:0"
+                }
+              ]
+            },
+            "documentation": "@dev Refund all grantors.\n@param id GUID for the grant to refund.\n@return True if successful, otherwise false.",
+            "id": 107,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "refundAll",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 100,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 99,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 107,
+                  "src": "3136:10:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 98,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3136:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3135:12:0"
+            },
+            "returnParameters": {
+              "id": 103,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 102,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 107,
+                  "src": "3182:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 101,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3182:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3181:6:0"
+            },
+            "scope": 132,
+            "src": "3117:103:0",
+            "stateMutability": "nonpayable",
+            "superFunction": 280,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 116,
+              "nodeType": "Block",
+              "src": "3463:28:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "74727565",
+                    "id": 114,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "3480:4:0",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "true"
+                  },
+                  "functionReturnParameters": 113,
+                  "id": 115,
+                  "nodeType": "Return",
+                  "src": "3473:11:0"
+                }
+              ]
+            },
+            "documentation": "@dev Cancel grant and enable refunds.\n@param id GUID for the grant to refund.\n@return True if successful, otherwise false.",
+            "id": 117,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "cancelGrant",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 110,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 109,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 117,
+                  "src": "3407:10:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 108,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3407:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3406:12:0"
+            },
+            "returnParameters": {
+              "id": 113,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 112,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 117,
+                  "src": "3453:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 111,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3453:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3452:6:0"
+            },
+            "scope": 132,
+            "src": "3386:105:0",
+            "stateMutability": "nonpayable",
+            "superFunction": 287,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 130,
+              "nodeType": "Block",
+              "src": "3915:28:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "74727565",
+                    "id": 128,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "3932:4:0",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "true"
+                  },
+                  "functionReturnParameters": 127,
+                  "id": 129,
+                  "nodeType": "Return",
+                  "src": "3925:11:0"
+                }
+              ]
+            },
+            "documentation": "@dev Voting Signal Method.\n@param id The ID of the grant to vote in favor for.\n@param token Address of token or NULL for Ether based vote.\n@param value Number of votes denoted in Token GRAINs or WEI.\n@return True if successful, otherwise false.",
+            "id": 131,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "signal",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 124,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 119,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 131,
+                  "src": "3813:10:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 118,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3813:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 121,
+                  "name": "token",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 131,
+                  "src": "3825:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 120,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3825:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 123,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 131,
+                  "src": "3840:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 122,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3840:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3812:42:0"
+            },
+            "returnParameters": {
+              "id": 127,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 126,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 131,
+                  "src": "3905:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 125,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3905:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3904:6:0"
+            },
+            "scope": 132,
+            "src": "3797:146:0",
+            "stateMutability": "payable",
+            "superFunction": 309,
+            "visibility": "external"
+          }
+        ],
+        "scope": 133,
+        "src": "315:3630:0"
+      }
+    ],
+    "src": "0:3946:0"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.10+commit.5a6ea5b1.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.5",
+  "updatedAt": "2019-07-17T20:05:34.954Z",
+  "devdoc": {
+    "author": "@NoahMarconi @JFickel @ArnaudBrousseau",
+    "details": "Grant request, funding, and management.",
+    "methods": {
+      "cancelGrant(bytes32)": {
+        "details": "Cancel grant and enable refunds.",
+        "params": {
+          "id": "GUID for the grant to refund."
+        },
+        "return": "True if successful, otherwise false."
+      },
+      "create((address,uint256,uint256)[],(address,uint8)[],address,uint256,uint256,uint8,bytes)": {
+        "details": "Grant creation function. May be called by grantors, grantees, or any other relevant party.",
+        "params": {
+          "currency": "(Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.",
+          "expiration": "(Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.",
+          "extraData": "Support for extensions to the Standard.",
+          "grantManagers": "(Optional) Weighted managers of distribution of funds.",
+          "grantType": "Which grant success scheme to apply to this grant.",
+          "grantees": "Recipients of unlocked funds and their respective allocations.",
+          "targetFunding": "(Optional) Funding threshold required to release funds."
+        },
+        "return": "GUID for this grant."
+      },
+      "fund(bytes32,uint256)": {
+        "details": "Fund a grant proposal.",
+        "params": {
+          "id": "GUID for the grant to fund.",
+          "value": "Amount in WEI or GRAINS to fund."
+        },
+        "return": "Cumulative funding received for this grant."
+      },
+      "payout(bytes32,address,uint256)": {
+        "details": "Pay a grantee.",
+        "params": {
+          "grantee": "Recipient of payment.",
+          "id": "GUID for the grant to fund.",
+          "value": "Amount in WEI or GRAINS to fund."
+        },
+        "return": "Remaining funding available in this grant."
+      },
+      "refund(bytes32,address,uint256)": {
+        "details": "Refund a grantor.",
+        "params": {
+          "grantor": "Recipient of refund.",
+          "id": "GUID for the grant to refund.",
+          "value": "Amount in WEI or GRAINS to fund."
+        },
+        "return": "True if successful, otherwise false."
+      },
+      "refundAll(bytes32)": {
+        "details": "Refund all grantors.",
+        "params": {
+          "id": "GUID for the grant to refund."
+        },
+        "return": "True if successful, otherwise false."
+      },
+      "signal(bytes32,address,uint256)": {
+        "details": "Voting Signal Method.",
+        "params": {
+          "id": "The ID of the grant to vote in favor for.",
+          "token": "Address of token or NULL for Ether based vote.",
+          "value": "Number of votes denoted in Token GRAINs or WEI."
+        },
+        "return": "True if successful, otherwise false."
+      }
+    },
+    "title": "Grants Spec Contract."
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

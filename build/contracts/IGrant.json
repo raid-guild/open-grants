@@ -1,0 +1,4086 @@
+{
+  "contractName": "IGrant",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "grantStatus",
+          "type": "uint8"
+        }
+      ],
+      "name": "LogStatusChange",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "name": "grantor",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogFunding",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "name": "grantor",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogRefund",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "name": "grantee",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogPayment",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "components": [
+            {
+              "name": "grantee",
+              "type": "address"
+            },
+            {
+              "name": "allocation",
+              "type": "uint256"
+            },
+            {
+              "name": "received",
+              "type": "uint256"
+            }
+          ],
+          "name": "grantees",
+          "type": "tuple[]"
+        },
+        {
+          "components": [
+            {
+              "name": "grantManager",
+              "type": "address"
+            },
+            {
+              "name": "weight",
+              "type": "uint8"
+            }
+          ],
+          "name": "grantManagers",
+          "type": "tuple[]"
+        },
+        {
+          "name": "currency",
+          "type": "address"
+        },
+        {
+          "name": "targetFunding",
+          "type": "uint256"
+        },
+        {
+          "name": "expiration",
+          "type": "uint256"
+        },
+        {
+          "name": "grantType",
+          "type": "uint8"
+        },
+        {
+          "name": "extraData",
+          "type": "bytes"
+        }
+      ],
+      "name": "create",
+      "outputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "fund",
+      "outputs": [
+        {
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "name": "grantee",
+          "type": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "payout",
+      "outputs": [
+        {
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "name": "grantor",
+          "type": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "refund",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "name": "refundAll",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "name": "cancelGrant",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity >=0.5.10 <0.6.0;\npragma experimental ABIEncoderV2;\n\n/**\n * @title Grants Spec Interface.\n * @dev Grant request, funding, and management.\n * @author @NoahMarconi @JFickel @ArnaudBrousseau\n */\ninterface IGrant {\n\n    /*----------  Types  ----------*/\n\n    enum GrantType {\n        FUND_THRESHOLD, // Funds unlocked if threshold met.\n        FUNDER_VOTE,    // Funds unlocked if funders approve.\n        MANAGED,        // Funds unlocked by grant_managers.\n        OPAQUE          // Other offchain method.\n    }\n\n    enum GrantStatus {\n        SIGNAL,  // Non-binding carbon vote.\n        FUND,    // Fundraising period.\n        PAY,     // Payout period.\n        REFUND,  // Refund to original funders.\n        COMPLETE // Grant complete.\n    }\n\n    struct Grantee {\n        address grantee;    // Address of grantee.\n        uint256 allocation; // Grant size for the grantee.\n        uint256 received;   // Cumulative payments received.\n    }\n\n    struct Grantor {\n        address grantor;  // Address of grantor.\n        uint256 funded;   // Total amount funded.\n        uint256 refunded; // Cumulative amount refunded.\n    }\n\n    struct GrantManager {\n        address grantManager; // Address of grant manager.\n        uint8 weight;         // Value 0 to 255.\n    }\n\n    struct Grant {\n        Grantee[] grantees;           // Grant recipients.\n        Grantor[] grantors;           // Funders of the grant.\n        GrantManager[] grantManagers; // (Optional) Addresses that manage distribution of funds.\n        address currency;             // (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.\n        uint256 targetFunding;        // (Optional) Funding threshold required to release funds.\n        uint256 totalFunded;          // Cumulative funding received for this grant.\n        uint256 totalPayed;           // Cumulative funding payed to grantees.\n        uint256 expiration;           // (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.\n        GrantType grantType;          // Which grant success scheme to apply to this grant.\n        GrantStatus grantStatus;      // Current GrantStatus.\n        bytes extraData;              // Support for extensions to the Standard.\n    }\n\n\n    /*----------  Events  ----------*/\n\n    /**\n     * @dev Change in GrantStatus.\n     * @param id Which Grant's status changed.\n     * @param grantStatus New GrantStatus.\n     */\n    event LogStatusChange(bytes32 indexed id, GrantStatus grantStatus);\n\n    /**\n     * @dev Grant received funding.\n     * @param id Which Grant received funding.\n     * @param grantor Address funding the grant.\n     * @param value Amount in WEI or GRAINS funded.\n     */\n    event LogFunding(bytes32 indexed id, address indexed grantor, uint256 value);\n\n    /**\n     * @dev Grant refunding funding.\n     * @param id Which grant refunding.\n     * @param grantor Address receiving refund.\n     * @param value Amount in WEI or GRAINS refunded.\n     */\n    event LogRefund(bytes32 indexed id, address indexed grantor, uint256 value);\n\n    /**\n     * @dev Grant paying grantee.\n     * @param id Which grant making payment.\n     * @param grantee Address receiving payment.\n     * @param value Amount in WEI or GRAINS refunded.\n     */\n    event LogPayment(bytes32 indexed id, address indexed grantee, uint256 value);\n\n    /*----------  Methods  ----------*/\n\n    /**\n     * @dev Grant creation function. May be called by grantors, grantees, or any other relevant party.\n     * @param grantees Recipients of unlocked funds and their respective allocations.\n     * @param grantManagers (Optional) Weighted managers of distribution of funds.\n     * @param currency (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.\n     * @param targetFunding (Optional) Funding threshold required to release funds.\n     * @param expiration (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.\n     * @param grantType Which grant success scheme to apply to this grant.\n     * @param extraData Support for extensions to the Standard.\n     * @return GUID for this grant.\n     */\n    function create(\n        Grantee[] calldata grantees,\n        GrantManager[] calldata grantManagers,\n        address currency,\n        uint256 targetFunding,\n        uint256 expiration,\n        GrantType grantType,\n        bytes calldata extraData\n    )\n        external\n        returns (bytes32 id);\n\n\n    /**\n     * @dev Fund a grant proposal.\n     * @param id GUID for the grant to fund.\n     * @param value Amount in WEI or GRAINS to fund.\n     * @return Cumulative funding received for this grant.\n     */\n    function fund(bytes32 id, uint256 value)\n        external\n        payable\n        returns (uint256 balance);\n\n    /**\n     * @dev Pay a grantee.\n     * @param id GUID for the grant to fund.\n     * @param grantee Recipient of payment.\n     * @param value Amount in WEI or GRAINS to fund.\n     * @return Remaining funding available in this grant.\n     */\n    function payout(bytes32 id, address grantee, uint256 value)\n        external\n        returns (uint256 balance);\n\n    /**\n     * @dev Refund a grantor.\n     * @param id GUID for the grant to refund.\n     * @param grantor Recipient of refund.\n     * @param value Amount in WEI or GRAINS to fund.\n     * @return True if successful, otherwise false.\n     */\n    function refund(bytes32 id, address grantor, uint256 value)\n        external\n        returns (bool);\n\n    /**\n     * @dev Refund all grantors.\n     * @param id GUID for the grant to refund.\n     * @return True if successful, otherwise false.\n     */\n    function refundAll(bytes32 id)\n        external\n        returns (bool);\n\n    /**\n     * @dev Cancel grant and enable refunds.\n     * @param id GUID for the grant to refund.\n     * @return True if successful, otherwise false.\n     */\n    function cancelGrant(bytes32 id)\n        external\n        returns (bool);\n}\n",
+  "sourcePath": "/Users/noahmarconi/dev/grant-contracts/contracts/IGrant.sol",
+  "ast": {
+    "absolutePath": "/Users/noahmarconi/dev/grant-contracts/contracts/IGrant.sol",
+    "exportedSymbols": {
+      "IGrant": [
+        288
+      ]
+    },
+    "id": 289,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 134,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.5",
+          ".10",
+          "<",
+          "0.6",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:32:1"
+      },
+      {
+        "id": 135,
+        "literals": [
+          "experimental",
+          "ABIEncoderV2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:33:1"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": "@title Grants Spec Interface.\n@dev Grant request, funding, and management.\n@author @NoahMarconi @JFickel @ArnaudBrousseau",
+        "fullyImplemented": false,
+        "id": 288,
+        "linearizedBaseContracts": [
+          288
+        ],
+        "name": "IGrant",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "IGrant.GrantType",
+            "id": 140,
+            "members": [
+              {
+                "id": 136,
+                "name": "FUND_THRESHOLD",
+                "nodeType": "EnumValue",
+                "src": "295:14:1"
+              },
+              {
+                "id": 137,
+                "name": "FUNDER_VOTE",
+                "nodeType": "EnumValue",
+                "src": "355:11:1"
+              },
+              {
+                "id": 138,
+                "name": "MANAGED",
+                "nodeType": "EnumValue",
+                "src": "417:7:1"
+              },
+              {
+                "id": 139,
+                "name": "OPAQUE",
+                "nodeType": "EnumValue",
+                "src": "478:6:1"
+              }
+            ],
+            "name": "GrantType",
+            "nodeType": "EnumDefinition",
+            "src": "270:255:1"
+          },
+          {
+            "canonicalName": "IGrant.GrantStatus",
+            "id": 146,
+            "members": [
+              {
+                "id": 141,
+                "name": "SIGNAL",
+                "nodeType": "EnumValue",
+                "src": "558:6:1"
+              },
+              {
+                "id": 142,
+                "name": "FUND",
+                "nodeType": "EnumValue",
+                "src": "603:4:1"
+              },
+              {
+                "id": 143,
+                "name": "PAY",
+                "nodeType": "EnumValue",
+                "src": "643:3:1"
+              },
+              {
+                "id": 144,
+                "name": "REFUND",
+                "nodeType": "EnumValue",
+                "src": "678:6:1"
+              },
+              {
+                "id": 145,
+                "name": "COMPLETE",
+                "nodeType": "EnumValue",
+                "src": "726:8:1"
+              }
+            ],
+            "name": "GrantStatus",
+            "nodeType": "EnumDefinition",
+            "src": "531:228:1"
+          },
+          {
+            "canonicalName": "IGrant.Grantee",
+            "id": 153,
+            "members": [
+              {
+                "constant": false,
+                "id": 148,
+                "name": "grantee",
+                "nodeType": "VariableDeclaration",
+                "scope": 153,
+                "src": "790:15:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 147,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "790:7:1",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 150,
+                "name": "allocation",
+                "nodeType": "VariableDeclaration",
+                "scope": 153,
+                "src": "841:18:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 149,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "841:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 152,
+                "name": "received",
+                "nodeType": "VariableDeclaration",
+                "scope": 153,
+                "src": "900:16:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 151,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "900:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Grantee",
+            "nodeType": "StructDefinition",
+            "scope": 288,
+            "src": "765:193:1",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "IGrant.Grantor",
+            "id": 160,
+            "members": [
+              {
+                "constant": false,
+                "id": 155,
+                "name": "grantor",
+                "nodeType": "VariableDeclaration",
+                "scope": 160,
+                "src": "989:15:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 154,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "989:7:1",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 157,
+                "name": "funded",
+                "nodeType": "VariableDeclaration",
+                "scope": 160,
+                "src": "1038:14:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 156,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1038:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 159,
+                "name": "refunded",
+                "nodeType": "VariableDeclaration",
+                "scope": 160,
+                "src": "1088:16:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 158,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1088:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Grantor",
+            "nodeType": "StructDefinition",
+            "scope": 288,
+            "src": "964:178:1",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "IGrant.GrantManager",
+            "id": 165,
+            "members": [
+              {
+                "constant": false,
+                "id": 162,
+                "name": "grantManager",
+                "nodeType": "VariableDeclaration",
+                "scope": 165,
+                "src": "1178:20:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 161,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1178:7:1",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 164,
+                "name": "weight",
+                "nodeType": "VariableDeclaration",
+                "scope": 165,
+                "src": "1237:12:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint8",
+                  "typeString": "uint8"
+                },
+                "typeName": {
+                  "id": 163,
+                  "name": "uint8",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1237:5:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "GrantManager",
+            "nodeType": "StructDefinition",
+            "scope": 288,
+            "src": "1148:135:1",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "IGrant.Grant",
+            "id": 191,
+            "members": [
+              {
+                "constant": false,
+                "id": 168,
+                "name": "grantees",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1312:18:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_struct$_Grantee_$153_storage_$dyn_storage_ptr",
+                  "typeString": "struct IGrant.Grantee[]"
+                },
+                "typeName": {
+                  "baseType": {
+                    "contractScope": null,
+                    "id": 166,
+                    "name": "Grantee",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 153,
+                    "src": "1312:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Grantee_$153_storage_ptr",
+                      "typeString": "struct IGrant.Grantee"
+                    }
+                  },
+                  "id": 167,
+                  "length": null,
+                  "nodeType": "ArrayTypeName",
+                  "src": "1312:9:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_Grantee_$153_storage_$dyn_storage_ptr",
+                    "typeString": "struct IGrant.Grantee[]"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 171,
+                "name": "grantors",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1371:18:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_struct$_Grantor_$160_storage_$dyn_storage_ptr",
+                  "typeString": "struct IGrant.Grantor[]"
+                },
+                "typeName": {
+                  "baseType": {
+                    "contractScope": null,
+                    "id": 169,
+                    "name": "Grantor",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 160,
+                    "src": "1371:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Grantor_$160_storage_ptr",
+                      "typeString": "struct IGrant.Grantor"
+                    }
+                  },
+                  "id": 170,
+                  "length": null,
+                  "nodeType": "ArrayTypeName",
+                  "src": "1371:9:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_Grantor_$160_storage_$dyn_storage_ptr",
+                    "typeString": "struct IGrant.Grantor[]"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 174,
+                "name": "grantManagers",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1434:28:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_struct$_GrantManager_$165_storage_$dyn_storage_ptr",
+                  "typeString": "struct IGrant.GrantManager[]"
+                },
+                "typeName": {
+                  "baseType": {
+                    "contractScope": null,
+                    "id": 172,
+                    "name": "GrantManager",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 165,
+                    "src": "1434:12:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_GrantManager_$165_storage_ptr",
+                      "typeString": "struct IGrant.GrantManager"
+                    }
+                  },
+                  "id": 173,
+                  "length": null,
+                  "nodeType": "ArrayTypeName",
+                  "src": "1434:14:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_GrantManager_$165_storage_$dyn_storage_ptr",
+                    "typeString": "struct IGrant.GrantManager[]"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 176,
+                "name": "currency",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1531:16:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 175,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1531:7:1",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 178,
+                "name": "targetFunding",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1657:21:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 177,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1657:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 180,
+                "name": "totalFunded",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1754:19:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 179,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1754:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 182,
+                "name": "totalPayed",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1839:18:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 181,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1839:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 184,
+                "name": "expiration",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1918:18:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 183,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1918:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 186,
+                "name": "grantType",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "2051:19:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_enum$_GrantType_$140",
+                  "typeString": "enum IGrant.GrantType"
+                },
+                "typeName": {
+                  "contractScope": null,
+                  "id": 185,
+                  "name": "GrantType",
+                  "nodeType": "UserDefinedTypeName",
+                  "referencedDeclaration": 140,
+                  "src": "2051:9:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_GrantType_$140",
+                    "typeString": "enum IGrant.GrantType"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 188,
+                "name": "grantStatus",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "2143:23:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_enum$_GrantStatus_$146",
+                  "typeString": "enum IGrant.GrantStatus"
+                },
+                "typeName": {
+                  "contractScope": null,
+                  "id": 187,
+                  "name": "GrantStatus",
+                  "nodeType": "UserDefinedTypeName",
+                  "referencedDeclaration": 146,
+                  "src": "2143:11:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_GrantStatus_$146",
+                    "typeString": "enum IGrant.GrantStatus"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 190,
+                "name": "extraData",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "2205:15:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes_storage_ptr",
+                  "typeString": "bytes"
+                },
+                "typeName": {
+                  "id": 189,
+                  "name": "bytes",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2205:5:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_storage_ptr",
+                    "typeString": "bytes"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Grant",
+            "nodeType": "StructDefinition",
+            "scope": 288,
+            "src": "1289:994:1",
+            "visibility": "public"
+          },
+          {
+            "anonymous": false,
+            "documentation": "@dev Change in GrantStatus.\n@param id Which Grant's status changed.\n@param grantStatus New GrantStatus.",
+            "id": 197,
+            "name": "LogStatusChange",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 196,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 193,
+                  "indexed": true,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 197,
+                  "src": "2493:18:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 192,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2493:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 195,
+                  "indexed": false,
+                  "name": "grantStatus",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 197,
+                  "src": "2513:23:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_GrantStatus_$146",
+                    "typeString": "enum IGrant.GrantStatus"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 194,
+                    "name": "GrantStatus",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 146,
+                    "src": "2513:11:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_enum$_GrantStatus_$146",
+                      "typeString": "enum IGrant.GrantStatus"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2492:45:1"
+            },
+            "src": "2471:67:1"
+          },
+          {
+            "anonymous": false,
+            "documentation": "@dev Grant received funding.\n@param id Which Grant received funding.\n@param grantor Address funding the grant.\n@param value Amount in WEI or GRAINS funded.",
+            "id": 205,
+            "name": "LogFunding",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 204,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 199,
+                  "indexed": true,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 205,
+                  "src": "2761:18:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 198,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2761:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 201,
+                  "indexed": true,
+                  "name": "grantor",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 205,
+                  "src": "2781:23:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 200,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2781:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 203,
+                  "indexed": false,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 205,
+                  "src": "2806:13:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 202,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2806:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2760:60:1"
+            },
+            "src": "2744:77:1"
+          },
+          {
+            "anonymous": false,
+            "documentation": "@dev Grant refunding funding.\n@param id Which grant refunding.\n@param grantor Address receiving refund.\n@param value Amount in WEI or GRAINS refunded.",
+            "id": 213,
+            "name": "LogRefund",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 212,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 207,
+                  "indexed": true,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 213,
+                  "src": "3038:18:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 206,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3038:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 209,
+                  "indexed": true,
+                  "name": "grantor",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 213,
+                  "src": "3058:23:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 208,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3058:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 211,
+                  "indexed": false,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 213,
+                  "src": "3083:13:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 210,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3083:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3037:60:1"
+            },
+            "src": "3022:76:1"
+          },
+          {
+            "anonymous": false,
+            "documentation": "@dev Grant paying grantee.\n@param id Which grant making payment.\n@param grantee Address receiving payment.\n@param value Amount in WEI or GRAINS refunded.",
+            "id": 221,
+            "name": "LogPayment",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 220,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 215,
+                  "indexed": true,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 221,
+                  "src": "3319:18:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 214,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3319:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 217,
+                  "indexed": true,
+                  "name": "grantee",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 221,
+                  "src": "3339:23:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 216,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3339:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 219,
+                  "indexed": false,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 221,
+                  "src": "3364:13:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 218,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3364:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3318:60:1"
+            },
+            "src": "3302:77:1"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Grant creation function. May be called by grantors, grantees, or any other relevant party.\n@param grantees Recipients of unlocked funds and their respective allocations.\n@param grantManagers (Optional) Weighted managers of distribution of funds.\n@param currency (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.\n@param targetFunding (Optional) Funding threshold required to release funds.\n@param expiration (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.\n@param grantType Which grant success scheme to apply to this grant.\n@param extraData Support for extensions to the Standard.\n@return GUID for this grant.",
+            "id": 242,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "create",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 238,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 224,
+                  "name": "grantees",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4223:27:1",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_Grantee_$153_calldata_$dyn_calldata_ptr",
+                    "typeString": "struct IGrant.Grantee[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "contractScope": null,
+                      "id": 222,
+                      "name": "Grantee",
+                      "nodeType": "UserDefinedTypeName",
+                      "referencedDeclaration": 153,
+                      "src": "4223:7:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Grantee_$153_storage_ptr",
+                        "typeString": "struct IGrant.Grantee"
+                      }
+                    },
+                    "id": 223,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "4223:9:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_Grantee_$153_storage_$dyn_storage_ptr",
+                      "typeString": "struct IGrant.Grantee[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 227,
+                  "name": "grantManagers",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4260:37:1",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_GrantManager_$165_calldata_$dyn_calldata_ptr",
+                    "typeString": "struct IGrant.GrantManager[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "contractScope": null,
+                      "id": 225,
+                      "name": "GrantManager",
+                      "nodeType": "UserDefinedTypeName",
+                      "referencedDeclaration": 165,
+                      "src": "4260:12:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_GrantManager_$165_storage_ptr",
+                        "typeString": "struct IGrant.GrantManager"
+                      }
+                    },
+                    "id": 226,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "4260:14:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_GrantManager_$165_storage_$dyn_storage_ptr",
+                      "typeString": "struct IGrant.GrantManager[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 229,
+                  "name": "currency",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4307:16:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 228,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4307:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 231,
+                  "name": "targetFunding",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4333:21:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 230,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4333:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 233,
+                  "name": "expiration",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4364:18:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 232,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4364:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 235,
+                  "name": "grantType",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4392:19:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_GrantType_$140",
+                    "typeString": "enum IGrant.GrantType"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 234,
+                    "name": "GrantType",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 140,
+                    "src": "4392:9:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_enum$_GrantType_$140",
+                      "typeString": "enum IGrant.GrantType"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 237,
+                  "name": "extraData",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4421:24:1",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_calldata_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 236,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4421:5:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4213:238:1"
+            },
+            "returnParameters": {
+              "id": 241,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 240,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4486:10:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 239,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4486:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4485:12:1"
+            },
+            "scope": 288,
+            "src": "4198:300:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Fund a grant proposal.\n@param id GUID for the grant to fund.\n@param value Amount in WEI or GRAINS to fund.\n@return Cumulative funding received for this grant.",
+            "id": 251,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "fund",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 247,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 244,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 251,
+                  "src": "4727:10:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 243,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4727:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 246,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 251,
+                  "src": "4739:13:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 245,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4739:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4726:27:1"
+            },
+            "returnParameters": {
+              "id": 250,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 249,
+                  "name": "balance",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 251,
+                  "src": "4804:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 248,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4804:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4803:17:1"
+            },
+            "scope": 288,
+            "src": "4713:108:1",
+            "stateMutability": "payable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Pay a grantee.\n@param id GUID for the grant to fund.\n@param grantee Recipient of payment.\n@param value Amount in WEI or GRAINS to fund.\n@return Remaining funding available in this grant.",
+            "id": 262,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "payout",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 258,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 253,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 262,
+                  "src": "5086:10:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 252,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5086:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 255,
+                  "name": "grantee",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 262,
+                  "src": "5098:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 254,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5098:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 257,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 262,
+                  "src": "5115:13:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 256,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5115:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5085:44:1"
+            },
+            "returnParameters": {
+              "id": 261,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 260,
+                  "name": "balance",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 262,
+                  "src": "5164:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 259,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5164:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5163:17:1"
+            },
+            "scope": 288,
+            "src": "5070:111:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Refund a grantor.\n@param id GUID for the grant to refund.\n@param grantor Recipient of refund.\n@param value Amount in WEI or GRAINS to fund.\n@return True if successful, otherwise false.",
+            "id": 273,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "refund",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 269,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 264,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 273,
+                  "src": "5444:10:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 263,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5444:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 266,
+                  "name": "grantor",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 273,
+                  "src": "5456:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 265,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5456:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 268,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 273,
+                  "src": "5473:13:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 267,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5473:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5443:44:1"
+            },
+            "returnParameters": {
+              "id": 272,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 271,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 273,
+                  "src": "5522:4:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 270,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5522:4:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5521:6:1"
+            },
+            "scope": 288,
+            "src": "5428:100:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Refund all grantors.\n@param id GUID for the grant to refund.\n@return True if successful, otherwise false.",
+            "id": 280,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "refundAll",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 276,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 275,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 280,
+                  "src": "5701:10:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 274,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5701:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5700:12:1"
+            },
+            "returnParameters": {
+              "id": 279,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 278,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 280,
+                  "src": "5747:4:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 277,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5747:4:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5746:6:1"
+            },
+            "scope": 288,
+            "src": "5682:71:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Cancel grant and enable refunds.\n@param id GUID for the grant to refund.\n@return True if successful, otherwise false.",
+            "id": 287,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "cancelGrant",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 283,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 282,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 287,
+                  "src": "5940:10:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 281,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5940:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5939:12:1"
+            },
+            "returnParameters": {
+              "id": 286,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 285,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 287,
+                  "src": "5986:4:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 284,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5986:4:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5985:6:1"
+            },
+            "scope": 288,
+            "src": "5919:73:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 289,
+        "src": "207:5787:1"
+      }
+    ],
+    "src": "0:5995:1"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/noahmarconi/dev/grant-contracts/contracts/IGrant.sol",
+    "exportedSymbols": {
+      "IGrant": [
+        288
+      ]
+    },
+    "id": 289,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 134,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.5",
+          ".10",
+          "<",
+          "0.6",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:32:1"
+      },
+      {
+        "id": 135,
+        "literals": [
+          "experimental",
+          "ABIEncoderV2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:33:1"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": "@title Grants Spec Interface.\n@dev Grant request, funding, and management.\n@author @NoahMarconi @JFickel @ArnaudBrousseau",
+        "fullyImplemented": false,
+        "id": 288,
+        "linearizedBaseContracts": [
+          288
+        ],
+        "name": "IGrant",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "IGrant.GrantType",
+            "id": 140,
+            "members": [
+              {
+                "id": 136,
+                "name": "FUND_THRESHOLD",
+                "nodeType": "EnumValue",
+                "src": "295:14:1"
+              },
+              {
+                "id": 137,
+                "name": "FUNDER_VOTE",
+                "nodeType": "EnumValue",
+                "src": "355:11:1"
+              },
+              {
+                "id": 138,
+                "name": "MANAGED",
+                "nodeType": "EnumValue",
+                "src": "417:7:1"
+              },
+              {
+                "id": 139,
+                "name": "OPAQUE",
+                "nodeType": "EnumValue",
+                "src": "478:6:1"
+              }
+            ],
+            "name": "GrantType",
+            "nodeType": "EnumDefinition",
+            "src": "270:255:1"
+          },
+          {
+            "canonicalName": "IGrant.GrantStatus",
+            "id": 146,
+            "members": [
+              {
+                "id": 141,
+                "name": "SIGNAL",
+                "nodeType": "EnumValue",
+                "src": "558:6:1"
+              },
+              {
+                "id": 142,
+                "name": "FUND",
+                "nodeType": "EnumValue",
+                "src": "603:4:1"
+              },
+              {
+                "id": 143,
+                "name": "PAY",
+                "nodeType": "EnumValue",
+                "src": "643:3:1"
+              },
+              {
+                "id": 144,
+                "name": "REFUND",
+                "nodeType": "EnumValue",
+                "src": "678:6:1"
+              },
+              {
+                "id": 145,
+                "name": "COMPLETE",
+                "nodeType": "EnumValue",
+                "src": "726:8:1"
+              }
+            ],
+            "name": "GrantStatus",
+            "nodeType": "EnumDefinition",
+            "src": "531:228:1"
+          },
+          {
+            "canonicalName": "IGrant.Grantee",
+            "id": 153,
+            "members": [
+              {
+                "constant": false,
+                "id": 148,
+                "name": "grantee",
+                "nodeType": "VariableDeclaration",
+                "scope": 153,
+                "src": "790:15:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 147,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "790:7:1",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 150,
+                "name": "allocation",
+                "nodeType": "VariableDeclaration",
+                "scope": 153,
+                "src": "841:18:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 149,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "841:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 152,
+                "name": "received",
+                "nodeType": "VariableDeclaration",
+                "scope": 153,
+                "src": "900:16:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 151,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "900:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Grantee",
+            "nodeType": "StructDefinition",
+            "scope": 288,
+            "src": "765:193:1",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "IGrant.Grantor",
+            "id": 160,
+            "members": [
+              {
+                "constant": false,
+                "id": 155,
+                "name": "grantor",
+                "nodeType": "VariableDeclaration",
+                "scope": 160,
+                "src": "989:15:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 154,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "989:7:1",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 157,
+                "name": "funded",
+                "nodeType": "VariableDeclaration",
+                "scope": 160,
+                "src": "1038:14:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 156,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1038:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 159,
+                "name": "refunded",
+                "nodeType": "VariableDeclaration",
+                "scope": 160,
+                "src": "1088:16:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 158,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1088:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Grantor",
+            "nodeType": "StructDefinition",
+            "scope": 288,
+            "src": "964:178:1",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "IGrant.GrantManager",
+            "id": 165,
+            "members": [
+              {
+                "constant": false,
+                "id": 162,
+                "name": "grantManager",
+                "nodeType": "VariableDeclaration",
+                "scope": 165,
+                "src": "1178:20:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 161,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1178:7:1",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 164,
+                "name": "weight",
+                "nodeType": "VariableDeclaration",
+                "scope": 165,
+                "src": "1237:12:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint8",
+                  "typeString": "uint8"
+                },
+                "typeName": {
+                  "id": 163,
+                  "name": "uint8",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1237:5:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "GrantManager",
+            "nodeType": "StructDefinition",
+            "scope": 288,
+            "src": "1148:135:1",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "IGrant.Grant",
+            "id": 191,
+            "members": [
+              {
+                "constant": false,
+                "id": 168,
+                "name": "grantees",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1312:18:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_struct$_Grantee_$153_storage_$dyn_storage_ptr",
+                  "typeString": "struct IGrant.Grantee[]"
+                },
+                "typeName": {
+                  "baseType": {
+                    "contractScope": null,
+                    "id": 166,
+                    "name": "Grantee",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 153,
+                    "src": "1312:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Grantee_$153_storage_ptr",
+                      "typeString": "struct IGrant.Grantee"
+                    }
+                  },
+                  "id": 167,
+                  "length": null,
+                  "nodeType": "ArrayTypeName",
+                  "src": "1312:9:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_Grantee_$153_storage_$dyn_storage_ptr",
+                    "typeString": "struct IGrant.Grantee[]"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 171,
+                "name": "grantors",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1371:18:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_struct$_Grantor_$160_storage_$dyn_storage_ptr",
+                  "typeString": "struct IGrant.Grantor[]"
+                },
+                "typeName": {
+                  "baseType": {
+                    "contractScope": null,
+                    "id": 169,
+                    "name": "Grantor",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 160,
+                    "src": "1371:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Grantor_$160_storage_ptr",
+                      "typeString": "struct IGrant.Grantor"
+                    }
+                  },
+                  "id": 170,
+                  "length": null,
+                  "nodeType": "ArrayTypeName",
+                  "src": "1371:9:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_Grantor_$160_storage_$dyn_storage_ptr",
+                    "typeString": "struct IGrant.Grantor[]"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 174,
+                "name": "grantManagers",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1434:28:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_struct$_GrantManager_$165_storage_$dyn_storage_ptr",
+                  "typeString": "struct IGrant.GrantManager[]"
+                },
+                "typeName": {
+                  "baseType": {
+                    "contractScope": null,
+                    "id": 172,
+                    "name": "GrantManager",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 165,
+                    "src": "1434:12:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_GrantManager_$165_storage_ptr",
+                      "typeString": "struct IGrant.GrantManager"
+                    }
+                  },
+                  "id": 173,
+                  "length": null,
+                  "nodeType": "ArrayTypeName",
+                  "src": "1434:14:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_GrantManager_$165_storage_$dyn_storage_ptr",
+                    "typeString": "struct IGrant.GrantManager[]"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 176,
+                "name": "currency",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1531:16:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 175,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1531:7:1",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 178,
+                "name": "targetFunding",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1657:21:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 177,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1657:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 180,
+                "name": "totalFunded",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1754:19:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 179,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1754:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 182,
+                "name": "totalPayed",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1839:18:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 181,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1839:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 184,
+                "name": "expiration",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "1918:18:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 183,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1918:7:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 186,
+                "name": "grantType",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "2051:19:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_enum$_GrantType_$140",
+                  "typeString": "enum IGrant.GrantType"
+                },
+                "typeName": {
+                  "contractScope": null,
+                  "id": 185,
+                  "name": "GrantType",
+                  "nodeType": "UserDefinedTypeName",
+                  "referencedDeclaration": 140,
+                  "src": "2051:9:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_GrantType_$140",
+                    "typeString": "enum IGrant.GrantType"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 188,
+                "name": "grantStatus",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "2143:23:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_enum$_GrantStatus_$146",
+                  "typeString": "enum IGrant.GrantStatus"
+                },
+                "typeName": {
+                  "contractScope": null,
+                  "id": 187,
+                  "name": "GrantStatus",
+                  "nodeType": "UserDefinedTypeName",
+                  "referencedDeclaration": 146,
+                  "src": "2143:11:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_GrantStatus_$146",
+                    "typeString": "enum IGrant.GrantStatus"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 190,
+                "name": "extraData",
+                "nodeType": "VariableDeclaration",
+                "scope": 191,
+                "src": "2205:15:1",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes_storage_ptr",
+                  "typeString": "bytes"
+                },
+                "typeName": {
+                  "id": 189,
+                  "name": "bytes",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2205:5:1",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_storage_ptr",
+                    "typeString": "bytes"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Grant",
+            "nodeType": "StructDefinition",
+            "scope": 288,
+            "src": "1289:994:1",
+            "visibility": "public"
+          },
+          {
+            "anonymous": false,
+            "documentation": "@dev Change in GrantStatus.\n@param id Which Grant's status changed.\n@param grantStatus New GrantStatus.",
+            "id": 197,
+            "name": "LogStatusChange",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 196,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 193,
+                  "indexed": true,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 197,
+                  "src": "2493:18:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 192,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2493:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 195,
+                  "indexed": false,
+                  "name": "grantStatus",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 197,
+                  "src": "2513:23:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_GrantStatus_$146",
+                    "typeString": "enum IGrant.GrantStatus"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 194,
+                    "name": "GrantStatus",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 146,
+                    "src": "2513:11:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_enum$_GrantStatus_$146",
+                      "typeString": "enum IGrant.GrantStatus"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2492:45:1"
+            },
+            "src": "2471:67:1"
+          },
+          {
+            "anonymous": false,
+            "documentation": "@dev Grant received funding.\n@param id Which Grant received funding.\n@param grantor Address funding the grant.\n@param value Amount in WEI or GRAINS funded.",
+            "id": 205,
+            "name": "LogFunding",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 204,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 199,
+                  "indexed": true,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 205,
+                  "src": "2761:18:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 198,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2761:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 201,
+                  "indexed": true,
+                  "name": "grantor",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 205,
+                  "src": "2781:23:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 200,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2781:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 203,
+                  "indexed": false,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 205,
+                  "src": "2806:13:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 202,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2806:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2760:60:1"
+            },
+            "src": "2744:77:1"
+          },
+          {
+            "anonymous": false,
+            "documentation": "@dev Grant refunding funding.\n@param id Which grant refunding.\n@param grantor Address receiving refund.\n@param value Amount in WEI or GRAINS refunded.",
+            "id": 213,
+            "name": "LogRefund",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 212,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 207,
+                  "indexed": true,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 213,
+                  "src": "3038:18:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 206,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3038:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 209,
+                  "indexed": true,
+                  "name": "grantor",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 213,
+                  "src": "3058:23:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 208,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3058:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 211,
+                  "indexed": false,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 213,
+                  "src": "3083:13:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 210,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3083:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3037:60:1"
+            },
+            "src": "3022:76:1"
+          },
+          {
+            "anonymous": false,
+            "documentation": "@dev Grant paying grantee.\n@param id Which grant making payment.\n@param grantee Address receiving payment.\n@param value Amount in WEI or GRAINS refunded.",
+            "id": 221,
+            "name": "LogPayment",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 220,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 215,
+                  "indexed": true,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 221,
+                  "src": "3319:18:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 214,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3319:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 217,
+                  "indexed": true,
+                  "name": "grantee",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 221,
+                  "src": "3339:23:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 216,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3339:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 219,
+                  "indexed": false,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 221,
+                  "src": "3364:13:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 218,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3364:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3318:60:1"
+            },
+            "src": "3302:77:1"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Grant creation function. May be called by grantors, grantees, or any other relevant party.\n@param grantees Recipients of unlocked funds and their respective allocations.\n@param grantManagers (Optional) Weighted managers of distribution of funds.\n@param currency (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.\n@param targetFunding (Optional) Funding threshold required to release funds.\n@param expiration (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.\n@param grantType Which grant success scheme to apply to this grant.\n@param extraData Support for extensions to the Standard.\n@return GUID for this grant.",
+            "id": 242,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "create",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 238,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 224,
+                  "name": "grantees",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4223:27:1",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_Grantee_$153_calldata_$dyn_calldata_ptr",
+                    "typeString": "struct IGrant.Grantee[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "contractScope": null,
+                      "id": 222,
+                      "name": "Grantee",
+                      "nodeType": "UserDefinedTypeName",
+                      "referencedDeclaration": 153,
+                      "src": "4223:7:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Grantee_$153_storage_ptr",
+                        "typeString": "struct IGrant.Grantee"
+                      }
+                    },
+                    "id": 223,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "4223:9:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_Grantee_$153_storage_$dyn_storage_ptr",
+                      "typeString": "struct IGrant.Grantee[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 227,
+                  "name": "grantManagers",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4260:37:1",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_GrantManager_$165_calldata_$dyn_calldata_ptr",
+                    "typeString": "struct IGrant.GrantManager[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "contractScope": null,
+                      "id": 225,
+                      "name": "GrantManager",
+                      "nodeType": "UserDefinedTypeName",
+                      "referencedDeclaration": 165,
+                      "src": "4260:12:1",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_GrantManager_$165_storage_ptr",
+                        "typeString": "struct IGrant.GrantManager"
+                      }
+                    },
+                    "id": 226,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "4260:14:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_GrantManager_$165_storage_$dyn_storage_ptr",
+                      "typeString": "struct IGrant.GrantManager[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 229,
+                  "name": "currency",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4307:16:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 228,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4307:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 231,
+                  "name": "targetFunding",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4333:21:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 230,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4333:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 233,
+                  "name": "expiration",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4364:18:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 232,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4364:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 235,
+                  "name": "grantType",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4392:19:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_GrantType_$140",
+                    "typeString": "enum IGrant.GrantType"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 234,
+                    "name": "GrantType",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 140,
+                    "src": "4392:9:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_enum$_GrantType_$140",
+                      "typeString": "enum IGrant.GrantType"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 237,
+                  "name": "extraData",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4421:24:1",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_calldata_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 236,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4421:5:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4213:238:1"
+            },
+            "returnParameters": {
+              "id": 241,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 240,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 242,
+                  "src": "4486:10:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 239,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4486:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4485:12:1"
+            },
+            "scope": 288,
+            "src": "4198:300:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Fund a grant proposal.\n@param id GUID for the grant to fund.\n@param value Amount in WEI or GRAINS to fund.\n@return Cumulative funding received for this grant.",
+            "id": 251,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "fund",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 247,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 244,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 251,
+                  "src": "4727:10:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 243,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4727:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 246,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 251,
+                  "src": "4739:13:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 245,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4739:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4726:27:1"
+            },
+            "returnParameters": {
+              "id": 250,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 249,
+                  "name": "balance",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 251,
+                  "src": "4804:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 248,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4804:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4803:17:1"
+            },
+            "scope": 288,
+            "src": "4713:108:1",
+            "stateMutability": "payable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Pay a grantee.\n@param id GUID for the grant to fund.\n@param grantee Recipient of payment.\n@param value Amount in WEI or GRAINS to fund.\n@return Remaining funding available in this grant.",
+            "id": 262,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "payout",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 258,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 253,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 262,
+                  "src": "5086:10:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 252,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5086:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 255,
+                  "name": "grantee",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 262,
+                  "src": "5098:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 254,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5098:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 257,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 262,
+                  "src": "5115:13:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 256,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5115:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5085:44:1"
+            },
+            "returnParameters": {
+              "id": 261,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 260,
+                  "name": "balance",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 262,
+                  "src": "5164:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 259,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5164:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5163:17:1"
+            },
+            "scope": 288,
+            "src": "5070:111:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Refund a grantor.\n@param id GUID for the grant to refund.\n@param grantor Recipient of refund.\n@param value Amount in WEI or GRAINS to fund.\n@return True if successful, otherwise false.",
+            "id": 273,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "refund",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 269,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 264,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 273,
+                  "src": "5444:10:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 263,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5444:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 266,
+                  "name": "grantor",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 273,
+                  "src": "5456:15:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 265,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5456:7:1",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 268,
+                  "name": "value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 273,
+                  "src": "5473:13:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 267,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5473:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5443:44:1"
+            },
+            "returnParameters": {
+              "id": 272,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 271,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 273,
+                  "src": "5522:4:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 270,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5522:4:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5521:6:1"
+            },
+            "scope": 288,
+            "src": "5428:100:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Refund all grantors.\n@param id GUID for the grant to refund.\n@return True if successful, otherwise false.",
+            "id": 280,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "refundAll",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 276,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 275,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 280,
+                  "src": "5701:10:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 274,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5701:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5700:12:1"
+            },
+            "returnParameters": {
+              "id": 279,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 278,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 280,
+                  "src": "5747:4:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 277,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5747:4:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5746:6:1"
+            },
+            "scope": 288,
+            "src": "5682:71:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Cancel grant and enable refunds.\n@param id GUID for the grant to refund.\n@return True if successful, otherwise false.",
+            "id": 287,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "cancelGrant",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 283,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 282,
+                  "name": "id",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 287,
+                  "src": "5940:10:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 281,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5940:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5939:12:1"
+            },
+            "returnParameters": {
+              "id": 286,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 285,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 287,
+                  "src": "5986:4:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 284,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5986:4:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5985:6:1"
+            },
+            "scope": 288,
+            "src": "5919:73:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 289,
+        "src": "207:5787:1"
+      }
+    ],
+    "src": "0:5995:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.10+commit.5a6ea5b1.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.5",
+  "updatedAt": "2019-07-17T20:05:34.958Z",
+  "devdoc": {
+    "author": "@NoahMarconi @JFickel @ArnaudBrousseau",
+    "details": "Grant request, funding, and management.",
+    "methods": {
+      "cancelGrant(bytes32)": {
+        "details": "Cancel grant and enable refunds.",
+        "params": {
+          "id": "GUID for the grant to refund."
+        },
+        "return": "True if successful, otherwise false."
+      },
+      "create((address,uint256,uint256)[],(address,uint8)[],address,uint256,uint256,uint8,bytes)": {
+        "details": "Grant creation function. May be called by grantors, grantees, or any other relevant party.",
+        "params": {
+          "currency": "(Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.",
+          "expiration": "(Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.",
+          "extraData": "Support for extensions to the Standard.",
+          "grantManagers": "(Optional) Weighted managers of distribution of funds.",
+          "grantType": "Which grant success scheme to apply to this grant.",
+          "grantees": "Recipients of unlocked funds and their respective allocations.",
+          "targetFunding": "(Optional) Funding threshold required to release funds."
+        },
+        "return": "GUID for this grant."
+      },
+      "fund(bytes32,uint256)": {
+        "details": "Fund a grant proposal.",
+        "params": {
+          "id": "GUID for the grant to fund.",
+          "value": "Amount in WEI or GRAINS to fund."
+        },
+        "return": "Cumulative funding received for this grant."
+      },
+      "payout(bytes32,address,uint256)": {
+        "details": "Pay a grantee.",
+        "params": {
+          "grantee": "Recipient of payment.",
+          "id": "GUID for the grant to fund.",
+          "value": "Amount in WEI or GRAINS to fund."
+        },
+        "return": "Remaining funding available in this grant."
+      },
+      "refund(bytes32,address,uint256)": {
+        "details": "Refund a grantor.",
+        "params": {
+          "grantor": "Recipient of refund.",
+          "id": "GUID for the grant to refund.",
+          "value": "Amount in WEI or GRAINS to fund."
+        },
+        "return": "True if successful, otherwise false."
+      },
+      "refundAll(bytes32)": {
+        "details": "Refund all grantors.",
+        "params": {
+          "id": "GUID for the grant to refund."
+        },
+        "return": "True if successful, otherwise false."
+      }
+    },
+    "title": "Grants Spec Interface."
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}
