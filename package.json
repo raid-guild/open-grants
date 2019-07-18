@@ -4,7 +4,7 @@
   "description": "Ethereum Smart Contracts to encode grants",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/ethereum-waffle/bin/waffle waffle.js && ./node_modules/ts-mocha/bin/ts-mocha test/*"
   },
   "repository": {
     "type": "git",
@@ -29,5 +29,13 @@
     "openzeppelin-solidity": "^2.3.0",
     "solc": "^0.5.10",
     "truffle": "^5.0.22"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
+    "chai": "^4.2.0",
+    "ethereum-waffle": "^2.0.14",
+    "ts-mocha": "^6.0.0",
+    "typescript": "^3.5.3"
   }
 }

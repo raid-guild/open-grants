@@ -51,7 +51,55 @@ contract Grant is IGrant, ISignal {
             blockhash(block.number.sub(1))
         ));
 
+        require(
+            grants[_id].grantStatus == GrantStatus.INIT,
+            "create::Status Error. Grant ID already in use."
+        );
+
+        require(
+            // solium-disable-next-line security/no-block-members
+            expiration == 0 || expiration > block.number,
+            "create::Invalid Argument. Expiration must be 0 or greater than current block."
+        );
+
+        require(
+            grantees.length > 0,
+            "create::Invalid Argument. Must have one or more grantees."
+        );
+
+        for (uint256 i = 0; i < grantees.length; i++) {
+            Grantee memory grantee = grantees[i];
+            grants[_id].grantees.push(grantee);
+        }
+
+        for (uint256 i = 0; i < grantees.length; i++) {
+            GrantManager memory grantManager = grantManagers[i];
+            grants[_id].grantManagers.push(grantManager);
+        }
+
+        grants[_id].currency = currency;
+        grants[_id].targetFunding = targetFunding;
+        grants[_id].expiration = expiration;
+        grants[_id].grantType = grantType;
+        grants[_id].grantStatus = GrantStatus.SIGNAL;
+        grants[_id].extraData = extraData;
+
+        emit LogStatusChange(_id, GrantStatus.SIGNAL);
+
         return _id;
+    }
+
+    /**
+     * @dev Grant Getter.
+     * @param id GUID for the grant to return.
+     * @return The Grant struct.
+     */
+    function getGrant(bytes32 id)
+        external
+        view
+        returns (Grant memory)
+    {
+        return grants[id];
     }
 
     /**

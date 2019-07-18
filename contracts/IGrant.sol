@@ -18,6 +18,7 @@ interface IGrant {
     }
 
     enum GrantStatus {
+        INIT,    // Null status.
         SIGNAL,  // Non-binding carbon vote.
         FUND,    // Fundraising period.
         PAY,     // Payout period.
@@ -90,6 +91,7 @@ interface IGrant {
      */
     event LogPayment(bytes32 indexed id, address indexed grantee, uint256 value);
 
+
     /*----------  Methods  ----------*/
 
     /**
@@ -114,7 +116,6 @@ interface IGrant {
     )
         external
         returns (bytes32 id);
-
 
     /**
      * @dev Fund a grant proposal.
