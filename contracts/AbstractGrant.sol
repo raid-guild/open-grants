@@ -2,11 +2,16 @@ pragma solidity >=0.5.10 <0.6.0;
 pragma experimental ABIEncoderV2;
 
 /**
- * @title Grants Spec Interface.
+ * @title Grants Spec Abstract Contract.
  * @dev Grant request, funding, and management.
  * @author @NoahMarconi @JFickel @ArnaudBrousseau
  */
-interface IGrant {
+contract AbstractGrant {
+
+    /*----------  Globals  ----------*/
+
+    mapping(bytes32 => Grant) internal grants; // Grants mapped by GUID.
+
 
     /*----------  Types  ----------*/
 
@@ -106,15 +111,15 @@ interface IGrant {
      * @return GUID for this grant.
      */
     function create(
-        Grantee[] calldata grantees,
-        GrantManager[] calldata grantManagers,
+        Grantee[] memory grantees,
+        GrantManager[] memory grantManagers,
         address currency,
         uint256 targetFunding,
         uint256 expiration,
         GrantType grantType,
-        bytes calldata extraData
+        bytes memory extraData
     )
-        external
+        public
         returns (bytes32 id);
 
     /**
@@ -124,7 +129,7 @@ interface IGrant {
      * @return Cumulative funding received for this grant.
      */
     function fund(bytes32 id, uint256 value)
-        external
+        public
         payable
         returns (uint256 balance);
 
@@ -136,7 +141,7 @@ interface IGrant {
      * @return Remaining funding available in this grant.
      */
     function payout(bytes32 id, address grantee, uint256 value)
-        external
+        public
         returns (uint256 balance);
 
     /**
@@ -147,7 +152,7 @@ interface IGrant {
      * @return True if successful, otherwise false.
      */
     function refund(bytes32 id, address grantor, uint256 value)
-        external
+        public
         returns (bool);
 
     /**
@@ -156,7 +161,7 @@ interface IGrant {
      * @return True if successful, otherwise false.
      */
     function refundAll(bytes32 id)
-        external
+        public
         returns (bool);
 
     /**
@@ -165,6 +170,6 @@ interface IGrant {
      * @return True if successful, otherwise false.
      */
     function cancelGrant(bytes32 id)
-        external
+        public
         returns (bool);
 }

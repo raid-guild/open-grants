@@ -8,22 +8,30 @@ pragma solidity >=0.5.10 <0.6.0;
 interface ISignal {
 
     /**
-     * @dev Log Event on receiving a vote.
-     * @param voter Address of voter.
-     * @param token Address of token or NULL for Ether based vote.
-     * @param value Number of votes denoted in Token GRAINs or WEI.
+     * @dev Log Event on receiving a signal.
+     * @param id The ID of the grant to signal in favor for.
+     * @param signaler Address of signaler.
+     * @param token Address of token or NULL for Ether based signal.
+     * @param value Number of signals denoted in Token GRAINs or WEI.
      */
-    event LogVote(address indexed voter, address indexed token, uint256 value);
+    event LogSignal(bytes32 indexed id, address indexed signaler, address indexed token, uint256 value);
 
     /**
      * @dev Voting Signal Method.
-     * @param id The ID of the grant to vote in favor for.
-     * @param token Address of token or NULL for Ether based vote.
-     * @param value Number of votes denoted in Token GRAINs or WEI.
+     * @param id The ID of the grant to signal in favor for.
+     * @param value Number of signals denoted in Token GRAINs or WEI.
      * @return True if successful, otherwise false.
      */
-    function signal(bytes32 id, address token, uint256 value)
+    function signal(bytes32 id, uint256 value)
         external
         payable
+        returns (bool);
+
+    /**
+     * @dev End signaling and move to next GrantStatus.
+     * @param id The ID of the grant to end signaling for.
+     */
+    function endSignaling(bytes32 id)
+        external
         returns (bool);
 }

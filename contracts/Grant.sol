@@ -2,7 +2,9 @@ pragma solidity >=0.5.10 <0.6.0;
 pragma experimental ABIEncoderV2;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./IGrant.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "./AbstractGrant.sol";
+import "./FundThreshold.sol";
 import "./ISignal.sol";
 
 
@@ -11,16 +13,36 @@ import "./ISignal.sol";
  * @dev Grant request, funding, and management.
  * @author @NoahMarconi @JFickel @ArnaudBrousseau
  */
-contract Grant is IGrant, ISignal {
+contract Grant is AbstractGrant, FundThreshold, ISignal {
     using SafeMath for uint256;
 
 
-    /*----------  Globals  ----------*/
+    /*----------  Modifiers  ----------*/
 
-    mapping(bytes32 => Grant) grants; // Grants mapped by GUID.
+    modifier isGrantee(bytes32 id) {
+        bool check;
+        Grantee[] memory grantees = grants[id].grantees;
+
+        for (uint256 i = 0; i < grantees.length; i++) {
+            if(grantees[i].grantee == msg.sender) {
+                // Flag.
+                check = true;
+
+                // Short circuit.
+                i = grantees.length;
+            }
+        }
+
+        require(
+            check,
+            "isGrantee::Invalid Sender. Sender is not a grantee for this grant."
+        );
+
+        _;
+    }
 
 
-    /*----------  Methods  ----------*/
+    /*----------  Public Methods  ----------*/
 
     /**
      * @dev Grant creation function. May be called by grantors, grantees, or any other relevant party.
@@ -34,17 +56,24 @@ contract Grant is IGrant, ISignal {
      * @return GUID for this grant.
      */
     function create(
-        Grantee[] calldata grantees,
-        GrantManager[] calldata grantManagers,
+        Grantee[] memory grantees,
+        GrantManager[] memory grantManagers,
         address currency,
         uint256 targetFunding,
         uint256 expiration,
         GrantType grantType,
-        bytes calldata extraData
+        bytes memory extraData
     )
-        external
+        public
         returns (bytes32 id)
     {
+        // GUID created by hashing sender address and previous block's hash.
+        // Provides a safe source of uniqueness as there is no benefit to
+        // manipulating keys (i.e. no reward for guessing RNG output).
+        //
+        // The one drawback of this approach is that the same address cannot
+        // create more than one grants in the same block (the second grant will
+        // fail due to the grant status not being GrantStatus.INIT).
         bytes32 _id = keccak256(abi.encodePacked(
             msg.sender,
             // solium-disable-next-line security/no-block-members
@@ -72,7 +101,7 @@ contract Grant is IGrant, ISignal {
             grants[_id].grantees.push(grantee);
         }
 
-        for (uint256 i = 0; i < grantees.length; i++) {
+        for (uint256 i = 0; i < grantManagers.length; i++) {
             GrantManager memory grantManager = grantManagers[i];
             grants[_id].grantManagers.push(grantManager);
         }
@@ -95,7 +124,7 @@ contract Grant is IGrant, ISignal {
      * @return The Grant struct.
      */
     function getGrant(bytes32 id)
-        external
+        public
         view
         returns (Grant memory)
     {
@@ -109,11 +138,45 @@ contract Grant is IGrant, ISignal {
      * @return Cumulative funding received for this grant.
      */
     function fund(bytes32 id, uint256 value)
-        external
+        public
         payable
         returns (uint256 balance)
     {
-        return value;
+        // Defer to correct funding method.
+        if(grants[id].currency == address(0)) {
+            require(
+                msg.value == value,
+                "fund::Invalid Argument. value must match msg.value."
+            );
+        } else {
+            require(
+                IERC20(grants[id].currency)
+                    .transferFrom(msg.sender, address(this), value),
+                "fund::Transfer Error. ERC20 token transferFrom failed."
+            );
+        }
+
+        // Record Contribution.
+        grants[id].grantors.push(Grantor({
+            grantor: msg.sender,
+            funded: value,
+            refunded: 0
+        }));
+
+        // Update funding tally.
+        balance = grants[id].totalFunded.add(value);
+        grants[id].totalFunded = balance;
+
+        // Log event.
+        emit LogFunding(id, msg.sender, value);
+
+        // May expand to handle variety of grantTypes.
+        uint256 result;
+        if (grants[id].grantType == GrantType.FUND_THRESHOLD) {
+           result = FundThreshold.fund(id, value);
+        }
+
+        return result;
     }
 
     /**
@@ -124,7 +187,7 @@ contract Grant is IGrant, ISignal {
      * @return Remaining funding available in this grant.
      */
     function payout(bytes32 id, address grantee, uint256 value)
-        external
+        public
         returns (uint256 balance)
     {
         return value;
@@ -138,7 +201,7 @@ contract Grant is IGrant, ISignal {
      * @return True if successful, otherwise false.
      */
     function refund(bytes32 id, address grantor, uint256 value)
-        external
+        public
         returns (bool)
     {
         return true;
@@ -150,7 +213,7 @@ contract Grant is IGrant, ISignal {
      * @return True if successful, otherwise false.
      */
     function refundAll(bytes32 id)
-        external
+        public
         returns (bool)
     {
         return true;
@@ -162,24 +225,77 @@ contract Grant is IGrant, ISignal {
      * @return True if successful, otherwise false.
      */
     function cancelGrant(bytes32 id)
-        external
+        public
         returns (bool)
     {
         return true;
     }
 
-        /**
+    /**
      * @dev Voting Signal Method.
-     * @param id The ID of the grant to vote in favor for.
-     * @param token Address of token or NULL for Ether based vote.
-     * @param value Number of votes denoted in Token GRAINs or WEI.
+     * @param id The ID of the grant to signal in favor for.
+     * @param value Number of signals denoted in Token GRAINs or WEI.
      * @return True if successful, otherwise false.
      */
-    function signal(bytes32 id, address token, uint256 value)
+    function signal(bytes32 id, uint256 value)
         external
         payable
         returns (bool)
     {
+        address token = grants[id].currency;
+
+        emit LogSignal(id, msg.sender, token, value);
+
+        // Prove signaler has control of tokens.
+        if (token == address(0)) {
+            require(
+                msg.value == value,
+                "signal::Invalid Argument. value must match msg.value."
+            );
+
+            require(
+                // solium-disable-next-line security/no-send
+                msg.sender.send(msg.value),
+                "signal::Transfer Error. Unable to send msg.value back to sender."
+            );
+        } else {
+            // Transfer to this contract.
+            require(
+                IERC20(token)
+                    .transferFrom(msg.sender, address(this), value),
+                "signal::Transfer Error. ERC20 token transferFrom failed."
+            );
+
+            // Transfer back to sender.
+            require(
+                IERC20(token)
+                    .transfer(msg.sender, value),
+                "signal::Transfer Error. ERC20 token transfer failed."
+            );
+        }
+
         return true;
     }
+
+    /**
+     * @dev End signaling and move to next GrantStatus.
+     * @param id The GUID of the grant to end signaling for.
+     */
+    function endSignaling(bytes32 id)
+        public
+        isGrantee(id)
+        returns (bool)
+    {
+        require(
+            grants[id].grantStatus == GrantStatus.SIGNAL,
+            "endSignaling::Status Error. Must be GrantStatus.SIGNAL to end signaling."
+        );
+
+        grants[id].grantStatus = GrantStatus.FUND;
+
+        emit LogStatusChange(id, GrantStatus.FUND);
+
+        return true;
+    }
+
 }

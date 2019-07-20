@@ -8,10 +8,6 @@
           "type": "bytes32"
         },
         {
-          "name": "token",
-          "type": "address"
-        },
-        {
           "name": "value",
           "type": "uint256"
         }
@@ -28,11 +24,35 @@
       "type": "function"
     },
     {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "name": "endSignaling",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "anonymous": false,
       "inputs": [
         {
           "indexed": true,
-          "name": "voter",
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "name": "signaler",
           "type": "address"
         },
         {
@@ -46,7 +66,7 @@
           "type": "uint256"
         }
       ],
-      "name": "LogVote",
+      "name": "LogSignal",
       "type": "event"
     }
   ],
@@ -73,10 +93,6 @@
           "type": "bytes32"
         },
         {
-          "name": "token",
-          "type": "address"
-        },
-        {
           "name": "value",
           "type": "uint256"
         }
@@ -93,11 +109,35 @@
       "type": "function"
     },
     {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "name": "endSignaling",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "anonymous": false,
       "inputs": [
         {
           "indexed": true,
-          "name": "voter",
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "name": "signaler",
           "type": "address"
         },
         {
@@ -111,7 +151,7 @@
           "type": "uint256"
         }
       ],
-      "name": "LogVote",
+      "name": "LogSignal",
       "type": "event"
     }
   ],
