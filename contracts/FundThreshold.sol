@@ -24,16 +24,16 @@ contract FundThreshold is AbstractGrant {
         returns (uint256 balance)
     {
         require(
-            grants[id].grantStatus == GrantStatus.FUND,
+            _grants[id].grantStatus == GrantStatus.FUND,
             "fund::Status Error. Must be GrantStatus.FUND to fund."
         );
 
         // When threshold met, move to payment stage.
-        if (grants[id].totalFunded == grants[id].targetFunding) {
-            grants[id].grantStatus = GrantStatus.PAY;
+        if (_grants[id].totalFunded == _grants[id].targetFunding) {
+            _grants[id].grantStatus = GrantStatus.PAY;
             emit LogStatusChange(id, GrantStatus.PAY);
         }
 
-        return grants[id].totalFunded;
+        return _grants[id].totalFunded;
     }
 }

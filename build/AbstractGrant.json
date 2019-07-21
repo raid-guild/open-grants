@@ -31,73 +31,6 @@
       "constant": false,
       "inputs": [
         {
-          "components": [
-            {
-              "name": "grantee",
-              "type": "address"
-            },
-            {
-              "name": "allocation",
-              "type": "uint256"
-            },
-            {
-              "name": "received",
-              "type": "uint256"
-            }
-          ],
-          "name": "grantees",
-          "type": "tuple[]"
-        },
-        {
-          "components": [
-            {
-              "name": "grantManager",
-              "type": "address"
-            },
-            {
-              "name": "weight",
-              "type": "uint8"
-            }
-          ],
-          "name": "grantManagers",
-          "type": "tuple[]"
-        },
-        {
-          "name": "currency",
-          "type": "address"
-        },
-        {
-          "name": "targetFunding",
-          "type": "uint256"
-        },
-        {
-          "name": "expiration",
-          "type": "uint256"
-        },
-        {
-          "name": "grantType",
-          "type": "uint8"
-        },
-        {
-          "name": "extraData",
-          "type": "bytes"
-        }
-      ],
-      "name": "create",
-      "outputs": [
-        {
-          "name": "id",
-          "type": "bytes32"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
           "name": "id",
           "type": "bytes32"
         },
@@ -180,6 +113,81 @@
       ],
       "payable": true,
       "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "components": [
+            {
+              "name": "isGrantee",
+              "type": "bool"
+            },
+            {
+              "name": "grantee",
+              "type": "address"
+            },
+            {
+              "name": "allocation",
+              "type": "uint256"
+            },
+            {
+              "name": "received",
+              "type": "uint256"
+            }
+          ],
+          "name": "grantees",
+          "type": "tuple[]"
+        },
+        {
+          "components": [
+            {
+              "name": "isGrantManager",
+              "type": "bool"
+            },
+            {
+              "name": "grantManager",
+              "type": "address"
+            },
+            {
+              "name": "weight",
+              "type": "uint8"
+            }
+          ],
+          "name": "grantManagers",
+          "type": "tuple[]"
+        },
+        {
+          "name": "currency",
+          "type": "address"
+        },
+        {
+          "name": "targetFunding",
+          "type": "uint256"
+        },
+        {
+          "name": "expiration",
+          "type": "uint256"
+        },
+        {
+          "name": "grantType",
+          "type": "uint8"
+        },
+        {
+          "name": "extraData",
+          "type": "bytes"
+        }
+      ],
+      "name": "create",
+      "outputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -312,73 +320,6 @@
       "constant": false,
       "inputs": [
         {
-          "components": [
-            {
-              "name": "grantee",
-              "type": "address"
-            },
-            {
-              "name": "allocation",
-              "type": "uint256"
-            },
-            {
-              "name": "received",
-              "type": "uint256"
-            }
-          ],
-          "name": "grantees",
-          "type": "tuple[]"
-        },
-        {
-          "components": [
-            {
-              "name": "grantManager",
-              "type": "address"
-            },
-            {
-              "name": "weight",
-              "type": "uint8"
-            }
-          ],
-          "name": "grantManagers",
-          "type": "tuple[]"
-        },
-        {
-          "name": "currency",
-          "type": "address"
-        },
-        {
-          "name": "targetFunding",
-          "type": "uint256"
-        },
-        {
-          "name": "expiration",
-          "type": "uint256"
-        },
-        {
-          "name": "grantType",
-          "type": "uint8"
-        },
-        {
-          "name": "extraData",
-          "type": "bytes"
-        }
-      ],
-      "name": "create",
-      "outputs": [
-        {
-          "name": "id",
-          "type": "bytes32"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
           "name": "id",
           "type": "bytes32"
         },
@@ -461,6 +402,81 @@
       ],
       "payable": true,
       "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "components": [
+            {
+              "name": "isGrantee",
+              "type": "bool"
+            },
+            {
+              "name": "grantee",
+              "type": "address"
+            },
+            {
+              "name": "allocation",
+              "type": "uint256"
+            },
+            {
+              "name": "received",
+              "type": "uint256"
+            }
+          ],
+          "name": "grantees",
+          "type": "tuple[]"
+        },
+        {
+          "components": [
+            {
+              "name": "isGrantManager",
+              "type": "bool"
+            },
+            {
+              "name": "grantManager",
+              "type": "address"
+            },
+            {
+              "name": "weight",
+              "type": "uint8"
+            }
+          ],
+          "name": "grantManagers",
+          "type": "tuple[]"
+        },
+        {
+          "name": "currency",
+          "type": "address"
+        },
+        {
+          "name": "targetFunding",
+          "type": "uint256"
+        },
+        {
+          "name": "expiration",
+          "type": "uint256"
+        },
+        {
+          "name": "grantType",
+          "type": "uint8"
+        },
+        {
+          "name": "extraData",
+          "type": "bytes"
+        }
+      ],
+      "name": "create",
+      "outputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {

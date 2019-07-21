@@ -4,7 +4,7 @@ import chai from 'chai';
 import * as waffle from "ethereum-waffle";
 import { Contract, Wallet, constants } from "ethers";
 import { Web3Provider, Provider } from "ethers/providers";
-import { bigNumberify, solidityKeccak256 } from "ethers/utils";
+import { bigNumberify, solidityKeccak256, id } from "ethers/utils";
 
 
 chai.use(waffle.solidity);
@@ -60,6 +60,7 @@ describe("Grant", () => {
     let granteeAddress: string;
     let grantorAddress: string;
     let grantManagerAddress: string;
+    let _grant: Contract;
 
     describe("When created", () => {
       before(async () => {
@@ -83,6 +84,7 @@ describe("Grant", () => {
         );
 
         grantRes = await grant.getGrant(id);
+        _grant = grant;
         granteeAddress = granteeWallet.address;
         grantorAddress = grantorWallet.address;
         grantManagerAddress = grantManagerWallet.address;
@@ -97,8 +99,8 @@ describe("Grant", () => {
     
       it("should persist the grant's details", async () => {
         const {
-          grantees: [{grantee, allocation, received}],
-          grantManagers: [{grantManager, weight}],
+          totalGrantees,
+          totalGrantManagers,
           currency,
           targetFunding,
           totalFunded,
@@ -108,12 +110,9 @@ describe("Grant", () => {
           grantStatus,
           extraData
         } = grantRes;
-        
-        expect(grantee).to.eq(granteeAddress);
-        expect(allocation).to.eq(1000);
-        expect(received).to.eq(0);
-        expect(grantManager).to.eq(grantManagerAddress);
-        expect(weight).to.eq(1);
+
+        expect(totalGrantees).to.eq(1)
+        expect(totalGrantManagers).to.eq(1)
         expect(currency).to.eq(constants.AddressZero);
         expect(targetFunding).to.eq(1000);
         expect(totalFunded).to.eq(0);
@@ -122,7 +121,25 @@ describe("Grant", () => {
         expect(grantType).to.eq(GrantType.FUND_THRESHOLD);
         expect(grantStatus).to.eq(GrantStatus.SIGNAL);
         expect(extraData).to.eq("0x00");
-  
+      });
+
+      it("should persist the grantee details", async () => {
+        const granteeRes = await _grant.getGrantee(id, granteeAddress);
+        const { grantee, isGrantee, allocation, received } = granteeRes;
+        
+        expect(isGrantee).to.be.true;
+        expect(grantee).to.eq(granteeAddress);
+        expect(allocation).to.eq(1000);
+        expect(received).to.eq(0);
+      });
+
+      it("should persist the grantManager details", async () => {
+        const grantManagerRes = await _grant.getGrantManager(id, grantManagerAddress);
+        const { grantManager, isGrantManager, weight } = grantManagerRes;
+        
+        expect(isGrantManager).to.be.true;
+        expect(grantManager).to.eq(grantManagerAddress);
+        expect(weight).to.eq(1);
       });
   
     });
@@ -131,76 +148,178 @@ describe("Grant", () => {
 
   describe("Signaling", () => {
 
-    let id: string;
-    let _grantFromGrantee: Contract;
-    let _grantFromGrantor: Contract;
-
-    before(async () => {
-      const {
-        grant,
-        granteeWallet,
-        grantManagerWallet,
-        grantFromGrantee,
-        grantFromGrantor
-      } = await waffle.loadFixture(fixture);
-
-      const res = await grant.create(
-        [{ grantee: granteeWallet.address, allocation: 1000, received: 0 }],
-        [{ grantManager: grantManagerWallet.address, weight: 1 }],
-        constants.AddressZero,
-        1000,
-        0,
-        GrantType.FUND_THRESHOLD,
-        [0x0]
-      );
-  
-      const receipt = await res.wait();
-      id = receipt.events[0].args.id;
-      _grantFromGrantee = grantFromGrantee;
-      _grantFromGrantor = grantFromGrantor;
-    });
-
     describe("Signal", () => {
+      
       describe("When Ether", () => {
+        let _id: string;
+        let _grantFromGrantee: Contract;
+        let _grantFromGrantor: Contract;
+        let _grantorAddress: string;
+        let _res: any;
+        let _provider: any;
         
+        before(async () => {
+          const {
+            grant,
+            granteeWallet,
+            grantorWallet,
+            grantManagerWallet,
+            grantFromGrantee,
+            grantFromGrantor,
+            provider
+          } = await waffle.loadFixture(fixture);
+    
+          const res = await grant.create(
+            [{ grantee: granteeWallet.address, allocation: 1000, received: 0 }],
+            [{ grantManager: grantManagerWallet.address, weight: 1 }],
+            constants.AddressZero,
+            1000,
+            0,
+            GrantType.FUND_THRESHOLD,
+            [0x0]
+          );
+      
+          const receipt = await res.wait();
+          _id = receipt.events[0].args.id;
+          _grantFromGrantee = grantFromGrantee;
+          _grantFromGrantor = grantFromGrantor;
+          _grantorAddress = grantorWallet.address;
+          _provider = provider;
+        });
+
+        it("should fail if not initialized.", async () => {
+          await expect(
+            _grantFromGrantor.signal(id("anything"), 1e6)
+          ).to.be.revertedWith("signal::Status Error. Must be GrantStatus.SIGNAL to signal.");
+        });
+
+        it("should fail if ether sent does not match value arg.", async () => {
+          await expect(
+            _grantFromGrantor.signal(_id, 1e6)
+          ).to.be.revertedWith("signal::Invalid Argument. value must match msg.value.");
+        });
+
+        it("should emit LogSignal event", async () => {
+          await expect(_grantFromGrantor.signal(_id, 1e6, { value: 1e6 }))
+            .to.emit(_grantFromGrantor, "LogSignal")
+            .withArgs(_id, _grantorAddress, constants.AddressZero, 1e6);
+        });
+
+        it("sender should have their funds returned", async () => {
+          const startingBalance = await _provider.getBalance(_grantorAddress);
+          // Set gas price to 1 to make it simple to calc gas spent in eth. 
+          const receipt = await (await _grantFromGrantor.signal(_id, 1e6, { value: 1e6, gasPrice: 1 })).wait();
+          const endingBalance = await _provider.getBalance(_grantorAddress);
+
+          expect(endingBalance).to.eq(startingBalance.sub(receipt.gasUsed));
+        });
+
+        describe("End Signaling", () => {
+  
+          describe("When sender is a grantee", () => {
+            let receipt: any;
+      
+            it("should update the grantStatus", async () => {
+              const res = await _grantFromGrantee.endSignaling(_id);
+              receipt = await res.wait();
+              const {
+                grantStatus
+              } = await _grantFromGrantee.getGrant(_id);
+              
+              expect(grantStatus).to.eq(GrantStatus.FUND);
+            });
+      
+            it("should emit LogStatusChange event", async () => {
+              const emittedEvent = receipt.events[0];
+              expect(emittedEvent.event).to.eq("LogStatusChange");
+              expect(emittedEvent.eventSignature).to.eq("LogStatusChange(bytes32,uint8)");
+              expect(emittedEvent.args).to.include({ id: _id, grantStatus: GrantStatus.FUND });
+            });
+          });
+      
+          describe("When sender is not a grantee", () => {
+      
+            it("should revert", async () => {
+              await expect(_grantFromGrantor.endSignaling(_id))
+                .to.be.revertedWith("isGrantee::Invalid Sender. Sender is not a grantee for this grant.");
+            });
+          });
+        });
       });
 
       describe("When Token", () => {
+        let _id: string;
+        let _grantFromGrantee: Contract;
+        let _grantFromGrantor: Contract;
+        let _grantorAddress: string;
+        let _res: any;
+        let _token: Contract;
 
-      });
-    });
-
-    describe("End Signaling", () => {
-  
-      describe("When sender is a grantee", () => {
-        let receipt: any;
-  
-        it("should update the grantStatus", async () => {
-          const res = await _grantFromGrantee.endSignaling(id);
-          receipt = await res.wait();
+        before(async () => {
           const {
-            grantStatus
-          } = await _grantFromGrantee.getGrant(id);
+            grant,
+            granteeWallet,
+            grantorWallet,
+            grantManagerWallet,
+            grantFromGrantee,
+            grantFromGrantor,
+            token
+          } = await waffle.loadFixture(fixture);
+    
+          const res = await grant.create(
+            [{ grantee: granteeWallet.address, allocation: 1000, received: 0 }],
+            [{ grantManager: grantManagerWallet.address, weight: 1 }],
+            token.address,
+            1000,
+            0,
+            GrantType.FUND_THRESHOLD,
+            [0x0]
+          );
+      
+          const receipt = await res.wait();
+          _id = receipt.events[0].args.id;
+          _grantFromGrantee = grantFromGrantee;
+          _grantFromGrantor = grantFromGrantor;
+          _grantorAddress = grantorWallet.address;
+          _token = token;
+        });
+
+        it("should fail if not initialized.", async () => {
+          await expect(
+            _grantFromGrantor.signal(id("anything"), 1e6)
+          ).to.be.revertedWith("signal::Status Error. Must be GrantStatus.SIGNAL to signal.");
+        });
+
+        it("should fail if tokens no approved.", async () => {
+          await expect(
+            _grantFromGrantor.signal(_id, 1e6)
+          ).to.be.revertedWith("SafeMath: subtraction overflow");
+        });
+
+        describe("When approved", async () => {
           
-          expect(grantStatus).to.eq(GrantStatus.FUND);
-        });
+          beforeEach(async () => {
+            await _token.approve(_grantFromGrantee.address, 1e6);
+          });
+
+          it("should emit LogSignal event", async () => {
+            await expect(_grantFromGrantor.signal(_id, 1e6, { value: 1e6 }))
+              .to.emit(_grantFromGrantor, "LogSignal")
+              .withArgs(_id, _grantorAddress, _token.address, 1e6);
+          });
   
-        it("should emit LogStatusChange event", async () => {
-          const emittedEvent = receipt.events[0];
-          expect(emittedEvent.event).to.eq("LogStatusChange");
-          expect(emittedEvent.eventSignature).to.eq("LogStatusChange(bytes32,uint8)");
-          expect(emittedEvent.args).to.include({ id: id, grantStatus: GrantStatus.FUND });
-        });
-      });
+          it("sender should have their funds returned", async () => {
+            await _grantFromGrantor.signal(_id, 1e6, { value: 1e6, gasPrice: 1 });
+            const endingBalance = await _token.balanceOf(_grantorAddress);
   
-      describe("When sender is not a grantee", () => {
-  
-        it("should revert", async () => {
-          await expect(_grantFromGrantor.endSignaling(id))
-            .to.be.revertedWith("isGrantee::Invalid Sender. Sender is not a grantee for this grant.");
+            expect(endingBalance).to.eq(1e6);
+          });
         });
+
       });
     });
+
+
   });
 
   describe("Fund Grant", () => {
@@ -284,10 +403,12 @@ describe("Grant", () => {
             grantDetail = await _grantFromGrantee.getGrant(_id);
           });
 
-          it("should update grantor array", () => {
-            const { grantors } = grantDetail;
-            const {grantor, funded, refunded } = grantors[0];
+          it("should update grantor mapping", async () => {
+            const grantorsStruct = await _grantFromGrantee.getGrantor(_id, _grantorWallet.address);
+            const { grantor, isGrantor, funded, refunded } = grantorsStruct;
+
             expect(grantor).to.eq(_grantorWallet.address);
+            expect(isGrantor).to.be.true;
             expect(funded).to.eq(10000);
             expect(refunded).to.eq(0);
           });
@@ -383,10 +504,12 @@ describe("Grant", () => {
             grantDetail = await _grantFromGrantee.getGrant(_id);
           });
 
-          it("should update grantor array", () => {
-            const { grantors } = grantDetail;
-            const {grantor, funded, refunded } = grantors[0];
+          it("should update grantor mapping", async () => {
+            const grantorsStruct = await _grantFromGrantee.getGrantor(_id, _grantorWallet.address);
+            const { grantor, isGrantor, funded, refunded } = grantorsStruct;
+            
             expect(grantor).to.eq(_grantorWallet.address);
+            expect(isGrantor).to.be.true;
             expect(funded).to.eq(10000);
             expect(refunded).to.eq(0);
           });
@@ -412,6 +535,10 @@ describe("Grant", () => {
       it("should fail if expired");
       it("should fail if wrong grantStatus");
     });
+  });
+
+  describe("Cancel Grant", () => {
+
   });
 
 });

@@ -3,7 +3,6 @@ pragma experimental ABIEncoderV2;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "./AbstractGrant.sol";
 import "./FundThreshold.sol";
 import "./ISignal.sol";
 
@@ -13,32 +12,77 @@ import "./ISignal.sol";
  * @dev Grant request, funding, and management.
  * @author @NoahMarconi @JFickel @ArnaudBrousseau
  */
-contract Grant is AbstractGrant, FundThreshold, ISignal {
+contract Grant is FundThreshold, ISignal {
     using SafeMath for uint256;
 
 
     /*----------  Modifiers  ----------*/
 
     modifier isGrantee(bytes32 id) {
-        bool check;
-        Grantee[] memory grantees = grants[id].grantees;
-
-        for (uint256 i = 0; i < grantees.length; i++) {
-            if(grantees[i].grantee == msg.sender) {
-                // Flag.
-                check = true;
-
-                // Short circuit.
-                i = grantees.length;
-            }
-        }
-
         require(
-            check,
+            _grantees[id][msg.sender].isGrantee,
             "isGrantee::Invalid Sender. Sender is not a grantee for this grant."
         );
 
         _;
+    }
+
+
+    /*----------  Public Getters  ----------*/
+
+    /**
+     * @dev Grant Getter.
+     * @param id GUID for the grant to return.
+     * @return The Grant struct.
+     */
+    function getGrant(bytes32 id)
+        public
+        view
+        returns (Grant memory)
+    {
+        return _grants[id];
+    }
+
+    /**
+     * @dev Grantor Getter.
+     * @param id GUID for the grant.
+     * @param grantor Address for the grantor.
+     * @return The Grantor struct.
+     */
+    function getGrantor(bytes32 id, address grantor)
+        public
+        view
+        returns (Grantor memory)
+    {
+        return _grantors[id][grantor];
+    }
+
+    /**
+     * @dev Grantee Getter.
+     * @param id GUID for the grant.
+     * @param grantee Address for the grantee.
+     * @return The Grantee struct.
+     */
+    function getGrantee(bytes32 id, address grantee)
+        public
+        view
+        returns (Grantee memory)
+    {
+        return _grantees[id][grantee];
+    }
+
+    /**
+     * @dev GrantManager Getter.
+     * @param id GUID for the grant.
+     * @param grantManager Address for the grantManager.
+     * @return The GrantManager struct.
+     */
+    function getGrantManager(bytes32 id, address grantManager)
+        public
+        view
+        returns (GrantManager memory)
+    {
+        return _grantManagers[id][grantManager];
     }
 
 
@@ -81,7 +125,7 @@ contract Grant is AbstractGrant, FundThreshold, ISignal {
         ));
 
         require(
-            grants[_id].grantStatus == GrantStatus.INIT,
+            _grants[_id].grantStatus == GrantStatus.INIT,
             "create::Status Error. Grant ID already in use."
         );
 
@@ -98,37 +142,28 @@ contract Grant is AbstractGrant, FundThreshold, ISignal {
 
         for (uint256 i = 0; i < grantees.length; i++) {
             Grantee memory grantee = grantees[i];
-            grants[_id].grantees.push(grantee);
+            grantee.isGrantee = true;
+            _grantees[_id][grantee.grantee] = grantee;
         }
 
         for (uint256 i = 0; i < grantManagers.length; i++) {
             GrantManager memory grantManager = grantManagers[i];
-            grants[_id].grantManagers.push(grantManager);
+            grantManager.isGrantManager = true;
+            _grantManagers[_id][grantManager.grantManager] = grantManager;
         }
 
-        grants[_id].currency = currency;
-        grants[_id].targetFunding = targetFunding;
-        grants[_id].expiration = expiration;
-        grants[_id].grantType = grantType;
-        grants[_id].grantStatus = GrantStatus.SIGNAL;
-        grants[_id].extraData = extraData;
+        _grants[_id].totalGrantees = uint16(grantees.length);
+        _grants[_id].totalGrantManagers = uint16(grantManagers.length);
+        _grants[_id].currency = currency;
+        _grants[_id].targetFunding = targetFunding;
+        _grants[_id].expiration = expiration;
+        _grants[_id].grantType = grantType;
+        _grants[_id].grantStatus = GrantStatus.SIGNAL;
+        _grants[_id].extraData = extraData;
 
         emit LogStatusChange(_id, GrantStatus.SIGNAL);
 
         return _id;
-    }
-
-    /**
-     * @dev Grant Getter.
-     * @param id GUID for the grant to return.
-     * @return The Grant struct.
-     */
-    function getGrant(bytes32 id)
-        public
-        view
-        returns (Grant memory)
-    {
-        return grants[id];
     }
 
     /**
@@ -143,36 +178,44 @@ contract Grant is AbstractGrant, FundThreshold, ISignal {
         returns (uint256 balance)
     {
         // Defer to correct funding method.
-        if(grants[id].currency == address(0)) {
+        if(_grants[id].currency == address(0)) {
             require(
                 msg.value == value,
                 "fund::Invalid Argument. value must match msg.value."
             );
         } else {
             require(
-                IERC20(grants[id].currency)
+                IERC20(_grants[id].currency)
                     .transferFrom(msg.sender, address(this), value),
                 "fund::Transfer Error. ERC20 token transferFrom failed."
             );
         }
 
         // Record Contribution.
-        grants[id].grantors.push(Grantor({
-            grantor: msg.sender,
-            funded: value,
-            refunded: 0
-        }));
+        if (!_grantors[id][msg.sender].isGrantor) {
+            _grantors[id][msg.sender] = Grantor({
+                isGrantor: true,
+                grantor: msg.sender,
+                funded: value,
+                refunded: 0
+            });
+
+            _grants[id].totalGrantors = uint32(uint256(_grants[id].totalGrantors).add(1));
+        } else {
+            _grantors[id][msg.sender].funded = _grantors[id][msg.sender]
+                .funded.add(value);
+        }
 
         // Update funding tally.
-        balance = grants[id].totalFunded.add(value);
-        grants[id].totalFunded = balance;
+        balance = _grants[id].totalFunded.add(value);
+        _grants[id].totalFunded = balance;
 
         // Log event.
         emit LogFunding(id, msg.sender, value);
 
         // May expand to handle variety of grantTypes.
         uint256 result;
-        if (grants[id].grantType == GrantType.FUND_THRESHOLD) {
+        if (_grants[id].grantType == GrantType.FUND_THRESHOLD) {
            result = FundThreshold.fund(id, value);
         }
 
@@ -228,6 +271,28 @@ contract Grant is AbstractGrant, FundThreshold, ISignal {
         public
         returns (bool)
     {
+        require(
+            _grants[id].grantStatus == GrantStatus.SIGNAL ||
+            _grants[id].grantStatus == GrantStatus.FUND ||
+            _grants[id].grantStatus == GrantStatus.PAY,
+            "cancelGrant::Status Error. Must be GrantStatus.SIGNAL, GrantStatus.FUND, or GrantStatus.PAY to cancel."
+        );
+
+        bool granteeOrGrantManager = _grantees[id][msg.sender].isGrantee ||
+            _grantManagers[id][msg.sender].isGrantManager;
+
+        require(
+            granteeOrGrantManager,
+            "cancelGrant::Invalid Sender. Only a Grantee or GrantManager may cancel the grant."
+        );
+
+        if (_grants[id].grantStatus == GrantStatus.SIGNAL) {
+            _grants[id].grantStatus = GrantStatus.COMPLETE;
+            emit LogStatusChange(id, GrantStatus.COMPLETE);
+        } else {
+            _grants[id].grantStatus = GrantStatus.REFUND;
+            emit LogStatusChange(id, GrantStatus.REFUND);
+        }
         return true;
     }
 
@@ -242,7 +307,13 @@ contract Grant is AbstractGrant, FundThreshold, ISignal {
         payable
         returns (bool)
     {
-        address token = grants[id].currency;
+
+        require(
+            _grants[id].grantStatus == GrantStatus.SIGNAL,
+            "signal::Status Error. Must be GrantStatus.SIGNAL to signal."
+        );
+
+        address token = _grants[id].currency;
 
         emit LogSignal(id, msg.sender, token, value);
 
@@ -287,11 +358,11 @@ contract Grant is AbstractGrant, FundThreshold, ISignal {
         returns (bool)
     {
         require(
-            grants[id].grantStatus == GrantStatus.SIGNAL,
+            _grants[id].grantStatus == GrantStatus.SIGNAL,
             "endSignaling::Status Error. Must be GrantStatus.SIGNAL to end signaling."
         );
 
-        grants[id].grantStatus = GrantStatus.FUND;
+        _grants[id].grantStatus = GrantStatus.FUND;
 
         emit LogStatusChange(id, GrantStatus.FUND);
 

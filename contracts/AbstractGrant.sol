@@ -10,7 +10,10 @@ contract AbstractGrant {
 
     /*----------  Globals  ----------*/
 
-    mapping(bytes32 => Grant) internal grants; // Grants mapped by GUID.
+    mapping(bytes32 => Grant) internal _grants;                                   // Grants mapped by GUID.
+    mapping(bytes32 => mapping(address => Grantee)) internal _grantees;           // Grantees mapped by Grant GUID then address.
+    mapping(bytes32 => mapping(address => Grantor)) internal _grantors;           // Grantors mapped by Grant GUID then address.
+    mapping(bytes32 => mapping(address => GrantManager)) internal _grantManagers; // GrantManagers mapped by Grant GUID then address.
 
 
     /*----------  Types  ----------*/
@@ -32,30 +35,34 @@ contract AbstractGrant {
     }
 
     struct Grantee {
+        bool isGrantee;     // Is a grantee.
         address grantee;    // Address of grantee.
         uint256 allocation; // Grant size for the grantee.
         uint256 received;   // Cumulative payments received.
     }
 
     struct Grantor {
+        bool isGrantor;   // Is a grantor.
         address grantor;  // Address of grantor.
         uint256 funded;   // Total amount funded.
         uint256 refunded; // Cumulative amount refunded.
     }
 
     struct GrantManager {
+        bool isGrantManager;  // Is a grant manager.
         address grantManager; // Address of grant manager.
         uint8 weight;         // Value 0 to 255.
     }
 
     struct Grant {
-        Grantee[] grantees;           // Grant recipients.
-        Grantor[] grantors;           // Funders of the grant.
-        GrantManager[] grantManagers; // (Optional) Addresses that manage distribution of funds.
+        uint16 totalGrantees;         // Number of Grantees for this grant.
+        uint16 totalGrantManagers;    // Number of GrantManagers for this grant.
+        uint32 totalGrantors;         // Cumulative number of Grantors for this grant.
         address currency;             // (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.
         uint256 targetFunding;        // (Optional) Funding threshold required to release funds.
         uint256 totalFunded;          // Cumulative funding received for this grant.
         uint256 totalPayed;           // Cumulative funding payed to grantees.
+        uint256 totalRefunded;        // Cumulative funding refunded to grantors.
         uint256 expiration;           // (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.
         GrantType grantType;          // Which grant success scheme to apply to this grant.
         GrantStatus grantStatus;      // Current GrantStatus.
