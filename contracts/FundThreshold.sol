@@ -29,7 +29,7 @@ contract FundThreshold is AbstractGrant {
         );
 
         // When threshold met, move to payment stage.
-        if (_grants[id].totalFunded == _grants[id].targetFunding) {
+        if (_grants[id].totalFunded >= _grants[id].targetFunding) {
             _grants[id].grantStatus = GrantStatus.PAY;
             emit LogStatusChange(id, GrantStatus.PAY);
         }

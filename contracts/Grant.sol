@@ -16,6 +16,12 @@ contract Grant is FundThreshold, ISignal {
     using SafeMath for uint256;
 
 
+    /*----------  Constants  ----------*/
+
+    uint256 PRECISION_D = 10 ** 18;
+    uint256 PRECISION_M = 10 ** 16;
+
+
     /*----------  Modifiers  ----------*/
 
     modifier isGrantee(bytes32 id) {
@@ -140,12 +146,21 @@ contract Grant is FundThreshold, ISignal {
             "create::Invalid Argument. Must have one or more grantees."
         );
 
+        // No uniqueness check, should be handled on client.
         for (uint256 i = 0; i < grantees.length; i++) {
             Grantee memory grantee = grantees[i];
-            grantee.isGrantee = true;
-            _grantees[_id][grantee.grantee] = grantee;
+
+            require(
+                grantee.allocation <= 100 && grantee.allocation >= 0,
+                "create::Invalid Argument. Grantee's allocation must be a number between 1 and 100."
+            );
+
+            _grantees[_id][grantee.grantee].isGrantee = true;
+            _grantees[_id][grantee.grantee].grantee = grantee.grantee;
+            _grantees[_id][grantee.grantee].allocation = grantee.allocation;
         }
 
+        // No uniqueness check, should be handled on client.
         for (uint256 i = 0; i < grantManagers.length; i++) {
             GrantManager memory grantManager = grantManagers[i];
             grantManager.isGrantManager = true;
@@ -192,6 +207,7 @@ contract Grant is FundThreshold, ISignal {
         }
 
         // Record Contribution.
+        // Add new Grantor or add to existing Grantor funded total.
         if (!_grantors[id][msg.sender].isGrantor) {
             _grantors[id][msg.sender] = Grantor({
                 isGrantor: true,
@@ -233,6 +249,91 @@ contract Grant is FundThreshold, ISignal {
         public
         returns (uint256 balance)
     {
+        // Accounts for over funded grants.
+        //
+        // Takes allocation percentage to determine Grantee's actual allocation
+        // of the total amount funded.
+        //
+        // Precise to 1 WEI if Ether.
+        uint256 actualAllocation;
+        if (_grantees[id][grantee].allocation < 100) {
+            uint256 allocation = _grantees[id][grantee].allocation;
+            actualAllocation = _grants[id].totalFunded
+                .mul(allocation.mul(PRECISION_M))
+                .div(PRECISION_D);
+        } else {
+            actualAllocation = _grants[id].totalFunded;
+        }
+
+        uint256 remainingAllocation = actualAllocation
+            .sub(_grantees[id][grantee].received);
+
+        require(
+            remainingAllocation >= value,
+            "payout::Invalid Argument. Value cannot exceed Grantee's remaining allocation."
+        );
+
+        require(
+            _grants[id].grantStatus == GrantStatus.PAY,
+            "payout::Status Error. Must be GrantStatus.PAY to issue payment."
+        );
+
+        require(
+            _grantManagers[id][msg.sender].isGrantManager || grantee == msg.sender,
+            "payout::Invalid Argument. If not a GrantManger, msg.sender must match grantee argument."
+        );
+
+
+        uint256 paymentsArrayLength = _grantees[id][grantee].payments.length;
+        Payment memory lastPayment = _grantees[id][grantee].payments[paymentsArrayLength - 1];
+        bool lastPaymentPaid = lastPayment.paid;
+
+        // The following checks are taking place:
+        // 1. if paid, create new payment request.
+        // 2. else if approved, send it (59 out of 100 pass with 2/3, 3/5, etc.)
+        // 3. else if grant manager add approvals,
+        // 4. else revert. as a grantee is request a payout while on is currently pending.
+        if (lastPaymentPaid) {
+            // 1. If paid, create new payment request.
+            _grantees[id][grantee].payments.push(
+                Payment({ approvals: 0, amount: value, paid: false })
+            );
+
+            emit LogPaymentRequest(id, grantee, value);
+        } else if (lastPayment.approvals > 59) {
+
+            require(
+                value == lastPayment.amount,
+                "payout::Invalid Argument. Value does not match lastPayment.amount."
+            );
+
+            // 2. else if approved, send it (59 out of 100 pass with 2/3, 3/5, etc.)
+            address currency = _grants[id].currency;
+            if (currency == address(0)) {
+                require(
+                    // solium-disable-next-line security/no-send
+                    address(uint160(grantee)).send(value),
+                    "payout::Transfer Error. Unable to send value to Grantee."
+                );
+            } else {
+                require(
+                    IERC20(currency)
+                        .transfer(grantee, value),
+                    "signal::Transfer Error. ERC20 token transfer failed."
+                );
+            }
+
+            emit LogPayment(id, grantee, value);
+        } else if (_grantManagers[id][msg.sender].isGrantManager) {
+            // 3. else if grant manager add approvals,
+            stop from approving twice.
+            uint8 approvals;
+            emit LogAddPaymentApprovals(id, grantee, value, approvals);
+        } else {
+            // 4. else revert.
+            revert("payout::Status Error. Cannot request a new payment while a payment is pending.");
+        }
+
         return value;
     }
 
@@ -244,18 +345,6 @@ contract Grant is FundThreshold, ISignal {
      * @return True if successful, otherwise false.
      */
     function refund(bytes32 id, address grantor, uint256 value)
-        public
-        returns (bool)
-    {
-        return true;
-    }
-
-    /**
-     * @dev Refund all grantors.
-     * @param id GUID for the grant to refund.
-     * @return True if successful, otherwise false.
-     */
-    function refundAll(bytes32 id)
         public
         returns (bool)
     {
@@ -286,6 +375,8 @@ contract Grant is FundThreshold, ISignal {
             "cancelGrant::Invalid Sender. Only a Grantee or GrantManager may cancel the grant."
         );
 
+        // SIGNAL can simply be moved to COMPLETE.
+        // Otherwise Grantors need to be refunded.
         if (_grants[id].grantStatus == GrantStatus.SIGNAL) {
             _grants[id].grantStatus = GrantStatus.COMPLETE;
             emit LogStatusChange(id, GrantStatus.COMPLETE);

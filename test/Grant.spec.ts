@@ -30,7 +30,7 @@ describe("Grant", () => {
 
   async function fixture(provider: any, wallets: Wallet[]) {
     const [granteeWallet, grantorWallet, grantManagerWallet] = wallets;
-    const grant: Contract = await waffle.deployContract(granteeWallet, Grant);
+    const grant: Contract = await waffle.deployContract(granteeWallet, Grant, [], { gasLimit: 5e6 });
     const token: Contract = await waffle.deployContract(grantorWallet, GrantToken, ["Grant Token", "GT", 18]);
 
     // Initial token balance.
@@ -67,8 +67,8 @@ describe("Grant", () => {
         const { grant, granteeWallet, grantorWallet, grantManagerWallet, provider } = await waffle.loadFixture(fixture);
 
         const res = await grant.create(
-          [{ grantee: granteeWallet.address, allocation: 1000, received: 0 }],
-          [{ grantManager: grantManagerWallet.address, weight: 1 }],
+          [{ grantee: granteeWallet.address, allocation: 100, payments: [], received: 0 }],
+          [{ grantManager: grantManagerWallet.address, weight: 100 }],
           constants.AddressZero,
           1000,
           0,
@@ -129,7 +129,7 @@ describe("Grant", () => {
         
         expect(isGrantee).to.be.true;
         expect(grantee).to.eq(granteeAddress);
-        expect(allocation).to.eq(1000);
+        expect(allocation).to.eq(100);
         expect(received).to.eq(0);
       });
 
@@ -139,7 +139,7 @@ describe("Grant", () => {
         
         expect(isGrantManager).to.be.true;
         expect(grantManager).to.eq(grantManagerAddress);
-        expect(weight).to.eq(1);
+        expect(weight).to.eq(100);
       });
   
     });
@@ -170,8 +170,8 @@ describe("Grant", () => {
           } = await waffle.loadFixture(fixture);
     
           const res = await grant.create(
-            [{ grantee: granteeWallet.address, allocation: 1000, received: 0 }],
-            [{ grantManager: grantManagerWallet.address, weight: 1 }],
+            [{ grantee: granteeWallet.address, allocation: 100, payments: [], received: 0 }],
+            [{ grantManager: grantManagerWallet.address, weight: 100 }],
             constants.AddressZero,
             1000,
             0,
@@ -267,8 +267,8 @@ describe("Grant", () => {
           } = await waffle.loadFixture(fixture);
     
           const res = await grant.create(
-            [{ grantee: granteeWallet.address, allocation: 1000, received: 0 }],
-            [{ grantManager: grantManagerWallet.address, weight: 1 }],
+            [{ grantee: granteeWallet.address, allocation: 100, payments: [], received: 0 }],
+            [{ grantManager: grantManagerWallet.address, weight: 100 }],
             token.address,
             1000,
             0,
@@ -359,8 +359,8 @@ describe("Grant", () => {
         before(async () => {
 
           const res = await _grantFromGrantee.create(
-            [{ grantee: _granteeWallet.address, allocation: 1000, received: 0 }],
-            [{ grantManager: _grantManagerWallet.address, weight: 1 }],
+            [{ grantee: _granteeWallet.address, allocation: 100, payments: [], received: 0 }],
+            [{ grantManager: _grantManagerWallet.address, weight: 100 }],
             constants.AddressZero,
             10000,
             0,
@@ -460,8 +460,8 @@ describe("Grant", () => {
           await _token.approve(_grantFromGrantee.address, 1e5);
 
           const res = await _grantFromGrantee.create(
-            [{ grantee: _granteeWallet.address, allocation: 1000, received: 0 }],
-            [{ grantManager: _grantManagerWallet.address, weight: 1 }],
+            [{ grantee: _granteeWallet.address, allocation: 100, payments: [], received: 0 }],
+            [{ grantManager: _grantManagerWallet.address, weight: 100 }],
             _token.address,
             10000,
             0,
@@ -538,7 +538,12 @@ describe("Grant", () => {
   });
 
   describe("Cancel Grant", () => {
-
+    it("should fail if wrong status");
+    it("should permit Grantee to cancel");
+    it("should permit GrantManager to cancel");
+    it("should fail if not Grantee or GrantManager");
+    it("should emit LogStatusChange event COMPLETE");
+    it("should emit LogStatusChange event REFUND");
   });
 
 });

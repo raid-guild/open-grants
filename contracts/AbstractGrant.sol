@@ -34,11 +34,18 @@ contract AbstractGrant {
         COMPLETE // Grant complete.
     }
 
+    struct Payment {
+        uint8 approvals; // Sum of approval weights from Grant Managers.
+        uint256 amount;  // Amount to be paid.
+        bool paid;       // True if paid, false if not.
+    }
+
     struct Grantee {
         bool isGrantee;     // Is a grantee.
         address grantee;    // Address of grantee.
         uint256 allocation; // Grant size for the grantee.
         uint256 received;   // Cumulative payments received.
+        Payment[] payments; // Payments to the Grantee.
     }
 
     struct Grantor {
@@ -103,6 +110,22 @@ contract AbstractGrant {
      */
     event LogPayment(bytes32 indexed id, address indexed grantee, uint256 value);
 
+    /**
+     * @dev Grantee requesting a payment.
+     * @param id Which grant making payment.
+     * @param grantee Address receiving payment.
+     * @param value Amount in WEI or GRAINS refunded.
+     */
+    event LogPaymentRequest(bytes32 indexed id, address indexed grantee, uint256 value);
+
+    /**
+     * @dev GrantManager adding approvals to a payment.
+     * @param id Which grant making payment.
+     * @param grantee Address receiving payment.
+     * @param value Amount in WEI or GRAINS refunded.
+     */
+    event LogAddPaymentApprovals(bytes32 indexed id, address indexed grantee, uint256 value, uint8 approvals);
+
 
     /*----------  Methods  ----------*/
 
@@ -159,15 +182,6 @@ contract AbstractGrant {
      * @return True if successful, otherwise false.
      */
     function refund(bytes32 id, address grantor, uint256 value)
-        public
-        returns (bool);
-
-    /**
-     * @dev Refund all grantors.
-     * @param id GUID for the grant to refund.
-     * @return True if successful, otherwise false.
-     */
-    function refundAll(bytes32 id)
         public
         returns (bool);
 
