@@ -285,6 +285,7 @@ contract Grant is FundThreshold, ISignal {
 
 
         uint256 paymentsArrayLength = _grantees[id][grantee].payments.length;
+        // TODO: handle empty array 
         Payment memory lastPayment = _grantees[id][grantee].payments[paymentsArrayLength - 1];
         bool lastPaymentPaid = lastPayment.paid;
 
@@ -326,7 +327,7 @@ contract Grant is FundThreshold, ISignal {
             emit LogPayment(id, grantee, value);
         } else if (_grantManagers[id][msg.sender].isGrantManager) {
             // 3. else if grant manager add approvals,
-            stop from approving twice.
+            // TODO: stop from GM from approving twice.
             uint8 approvals;
             emit LogAddPaymentApprovals(id, grantee, value, approvals);
         } else {

@@ -58,7 +58,7 @@ contract AbstractGrant {
     struct GrantManager {
         bool isGrantManager;  // Is a grant manager.
         address grantManager; // Address of grant manager.
-        uint8 weight;         // Value 0 to 255.
+        uint8 weight;         // Value 0 to 100.
     }
 
     struct Grant {
@@ -145,7 +145,8 @@ contract AbstractGrant {
         GrantManager[] memory grantManagers,
         address currency,
         uint256 targetFunding,
-        uint256 expiration,
+        uint256 fundingExpiration,
+        uint256 executionExpiration,
         GrantType grantType,
         bytes memory extraData
     )
@@ -183,7 +184,7 @@ contract AbstractGrant {
      */
     function refund(bytes32 id, address grantor, uint256 value)
         public
-        returns (bool);
+        returns (uint256 balance);
 
     /**
      * @dev Cancel grant and enable refunds.
@@ -192,5 +193,5 @@ contract AbstractGrant {
      */
     function cancelGrant(bytes32 id)
         public
-        returns (bool);
+        returns (uint256 balance);
 }

@@ -1,3 +1,34 @@
+partial refunds ()
+
+auto refund if expiration and target not reached
+
+heartbeat or second expiration 
+
+
+
+use counter for ID
+
+
+grantee uniqueness check
+
+
+? extension to send simple ETH to fallback.
+   ^
+   |
+   |
+factory
+
+
+
+Reject eth if currency is token.
+Fallback function for simple eth transfer
+
+Return the rest if over funded.
+Fixed sized grants you pre-populate on create
+If dynamic sized grant you calculate.
+
+
+
 Consistent return value (funds or success/fail)?
 
 Sweep (accidental transfers)?
