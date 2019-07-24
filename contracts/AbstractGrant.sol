@@ -70,7 +70,8 @@ contract AbstractGrant {
         uint256 totalFunded;          // Cumulative funding received for this grant.
         uint256 totalPayed;           // Cumulative funding payed to grantees.
         uint256 totalRefunded;        // Cumulative funding refunded to grantors.
-        uint256 expiration;           // (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.
+        uint256 fundingExpiration;    // (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.
+        uint256 executionExpiration;  // (Optional) Block number after which payouts must be complete or anyone can trigger refunds.
         GrantType grantType;          // Which grant success scheme to apply to this grant.
         GrantStatus grantStatus;      // Current GrantStatus.
         bytes extraData;              // Support for extensions to the Standard.
@@ -135,7 +136,8 @@ contract AbstractGrant {
      * @param grantManagers (Optional) Weighted managers of distribution of funds.
      * @param currency (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.
      * @param targetFunding (Optional) Funding threshold required to release funds.
-     * @param expiration (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.
+     * @param fundingExpiration (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.
+     * @param executionExpiration (Optional) Block number after which payouts must be complete or anyone can trigger refunds.
      * @param grantType Which grant success scheme to apply to this grant.
      * @param extraData Support for extensions to the Standard.
      * @return GUID for this grant.

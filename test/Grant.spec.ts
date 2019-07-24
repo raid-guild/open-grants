@@ -30,7 +30,7 @@ describe("Grant", () => {
 
   async function fixture(provider: any, wallets: Wallet[]) {
     const [granteeWallet, grantorWallet, grantManagerWallet] = wallets;
-    const grant: Contract = await waffle.deployContract(granteeWallet, Grant, [], { gasLimit: 5e6 });
+    const grant: Contract = await waffle.deployContract(granteeWallet, Grant, [], { gasLimit: 6e6 });
     const token: Contract = await waffle.deployContract(grantorWallet, GrantToken, ["Grant Token", "GT", 18]);
 
     // Initial token balance.
@@ -72,6 +72,7 @@ describe("Grant", () => {
           constants.AddressZero,
           1000,
           0,
+          0,
           GrantType.FUND_THRESHOLD,
           [0x0]
         );
@@ -105,7 +106,8 @@ describe("Grant", () => {
           targetFunding,
           totalFunded,
           totalPayed,
-          expiration,
+          fundingExpiration,
+          executionExpiration,
           grantType,
           grantStatus,
           extraData
@@ -117,7 +119,8 @@ describe("Grant", () => {
         expect(targetFunding).to.eq(1000);
         expect(totalFunded).to.eq(0);
         expect(totalPayed).to.eq(0);
-        expect(expiration).to.eq(0);
+        expect(fundingExpiration).to.eq(0);
+        expect(executionExpiration).to.eq(0);
         expect(grantType).to.eq(GrantType.FUND_THRESHOLD);
         expect(grantStatus).to.eq(GrantStatus.SIGNAL);
         expect(extraData).to.eq("0x00");
@@ -174,6 +177,7 @@ describe("Grant", () => {
             [{ grantManager: grantManagerWallet.address, weight: 100 }],
             constants.AddressZero,
             1000,
+            0,
             0,
             GrantType.FUND_THRESHOLD,
             [0x0]
@@ -272,6 +276,7 @@ describe("Grant", () => {
             token.address,
             1000,
             0,
+            0,
             GrantType.FUND_THRESHOLD,
             [0x0]
           );
@@ -363,6 +368,7 @@ describe("Grant", () => {
             [{ grantManager: _grantManagerWallet.address, weight: 100 }],
             constants.AddressZero,
             10000,
+            0,
             0,
             GrantType.FUND_THRESHOLD,
             [0x0]
@@ -464,6 +470,7 @@ describe("Grant", () => {
             [{ grantManager: _grantManagerWallet.address, weight: 100 }],
             _token.address,
             10000,
+            0,
             0,
             GrantType.FUND_THRESHOLD,
             [0x0]

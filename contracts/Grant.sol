@@ -100,7 +100,8 @@ contract Grant is FundThreshold, ISignal {
      * @param grantManagers (Optional) Weighted managers of distribution of funds.
      * @param currency (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.
      * @param targetFunding (Optional) Funding threshold required to release funds.
-     * @param expiration (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.
+     * @param fundingExpiration (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.
+     * @param executionExpiration (Optional) Block number after which payouts must be complete or anyone can trigger refunds.
      * @param grantType Which grant success scheme to apply to this grant.
      * @param extraData Support for extensions to the Standard.
      * @return GUID for this grant.
@@ -110,7 +111,8 @@ contract Grant is FundThreshold, ISignal {
         GrantManager[] memory grantManagers,
         address currency,
         uint256 targetFunding,
-        uint256 expiration,
+        uint256 fundingExpiration,
+        uint256 executionExpiration,
         GrantType grantType,
         bytes memory extraData
     )
@@ -137,8 +139,14 @@ contract Grant is FundThreshold, ISignal {
 
         require(
             // solium-disable-next-line security/no-block-members
-            expiration == 0 || expiration > block.number,
-            "create::Invalid Argument. Expiration must be 0 or greater than current block."
+            fundingExpiration == 0 || fundingExpiration > block.number,
+            "create::Invalid Argument. fundingExpiration must be 0 or greater than current block."
+        );
+
+        require(
+            // solium-disable-next-line security/no-block-members
+            executionExpiration == 0 || executionExpiration > block.number,
+            "create::Invalid Argument. executionExpiration must be 0 or greater than current block."
         );
 
         require(
@@ -171,7 +179,8 @@ contract Grant is FundThreshold, ISignal {
         _grants[_id].totalGrantManagers = uint16(grantManagers.length);
         _grants[_id].currency = currency;
         _grants[_id].targetFunding = targetFunding;
-        _grants[_id].expiration = expiration;
+        _grants[_id].fundingExpiration = fundingExpiration;
+        _grants[_id].executionExpiration = executionExpiration;
         _grants[_id].grantType = grantType;
         _grants[_id].grantStatus = GrantStatus.SIGNAL;
         _grants[_id].extraData = extraData;
@@ -235,7 +244,9 @@ contract Grant is FundThreshold, ISignal {
            result = FundThreshold.fund(id, value);
         }
 
-        return result;
+        return _grants[id].totalFunded
+            .sub(_grants[id].totalPayed)
+            .sub(_grants[id].totalRefunded);
     }
 
     /**
@@ -285,7 +296,7 @@ contract Grant is FundThreshold, ISignal {
 
 
         uint256 paymentsArrayLength = _grantees[id][grantee].payments.length;
-        // TODO: handle empty array 
+        // TODO: handle empty array
         Payment memory lastPayment = _grantees[id][grantee].payments[paymentsArrayLength - 1];
         bool lastPaymentPaid = lastPayment.paid;
 
@@ -335,7 +346,9 @@ contract Grant is FundThreshold, ISignal {
             revert("payout::Status Error. Cannot request a new payment while a payment is pending.");
         }
 
-        return value;
+        return _grants[id].totalFunded
+            .sub(_grants[id].totalPayed)
+            .sub(_grants[id].totalRefunded);
     }
 
     /**
@@ -347,9 +360,11 @@ contract Grant is FundThreshold, ISignal {
      */
     function refund(bytes32 id, address grantor, uint256 value)
         public
-        returns (bool)
+        returns (uint256 balance)
     {
-        return true;
+        return _grants[id].totalFunded
+            .sub(_grants[id].totalPayed)
+            .sub(_grants[id].totalRefunded);
     }
 
     /**
@@ -359,7 +374,7 @@ contract Grant is FundThreshold, ISignal {
      */
     function cancelGrant(bytes32 id)
         public
-        returns (bool)
+        returns (uint256 balance)
     {
         require(
             _grants[id].grantStatus == GrantStatus.SIGNAL ||
@@ -385,7 +400,9 @@ contract Grant is FundThreshold, ISignal {
             _grants[id].grantStatus = GrantStatus.REFUND;
             emit LogStatusChange(id, GrantStatus.REFUND);
         }
-        return true;
+        return _grants[id].totalFunded
+            .sub(_grants[id].totalPayed)
+            .sub(_grants[id].totalRefunded);
     }
 
     /**

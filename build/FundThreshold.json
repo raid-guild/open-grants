@@ -31,6 +31,52 @@
       "constant": false,
       "inputs": [
         {
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "name": "grantor",
+          "type": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "refund",
+      "outputs": [
+        {
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "name": "cancelGrant",
+      "outputs": [
+        {
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
           "components": [
             {
               "name": "isGrantee",
@@ -97,7 +143,11 @@
           "type": "uint256"
         },
         {
-          "name": "expiration",
+          "name": "fundingExpiration",
+          "type": "uint256"
+        },
+        {
+          "name": "executionExpiration",
           "type": "uint256"
         },
         {
@@ -114,52 +164,6 @@
         {
           "name": "id",
           "type": "bytes32"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "name": "grantor",
-          "type": "address"
-        },
-        {
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "refund",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "id",
-          "type": "bytes32"
-        }
-      ],
-      "name": "cancelGrant",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
         }
       ],
       "payable": false,
@@ -368,6 +372,52 @@
       "constant": false,
       "inputs": [
         {
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "name": "grantor",
+          "type": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "refund",
+      "outputs": [
+        {
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "name": "cancelGrant",
+      "outputs": [
+        {
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
           "components": [
             {
               "name": "isGrantee",
@@ -434,7 +484,11 @@
           "type": "uint256"
         },
         {
-          "name": "expiration",
+          "name": "fundingExpiration",
+          "type": "uint256"
+        },
+        {
+          "name": "executionExpiration",
           "type": "uint256"
         },
         {
@@ -451,52 +505,6 @@
         {
           "name": "id",
           "type": "bytes32"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "name": "grantor",
-          "type": "address"
-        },
-        {
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "refund",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "id",
-          "type": "bytes32"
-        }
-      ],
-      "name": "cancelGrant",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
         }
       ],
       "payable": false,
