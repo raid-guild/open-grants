@@ -4,7 +4,9 @@
   "description": "Ethereum Smart Contracts to encode grants",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/ethereum-waffle/bin/waffle waffle.js && ./node_modules/ts-mocha/bin/ts-mocha test/*"
+    "test": "./node_modules/ethereum-waffle/bin/waffle waffle.js && ./node_modules/ts-mocha/bin/ts-mocha test/*",
+    "clean": "npx rimraf ./node_modules/",
+    "lint": "solium -d contracts/"
   },
   "repository": {
     "type": "git",
@@ -27,7 +29,7 @@
   "dependencies": {
     "diff": ">=3.5.0",
     "openzeppelin-solidity": "^2.3.0",
-    "solc": "^0.5.10",
+    "solc": "^0.5.11",
     "truffle": "^5.0.22"
   },
   "devDependencies": {
@@ -35,6 +37,7 @@
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
     "ethereum-waffle": "^2.0.14",
+    "rimraf": "^3.0.0",
     "ts-mocha": "^6.0.0",
     "typescript": "^3.5.3"
   }

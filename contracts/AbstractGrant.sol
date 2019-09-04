@@ -4,77 +4,55 @@ pragma experimental ABIEncoderV2;
 /**
  * @title Grants Spec Abstract Contract.
  * @dev Grant request, funding, and management.
- * @author @NoahMarconi @JFickel @ArnaudBrousseau
+ * @author @NoahMarconi @ameensol @JFickel @ArnaudBrousseau
  */
 contract AbstractGrant {
 
     /*----------  Globals  ----------*/
 
-    mapping(bytes32 => Grant) internal _grants;                                   // Grants mapped by GUID.
-    mapping(bytes32 => mapping(address => Grantee)) internal _grantees;           // Grantees mapped by Grant GUID then address.
-    mapping(bytes32 => mapping(address => Grantor)) internal _grantors;           // Grantors mapped by Grant GUID then address.
-    mapping(bytes32 => mapping(address => GrantManager)) internal _grantManagers; // GrantManagers mapped by Grant GUID then address.
-
+    address public manager;                      // Multisig or EOA address to manage grant.
+    address public currency;                     // (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.
+    uint256 public targetFunding;                // (Optional) Funding threshold required to release funds.
+    uint256 public totalFunding;                 // Cumulative funding donated by donors.
+    uint256 public totalPayed;                   // Cumulative funding payed to grantees.
+    uint256 public totalRefunded;                // Cumulative funding refunded to grantors.
+    uint256 public fundingExpiration;            // (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.
+    uint256 public contractExpiration;           // (Optional) Block number after which payouts must be complete or anyone can trigger refunds.
+    uint256 public refundCheckpoint;             // Balance when donor initiated refund begins. Calculate % of funds donor may refund themself.
+    GrantStatus public grantStatus;              // Current GrantStatus.
+    mapping(address => Grantee) grantees;        // Grant recipients by address.
+    mapping(address => Donor) donors;            // Donors by address.
 
     /*----------  Types  ----------*/
 
-    enum GrantType {
-        FUND_THRESHOLD, // Funds unlocked if threshold met.
-        FUNDER_VOTE,    // Funds unlocked if funders approve.
-        MANAGED,        // Funds unlocked by grant_managers.
-        OPAQUE          // Other offchain method.
-    }
+
+    // TODO: Confirm GrantStatus not needed for FUNDRAISING as it can be inferred.
+
+    // 1. INIT is fine - contract deployment
+    // 2. remove SIGNAL
+    // 3. FUNDRAISING is fine - fund start timestamp passed
+    // 4. working
+    // 5. done (all refunds allowed)
+
+    // INIT -> FUNDRAISING -> SUCCESS -> DONE
+    //                     -> DONE
 
     enum GrantStatus {
-        INIT,    // Null status.
-        SIGNAL,  // Non-binding carbon vote.
-        FUND,    // Fundraising period.
-        PAY,     // Payout period.
-        REFUND,  // Refund to original funders.
-        COMPLETE // Grant complete.
-    }
-
-    struct Payment {
-        uint8 approvals; // Sum of approval weights from Grant Managers.
-        uint256 amount;  // Amount to be paid.
-        bool paid;       // True if paid, false if not.
+        INIT,    // Contract Deployment.
+        SUCCESS, // Grant successfully funded.
+        DONE     // Grant complete and funds dispersed, or grant cancelled.
     }
 
     struct Grantee {
-        bool isGrantee;     // Is a grantee.
-        address grantee;    // Address of grantee.
-        uint256 allocation; // Grant size for the grantee.
-        uint256 received;   // Cumulative payments received.
-        Payment[] payments; // Payments to the Grantee.
+        uint256 targetFunding;   // Funding amount targeted for Grantee.
+        uint256 totalPayed;      // Cumulative funding received by Grantee.
+        uint256 payoutApproved;  // Pending payout approved by Manager.
     }
 
-    struct Grantor {
-        bool isGrantor;   // Is a grantor.
-        address grantor;  // Address of grantor.
-        uint256 funded;   // Total amount funded.
-        uint256 refunded; // Cumulative amount refunded.
-    }
-
-    struct GrantManager {
-        bool isGrantManager;  // Is a grant manager.
-        address grantManager; // Address of grant manager.
-        uint8 weight;         // Value 0 to 100.
-    }
-
-    struct Grant {
-        uint16 totalGrantees;         // Number of Grantees for this grant.
-        uint16 totalGrantManagers;    // Number of GrantManagers for this grant.
-        uint32 totalGrantors;         // Cumulative number of Grantors for this grant.
-        address currency;             // (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.
-        uint256 targetFunding;        // (Optional) Funding threshold required to release funds.
-        uint256 totalFunded;          // Cumulative funding received for this grant.
-        uint256 totalPayed;           // Cumulative funding payed to grantees.
-        uint256 totalRefunded;        // Cumulative funding refunded to grantors.
-        uint256 fundingExpiration;    // (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.
-        uint256 executionExpiration;  // (Optional) Block number after which payouts must be complete or anyone can trigger refunds.
-        GrantType grantType;          // Which grant success scheme to apply to this grant.
-        GrantStatus grantStatus;      // Current GrantStatus.
-        bytes extraData;              // Support for extensions to the Standard.
+    struct Donor {
+        uint256 funded;          // Total amount funded.
+        uint256 refunded;        // Cumulative amount refunded.
+        uint256 refundApproved;  // Pending refund approved by Manager.
     }
 
 
@@ -82,118 +60,97 @@ contract AbstractGrant {
 
     /**
      * @dev Change in GrantStatus.
-     * @param id Which Grant's status changed.
      * @param grantStatus New GrantStatus.
      */
-    event LogStatusChange(bytes32 indexed id, GrantStatus grantStatus);
+    event LogStatusChange(GrantStatus grantStatus);
 
     /**
      * @dev Grant received funding.
-     * @param id Which Grant received funding.
-     * @param grantor Address funding the grant.
+     * @param donor Address funding the grant.
      * @param value Amount in WEI or GRAINS funded.
      */
-    event LogFunding(bytes32 indexed id, address indexed grantor, uint256 value);
+    event LogFunding(address indexed donor, uint256 value);
 
     /**
      * @dev Grant refunding funding.
-     * @param id Which grant refunding.
-     * @param grantor Address receiving refund.
+     * @param donor Address receiving refund.
      * @param value Amount in WEI or GRAINS refunded.
      */
-    event LogRefund(bytes32 indexed id, address indexed grantor, uint256 value);
+    event LogRefund(address indexed donor, uint256 value);
 
     /**
      * @dev Grant paying grantee.
-     * @param id Which grant making payment.
      * @param grantee Address receiving payment.
      * @param value Amount in WEI or GRAINS refunded.
      */
-    event LogPayment(bytes32 indexed id, address indexed grantee, uint256 value);
+    event LogPayment(address indexed grantee, uint256 value);
 
     /**
-     * @dev Grantee requesting a payment.
-     * @param id Which grant making payment.
+     * @dev Manager approving a payment.
      * @param grantee Address receiving payment.
      * @param value Amount in WEI or GRAINS refunded.
      */
-    event LogPaymentRequest(bytes32 indexed id, address indexed grantee, uint256 value);
+    event LogPaymentApproval(address indexed grantee, uint256 value);
 
     /**
-     * @dev GrantManager adding approvals to a payment.
-     * @param id Which grant making payment.
-     * @param grantee Address receiving payment.
+     * @dev Manager approving a refund.
+     * @param donor Address receiving refund.
      * @param value Amount in WEI or GRAINS refunded.
      */
-    event LogAddPaymentApprovals(bytes32 indexed id, address indexed grantee, uint256 value, uint8 approvals);
+    event LogRefundApproval(address indexed donor, uint256 value);
 
 
     /*----------  Methods  ----------*/
 
     /**
-     * @dev Grant creation function. May be called by grantors, grantees, or any other relevant party.
-     * @param grantees Recipients of unlocked funds and their respective allocations.
-     * @param grantManagers (Optional) Weighted managers of distribution of funds.
-     * @param currency (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.
-     * @param targetFunding (Optional) Funding threshold required to release funds.
-     * @param fundingExpiration (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.
-     * @param executionExpiration (Optional) Block number after which payouts must be complete or anyone can trigger refunds.
-     * @param grantType Which grant success scheme to apply to this grant.
-     * @param extraData Support for extensions to the Standard.
-     * @return GUID for this grant.
+     * @dev Total funding getter.
+     * @return Cumulative funding received for this grant.
      */
-    function create(
-        Grantee[] memory grantees,
-        GrantManager[] memory grantManagers,
-        address currency,
-        uint256 targetFunding,
-        uint256 fundingExpiration,
-        uint256 executionExpiration,
-        GrantType grantType,
-        bytes memory extraData
-    )
+    function getTotalFunding()
         public
-        returns (bytes32 id);
+        view
+        returns (uint256 funding);
 
     /**
      * @dev Fund a grant proposal.
-     * @param id GUID for the grant to fund.
      * @param value Amount in WEI or GRAINS to fund.
-     * @return Cumulative funding received for this grant.
+     * @return Remaining funding available in this grant.
      */
-    function fund(bytes32 id, uint256 value)
+    function fund(uint256 value)
         public
         payable
         returns (uint256 balance);
 
     /**
      * @dev Pay a grantee.
-     * @param id GUID for the grant to fund.
      * @param grantee Recipient of payment.
      * @param value Amount in WEI or GRAINS to fund.
      * @return Remaining funding available in this grant.
      */
-    function payout(bytes32 id, address grantee, uint256 value)
+    function payout(address grantee, uint256 value)
         public
         returns (uint256 balance);
 
     /**
      * @dev Refund a grantor.
-     * @param id GUID for the grant to refund.
-     * @param grantor Recipient of refund.
-     * @param value Amount in WEI or GRAINS to fund.
-     * @return True if successful, otherwise false.
+     * @param donor Recipient of refund.
+     * @return Remaining funding available in this grant.
      */
-    function refund(bytes32 id, address grantor, uint256 value)
+
+    // TODO: MUST BE DONE
+    // any donor can receive up to their maximum
+    // - their fraction of (total funding - total spent) * (donor value / total funding)
+    // - only allow refunds in full
+    // - check that donor refund = 0
+    function refund(address donor)
         public
         returns (uint256 balance);
 
     /**
      * @dev Cancel grant and enable refunds.
-     * @param id GUID for the grant to refund.
-     * @return True if successful, otherwise false.
+     * @return Remaining funding available in this grant.
      */
-    function cancelGrant(bytes32 id)
+    function cancelGrant()
         public
         returns (uint256 balance);
 }

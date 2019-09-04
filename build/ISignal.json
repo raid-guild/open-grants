@@ -4,10 +4,6 @@
       "constant": false,
       "inputs": [
         {
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
           "name": "value",
           "type": "uint256"
         }
@@ -24,32 +20,8 @@
       "type": "function"
     },
     {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "id",
-          "type": "bytes32"
-        }
-      ],
-      "name": "endSignaling",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "anonymous": false,
       "inputs": [
-        {
-          "indexed": true,
-          "name": "id",
-          "type": "bytes32"
-        },
         {
           "indexed": true,
           "name": "signaler",
@@ -89,10 +61,6 @@
       "constant": false,
       "inputs": [
         {
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
           "name": "value",
           "type": "uint256"
         }
@@ -109,32 +77,8 @@
       "type": "function"
     },
     {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "id",
-          "type": "bytes32"
-        }
-      ],
-      "name": "endSignaling",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "anonymous": false,
       "inputs": [
-        {
-          "indexed": true,
-          "name": "id",
-          "type": "bytes32"
-        },
         {
           "indexed": true,
           "name": "signaler",

@@ -4,10 +4,6 @@
       "constant": false,
       "inputs": [
         {
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
           "name": "grantee",
           "type": "address"
         },
@@ -28,40 +24,64 @@
       "type": "function"
     },
     {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "name": "grantor",
-          "type": "address"
-        },
-        {
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "refund",
+      "constant": true,
+      "inputs": [],
+      "name": "fundingExpiration",
       "outputs": [
         {
-          "name": "balance",
+          "name": "",
           "type": "uint256"
         }
       ],
       "payable": false,
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "manager",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "refundCheckpoint",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "grantStatus",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
       "type": "function"
     },
     {
       "constant": false,
-      "inputs": [
-        {
-          "name": "id",
-          "type": "bytes32"
-        }
-      ],
+      "inputs": [],
       "name": "cancelGrant",
       "outputs": [
         {
@@ -74,109 +94,50 @@
       "type": "function"
     },
     {
-      "constant": false,
-      "inputs": [
-        {
-          "components": [
-            {
-              "name": "isGrantee",
-              "type": "bool"
-            },
-            {
-              "name": "grantee",
-              "type": "address"
-            },
-            {
-              "name": "allocation",
-              "type": "uint256"
-            },
-            {
-              "name": "received",
-              "type": "uint256"
-            },
-            {
-              "components": [
-                {
-                  "name": "approvals",
-                  "type": "uint8"
-                },
-                {
-                  "name": "amount",
-                  "type": "uint256"
-                },
-                {
-                  "name": "paid",
-                  "type": "bool"
-                }
-              ],
-              "name": "payments",
-              "type": "tuple[]"
-            }
-          ],
-          "name": "grantees",
-          "type": "tuple[]"
-        },
-        {
-          "components": [
-            {
-              "name": "isGrantManager",
-              "type": "bool"
-            },
-            {
-              "name": "grantManager",
-              "type": "address"
-            },
-            {
-              "name": "weight",
-              "type": "uint8"
-            }
-          ],
-          "name": "grantManagers",
-          "type": "tuple[]"
-        },
-        {
-          "name": "currency",
-          "type": "address"
-        },
-        {
-          "name": "targetFunding",
-          "type": "uint256"
-        },
-        {
-          "name": "fundingExpiration",
-          "type": "uint256"
-        },
-        {
-          "name": "executionExpiration",
-          "type": "uint256"
-        },
-        {
-          "name": "grantType",
-          "type": "uint8"
-        },
-        {
-          "name": "extraData",
-          "type": "bytes"
-        }
-      ],
-      "name": "create",
+      "constant": true,
+      "inputs": [],
+      "name": "contractExpiration",
       "outputs": [
         {
-          "name": "id",
-          "type": "bytes32"
+          "name": "",
+          "type": "uint256"
         }
       ],
       "payable": false,
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalPayed",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getTotalFunding",
+      "outputs": [
+        {
+          "name": "funding",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
       "type": "function"
     },
     {
       "constant": false,
       "inputs": [
-        {
-          "name": "id",
-          "type": "bytes32"
-        },
         {
           "name": "value",
           "type": "uint256"
@@ -194,13 +155,83 @@
       "type": "function"
     },
     {
-      "anonymous": false,
+      "constant": true,
+      "inputs": [],
+      "name": "totalRefunded",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "currency",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "targetFunding",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
       "inputs": [
         {
-          "indexed": true,
-          "name": "id",
-          "type": "bytes32"
-        },
+          "name": "donor",
+          "type": "address"
+        }
+      ],
+      "name": "refund",
+      "outputs": [
+        {
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalFunding",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
         {
           "indexed": false,
           "name": "grantStatus",
@@ -215,12 +246,7 @@
       "inputs": [
         {
           "indexed": true,
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
-          "name": "grantor",
+          "name": "donor",
           "type": "address"
         },
         {
@@ -237,12 +263,7 @@
       "inputs": [
         {
           "indexed": true,
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
-          "name": "grantor",
+          "name": "donor",
           "type": "address"
         },
         {
@@ -257,11 +278,6 @@
     {
       "anonymous": false,
       "inputs": [
-        {
-          "indexed": true,
-          "name": "id",
-          "type": "bytes32"
-        },
         {
           "indexed": true,
           "name": "grantee",
@@ -281,11 +297,6 @@
       "inputs": [
         {
           "indexed": true,
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
           "name": "grantee",
           "type": "address"
         },
@@ -295,7 +306,7 @@
           "type": "uint256"
         }
       ],
-      "name": "LogPaymentRequest",
+      "name": "LogPaymentApproval",
       "type": "event"
     },
     {
@@ -303,26 +314,16 @@
       "inputs": [
         {
           "indexed": true,
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
-          "name": "grantee",
+          "name": "donor",
           "type": "address"
         },
         {
           "indexed": false,
           "name": "value",
           "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "approvals",
-          "type": "uint8"
         }
       ],
-      "name": "LogAddPaymentApprovals",
+      "name": "LogRefundApproval",
       "type": "event"
     }
   ],
@@ -345,10 +346,6 @@
       "constant": false,
       "inputs": [
         {
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
           "name": "grantee",
           "type": "address"
         },
@@ -369,40 +366,64 @@
       "type": "function"
     },
     {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "name": "grantor",
-          "type": "address"
-        },
-        {
-          "name": "value",
-          "type": "uint256"
-        }
-      ],
-      "name": "refund",
+      "constant": true,
+      "inputs": [],
+      "name": "fundingExpiration",
       "outputs": [
         {
-          "name": "balance",
+          "name": "",
           "type": "uint256"
         }
       ],
       "payable": false,
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "manager",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "refundCheckpoint",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "grantStatus",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
       "type": "function"
     },
     {
       "constant": false,
-      "inputs": [
-        {
-          "name": "id",
-          "type": "bytes32"
-        }
-      ],
+      "inputs": [],
       "name": "cancelGrant",
       "outputs": [
         {
@@ -415,109 +436,50 @@
       "type": "function"
     },
     {
-      "constant": false,
-      "inputs": [
-        {
-          "components": [
-            {
-              "name": "isGrantee",
-              "type": "bool"
-            },
-            {
-              "name": "grantee",
-              "type": "address"
-            },
-            {
-              "name": "allocation",
-              "type": "uint256"
-            },
-            {
-              "name": "received",
-              "type": "uint256"
-            },
-            {
-              "components": [
-                {
-                  "name": "approvals",
-                  "type": "uint8"
-                },
-                {
-                  "name": "amount",
-                  "type": "uint256"
-                },
-                {
-                  "name": "paid",
-                  "type": "bool"
-                }
-              ],
-              "name": "payments",
-              "type": "tuple[]"
-            }
-          ],
-          "name": "grantees",
-          "type": "tuple[]"
-        },
-        {
-          "components": [
-            {
-              "name": "isGrantManager",
-              "type": "bool"
-            },
-            {
-              "name": "grantManager",
-              "type": "address"
-            },
-            {
-              "name": "weight",
-              "type": "uint8"
-            }
-          ],
-          "name": "grantManagers",
-          "type": "tuple[]"
-        },
-        {
-          "name": "currency",
-          "type": "address"
-        },
-        {
-          "name": "targetFunding",
-          "type": "uint256"
-        },
-        {
-          "name": "fundingExpiration",
-          "type": "uint256"
-        },
-        {
-          "name": "executionExpiration",
-          "type": "uint256"
-        },
-        {
-          "name": "grantType",
-          "type": "uint8"
-        },
-        {
-          "name": "extraData",
-          "type": "bytes"
-        }
-      ],
-      "name": "create",
+      "constant": true,
+      "inputs": [],
+      "name": "contractExpiration",
       "outputs": [
         {
-          "name": "id",
-          "type": "bytes32"
+          "name": "",
+          "type": "uint256"
         }
       ],
       "payable": false,
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalPayed",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getTotalFunding",
+      "outputs": [
+        {
+          "name": "funding",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
       "type": "function"
     },
     {
       "constant": false,
       "inputs": [
-        {
-          "name": "id",
-          "type": "bytes32"
-        },
         {
           "name": "value",
           "type": "uint256"
@@ -535,13 +497,83 @@
       "type": "function"
     },
     {
-      "anonymous": false,
+      "constant": true,
+      "inputs": [],
+      "name": "totalRefunded",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "currency",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "targetFunding",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
       "inputs": [
         {
-          "indexed": true,
-          "name": "id",
-          "type": "bytes32"
-        },
+          "name": "donor",
+          "type": "address"
+        }
+      ],
+      "name": "refund",
+      "outputs": [
+        {
+          "name": "balance",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalFunding",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
         {
           "indexed": false,
           "name": "grantStatus",
@@ -556,12 +588,7 @@
       "inputs": [
         {
           "indexed": true,
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
-          "name": "grantor",
+          "name": "donor",
           "type": "address"
         },
         {
@@ -578,12 +605,7 @@
       "inputs": [
         {
           "indexed": true,
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
-          "name": "grantor",
+          "name": "donor",
           "type": "address"
         },
         {
@@ -598,11 +620,6 @@
     {
       "anonymous": false,
       "inputs": [
-        {
-          "indexed": true,
-          "name": "id",
-          "type": "bytes32"
-        },
         {
           "indexed": true,
           "name": "grantee",
@@ -622,11 +639,6 @@
       "inputs": [
         {
           "indexed": true,
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
           "name": "grantee",
           "type": "address"
         },
@@ -636,7 +648,7 @@
           "type": "uint256"
         }
       ],
-      "name": "LogPaymentRequest",
+      "name": "LogPaymentApproval",
       "type": "event"
     },
     {
@@ -644,26 +656,16 @@
       "inputs": [
         {
           "indexed": true,
-          "name": "id",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
-          "name": "grantee",
+          "name": "donor",
           "type": "address"
         },
         {
           "indexed": false,
           "name": "value",
           "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "approvals",
-          "type": "uint8"
         }
       ],
-      "name": "LogAddPaymentApprovals",
+      "name": "LogRefundApproval",
       "type": "event"
     }
   ],
