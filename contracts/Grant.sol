@@ -164,16 +164,6 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
             .sub(pendingPayments);
     }
 
-    function getContractBalance()
-        public
-        view
-        returns(uint256)
-    {
-        return totalFunding
-            .sub(totalPayed)
-            .sub(totalRefunded);
-    }
-
     /**
      * @dev Funding status check.
      * @return true if can fund grant.
@@ -449,7 +439,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
             .div(PRECISION_D);
 
         require(
-            eligibleRefund > donors[donor].refunded,
+            eligibleRefund >= donors[donor].refunded,
             "withdrawRefund::Error. Donor has already withdrawn currently eligible refund."
         );
 
