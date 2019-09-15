@@ -4,6 +4,10 @@
       "constant": false,
       "inputs": [
         {
+          "name": "support",
+          "type": "bool"
+        },
+        {
           "name": "value",
           "type": "uint256"
         }
@@ -22,6 +26,11 @@
     {
       "anonymous": false,
       "inputs": [
+        {
+          "indexed": true,
+          "name": "support",
+          "type": "bool"
+        },
         {
           "indexed": true,
           "name": "signaler",
@@ -61,6 +70,10 @@
       "constant": false,
       "inputs": [
         {
+          "name": "support",
+          "type": "bool"
+        },
+        {
           "name": "value",
           "type": "uint256"
         }
@@ -79,6 +92,11 @@
     {
       "anonymous": false,
       "inputs": [
+        {
+          "indexed": true,
+          "name": "support",
+          "type": "bool"
+        },
         {
           "indexed": true,
           "name": "signaler",
