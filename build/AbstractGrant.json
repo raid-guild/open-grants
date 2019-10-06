@@ -1,29 +1,6 @@
 {
   "abi": [
     {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "value",
-          "type": "uint256"
-        },
-        {
-          "name": "grantee",
-          "type": "address"
-        }
-      ],
-      "name": "withdrawPayout",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "constant": true,
       "inputs": [],
       "name": "fundingExpiration",
@@ -114,7 +91,12 @@
         }
       ],
       "name": "approvePayout",
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
@@ -438,29 +420,6 @@
   },
   "interface": [
     {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "value",
-          "type": "uint256"
-        },
-        {
-          "name": "grantee",
-          "type": "address"
-        }
-      ],
-      "name": "withdrawPayout",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "constant": true,
       "inputs": [],
       "name": "fundingExpiration",
@@ -551,7 +510,12 @@
         }
       ],
       "name": "approvePayout",
-      "outputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"

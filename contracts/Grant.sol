@@ -171,7 +171,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
     /**
      * @dev Grantee specific check for remaining allocated funds.
-     * @param Grantee's address.
+     * @param grantee's address.
      */
     function remainingAllocation(address grantee)
         public
