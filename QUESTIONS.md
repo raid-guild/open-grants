@@ -2,7 +2,7 @@ Questions:
 
 
 - [x] All or nothing refunds. (prevents collusion with manager)
-- [] consider pay by increments (manager approve): total available for grants (< target funding )
+- [ ] ~~consider pay by increments (manager approve): total available for grants (< target funding )~~
 
 - ~~PAY as group or pay individuals ~~
 
@@ -16,15 +16,15 @@ Questions:
 - [x] switch to approve/withdraw instead of overlaoding
 
   
-- [ ] confirm fund function does not exceed gas limit for fallback. and test from contracts
+- [x] confirm fund function does not exceed gas limit for fallback. and test from contracts NOTE: exceeds send/transfer stipend but problem when gas specified from EOA or call
 - [x] refund amount instead of person. (authorizeRefund(amount) donor calls getRefund)
 - [x] ask why return balance? can we return a boolean (if payment that could fail)? or nothing?
 - [x] all or nothing means all donors not all of donated funds
 - [x] add canFund function
 
 
-- [ ] can we combine / reduce grant state
-- [ ] maybe use a getter for total funded (diff for ERC20 vs ETH)
+- [x] can we combine / reduce grant state
+- [x] maybe use a getter for total funded (diff for ERC20 vs ETH)
 - [ ] ~~can we reduce # of roles (grantor / grantee)~~
 - [x] can we combine grants structs
 - [x] can we get rid of grant types?
@@ -35,12 +35,12 @@ Questions:
 - [x] can we remove "request payment"
   - [x] are we assuming that grant managers have robust offchain comm with grantees
   - [x] what if everyone is a grant manager?
-  - [ ] DAO as manager (delegate management but maintain cancel control for example)
+  - [x] DAO as manager (delegate management but maintain cancel control for example)
 - [x] can we remove Payments[] by having a "requesting" global state
   - [x] grant managers approve / vote on the requested funds
   - [] ~~possibly use timestamp to avoid explicit states~~
   - [ ] ~~if expires then can propose again~~
-  - [ ] One payment at a time or not?
+  - [ ] ~~One payment at a time or not?~~
 - [x] can we remove multiple grant managers / voting / m-of-n and replace w/ msig?
 - [x] use donor / grantee / manager
 
