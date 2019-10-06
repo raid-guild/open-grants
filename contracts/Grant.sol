@@ -129,22 +129,6 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
     /*----------  Public Helpers  ----------*/
 
-    function isGrantee(address toCheck)
-        public
-        view
-        returns(bool)
-    {
-        return grantees[toCheck].targetFunding > 0;
-    }
-
-    function isDonor(address toCheck)
-        public
-        view
-        returns(bool)
-    {
-        return donors[toCheck].funded > 0;
-    }
-
     function isManager(address toCheck)
         public
         view
@@ -185,6 +169,10 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         );
     }
 
+    /**
+     * @dev Grantee specific check for remaining allocated funds.
+     * @param Grantee's address.
+     */
     function remainingAllocation(address grantee)
         public
         view
@@ -194,6 +182,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
             .sub(grantees[grantee].totalPayed)
             .sub(grantees[grantee].payoutApproved);
     }
+
 
     /*----------  Public Methods  ----------*/
 
@@ -246,16 +235,18 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         return true;
     }
 
+
     /*----------  Manager Methods  ----------*/
 
     /**
-     * @dev Approve payment to a grantee.
+     * @dev Approve and make payment to a grantee.
      * @param value Amount in WEI or GRAINS to fund.
      * @param grantee Recipient of payment.
      */
     function approvePayout(uint256 value, address grantee)
         public
         onlyManager
+        returns(bool)
     {
 
         require(
@@ -274,12 +265,27 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         );
 
         // Update state.
-        grantees[grantee].payoutApproved = grantees[grantee]
-            .payoutApproved.add(value);
+        totalPayed = totalPayed.add(value);
+        grantees[grantee].totalPayed = grantees[grantee].totalPayed.add(value);
 
-        pendingPayments = pendingPayments.add(value);
+        // Send funds.
+        if (currency == address(0)) {
+            require(
+                // solium-disable-next-line security/no-send
+                msg.sender.send(value),
+                "approvePayout::Transfer Error. Unable to send value to Grantee."
+            );
+        } else {
+            require(
+                IERC20(currency)
+                    .transfer(grantee, value),
+                "approvePayout::Transfer Error. ERC20 token transfer failed."
+            );
+        }
 
-        emit LogPaymentApproval(grantee, value);
+        emit LogPayment(grantee, value);
+
+        return true;
     }
 
     /**
@@ -312,7 +318,6 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
         emit LogGrantCancellation();
     }
-
 
     /**
      * @dev Approve refunding a portion of the contract's available balance.
@@ -406,43 +411,12 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
     /*----------  Withdrawal Methods  ----------*/
 
-    function withdrawPayout(uint256 value, address grantee)
-        public
-        nonReentrant
-        returns (bool)
-    {
-        require(
-            grantees[grantee].payoutApproved == value,
-            "withdrawPayout::Invalid Argument. grantee payoutApproved must equal value."
-        );
-
-        // Update state.
-        totalPayed = totalPayed.add(value);
-        pendingPayments = pendingPayments.sub(value);
-        grantees[grantee].payoutApproved = 0;
-        grantees[grantee].totalPayed = grantees[grantee].totalPayed.add(value);
-
-        // Send funds.
-        if (currency == address(0)) {
-            require(
-                // solium-disable-next-line security/no-send
-                msg.sender.send(value),
-                "withdrawPayout::Transfer Error. Unable to send value to Grantee."
-            );
-        } else {
-            require(
-                IERC20(currency)
-                    .transfer(grantee, value),
-                "withdrawPayout::Transfer Error. ERC20 token transfer failed."
-            );
-        }
-
-        emit LogPayment(grantee, value);
-
-        return true;
-    }
-
-
+    /**
+     * @dev Withdraws portion of the contract's available balance.
+     *      Amount donor receives is proportionate to their funding contribution.
+     * @param donor Donor address to refund.
+     * @return true if withdraw successful.
+     */
     function withdrawRefund(address donor)
         public
         nonReentrant

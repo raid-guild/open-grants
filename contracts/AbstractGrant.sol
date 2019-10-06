@@ -118,20 +118,11 @@ contract AbstractGrant {
      * @dev Approve payment to a grantee.
      * @param value Amount in WEI or GRAINS to pay.
      * @param grantee Recipient of payment.
+     * @return true if payout successful.
      */
     function approvePayout(uint256 value, address grantee)
-        public;
-
-    /**
-     * @dev Withdraws portion of the contract's available balance.
-     *      Amount must first be approved by Manager.
-     * @param value Amount in WEI or GRAINS to withdraw.
-     * @param grantee Grantee address to pay.
-     * @return true if withdraw successful.
-     */
-    function withdrawPayout(uint256 value, address grantee)
         public
-        returns (bool);
+        returns(bool);
 
     /**
      * @dev Approve refunding a portion of the contract's available balance.
