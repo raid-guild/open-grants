@@ -19,7 +19,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
     /*----------  Constants  ----------*/
 
-    uint256 PRECISION_D = 10 ** 18;
+    uint256 GRAINS = 10 ** 18;
 
 
     /*----------  Constructor  ----------*/
@@ -31,7 +31,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
      * @param _manager (Optional) Multisig or EOA address of grant manager.
      * @param _currency (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.
      * @param _targetFunding (Optional) Funding threshold required to release funds.
-     * @param _fundingExpiration (Optional) Date after which votes OR funds (dependant on GrantType) cannot be sent.
+     * @param _fundingExpiration (Optional) Date after which signaling OR funds cannot be sent.
      * @param _contractExpiration (Optional) Date after which payouts must be complete or anyone can trigger refunds.
      */
     constructor(
@@ -48,19 +48,19 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
         require(
             _fundingExpiration == 0 || _fundingExpiration < _contractExpiration,
-            "constructor::Invalid Argument. _fundingExpiration must be 0 or less than _contractExpiration."
+            "constructor::Invalid Argument. _fundingExpiration not < _contractExpiration."
         );
 
         require(
         // solium-disable-next-line security/no-block-members
             _fundingExpiration == 0 || _fundingExpiration > now,
-            "constructor::Invalid Argument. _fundingExpiration must be 0 or greater than current date."
+            "constructor::Invalid Argument. _fundingExpiration not > now."
         );
 
         require(
         // solium-disable-next-line security/no-block-members
             _contractExpiration == 0 || _contractExpiration > now,
-            "constructor::Invalid Argument. _contractExpiration must be 0 or greater than current date."
+            "constructor::Invalid Argument. _contractExpiration not > now."
         );
 
         require(
@@ -70,7 +70,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
         require(
             _grantees.length == _amounts.length,
-            "constructor::Invalid Argument. _grantees and _amounts arrays must be of equal length."
+            "constructor::Invalid Argument. _grantees.length must equal _amounts.length"
         );
 
         // Initialize globals.
@@ -91,12 +91,12 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
             require(
                 currentAmount > 0,
-                "constructor::Invalid Argument. Grantee's allocation (currentAmount) must be greater than 0."
+                "constructor::Invalid Argument. currentAmount must be greater than 0."
             );
 
             require(
                 currentGrantee > lastAddress,
-                "constructor::Invalid Argument. Grantee's address array must be duplicate free and sorted smallest to largest."
+                "constructor::Invalid Argument. Duplicate or out of order _grantees."
             );
 
             require(
@@ -111,7 +111,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
         require(
             totalFundingAmount == _targetFunding,
-            "constructor::Invalid Argument. _targetFunding must equal the sum of values in _amounts array."
+            "constructor::Invalid Argument. _targetFunding must equal totalFundingAmount."
         );
 
     }
@@ -153,10 +153,14 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         return manager == toCheck;
     }
 
-    function getAvailableBalance()
+    /**
+     * @dev Get available grant balance.
+     * @return Balance remaining in contract.
+     */
+    function availableBalance()
         public
         view
-        returns(uint256 balance)
+        returns(uint256)
     {
         return totalFunding
             .sub(totalPayed)
@@ -179,6 +183,16 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
             totalFunding < targetFunding &&
             !grantCancelled
         );
+    }
+
+    function remainingAllocation(address grantee)
+        public
+        view
+        returns(uint256)
+    {
+        return grantees[grantee].targetFunding
+            .sub(grantees[grantee].totalPayed)
+            .sub(grantees[grantee].payoutApproved);
     }
 
     /*----------  Public Methods  ----------*/
@@ -236,32 +250,27 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
     /**
      * @dev Approve payment to a grantee.
-     * @param grantee Recipient of payment.
      * @param value Amount in WEI or GRAINS to fund.
-     * @return Remaining funding available in this grant.
+     * @param grantee Recipient of payment.
      */
-    function approvePayout(address grantee, uint256 value)
+    function approvePayout(uint256 value, address grantee)
         public
         onlyManager
     {
 
         require(
             targetFunding == totalFunding,
-            "approvePayout::Status Error. Cannot approve payment if funding target not met."
+            "approvePayout::Status Error. Cannot approve if funding target not met."
         );
 
         require(
             !grantCancelled,
-            "approvePayout::Status Error. Cannot approve payment if grant is cancelled."
+            "approvePayout::Status Error. Cannot approve if grant is cancelled."
         );
 
-        uint256 remainingAllocation = grantees[grantee].targetFunding
-            .sub(grantees[grantee].totalPayed)
-            .sub(grantees[grantee].payoutApproved);
-
         require(
-            remainingAllocation >= value,
-            "approvePayout::Invalid Argument. value cannot exceed Grantee's remaining allocation."
+            remainingAllocation(grantee) >= value,
+            "approvePayout::Invalid Argument. value cannot exceed remaining allocation."
         );
 
         // Update state.
@@ -285,7 +294,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         );
 
         if (!isManager(msg.sender)) {
-            // Non manager may cancel grant if:
+            // Non-manager may cancel grant if:
             //      1. Funding goal not met before fundingExpiration.
             //      2. Funds not completely dispersed before contractExpiration.
             require(
@@ -293,11 +302,11 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
                 (fundingExpiration != 0 && fundingExpiration <= now && totalFunding < targetFunding) ||
                 (contractExpiration != 0 && contractExpiration <= now),
                 // solium-disable-previous-line security/no-block-members
-                "cancelGrant::Invalid Sender. Sender must be grant manager unless grant missed funding or contract expiration."
+                "cancelGrant::Invalid Sender. Sender must be manager or expired."
             );
         }
 
-        totalRefunded = totalRefunded.add(getAvailableBalance());
+        totalRefunded = totalRefunded.add(availableBalance());
 
         grantCancelled = true;
 
@@ -308,20 +317,32 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
     /**
      * @dev Approve refunding a portion of the contract's available balance.
      *      Refunds are split between donors based on their contribution to totalFunded.
-     * @param amount Amount to refund.
+     * @param value Amount to refund.
+     * @param grantee Grantee address to reduce allocation from.
      */
-    function approveRefund(uint256 amount)
+    function approveRefund(uint256 value, address grantee)
         public
         onlyManager
     {
+
+        if (grantee != address(0)) {
+            require(
+                remainingAllocation(grantee) >= value,
+                "approveRefund::Invalid Argument. Value greater than remaining allocation."
+            );
+
+            // Reduce allocation.
+            grantees[grantee].targetFunding.sub(value);
+        }
+
         require(
-            amount <= getAvailableBalance(),
-            "approveRefund::Invalid Argument. Amount must be less than or equal to the contract's Available Balance."
+            value <= availableBalance(),
+            "approveRefund::Invalid Argument. Amount is greater than Available Balance."
         );
 
-        totalRefunded = totalRefunded.add(amount);
+        totalRefunded = totalRefunded.add(value);
 
-        emit LogRefundApproval(amount, totalRefunded);
+        emit LogRefundApproval(value, totalRefunded);
     }
 
 
@@ -341,7 +362,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
         require(
             totalFunding < targetFunding,
-            "signal::Status Error. Signalling only permitted prior to reaching funding target."
+            "signal::Status Error. Funding target reached."
         );
 
         emit LogSignal(support, msg.sender, currency, value);
@@ -385,14 +406,14 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
     /*----------  Withdrawal Methods  ----------*/
 
-    function withdrawPayout(address grantee, uint256 value)
+    function withdrawPayout(uint256 value, address grantee)
         public
         nonReentrant
         returns (bool)
     {
         require(
             grantees[grantee].payoutApproved == value,
-            "withdrawPayout::Invalid Argument. grantee payoutApproved does not match value."
+            "withdrawPayout::Invalid Argument. grantee payoutApproved must equal value."
         );
 
         // Update state.
@@ -429,18 +450,18 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
     {
 
         uint256 percentContributed = donors[donor].funded
-            .mul(PRECISION_D).div(
+            .mul(GRAINS).div(
                 totalFunding
             );
 
         // Donor's share of refund.
         uint256 eligibleRefund = totalRefunded
             .mul(percentContributed)
-            .div(PRECISION_D);
+            .div(GRAINS);
 
         require(
             eligibleRefund >= donors[donor].refunded,
-            "withdrawRefund::Error. Donor has already withdrawn currently eligible refund."
+            "withdrawRefund::Error. Donor has already withdrawn eligible refund."
         );
 
         // Minus previous withdrawals.
@@ -477,7 +498,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
     {
         require(
             msg.value == value,
-            "fundWithEther::Invalid Argument. value must equal msg.value. Consider using the fallback function for Ether donations."
+            "fundWithEther::Invalid Argument. value must equal msg.value."
         );
 
         require(

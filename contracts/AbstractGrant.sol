@@ -17,9 +17,8 @@ contract AbstractGrant {
     uint256 public totalPayed;                   // Cumulative funding payed to grantees.
     uint256 public totalRefunded;                // Cumulative funding refunded to donors.
     uint256 public pendingPayments;              // Payments approved to grantees but not yet withdrawn.
-    uint256 public fundingExpiration;            // (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.
-    uint256 public contractExpiration;           // (Optional) Block number after which payouts must be complete or anyone can trigger refunds.
-    uint256 public refundCheckpoint;             // Balance when donor initiated refund begins. Calculate % of funds donor may refund themself.
+    uint256 public fundingExpiration;            // (Optional) Date after which signal OR funds cannot be sent.
+    uint256 public contractExpiration;           // (Optional) Date after which payouts must be complete or anyone can trigger refunds.
     bool public grantCancelled;                  // Flag to indicate when grant is cancelled.
     mapping(address => Grantee) public grantees; // Grant recipients by address.
     mapping(address => Donor) public donors;     // Donors by address.
@@ -67,14 +66,14 @@ contract AbstractGrant {
     /**
      * @dev Grant paying grantee.
      * @param grantee Address receiving payment.
-     * @param value Amount in WEI or GRAINS refunded.
+     * @param value Amount in WEI or GRAINS payed.
      */
     event LogPayment(address indexed grantee, uint256 value);
 
     /**
      * @dev Manager approving a payment.
      * @param grantee Address receiving payment.
-     * @param value Amount in WEI or GRAINS refunded.
+     * @param value Amount in WEI or GRAINS approved for payment.
      */
     event LogPaymentApproval(address indexed grantee, uint256 value);
 
@@ -92,10 +91,10 @@ contract AbstractGrant {
      * @dev Get available grant balance.
      * @return Balance remaining in contract.
      */
-    function getAvailableBalance()
+    function availableBalance()
         public
         view
-        returns(uint256 balance);
+        returns(uint256);
 
     /**
      * @dev Funding status check.
@@ -117,29 +116,30 @@ contract AbstractGrant {
 
     /**
      * @dev Approve payment to a grantee.
+     * @param value Amount in WEI or GRAINS to pay.
      * @param grantee Recipient of payment.
-     * @param value Amount in WEI or GRAINS to fund.
-     * @return Remaining funding available in this grant.
      */
-    function approvePayout(address grantee, uint256 value)
+    function approvePayout(uint256 value, address grantee)
         public;
 
     /**
      * @dev Withdraws portion of the contract's available balance.
      *      Amount must first be approved by Manager.
+     * @param value Amount in WEI or GRAINS to withdraw.
      * @param grantee Grantee address to pay.
      * @return true if withdraw successful.
      */
-    function withdrawPayout(address grantee, uint256 value)
+    function withdrawPayout(uint256 value, address grantee)
         public
         returns (bool);
 
     /**
      * @dev Approve refunding a portion of the contract's available balance.
      *      Refunds are split between donors based on their contribution to totalFunded.
-     * @param amount Amount to refund.
+     * @param value Amount to refund.
+     * @param grantee Grantee address to reduce allocation from.
      */
-    function approveRefund(uint256 amount)
+    function approveRefund(uint256 value, address grantee)
         public;
 
 

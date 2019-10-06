@@ -4,12 +4,12 @@
       "constant": false,
       "inputs": [
         {
-          "name": "grantee",
-          "type": "address"
-        },
-        {
           "name": "value",
           "type": "uint256"
+        },
+        {
+          "name": "grantee",
+          "type": "address"
         }
       ],
       "name": "withdrawPayout",
@@ -38,20 +38,6 @@
       "type": "function"
     },
     {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "approveRefund",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "constant": true,
       "inputs": [],
       "name": "manager",
@@ -59,20 +45,6 @@
         {
           "name": "",
           "type": "address"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "refundCheckpoint",
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256"
         }
       ],
       "payable": false,
@@ -130,29 +102,15 @@
       "type": "function"
     },
     {
-      "constant": true,
-      "inputs": [],
-      "name": "getAvailableBalance",
-      "outputs": [
-        {
-          "name": "balance",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "constant": false,
       "inputs": [
         {
-          "name": "grantee",
-          "type": "address"
-        },
-        {
           "name": "value",
           "type": "uint256"
+        },
+        {
+          "name": "grantee",
+          "type": "address"
         }
       ],
       "name": "approvePayout",
@@ -184,6 +142,20 @@
       "constant": true,
       "inputs": [],
       "name": "contractExpiration",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "availableBalance",
       "outputs": [
         {
           "name": "",
@@ -260,6 +232,24 @@
           "type": "bool"
         }
       ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "uint256"
+        },
+        {
+          "name": "grantee",
+          "type": "address"
+        }
+      ],
+      "name": "approveRefund",
+      "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
@@ -451,12 +441,12 @@
       "constant": false,
       "inputs": [
         {
-          "name": "grantee",
-          "type": "address"
-        },
-        {
           "name": "value",
           "type": "uint256"
+        },
+        {
+          "name": "grantee",
+          "type": "address"
         }
       ],
       "name": "withdrawPayout",
@@ -485,20 +475,6 @@
       "type": "function"
     },
     {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "approveRefund",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "constant": true,
       "inputs": [],
       "name": "manager",
@@ -506,20 +482,6 @@
         {
           "name": "",
           "type": "address"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "refundCheckpoint",
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256"
         }
       ],
       "payable": false,
@@ -577,29 +539,15 @@
       "type": "function"
     },
     {
-      "constant": true,
-      "inputs": [],
-      "name": "getAvailableBalance",
-      "outputs": [
-        {
-          "name": "balance",
-          "type": "uint256"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "constant": false,
       "inputs": [
         {
-          "name": "grantee",
-          "type": "address"
-        },
-        {
           "name": "value",
           "type": "uint256"
+        },
+        {
+          "name": "grantee",
+          "type": "address"
         }
       ],
       "name": "approvePayout",
@@ -631,6 +579,20 @@
       "constant": true,
       "inputs": [],
       "name": "contractExpiration",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "availableBalance",
       "outputs": [
         {
           "name": "",
@@ -707,6 +669,24 @@
           "type": "bool"
         }
       ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "uint256"
+        },
+        {
+          "name": "grantee",
+          "type": "address"
+        }
+      ],
+      "name": "approveRefund",
+      "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
