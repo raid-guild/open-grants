@@ -1,0 +1,70 @@
+<!-- <ion-header mode="md" no-border>
+  <ion-toolbar mode="md">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="logo">
+      <img src="assets/imgs/logo.svg" alt="">
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button mode="md" fill="solid" color="success" class="gbtn">sign in</ion-button>
+      <ion-button mode="md" fill="solid" color="success" class="gbtn">Register</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content padding color="light">
+
+
+  <div class="auth-content">
+    <ion-card mode="ios">
+      <ion-card-content>
+        <ion-list lines="none">
+          <form (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
+            <ion-list-header>Sign In</ion-list-header>
+
+            <ion-item>
+              <ion-input required placeholder="Email" type="email" [(ngModel)]="user.userName" name="userName"
+                #userName="ngModel" required></ion-input>
+            </ion-item>
+
+            <div>
+              <label *ngIf="f.submitted && userName.invalid">
+                Please Enter Email or User Name
+              </label>
+            </div>
+
+            <ion-item>
+              <ion-input placeholder="Password" [type]="passwordType ? 'text' : 'password'" [(ngModel)]="user.password"
+                name="password" #password="ngModel" required></ion-input>
+              <ion-icon slot="end" (click)="togglePasswordFieldType()" [name]="passwordType ? 'eye-off' : 'eye'">
+              </ion-icon>
+            </ion-item>
+
+            <div>
+              <label *ngIf="f.submitted && password.invalid">
+                Please Enter Password
+              </label>
+            </div>
+
+            <div class="remember-forgot">
+              <div class="checkbox">
+                <ion-checkbox mode="md"></ion-checkbox>
+                <ion-label>Remember Me</ion-label>
+              </div>
+
+              <ion-button mode="ios" fill="clear" class="tt-none" color="medium">Forgot Password ?</ion-button>
+            </div>
+
+            <ion-button expand="block" mode="md" class="tt-none" [disabled]="processing" type="ngSubmit">Sign In
+            </ion-button>
+
+            <ion-button expand="block" mode="md" class="tt-none" [disabled]="processing" (click)="signup()">Sign Up
+            </ion-button>
+          </form>
+        </ion-list>
+
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

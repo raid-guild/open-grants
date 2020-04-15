@@ -1,0 +1,130 @@
+<app-header (onChange)="handleChange($event)"></app-header>
+
+<ion-content color="light">
+  <ion-row class="page-row">
+    <ion-col size="12" size-md="4">
+      <ion-item mode="md" lines="none" class="heading">
+        <ion-label>Created by me</ion-label>
+        <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button>
+      </ion-item>
+
+      <hr class="dassed-line">
+
+      <ion-card class="grant" mode="md" *ngFor="let create of searchCreatedBy">
+        <ion-card-content>
+          <ion-item mode="md" lines="none">
+            <ion-label>
+              <h2>{{create.grantName}}</h2>
+              <p>{{create.grantLink}}</p>
+            </ion-label>
+            <ion-label slot="end" text-right>
+              <h3>$ {{create.totalFunding - create.totalPayed}}</h3>
+              <p>OUT OF $ {{create.targetFunding}}</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item mode="md" lines="none">
+            <div class="users-container">
+              <div class="users">
+                <img *ngFor="let user of create.donors | slice:0:4" [src]="user?.picture || ''" alt="">
+              </div>
+            </div>
+            <ion-button class="details" mode="md" slot="end" (click)="viewGrunt(create)">See</ion-button>
+            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(create._id)">Details</ion-button>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+    <ion-col size="12" size-md="4">
+      <ion-item mode="md" lines="none" class="heading">
+        <ion-label>Funded by me</ion-label>
+        <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button>
+      </ion-item>
+
+      <hr class="dassed-line">
+      <ion-card class="grant" mode="md" *ngFor="let fund of searchFundedBy">
+        <ion-card-content>
+          <ion-item mode="md" lines="none">
+            <ion-label>
+              <h2>{{fund.grantName}}</h2>
+              <p>{{fund.grantLink}}</p>
+            </ion-label>
+            <ion-label slot="end" text-right>
+              <h3>$ {{fund.totalFunding- fund.totalPayed}}</h3>
+              <p>OUT OF $ {{fund.targetFunding}}</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item mode="md" lines="none">
+            <div class="users-container">
+              <div class="users">
+                <img *ngFor="let user of fund.donors | slice:0:4" [src]="user?.picture || ''" alt="">
+              </div>
+            </div>
+            <ion-button class="details" mode="md" slot="end" (click)="viewGrunt(fund)">See</ion-button>
+            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(fund._id)">Details</ion-button>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- <ion-card class="grant">
+        <ion-card-header>
+
+          <ion-card-title>All Modal Pages</ion-card-title>
+          <ion-card-subtitle>This card is to access Modal page components only on click buttons</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+
+          <ion-button mode="md" color="secondary">
+            View Grunt
+          </ion-button>
+          <ion-button mode="md" color="secondary" (click)="viewGruntRequestRefund()">
+            View Grunt Request Refund
+          </ion-button>
+
+          <ion-button mode="md" color="secondary" (click)="viewGruntUnmarkAsComplete()">
+            View Grunt Unmark as Complete
+          </ion-button>
+          <ion-button mode="md" color="secondary" (click)="viewGruntNotifications()">
+            View Grunt Notifications
+          </ion-button>
+          <ion-button mode="md" color="secondary" (click)="amountsReceive()">
+            Amounts each receipent will receive
+          </ion-button>
+        </ion-card-content>
+      </ion-card> -->
+    </ion-col>
+    <ion-col size="12" size-md="4">
+      <ion-item mode="md" lines="none" class="heading">
+        <ion-label>Managed by me</ion-label>
+        <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button>
+      </ion-item>
+
+      <hr class="dassed-line">
+      <ion-card class="grant" mode="md" *ngFor="let manage of searchManagedBy">
+        <ion-card-content>
+          <ion-item mode="md" lines="none">
+            <ion-label>
+              <h2>{{manage.grantName}}</h2>
+              <p>{{manage.grantLink}}</p>
+            </ion-label>
+            <ion-label slot="end" text-right>
+              <h3>$ {{manage.totalFunding - manage.totalPayed}}</h3>
+              <p>OUT OF $ {{manage.targetFunding}}</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item mode="md" lines="none">
+            <div class="users-container">
+              <div class="users">
+                <img *ngFor="let user of manage.donors | slice:0:4" [src]="user?.picture || ''" alt="">
+              </div>
+            </div>
+            <ion-button class="details" mode="md" slot="end" (click)="viewGrunt(manage)">See </ion-button>
+            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(manage._id)">Details</ion-button>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-content>

@@ -1,0 +1,19 @@
+# In this directory, run the following command to build this builder.
+# $ gcloud builds submit . --config=cloudbuild.yaml
+
+steps:
+    - name: 'gcr.io/cloud-builders/docker'
+      args: ['build', '-t', 'gcr.io/grantsplatform/grants-platform-backend', '.']
+    #   timeout: 500s
+    # - name: 'gcr.io/cloud-builders/docker'
+    #   args: ['push', 'gcr.io/grantsplatform/grants-platform-backend']
+    # - name: 'gcr.io/cloud-builders/kubectl'
+    #   args: ['set', 'image', 'deployment/my-deployment', 'my-container=gcr.io/grantsplatform/grants-platform-backend']
+    #   env:
+    #   - 'CLOUDSDK_COMPUTE_ZONE=us-east1-b'
+    #   - 'CLOUDSDK_CONTAINER_CLUSTER=my-cluster'
+    # options:
+    #     machineType: 'N1_HIGHCPU_8'
+    # timeout: 660s
+    # tags: ['mytag1', 'mytag2']
+    # images: ['gcr.io/grantsplatform/grants-platform-backend']

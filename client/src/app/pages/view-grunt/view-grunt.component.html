@@ -1,0 +1,100 @@
+<ion-header no-border mode="md" class="modal-header-funds">
+  <ion-toolbar mode="md">
+    <div class="detailed-header-title">
+      <h2>{{grant?.grantName}}</h2>
+      <p>{{grant?.grantLink}}</p>
+    </div>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" color="medium">
+        <ion-icon slot="icon-only" class="gp-close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar no-padding mode="md" class="grant-recepients">
+    <h3>Grant Recepients</h3>
+    <ion-item lines="none">
+      <div class="users-container">
+        <div class="users">
+          <img *ngFor="let user of grant?.donors " src="{{user?.picture}}" alt="">
+        </div>
+        <a *ngIf="grant?.donors.length > 4" href="">View All</a>
+      </div>
+
+      <div slot="end" class="cost-details">
+        <div class="cost">
+          <h3>$ {{grant?.fund}}</h3>
+          <p>OUT OF ${{grant?.grantAmount}}</p>
+        </div>
+
+      </div>
+    </ion-item>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="multipleMilestones">
+    <div class="delivery-date-milestone">
+      <ul class="milestone-status">
+        <li class="{{item?.status}}" *ngFor="let item of grant?.multipleMilestones">
+          <span class="status"><i class="gp-check-circle"></i></span>
+          <ion-item lines="none">
+            <ion-label>
+              <p>Milestone {{item.milestoneNumber}}</p>
+              <h3>{{item.completionDate}}</h3>
+            </ion-label>
+            <ion-label text-right class="cost" slot="end">
+              <h3>$ {{item.funding}}</h3>
+              <p>OUT OF $ {{grant?.targetFunding}}</p>
+            </ion-label>
+          </ion-item>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div *ngIf="!multipleMilestones">
+    <div class="delivery-date-milestone">
+      <div class="time-of-deliver">
+        <h4>Delivery Date</h4>
+        <p>{{grant?.singleDeliveryDate.fundingExpiryDate}}</p>
+      </div>
+      <ul class="milestone-status">
+        <li class="{{grant?.singleDeliveryDate.status}}">
+          <span class="status"><i class="gp-check-circle"></i></span>
+          <ion-item lines="none">
+            <ion-label>
+              <p>Completion Date</p>
+              <h3>{{grant?.singleDeliveryDate.completionDate}}</h3>
+            </ion-label>
+            <ion-label text-right class="cost" slot="end">
+              <h3>$ {{grant?.singleDeliveryDate.funding}}</h3>
+              <p>OUT OF $ {{grant?.grantAmount}}</p>
+            </ion-label>
+          </ion-item>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- <div *ngIf="allowFunding" class="footer-details">
+    <ion-row>
+      <ion-col size="8">
+        <ion-item lines="none">
+          <ion-input placeholder="Amount" type="text" [(ngModel)]="grantFund.amount" name="amount" [OnlyNumber]="true"
+            #amount="ngModel" required>
+          </ion-input>
+        </ion-item>
+        <label *ngIf="submitted && amount.invalid" class="error">
+          Please Enter Amount
+        </label>
+      </ion-col>
+      <ion-col size="4">
+        <ion-button mode="md" expand="block" [disabled]="processing" (click)="privateKeyPopup()">
+          Fund Grant
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div> -->
+</ion-content>

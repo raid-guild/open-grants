@@ -1,0 +1,52 @@
+<ion-header no-border mode="md" class="modal-header-funds">
+  <ion-toolbar mode="md">
+    <div class="detailed-header-title">
+      <h2>Untitled Grant</h2>
+      <p>https://grantlink.com</p>
+    </div>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" color="medium">
+        <ion-icon slot="icon-only" class="gp-close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar no-padding mode="md" class="grant-recepients">
+    <h3>Grant Recepients</h3>
+    <ion-item lines="none">
+      <div class="users-container">
+        <div class="users">
+          <img src="assets/imgs/avatar-02.png" alt="">
+          <img src="assets/imgs/avatar-03.png" alt="">
+          <img src="assets/imgs/avatar-04.png" alt="">
+        </div> <a href="">View All</a>
+      </div>
+
+      <div slot="end" class="cost-details">
+        <div class="cost">
+          <h3>$ 1,500</h3>
+          <p>OUT OF $5,000</p>
+        </div>
+      </div>
+    </ion-item>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="amounts-receipent">
+    <ion-button mode="md" fill="clear">
+      back
+    </ion-button>
+
+    <ion-list mode="md" lines="full">
+      <ion-item mode="md" *ngFor="let item of items">
+        <ion-avatar slot="start">
+          <img src="assets/imgs/{{item.img}}.png" />
+        </ion-avatar>
+        <ion-label>{{item.name}}</ion-label>
+        <div class="cost" slot="end">$ {{item.amount}}</div>
+      </ion-item>
+    </ion-list>
+  </div>
+
+</ion-content>

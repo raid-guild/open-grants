@@ -1,0 +1,52 @@
+
+  <ion-header  mode="md" no-border>
+    <ion-card >
+    <ion-toolbar color="light">
+  
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+  
+      <ion-title *ngIf="!searchBar">
+        <!-- {{path}} -->
+      </ion-title>
+  
+      <form [formGroup]="myForm" class="">
+        <div>
+          <ion-item lines="none" class="custom-search" *ngIf="searchBar">
+            <ion-label slot="start">Find</ion-label>
+            <ion-input placeholder="grant ..." mode="md" type="search" formControlName="searchBox"></ion-input>
+            <ion-button slot="end" color="primary" mode="md" (click)="onSearch()">
+              <ion-icon class="gp-search"></ion-icon>
+            </ion-button>
+  
+            <!-- <div *ngIf="searchResult.length" class="">
+              <ul class="">
+                <li *ngFor="let x of searchResult" (click)="selectGrant(x)">
+                  {{ x.grantName }}
+                </li>
+              </ul>
+            </div> -->
+          </ion-item>
+  
+  
+        </div>
+  
+      </form>
+     
+      <ion-buttons slot="end">
+        <div class="user-icon">
+          <img class="image" *ngIf="picture" [src]="userData?.picture || ''" alt="" style="max-width: 20%;">
+          <ion-icon *ngIf="!picture" size="large" name="person"></ion-icon>
+        </div>
+        <ion-button mode="md" class="user-profile-menu">
+          
+          <span>{{userData?.userName ? userData?.userName : '' }}<i class="gp-arrow-down"
+              (click)="userMenuPopover($event)"></i></span>
+        </ion-button>
+      </ion-buttons>
+  
+    </ion-toolbar>
+  </ion-card>
+  </ion-header>
+

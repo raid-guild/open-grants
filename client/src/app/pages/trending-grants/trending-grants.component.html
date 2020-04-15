@@ -1,0 +1,65 @@
+<app-header (onChange)="handleChange($event)"></app-header>
+
+<ion-content color="light">
+  <ion-row class="page-row">
+    <ion-col size="12">
+      <ion-item mode="md" lines="none" class="heading">
+        <ion-label>Trending Grants</ion-label>
+        <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button>
+      </ion-item>
+
+      <hr class="dassed-line">
+
+      <ion-card class="grant" mode="md" *ngFor="let lg of seachResult">
+        <ion-card-content>
+          <ul class="multi-section">
+            <li class="grants-details">
+              <ion-item mode="md" lines="none">
+                <ion-label>
+                  <h2>{{lg.grantName}}</h2>
+                  <p>{{lg.grantLink}}</p>
+                  <div class="users-container">
+                    <div class="users">
+                      <img *ngFor="let user of lg.grantees | slice:0:4" [src]="user.grantee?.picture || ''" alt="">
+                    </div>
+                  </div>
+                </ion-label>
+              </ion-item>
+            </li>
+            <li>
+              <div class="manager-details">
+                <h2>Grant Manager</h2>
+                <img [src]="lg.grantManager?.picture || ''" alt="">
+                <a href="">{{lg.grantManager.userName}}</a>
+              </div>
+            </li>
+            <li>
+              <div class="recepients-details">
+                <h2>Grant Recepients</h2>
+                <div class="users">
+                  <img *ngFor="let user of lg.donors | slice:0:4" [src]="user?.picture || ''" alt="">
+                </div>
+                <a *ngIf="lg.donors.length > 4" href="">SEE ALL</a>
+              </div>
+            </li>
+            <li class="cost-details">
+              <ion-item mode="md" lines="none">
+                <ion-label text-right>
+                  <h3>$ {{lg.totalFunding - lg.totalPayed}}</h3>
+                  <p>OUT OF $ {{lg.targetFunding}}</p>
+
+                  <ion-button class="details" mode="md" slot="end" (click)="viewGrunt(lg)">See</ion-button>
+                  <ion-button class="details" mode="md" slot="end" (click)="grantDetails(lg._id)">Details
+                  </ion-button>
+
+                </ion-label>
+
+              </ion-item>
+            </li>
+          </ul>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+
+  </ion-row>
+</ion-content>

@@ -1,0 +1,82 @@
+.form-details {
+  .name {
+    padding: 0;
+    .padding-0 {
+      padding: 5px 25px;
+    }
+  }
+}
+ion-list.forms.md.list-md.list-lines-none.list-md-lines-none.hydrated {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+form {
+  ion-item,
+  tag-input {
+    border-radius: 40px;
+  }
+  ion-label {
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+}
+ion-card{
+    margin: 20px;
+}
+.select-icon {
+  display: none !important;
+  opacity: 0;
+}
+
+.total-amount {
+  text-align: center;
+ 
+}
+.total-amount[_ngcontent-sur-c2]{
+    text-align: center;
+    font-weight: 700;
+    font-size: 20px;
+}
+.flot-right {
+  float: right;
+}
+.close-circle {
+  padding-top: 15px;
+}
+.close{
+    padding-top: 5px;
+    font-size: 30px;
+}
+.close-circle{
+    padding-top: 15px;
+}
+ion-card{
+
+  margin: 0;
+}
+.img-resposive{
+  height: 40px;
+  width: 40px;
+  margin-left: 130px;
+  border-radius: 50%;
+}
+.d-flex{
+  display: flex;
+  justify-content: space-between;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 230px;
+  overflow: auto;
+  border: 1px solid #ddd;
+  z-index: 1;
+} 
+
+.dropdown-content li {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}

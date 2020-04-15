@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json",
+  "angularCompilerOptions": {
+    "disableTypeScriptVersionCheck": true
+  },
+  "compilerOptions": {
+    "outDir": "../out-tsc/app",
+    "module": "commonjs",
+    "target": "es5",
+    "types": [
+      "jasmine",
+      "jasminewd2",
+      "node"
+    ]
+  }
+}
