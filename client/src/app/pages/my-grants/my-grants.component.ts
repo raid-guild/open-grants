@@ -4,10 +4,10 @@ import { Events } from '@ionic/angular';
 import { PopoverController, ModalController } from '@ionic/angular';
 
 import { MenuPopoverComponent } from '../menu-popover/menu-popover.component';
-import { ViewGruntComponent } from '../view-grunt/view-grunt.component';
-import { ViewGruntRequestRefundComponent } from '../view-grunt-request-refund/view-grunt-request-refund.component';
-import { ViewGruntUnmarkAsCompleteComponent } from '../view-grunt-unmark-as-complete/view-grunt-unmark-as-complete.component';
-import { ViewGruntNotificationsComponent } from '../view-grunt-notifications/view-grunt-notifications.component';
+import { ViewGrantComponent } from '../view-grant/view-grant.component';
+import { ViewGrantRequestRefundComponent } from '../view-grant-request-refund/view-grant-request-refund.component';
+import { ViewGrantUnmarkAsCompleteComponent } from '../view-grant-unmark-as-complete/view-grant-unmark-as-complete.component';
+import { ViewGrantNotificationsComponent } from '../view-grant-notifications/view-grant-notifications.component';
 import { AmountsReceiveComponent } from '../amounts-receive/amounts-receive.component';
 import { GrantService, IGrant } from 'src/app/services/grant.service';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
@@ -57,9 +57,9 @@ export class MyGrantsComponent implements OnInit {
     return await popover.present();
   }
 
-  async viewGrunt(data: any) {
+  async viewGrant(data: any) {
     const modal = await this.modalController.create({
-      component: ViewGruntComponent,
+      component: ViewGrantComponent,
       cssClass: 'custom-modal-style',
       mode: "ios",
       componentProps: {
@@ -83,27 +83,27 @@ export class MyGrantsComponent implements OnInit {
     this.router.navigate(['/pages/grant-details/' + id])
   }
 
-  async viewGruntRequestRefund() {
+  async viewGrantRequestRefund() {
     const modal = await this.modalController.create({
-      component: ViewGruntRequestRefundComponent,
+      component: ViewGrantRequestRefundComponent,
       cssClass: 'custom-modal-style',
       mode: "ios"
     })
     return await modal.present();
   }
 
-  async viewGruntUnmarkAsComplete() {
+  async viewGrantUnmarkAsComplete() {
     const modal = await this.modalController.create({
-      component: ViewGruntUnmarkAsCompleteComponent,
+      component: ViewGrantUnmarkAsCompleteComponent,
       cssClass: 'custom-modal-style',
       mode: "ios"
     })
     return await modal.present();
   }
 
-  async viewGruntNotifications() {
+  async viewGrantNotifications() {
     const modal = await this.modalController.create({
-      component: ViewGruntNotificationsComponent,
+      component: ViewGrantNotificationsComponent,
       cssClass: 'custom-modal-style notification',
       mode: "ios"
     })

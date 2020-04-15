@@ -4,13 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
-import { ViewGruntNotificationsComponent } from './view-grunt-notifications.component';
+import { ViewGrantNotificationsComponent } from './view-grant-notifications.component';
 
 
 const routes: Routes = [
   {
     path: '',
-    component: ViewGruntNotificationsComponent
+    component: ViewGrantNotificationsComponent
   }
 ];
 
@@ -21,6 +21,6 @@ const routes: Routes = [
     IonicModule,
     // RouterModule.forChild(routes)
   ],
-  declarations: [ViewGruntNotificationsComponent]
+  declarations: [ViewGrantNotificationsComponent]
 })
-export class ViewGruntNotificationsModule {}
+export class ViewGrantNotificationsModule {}

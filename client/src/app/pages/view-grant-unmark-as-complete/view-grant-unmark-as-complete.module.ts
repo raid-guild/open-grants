@@ -4,12 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
-import { ViewGruntUnmarkAsCompleteComponent } from './view-grunt-unmark-as-complete.component';
+import { ViewGrantUnmarkAsCompleteComponent } from './view-grant-unmark-as-complete.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: ViewGruntUnmarkAsCompleteComponent
+    component: ViewGrantUnmarkAsCompleteComponent
   }
 ];
 
@@ -20,6 +20,6 @@ const routes: Routes = [
     IonicModule,
     // RouterModule.forChild(routes)
   ],
-  declarations: [ViewGruntUnmarkAsCompleteComponent]
+  declarations: [ViewGrantUnmarkAsCompleteComponent]
 })
-export class ViewGruntUnmarkAsCompleteModule {}
+export class ViewGrantUnmarkAsCompleteModule {}

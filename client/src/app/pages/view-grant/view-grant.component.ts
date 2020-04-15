@@ -13,11 +13,11 @@ import { EthcontractService } from 'src/app/services/ethcontract.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-view-grunt',
-  templateUrl: './view-grunt.component.html',
-  styleUrls: ['./view-grunt.component.scss'],
+  selector: 'app-view-grant',
+  templateUrl: './view-grant.component.html',
+  styleUrls: ['./view-grant.component.scss'],
 })
-export class ViewGruntComponent implements OnInit {
+export class ViewGrantComponent implements OnInit {
 
   @Input() grantData: any;
 

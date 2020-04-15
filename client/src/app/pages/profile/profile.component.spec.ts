@@ -8,7 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { MenuPopoverModule } from '../menu-popover/menu-popover.module';
 import { HeaderModule } from '../header/header.module';
 import { ResetPasswordModule } from '../reset-password/reset-password.module';
-import { ViewGruntModule } from '../view-grunt/view-grunt.module';
+import { ViewGrantModule } from '../view-grant/view-grant.module';
 import { UserService } from 'src/app/services/user.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -26,7 +26,7 @@ describe('ProfileComponent', () => {
         MenuPopoverModule,
         HeaderModule,
         ResetPasswordModule,
-        ViewGruntModule,
+        ViewGrantModule,
       ],
       providers: [UserService, ToastrService],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],

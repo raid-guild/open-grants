@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { MenuPopoverModule } from '../menu-popover/menu-popover.module';
 import { HeaderModule } from '../header/header.module';
-import { ViewGruntModule } from '../view-grunt/view-grunt.module';
+import { ViewGrantModule } from '../view-grant/view-grant.module';
 import { RouterModule, Routes } from '@angular/router';
 import { ProfileComponent } from './profile.component';
 import { MenuPopoverComponent } from '../menu-popover/menu-popover.component';
@@ -32,7 +32,7 @@ const routes: Routes = [
     HeaderModule,
     ResetPasswordModule,
     ImageCropModule,
-    ViewGruntModule,
+    ViewGrantModule,
     ImageCropperModule,
     RouterModule.forChild(routes)
   ],

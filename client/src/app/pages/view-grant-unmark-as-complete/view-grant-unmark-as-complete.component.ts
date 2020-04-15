@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-view-grunt-unmark-as-complete',
-  templateUrl: './view-grunt-unmark-as-complete.component.html',
-  styleUrls: ['./view-grunt-unmark-as-complete.component.scss'],
+  selector: 'app-view-grant-unmark-as-complete',
+  templateUrl: './view-grant-unmark-as-complete.component.html',
+  styleUrls: ['./view-grant-unmark-as-complete.component.scss'],
 })
-export class ViewGruntUnmarkAsCompleteComponent implements OnInit {
+export class ViewGrantUnmarkAsCompleteComponent implements OnInit {
 
   constructor(public modalCtrl : ModalController) { }
   dismiss(){

@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-view-grunt-notifications',
-  templateUrl: './view-grunt-notifications.component.html',
-  styleUrls: ['./view-grunt-notifications.component.scss'],
+  selector: 'app-view-grant-notifications',
+  templateUrl: './view-grant-notifications.component.html',
+  styleUrls: ['./view-grant-notifications.component.scss'],
 })
-export class ViewGruntNotificationsComponent implements OnInit {
+export class ViewGrantNotificationsComponent implements OnInit {
 
   constructor(public modalCtrl : ModalController) { }
 

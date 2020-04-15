@@ -4,13 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
-import { ViewGruntRequestRefundComponent } from './view-grunt-request-refund.component';
+import { ViewGrantRequestRefundComponent } from './view-grant-request-refund.component';
 
 
 const routes: Routes = [
   {
     path: '',
-    component: ViewGruntRequestRefundComponent
+    component: ViewGrantRequestRefundComponent
   }
 ];
 
@@ -21,6 +21,6 @@ const routes: Routes = [
     IonicModule,
     // RouterModule.forChild(routes)
   ],
-  declarations: [ViewGruntRequestRefundComponent]
+  declarations: [ViewGrantRequestRefundComponent]
 })
-export class ViewGruntRequestRefundModule {}
+export class ViewGrantRequestRefundModule {}

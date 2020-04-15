@@ -4,16 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
-import { ViewGruntComponent } from './view-grunt.component';
 import { GrantFundService } from 'src/app/services/grantFund.service';
 import { GrantService } from 'src/app/services/grant.service';
 import { NumberonlyDirectiveModule } from 'src/app/common/directives/numberOnlyDirective/numberonlyDirective.module';
+import { ViewGrantComponent } from './view-grant.component';
 
 
 const routes: Routes = [
   {
     path: '',
-    component: ViewGruntComponent
+    component: ViewGrantComponent
   }
 ];
 
@@ -25,7 +25,7 @@ const routes: Routes = [
     NumberonlyDirectiveModule
     // RouterModule.forChild(routes)
   ],
-  declarations: [ViewGruntComponent],
+  declarations: [ViewGrantComponent],
   providers: [GrantFundService, GrantService]
 })
-export class ViewGruntModule { }
+export class ViewGrantModule { }

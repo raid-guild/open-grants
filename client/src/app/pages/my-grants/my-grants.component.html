@@ -29,8 +29,8 @@
                 <img *ngFor="let user of create.donors | slice:0:4" [src]="user?.picture || ''" alt="">
               </div>
             </div>
-            <ion-button class="details" mode="md" slot="end" (click)="viewGrunt(create)">See</ion-button>
-            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(create._id)">Details</ion-button>
+            <ion-button class="details" mode="md" slot="end" (click)="viewGrant(create)">Quick View</ion-button><br>
+            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(create._id)">Details View</ion-button>
           </ion-item>
         </ion-card-content>
       </ion-card>
@@ -61,8 +61,8 @@
                 <img *ngFor="let user of fund.donors | slice:0:4" [src]="user?.picture || ''" alt="">
               </div>
             </div>
-            <ion-button class="details" mode="md" slot="end" (click)="viewGrunt(fund)">See</ion-button>
-            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(fund._id)">Details</ion-button>
+            <ion-button class="details" mode="md" slot="end" (click)="viewGrant(fund)">Quick View</ion-button>
+            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(fund._id)">Details View</ion-button>
           </ion-item>
         </ion-card-content>
       </ion-card>
@@ -76,17 +76,17 @@
         <ion-card-content>
 
           <ion-button mode="md" color="secondary">
-            View Grunt
+            View Grant
           </ion-button>
-          <ion-button mode="md" color="secondary" (click)="viewGruntRequestRefund()">
-            View Grunt Request Refund
+          <ion-button mode="md" color="secondary" (click)="viewGrantRequestRefund()">
+            View Grant Request Refund
           </ion-button>
 
-          <ion-button mode="md" color="secondary" (click)="viewGruntUnmarkAsComplete()">
-            View Grunt Unmark as Complete
+          <ion-button mode="md" color="secondary" (click)="viewGrantUnmarkAsComplete()">
+            View Grant Unmark as Complete
           </ion-button>
-          <ion-button mode="md" color="secondary" (click)="viewGruntNotifications()">
-            View Grunt Notifications
+          <ion-button mode="md" color="secondary" (click)="viewGrantNotifications()">
+            View Grant Notifications
           </ion-button>
           <ion-button mode="md" color="secondary" (click)="amountsReceive()">
             Amounts each receipent will receive
@@ -120,8 +120,9 @@
                 <img *ngFor="let user of manage.donors | slice:0:4" [src]="user?.picture || ''" alt="">
               </div>
             </div>
-            <ion-button class="details" mode="md" slot="end" (click)="viewGrunt(manage)">See </ion-button>
-            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(manage._id)">Details</ion-button>
+            <ion-button class="details" mode="sm" slot="end" (click)="viewGrant(manage)">Quick View</ion-button>
+            <ion-button class="details" mode="sm" slot="end" (click)="grantDetails(manage._id)">Details View
+            </ion-button>
           </ion-item>
         </ion-card-content>
       </ion-card>

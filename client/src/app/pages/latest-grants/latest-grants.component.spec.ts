@@ -10,7 +10,7 @@ import { HeaderModule } from '../header/header.module';
 import { RouterModule } from '@angular/router';
 import { GrantService } from 'src/app/services/grant.service';
 import { MenuPopoverModule } from '../menu-popover/menu-popover.module';
-import { ViewGruntModule } from '../view-grunt/view-grunt.module';
+import { ViewGrantModule } from '../view-grant/view-grant.module';
 
 describe('LatestGrantsComponent', () => {
   let component: LatestGrantsComponent;
@@ -26,7 +26,7 @@ describe('LatestGrantsComponent', () => {
         MenuPopoverModule,
         HeaderModule,
         HttpClientModule,
-        ViewGruntModule,
+        ViewGrantModule,
         RouterModule],
       declarations: [LatestGrantsComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],

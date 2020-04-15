@@ -38,20 +38,20 @@ const routes: Routes = [{
             path: 'transaction-history',
             loadChildren: () => import('./transaction-history/transaction-history.module').then(m => m.TransactionHistoryModule),
         }, {
-            path: 'view-grunt',
-            loadChildren: () => import('./view-grunt/view-grunt.module').then(m => m.ViewGruntModule),
+            path: 'view-grant',
+            loadChildren: () => import('./view-grant/view-grant.module').then(m => m.ViewGrantModule),
         }, {
             path: 'grant-details',
             loadChildren: () => import('./grant-details/grant-details.module').then(m => m.GrantDetailsModule),
         }, {
-            path: 'view-grunt-notifications',
-            loadChildren: () => import('./view-grunt-notifications/view-grunt-notifications.module').then(m => m.ViewGruntNotificationsModule),
+            path: 'view-grant-notifications',
+            loadChildren: () => import('./view-grant-notifications/view-grant-notifications.module').then(m => m.ViewGrantNotificationsModule),
         }, {
-            path: 'view-grunt-request-refund',
-            loadChildren: () => import('./view-grunt-request-refund/view-grunt-request-refund.module').then(m => m.ViewGruntRequestRefundModule),
+            path: 'view-grant-request-refund',
+            loadChildren: () => import('./view-grant-request-refund/view-grant-request-refund.module').then(m => m.ViewGrantRequestRefundModule),
         }, {
-            path: 'view-grunt-unmark-as-complete',
-            loadChildren: () => import('./view-grunt-unmark-as-complete/view-grunt-unmark-as-complete.module').then(m => m.ViewGruntUnmarkAsCompleteModule),
+            path: 'view-grant-unmark-as-complete',
+            loadChildren: () => import('./view-grant-unmark-as-complete/view-grant-unmark-as-complete.module').then(m => m.ViewGrantUnmarkAsCompleteModule),
         }, {
             path: 'amounts-receive',
             loadChildren: () => import('./amounts-receive/amounts-receive.module').then(m => m.AmountsReceiveModule),

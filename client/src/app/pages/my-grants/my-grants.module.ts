@@ -7,14 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { MyGrantsComponent } from './my-grants.component';
 import { MenuPopoverComponent } from '../menu-popover/menu-popover.component';
 import { MenuPopoverModule } from '../menu-popover/menu-popover.module';
-import { ViewGruntModule } from '../view-grunt/view-grunt.module';
-import { ViewGruntRequestRefundModule } from '../view-grunt-request-refund/view-grunt-request-refund.module';
-import { ViewGruntUnmarkAsCompleteModule } from '../view-grunt-unmark-as-complete/view-grunt-unmark-as-complete.module';
-import { ViewGruntNotificationsModule } from '../view-grunt-notifications/view-grunt-notifications.module';
-import { ViewGruntComponent } from '../view-grunt/view-grunt.component';
-import { ViewGruntRequestRefundComponent } from '../view-grunt-request-refund/view-grunt-request-refund.component';
-import { ViewGruntUnmarkAsCompleteComponent } from '../view-grunt-unmark-as-complete/view-grunt-unmark-as-complete.component';
-import { ViewGruntNotificationsComponent } from '../view-grunt-notifications/view-grunt-notifications.component';
+import { ViewGrantModule } from '../view-grant/view-grant.module';
+import { ViewGrantRequestRefundModule } from '../view-grant-request-refund/view-grant-request-refund.module';
+import { ViewGrantUnmarkAsCompleteModule } from '../view-grant-unmark-as-complete/view-grant-unmark-as-complete.module';
+import { ViewGrantNotificationsModule } from '../view-grant-notifications/view-grant-notifications.module';
+import { ViewGrantComponent } from '../view-grant/view-grant.component';
+import { ViewGrantRequestRefundComponent } from '../view-grant-request-refund/view-grant-request-refund.component';
+import { ViewGrantUnmarkAsCompleteComponent } from '../view-grant-unmark-as-complete/view-grant-unmark-as-complete.component';
+import { ViewGrantNotificationsComponent } from '../view-grant-notifications/view-grant-notifications.component';
 import { AmountsReceiveComponent } from '../amounts-receive/amounts-receive.component';
 import { GrantService } from 'src/app/services/grant.service';
 import { HeaderModule } from '../header/header.module';
@@ -32,17 +32,17 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     HeaderModule,
-    ViewGruntModule,
-    ViewGruntRequestRefundModule,
-    ViewGruntUnmarkAsCompleteModule,
-    ViewGruntNotificationsModule,
+    ViewGrantModule,
+    ViewGrantRequestRefundModule,
+    ViewGrantUnmarkAsCompleteModule,
+    ViewGrantNotificationsModule,
     RouterModule.forChild(routes)
   ],
   entryComponents: [
-    ViewGruntComponent,
-    ViewGruntRequestRefundComponent,
-    ViewGruntUnmarkAsCompleteComponent,
-    ViewGruntNotificationsComponent
+    ViewGrantComponent,
+    ViewGrantRequestRefundComponent,
+    ViewGrantUnmarkAsCompleteComponent,
+    ViewGrantNotificationsComponent
   ],
   declarations: [MyGrantsComponent],
   providers: [GrantService]

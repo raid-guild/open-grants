@@ -5,7 +5,7 @@ import { GrantService, IGrant } from 'src/app/services/grant.service';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 import { ENVIRONMENT } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
-import { ViewGruntComponent } from '../view-grunt/view-grunt.component';
+import { ViewGrantComponent } from '../view-grant/view-grant.component';
 import { Router } from '@angular/router';
 
 @Component({
@@ -56,9 +56,9 @@ export class LatestGrantsComponent implements OnInit {
     return await popover.present();
   }
 
-  async viewGrunt(data: any) {
+  async viewGrant(data: any) {
     const modal = await this.modalController.create({
-      component: ViewGruntComponent,
+      component: ViewGrantComponent,
       cssClass: 'custom-modal-style',
       mode: "ios",
       componentProps: {

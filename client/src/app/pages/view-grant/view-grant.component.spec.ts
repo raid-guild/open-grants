@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ViewGruntComponent } from './view-grunt.component';
+import { ViewGrantComponent } from './view-grant.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { GrantFundService } from 'src/app/services/grantFund.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -22,9 +22,9 @@ class MockNavParams {
   }
 }
 
-describe('ViewGruntComponent', () => {
-  let component: ViewGruntComponent;
-  let fixture: ComponentFixture<ViewGruntComponent>;
+describe('ViewGrantComponent', () => {
+  let component: ViewGrantComponent;
+  let fixture: ComponentFixture<ViewGrantComponent>;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -32,14 +32,14 @@ describe('ViewGruntComponent', () => {
         RouterTestingModule, CommonModule,
         FormsModule,
         IonicModule, HttpClientTestingModule, ToastrModule.forRoot()],
-      declarations: [ViewGruntComponent],
+      declarations: [ViewGrantComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [AuthenticationService, GrantFundService, GrantService, ToastrService, { provide: NavParams, useClass: MockNavParams },]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ViewGruntComponent);
+    fixture = TestBed.createComponent(ViewGrantComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -9,8 +9,8 @@ import { MenuPopoverModule } from '../menu-popover/menu-popover.module';
 import { MenuPopoverComponent } from '../menu-popover/menu-popover.component';
 import { GrantService } from 'src/app/services/grant.service';
 import { HeaderModule } from '../header/header.module';
-import { ViewGruntModule } from '../view-grunt/view-grunt.module';
-import { ViewGruntComponent } from '../view-grunt/view-grunt.component';
+import { ViewGrantModule } from '../view-grant/view-grant.module';
+import { ViewGrantComponent } from '../view-grant/view-grant.component';
 
 
 const routes: Routes = [
@@ -27,10 +27,10 @@ const routes: Routes = [
     IonicModule,
     MenuPopoverModule,
     HeaderModule,
-    ViewGruntModule,
+    ViewGrantModule,
     RouterModule.forChild(routes)
   ],
-  entryComponents: [MenuPopoverComponent, ViewGruntComponent],
+  entryComponents: [MenuPopoverComponent, ViewGrantComponent],
   declarations: [LatestGrantsComponent],
   providers: [GrantService]
 })

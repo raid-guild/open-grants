@@ -8,10 +8,10 @@ import { GrantService } from 'src/app/services/grant.service';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { HeaderModule } from '../header/header.module';
-import { ViewGruntModule } from '../view-grunt/view-grunt.module';
-import { ViewGruntRequestRefundModule } from '../view-grunt-request-refund/view-grunt-request-refund.module';
-import { ViewGruntUnmarkAsCompleteModule } from '../view-grunt-unmark-as-complete/view-grunt-unmark-as-complete.module';
-import { ViewGruntNotificationsModule } from '../view-grunt-notifications/view-grunt-notifications.module';
+import { ViewGrantModule } from '../view-grant/view-grant.module';
+import { ViewGrantRequestRefundModule } from '../view-grant-request-refund/view-grant-request-refund.module';
+import { ViewGrantUnmarkAsCompleteModule } from '../view-grant-unmark-as-complete/view-grant-unmark-as-complete.module';
+import { ViewGrantNotificationsModule } from '../view-grant-notifications/view-grant-notifications.module';
 import { AmountsReceiveModule } from '../amounts-receive/amounts-receive.module';
 import { RouterModule } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -28,11 +28,11 @@ describe('MyGrantsComponent', () => {
         FormsModule,
         IonicModule,
         HeaderModule,
-        ViewGruntModule,
+        ViewGrantModule,
         HttpClientTestingModule,
-        ViewGruntRequestRefundModule,
-        ViewGruntUnmarkAsCompleteModule,
-        ViewGruntNotificationsModule,
+        ViewGrantRequestRefundModule,
+        ViewGrantUnmarkAsCompleteModule,
+        ViewGrantNotificationsModule,
         AmountsReceiveModule,
         RouterModule],
       declarations: [MyGrantsComponent],

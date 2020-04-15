@@ -3,7 +3,7 @@ import { PopoverController, ModalController } from '@ionic/angular';
 import { MenuPopoverComponent } from '../menu-popover/menu-popover.component';
 import { GrantService } from 'src/app/services/grant.service';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
-import { ViewGruntComponent } from '../view-grunt/view-grunt.component';
+import { ViewGrantComponent } from '../view-grant/view-grant.component';
 import { ENVIRONMENT } from 'src/environments/environment';
 import { Router } from '@angular/router';
 
@@ -56,9 +56,9 @@ export class TrendingGrantsComponent implements OnInit {
     }
   }
 
-  async viewGrunt(data: any) {
+  async viewGrant(data: any) {
     const modal = await this.modalController.create({
-      component: ViewGruntComponent,
+      component: ViewGrantComponent,
       cssClass: 'custom-modal-style',
       mode: "ios",
       componentProps: {

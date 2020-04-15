@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-view-grunt-request-refund',
-  templateUrl: './view-grunt-request-refund.component.html',
-  styleUrls: ['./view-grunt-request-refund.component.scss'],
+  selector: 'app-view-grant-request-refund',
+  templateUrl: './view-grant-request-refund.component.html',
+  styleUrls: ['./view-grant-request-refund.component.scss'],
 })
-export class ViewGruntRequestRefundComponent implements OnInit {
+export class ViewGrantRequestRefundComponent implements OnInit {
 
   constructor( public modalCtrl : ModalController ) { }
   dismiss(){
