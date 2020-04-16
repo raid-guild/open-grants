@@ -1,9 +1,9 @@
 # grants-platforms-backend
 
 Build the image
-$ docker build -t grants-platform-backend .
+$ docker build -t grant-platform-server .
 
 Run the container
-$ docker run -p 8080:80 grants-platform-backend
+$ docker run -p 7001:7001 grant-platform-server
 
-Done, your dockerized app will be accessible at http://localhost:8080
+Done, your dockerized app will be accessible at http://localhost:7001

@@ -28,4 +28,8 @@ export class AmountsReceiveComponent implements OnInit {
       { img: "avatar-02", name: "John Smith", amount: "1,500" },
     ]
   }
+
+  dismiss(){
+    
+  }
 }

@@ -20,8 +20,8 @@ import { ScheduleService } from './helpers/schedule.service';
 
 @Module({
   imports: [
-    // MongooseModule.forRoot('mongodb://localhost/Grants-platform', { useNewUrlParser: true }),
-    MongooseModule.forRoot('mongodb://database/grant-platform', { useNewUrlParser: true }),
+    MongooseModule.forRoot('mongodb://localhost/grant-platform', { useNewUrlParser: true }),
+    // MongooseModule.forRoot('mongodb://database/grant-platform', { useNewUrlParser: true }),
     AuthModule,
     UserModule,
     GrantModule,

@@ -10,7 +10,7 @@ export const environment = {
 // http://grantsportal.rejoicehub.com/api/v1/
 
 const protocol = 'http';
-const host = 'grantsportal.rejoicehub.com';
+const host = '18.217.146.64';
 const port = '';
 const trailUrl = 'api/v1';
 const webHost = 'http://grantsportal.rejoicehub.com/';
