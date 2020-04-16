@@ -15,7 +15,7 @@ import {
     ApiTags
 
 } from '@nestjs/swagger';
-import { Payout } from './Payout.model';
+import { Payout } from './payout.model';
 import { response } from 'express';
 import { ScheduleService } from '../../helpers/schedule.service';
 

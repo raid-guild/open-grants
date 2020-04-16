@@ -10,8 +10,8 @@ import { GrantFundTaskService } from '../funding/grantFundTask.service';
 import { GrantFundTaskSchema } from '../funding/grantFundTask.model';
 import { GrantFundService } from '../funding/grantFund.service';
 import { GrantFundSchema } from '../funding/grantFund.model';
-import { PayoutSchema } from '../payout/Payout.model';
 import { PayoutService } from '../payout/payout.service';
+import { PayoutSchema } from '../payout/payout.model';
 
 @Module({
   imports: [

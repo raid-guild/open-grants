@@ -12,7 +12,7 @@ import { GrantFundTaskService } from '../funding/grantFundTask.service';
 import { CancelRequestSchema } from '../cancelRequest/cancelRequest.model';
 import { CancelRequestService } from '../cancelRequest/cancelRequest.service';
 import { PayoutService } from '../payout/payout.service';
-import { PayoutSchema } from '../payout/Payout.model';
+import { PayoutSchema } from '../payout/payout.model';
 
 @Module({
   imports: [

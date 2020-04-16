@@ -8,9 +8,7 @@ export const environment = {
 
 /* local env */
 const protocol = 'http';
-// const host = 'grantsportal.rejoicehub.com';
 const host = 'localhost';
-// const port = '';
 const port = '7001';
 const trailUrl = 'api/v1';
 

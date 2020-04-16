@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Payout } from './Payout.model';
+import { Payout } from './payout.model';
 import { GrantService } from '../grant/grant.service';
 
 @Injectable()

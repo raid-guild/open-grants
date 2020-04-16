@@ -4,7 +4,7 @@ import { PayoutService } from './payout.service';
 import { PayoutController } from './payout.controller'
 import { GrantService } from '../grant/grant.service';
 import { GrantSchema } from '../grant/grant.model';
-import { PayoutSchema } from './Payout.model';
+import { PayoutSchema } from './payout.model';
 import { ScheduleService } from '../../helpers/schedule.service';
 import { GrantFundTaskService } from '../funding/grantFundTask.service';
 import { GrantFundSchema } from '../funding/grantFund.model';
