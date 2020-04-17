@@ -143,6 +143,7 @@ CRON job to check status of pending transactions
   - [ ] The Graph https://thegraph.com/ for queries
   - [ ] UI refactor for each ROLE’s { NULL, Manager, Grantee, Donor } grant view
   - [ ] Determine whether link to grant description stored in grant contract or defer to ENS
+  - [ ] Use factor contract to deploy new grants. Confirm factor has required events for tracking.
 
 
 
