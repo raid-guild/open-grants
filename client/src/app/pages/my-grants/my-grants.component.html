@@ -120,8 +120,8 @@
                 <img *ngFor="let user of manage.donors | slice:0:4" [src]="user?.picture || ''" alt="">
               </div>
             </div>
-            <ion-button class="details" mode="sm" slot="end" (click)="viewGrant(manage)">Quick View</ion-button>
-            <ion-button class="details" mode="sm" slot="end" (click)="grantDetails(manage._id)">Details View
+            <ion-button class="details" mode="md" slot="end" (click)="viewGrant(manage)">Quick View</ion-button>
+            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(manage._id)">Details View
             </ion-button>
           </ion-item>
         </ion-card-content>
