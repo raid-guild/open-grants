@@ -53,13 +53,6 @@ Index view for all user grants. User would be one of a Donor, Grantee, or Manage
 ![my grants](docs/mygrants.png)
 
 
-### grant-details
-
-Shows current state of grant. Based on role, more or less interaction options exist (e.g. cancel grant, approveRefund, fund, etc.).
-
-![grant details](docs/grantdetail.png)
-
-
 
 ### create-new-grant
 
@@ -69,6 +62,28 @@ Grant description is stored in back end db.
 
 ![create grant](docs/create.png)
 
+
+
+### grant-details
+
+Shows current state of grant. Based on role, more or less interaction options exist (e.g. cancel grant, approveRefund, fund, etc.).
+
+#### Grantee View (grant details)
+
+![grantee view grant details](docs/grantee.png)
+
+#### Donor View (grant details)
+
+Pre-funding
+![donor view grant details](docs/donorprefunded.png)
+
+Post-funding
+![donor view grant details](docs/donorfunded.png)
+
+
+#### Grant Manager View (grant details)
+
+![grant details](docs/grantdetail.png)
 
 
 ### latest-grants
