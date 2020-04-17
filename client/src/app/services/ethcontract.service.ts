@@ -178,7 +178,7 @@ export class EthcontractService {
                     this.utils.stopLoader();
                     resolve({
                         status: "success",
-                        message: "Reqest sent successfully",
+                        message: "Request sent successfully",
                         address: response.address,
                         hash: response.deployTransaction.hash
                     });
