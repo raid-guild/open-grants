@@ -18,7 +18,6 @@ import { PublicKeyModelComponent } from './public-key-model/public-key-model.com
     templateUrl: './pages.component.html',
     styleUrls: ['./pages.component.scss'],
 })
-
 export class PagesComponent implements OnInit {
     public appPages = [
         {
@@ -40,11 +39,11 @@ export class PagesComponent implements OnInit {
             url: '/pages/trending-grants',
             icon: 'gp-trending-grants'
         },
-        {
-            title: 'Transaction History',
-            url: '/pages/transaction-history',
-            icon: 'gp-transaction-history'
-        }
+        // {
+        //     title: 'Transaction History',
+        //     url: '/pages/transaction-history',
+        //     icon: 'gp-transaction-history'
+        // }
     ];
 
     userData: any;
