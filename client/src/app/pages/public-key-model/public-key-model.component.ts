@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { NavParams, ModalController } from '@ionic/angular';
 import { UserManagementService } from 'src/app/services/user-management.service';
+import { EthcontractService } from 'src/app/services/ethcontract.service';
+import { async } from 'rxjs/internal/scheduler/async';
 
 @Component({
   selector: 'app-public-key-model',
@@ -16,10 +18,12 @@ export class PublicKeyModelComponent implements OnInit {
   @Input() public modal;
   processing = false;
   isAvailable = false;
+  accounts = [];
   model = {
     publicKey: '',
   }
   toastTitle = "Private key"
+  addresRadio: any;
 
   constructor(
     public modalCtrl: ModalController,
@@ -28,9 +32,16 @@ export class PublicKeyModelComponent implements OnInit {
     public router: Router,
     private navParams: NavParams,
     private authService: AuthService,
-    private userManagementService: UserManagementService
+    private userManagementService: UserManagementService,
+    private ethcontractService: EthcontractService,
   ) {
     this.isAvailable = navParams.get('isAvailable');
+
+    (async () => {
+      let res = await this.ethcontractService.getAvailableAccount();
+      this.accounts.push(res);
+      console.log("this.accounts", this.accounts);
+    })();
   }
 
   ngOnInit() { }
@@ -54,6 +65,10 @@ export class PublicKeyModelComponent implements OnInit {
       this.processing = false;
       this.toastr.error('Error Login. Please try after sometime');
     });
+  }
+
+  selectAccount(index: number) {
+    this.model.publicKey = this.accounts[index].account;
   }
 
   signOut() {

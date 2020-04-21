@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import * as Web3 from 'web3';
-import { ethers } from 'ethers';
+import { ethers, providers, utils } from 'ethers';
+import UniLogin from '@unilogin/provider';
 import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { AddressZero, Zero } from "ethers/constants";
 import { UtilsService } from './utils.service';
 import { AppSettings } from '../config/app.config';
-import { async } from 'rxjs/internal/scheduler/async';
+import * as ThreeboxFactory from '3box';
+
 
 declare let require: any;
 declare let window: any;
@@ -24,67 +26,63 @@ export interface AcctInfo {
 
 export class EthcontractService {
     private web3Provider: any;
-    account: any;
 
-    private acctInfoSubject = new Subject<AcctInfo>();
-    acctInfo = this.acctInfoSubject.asObservable();
+    // private acctInfoSubject = new Subject<AcctInfo>();
+    // acctInfo = this.acctInfoSubject.asObservable();
 
     constructor(
         private toastr: ToastrService,
-        private utils: UtilsService
+        private utilsService: UtilsService
     ) {
-        if (typeof window.web3 !== 'undefined') {
-            this.web3Provider = window.web3.currentProvider;
-        } else {
-            this.toastr.warning('Please use a dapp browser like MetaMask plugin for chrome');
-            // this.web3Provider = new Web3.providers.HttpProvider(AppSettings.ethersConfig.rpcURL);
-            // this.web3Provider = new Web3.providers.HttpProvider("http://localhost:8545");
-        }
+        (async () => {
+            if (window.ethereum) {
+                this.web3Provider = window.ethereum;
+                window.web3 = new Web3(window.ethereum)
+                await window.ethereum.enable()
+            }
+            else if (window.web3) {
+                this.web3Provider = window.web3.currentProvider;
+                window.web3 = new Web3(window.web3.currentProvider)
+            }
+            else {
+                window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                // this.web3Provider = new Web3.providers.HttpProvider(AppSettings.ethersConfig.rpcURL);
+                // this.web3Provider = new Web3.providers.HttpProvider("http://localhost:8545");
+            }
 
-        // window.addEventListener('load', async () => {
-        //     // Modern dapp browsers...
-        //     if (window.ethereum) {
-        //         window.web3 = new Web3(ethereum);
-        //         try {
-        //             // Request account access if needed
-        //             await ethereum.enable();
-        //             // Acccounts now exposed
-        //             web3.eth.sendTransaction({/* ... */ });
-        //         } catch (error) {
-        //             // User denied account access...
-        //         }
-        //     }
-        //     // Legacy dapp browsers...
-        //     else if (window.web3) {
-        //         window.web3 = new Web3(web3.currentProvider);
-        //         // Acccounts always exposed
-        //         web3.eth.sendTransaction({/* ... */ });
-        //     }
-        //     // Non-dapp browsers...
-        //     else {
-        //         console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+            let openBox = await this.openBox("0x6D48912C6c768e0CAd669b0154DD85F156284A21");
+            console.log("openBox",openBox)
+        })();
+
+        // window.web3.eth.getAccounts((err, accounts) => {
+        //     if (err) {
+        //         console.log("err", err);
+        //     } else {
+        //         console.log("accounts", accounts);
         //     }
         // });
 
-        window.web3 = new Web3(this.web3Provider);
-
         window.ethereum.on('accountsChanged', (accounts) => {
             console.log("accountsChanged");
-            // this.getAccountInfo();
         });
 
-        (async () => {
-            window.ethereum.enable().then((res) => {
-                console.log("res", res);
-            }, (err) => {
-                console.log("err", err);
-            });
-        })();
+        window.ethereum.on('networkChanged', (network) => {
+            console.log("networkChanged");
+        });
+    }
+
+    public openBox(address?: string) {
+        return ThreeboxFactory.openBox(
+            address,
+            this.web3Provider
+        ).then(box => {
+            let res = box;
+            return res;
+        });
     }
 
     getAccountInfo(account) {
         return new Promise((resolve) => {
-
             window.web3.eth.getBalance(account, (err, balance) => {
                 if (err === null) {
                     resolve({
@@ -100,55 +98,83 @@ export class EthcontractService {
             });
 
             // window.web3.eth.getCoinbase((err, account) => {
-            //     // console.log("account", account);
-            //     this.account = account;
+            //     console.log("account", account);
             //     if (err === null) {
             //         window.web3.eth.getBalance(account, (err, balance) => {
             //             if (err === null) {
-            //                 this.acctInfoSubject.next({
+            //                 resolve({
             //                     account: account,
             //                     balance: (window.web3.fromWei(balance, "ether")).toNumber()
             //                 });
-            //                 resolve();
             //             } else {
-            //                 this.acctInfoSubject.next({
+            //                 resolve({
             //                     account: 'error',
             //                     balance: 0
-            //                 })
-            //                 resolve();
+            //                 });
             //             }
             //         });
             //     }
-            //     resolve();
+            //     resolve({
+            //         account: 'error',
+            //         balance: 0
+            //     });
             // });
 
             // window.web3.listAccounts().then(account => {
-            //     // console.log("account", account)
+            //     console.log("account", account)
             //     if (account.length) {
             //         window.web3.getBalance(account[0]).then((balance) => {
-            //             this.acctInfoSubject.next({
+            //             resolve({
             //                 account: account,
             //                 balance: (window.web3.fromWei(balance, "ether")).toNumber()
             //             });
             //         });
             //     } else {
-            //         this.acctInfoSubject.next({
+            //         resolve({
             //             account: 'error',
             //             balance: 0
             //         })
             //     }
             // }).catch(err => {
-            //     this.acctInfoSubject.next({
+            //     resolve({
             //         account: 'error',
             //         balance: 0
             //     })
             // });
-        })
+        });
     }
+
+    async getAvailableAccount() {
+        return new Promise(async (resolve, reject) => {
+            window.web3.eth.getCoinbase((err, account) => {
+                if (err === null) {
+                    window.web3.eth.getBalance(account, (err, balance) => {
+                        if (err === null) {
+                            resolve({
+                                account: account,
+                                balance: (window.web3.fromWei(balance, "ether")).toNumber()
+                            });
+                        } else {
+                            resolve({
+                                account: 'error',
+                                balance: 0
+                            });
+                        }
+                    });
+                } else {
+                    resolve({
+                        account: 'error',
+                        balance: 0
+                    });
+                }
+            });
+        });
+    }
+
 
     async deployContract(data) {
         return new Promise(async (resolve, reject) => {
-            this.utils.startLoader();
+            this.utilsService.startLoader();
 
             // let data = {
             //     currency: "wei",
@@ -159,13 +185,9 @@ export class EthcontractService {
             //     fundingExpiration: "1587114701",
             //     contractExpiration: "1589706701"
             // }
-            // let provider = new ethers.providers.InfuraProvider(AppSettings.ethersConfig.networks, '56a56ec009b34e31b6aeb4eb817f0772');
-            // let provider = ethers.getDefaultProvider(AppSettings.ethersConfig.networks);
-            // let wallet = new ethers.Wallet(AppSettings.ethersConfig.privateKey, provider);
-
             let currency = AddressZero;
-            if (data.currency == "wei") {
-                currency = AddressZero;
+            if (data.currency == "ETH") {
+                data.amounts = (ethers.utils.parseEther(data.amounts.toString())).toString();
             }
 
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
@@ -174,8 +196,7 @@ export class EthcontractService {
 
             factory.deploy(data.grantees, data.amounts, data.manager, currency, data.targetFunding,
                 data.fundingExpiration, data.contractExpiration, { gasLimit: AppSettings.ethersConfig.gasLimit }).then((response) => {
-                    console.log("response", response);
-                    this.utils.stopLoader();
+                    this.utilsService.stopLoader();
                     resolve({
                         status: "success",
                         message: "Request sent successfully",
@@ -184,7 +205,7 @@ export class EthcontractService {
                     });
                 }, (error) => {
                     console.log(error)
-                    this.utils.stopLoader();
+                    this.utilsService.stopLoader();
                     resolve({
                         hash: '',
                         address: '',
@@ -202,7 +223,8 @@ export class EthcontractService {
                 let provider = ethers.getDefaultProvider(AppSettings.ethersConfig.networks);
                 let contract = new ethers.Contract(contractAddress, tokenAbi.abi, provider);
                 let response = await contract.availableBalance();
-                resolve(response.toNumber());
+                response = ethers.utils.formatEther(response.toNumber());
+                resolve(response);
             } catch (e) {
                 resolve(0);
             }
@@ -225,7 +247,7 @@ export class EthcontractService {
     canFund(contractAddress) {
         return new Promise(async (resolve, reject) => {
             try {
-                let provider = ethers.getDefaultProvider(AppSettings.ethersConfig.networks);
+                const provider = new ethers.providers.Web3Provider(this.web3Provider);
                 let contract = new ethers.Contract(contractAddress, tokenAbi.abi, provider);
                 let response = await contract.canFund();
                 // console.log("response", response);
@@ -238,7 +260,7 @@ export class EthcontractService {
 
     fund(contractAddress, amount) {
         return new Promise(async (resolve, reject) => {
-            this.utils.startLoader();
+            this.utilsService.startLoader();
 
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
@@ -251,7 +273,7 @@ export class EthcontractService {
             })
                 .then((response) => {
                     console.log("response", response);
-                    this.utils.stopLoader();
+                    this.utilsService.stopLoader();
                     resolve({
                         status: "success",
                         message: "Reqest sent successfully",
@@ -259,7 +281,7 @@ export class EthcontractService {
                     });
                 }, (error) => {
                     console.log(error)
-                    this.utils.stopLoader();
+                    this.utilsService.stopLoader();
                     resolve({
                         hash: '',
                         status: "failed",
@@ -272,7 +294,7 @@ export class EthcontractService {
     remainingAllocation(contractAddress, userPublicKey) {
         return new Promise(async (resolve, reject) => {
             try {
-                let provider = ethers.getDefaultProvider(AppSettings.ethersConfig.networks);
+                const provider = new ethers.providers.Web3Provider(this.web3Provider);
                 let contract = new ethers.Contract(contractAddress, tokenAbi.abi, provider);
                 let response = await contract.remainingAllocation(userPublicKey);
                 resolve(response.toNumber());
@@ -284,7 +306,7 @@ export class EthcontractService {
 
     approvePayout(contractAddress, granteePublicKey, amount) {
         return new Promise(async (resolve, reject) => {
-            this.utils.startLoader();
+            this.utilsService.startLoader();
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
             let contract = new ethers.Contract(contractAddress, tokenAbi.abi, provider);
@@ -292,7 +314,7 @@ export class EthcontractService {
             let valuetkn = new ethers.utils.BigNumber(amount);
             contractWithSigner.approvePayout(valuetkn, granteePublicKey, { gasLimit: AppSettings.ethersConfig.gasLimit }).then((response) => {
                 console.log("response", response);
-                this.utils.stopLoader();
+                this.utilsService.stopLoader();
                 resolve({
                     status: "success",
                     message: "Reqest sent successfully",
@@ -303,7 +325,7 @@ export class EthcontractService {
                 });
             }, (error) => {
                 console.log(error)
-                this.utils.stopLoader();
+                this.utilsService.stopLoader();
                 resolve({
                     hash: '',
                     status: "failed",
@@ -319,7 +341,7 @@ export class EthcontractService {
     approveRefund(contractAddress, userPublicKey, amount) {
         return new Promise(async (resolve, reject) => {
             // try {
-            this.utils.startLoader();
+            this.utilsService.startLoader();
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
             let contract = new ethers.Contract(contractAddress, tokenAbi.abi, provider);
@@ -328,7 +350,7 @@ export class EthcontractService {
             let response = await contractWithSigner.approveRefund(valuetkn, userPublicKey, { gasLimit: AppSettings.ethersConfig.gasLimit });
             console.log("response", response)
             let tx = await response.wait();
-            this.utils.stopLoader();
+            this.utilsService.stopLoader();
             resolve({
                 contract: contractAddress,
                 grantee: userPublicKey,
@@ -336,7 +358,7 @@ export class EthcontractService {
                 status: "Success"
             });
             // } catch (e) {
-            //     this.utils.stopLoader();
+            //     this.utilsService.stopLoader();
             //     reject({
             //         contract: contractAddress,
             //         grantee: userPublicKey,
@@ -351,7 +373,7 @@ export class EthcontractService {
     withdrawRefund(contractAddress, donorAddress) {
         return new Promise(async (resolve, reject) => {
             try {
-                this.utils.startLoader();
+                this.utilsService.startLoader();
                 const provider = new ethers.providers.Web3Provider(this.web3Provider);
                 const signer = provider.getSigner();
                 let contract = new ethers.Contract(contractAddress, tokenAbi.abi, provider);
@@ -360,14 +382,14 @@ export class EthcontractService {
                 console.log("response", response);
                 let tx = await response.wait();
                 console.log("tx", tx);
-                this.utils.stopLoader();
+                this.utilsService.stopLoader();
                 resolve({
                     contract: contractAddress,
                     donor: donorAddress,
                     status: "Success"
                 });
             } catch (e) {
-                this.utils.stopLoader();
+                this.utilsService.stopLoader();
                 reject({
                     contract: contractAddress,
                     donor: donorAddress,
@@ -380,7 +402,7 @@ export class EthcontractService {
     signal(contractAddress, support, amount) {
         return new Promise(async (resolve, reject) => {
             // try {
-            this.utils.startLoader();
+            this.utilsService.startLoader();
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
             let contract = new ethers.Contract(contractAddress, tokenAbi.abi, provider);
@@ -390,10 +412,10 @@ export class EthcontractService {
             console.log("response", response);
             let tx = await response.wait();
             console.log("tx", tx);
-            this.utils.stopLoader();
+            this.utilsService.stopLoader();
             resolve();
             // } catch (e) {
-            //     this.utils.stopLoader();
+            //     this.utilsService.stopLoader();
             //     reject();
             // }
         })
@@ -401,14 +423,14 @@ export class EthcontractService {
 
     cancelGrant(contractAddress) {
         return new Promise(async (resolve, reject) => {
-            this.utils.startLoader();
+            this.utilsService.startLoader();
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
             let contract = new ethers.Contract(contractAddress, tokenAbi.abi, provider);
             let contractWithSigner = contract.connect(signer);
             contractWithSigner.cancelGrant({ gasLimit: AppSettings.ethersConfig.gasLimit }).then(async (response) => {
                 console.log("response", response);
-                this.utils.stopLoader();
+                this.utilsService.stopLoader();
                 resolve({
                     status: "success",
                     message: "Reqest sent successfully",
@@ -417,7 +439,7 @@ export class EthcontractService {
 
             }, (error) => {
                 console.log(error)
-                this.utils.stopLoader();
+                this.utilsService.stopLoader();
                 resolve({
                     status: "failed",
                     message: error.message,

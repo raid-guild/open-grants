@@ -76,7 +76,7 @@ export class CreateNewGrantComponent implements OnInit {
   ngOnInit() {
 
     this.currency = [
-      { name: "Wai", value: "wei" }
+      { name: "ETH", value: "ETH" }
     ]
 
     this.granteeControls.valueChanges
@@ -203,7 +203,7 @@ export class CreateNewGrantComponent implements OnInit {
       grantManager: ['', Validators.required],
       type: ['singleDeliveryDate', Validators.required],
       targetFunding: [null, Validators.required],
-      currency: ['wei', Validators.required],
+      currency: ['ETH', Validators.required],
       content: [''],
       singleDeliveryDate: this.fb.group({
         fundingExpiryDate: ['', Validators.required],

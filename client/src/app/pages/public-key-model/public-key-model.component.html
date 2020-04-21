@@ -13,6 +13,15 @@
 </ion-header>
 
 <ion-content>
+  <div class="form-details">
+    <h5>Select your metamask account OR Enter address</h5>
+    <ion-list lines="none" class="forms" mode="md">
+      <ion-card *ngFor="let acc of accounts; let i = index" (click)="selectAccount(i)">
+        <span>{{acc.account}} : {{acc.balance.toFixed()}}</span>
+      </ion-card>
+    </ion-list>
+  </div>
+
   <form (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
     <div class="form-details">
       <ion-list lines="none" class="forms" mode="md">

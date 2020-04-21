@@ -18,7 +18,8 @@ export enum EnvConfig {
     MULTIPLE
 }
 var currencyEnum = {
-    WEI: "wei"
+    WEI: "wei",
+    ETH : "ETH"
 }
 
 export enum currencyConfig {
