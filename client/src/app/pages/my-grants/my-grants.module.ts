@@ -47,4 +47,8 @@ const routes: Routes = [
   declarations: [MyGrantsComponent],
   providers: [GrantService]
 })
-export class MyGrantsModule { }
+export class MyGrantsModule {
+  constructor() {
+    console.log("MyGrantsModule")
+  }
+}

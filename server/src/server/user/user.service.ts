@@ -2,6 +2,7 @@ import { Injectable, flatten } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.model';
+import { async } from 'rxjs/internal/scheduler/async';
 
 @Injectable()
 export class UserService {
@@ -26,6 +27,13 @@ export class UserService {
                 { "lastName": { '$regex': name } },
                 { "userName": { '$regex': name } }
             ]
+        }).exec();
+        return response;
+    }
+
+    async searchBypublicAddress(publicAddress: string): Promise<User> {
+        const response = await this.UserModel.findOne({
+            publicAddress: publicAddress
         }).exec();
         return response;
     }

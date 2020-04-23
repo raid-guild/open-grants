@@ -206,53 +206,6 @@ export class GrantController {
         }
     }
 
-    // @Post('cancel/:id')
-    // @ApiBearerAuth()
-    // @ApiResponse({ status: 200, description: 'Grant cancel successfully' })
-    // async cancel(@Req() req, @Res() res, @Param('id') grantId) {
-    //     try {
-    //         let getByDonor = await this.grantService.getByIdAndDonorAndGrantee(grantId, req.user._id);
-
-    //         if (getByDonor) {
-    //             let grantData = getByDonor;
-    //             let now = new Date().toISOString();
-
-    //             if (grantData.type == "singleDeliveryDate") {
-    //                 const isAfter = moment(now).isAfter(moment(grantData.singleDeliveryDate.fundingExpiryDate));
-
-    //                 if (isAfter && grantData.totalFunding < grantData.targetFunding) {
-    //                     await this.grantService.cancel(grantData._id, req.user._id);
-    //                     return res.status(httpStatus.OK).json(new APIResponse(null, 'Grant cancel successfully', httpStatus.OK));
-    //                 }
-    //             }
-
-    //             if (grantData.type == "multipleMilestones") {
-    //                 const isAfter = moment(now).isAfter(moment(grantData.multipleMilestones[grantData.multipleMilestones.length - 1].completionDate));
-
-    //                 if (isAfter && grantData.totalFunding < grantData.targetFunding) {
-    //                     await this.grantService.cancel(grantData._id, req.user._id);
-    //                     return res.status(httpStatus.OK).json(new APIResponse(null, 'Grant cancel successfully', httpStatus.OK));
-    //                 }
-    //             }
-
-    //             return res.status(httpStatus.BAD_REQUEST).json(new APIResponse(null, 'Some thing went wrong', httpStatus.BAD_REQUEST));
-    //         }
-
-    //         let getByManager = await this.grantService.getByIdAndManager(grantId, req.user._id);
-
-    //         if (getByManager) {
-    //             await this.grantService.cancel(getByManager._id, req.user._id);
-    //             return res.status(httpStatus.OK).json(new APIResponse(null, 'Grant cancel successfully', httpStatus.OK));
-    //         }
-
-    //         return res.status(httpStatus.BAD_REQUEST).json(new APIResponse(getByManager, 'No Record Found', httpStatus.BAD_REQUEST));
-
-    //     } catch (e) {
-    //         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error cancling grant', httpStatus.INTERNAL_SERVER_ERROR, e));
-    //     }
-    // }
-
-
     @Post('cancel/:id')
     @ApiBearerAuth()
     @ApiResponse({ status: 200, description: 'Grant cancel successfully' })

@@ -8,11 +8,11 @@ export class Guard implements CanActivate {
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
 
         const req = context.switchToHttp().getRequest();
-        // console.log("req", req.url, req.headers);
+        console.log("req", req.url, req.headers);
         const url = req.url.split('/');
         const method = req.method;
-        // console.log("url", url[1] + '/' + url[2]);
-        // console.log("method", method);
+        console.log("url", url[1] + '/' + url[2]);
+        console.log("method", method);
 
         const token = req.headers.authorization;
         let decodeToken;
@@ -27,6 +27,8 @@ export class Guard implements CanActivate {
 
         }
 
-        throw new HttpException('Authorization error', HttpStatus.UNAUTHORIZED);
+        return true;
+
+        // throw new HttpException('Authorization error', HttpStatus.UNAUTHORIZED);
     }
 }

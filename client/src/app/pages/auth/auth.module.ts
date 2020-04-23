@@ -5,9 +5,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
 
 const routes: Routes = [
     {
@@ -17,15 +17,11 @@ const routes: Routes = [
     {
         path: 'login',
         component: LoginComponent
-    },
-    {
-        path: 'register',
-        component: RegisterComponent
     }
 ];
 
 @NgModule({
-    declarations: [LoginComponent, RegisterComponent],
+    declarations: [LoginComponent],
 
     imports: [
         CommonModule,
@@ -35,6 +31,6 @@ const routes: Routes = [
         RouterModule.forChild(routes),
     ],
 
-    providers: [AuthenticationService, AuthService]
+    providers: [AuthenticationService, AuthService, UserService]
 })
 export class AuthModule { }

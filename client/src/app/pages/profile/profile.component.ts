@@ -96,8 +96,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   async getAccountInfo() {
-    if (this.userData && this.userData.hasOwnProperty('publicKey') && this.userData.publicKey) {
-      let data: any = await this.ethcontractService.getAccountInfo(this.userData.publicKey);
+    if (this.userData && this.userData.hasOwnProperty('publicAddress') && this.userData.publicAddress) {
+      let data: any = await this.ethcontractService.getAccountInfo(this.userData.publicAddress);
       this.account = data.account;
       this.balance = data.balance;
     }

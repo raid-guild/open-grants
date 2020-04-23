@@ -3,6 +3,11 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
+import { UserService } from 'src/app/services/user.service';
+import * as ethUtil from 'ethereumjs-util';
+import * as sigUtil from 'eth-sig-util';
+
+declare let window: any;
 
 @Component({
   selector: 'app-login',
@@ -11,18 +16,17 @@ import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 })
 export class LoginComponent implements OnInit {
   processing = false;
-  passwordType = false;
   toastTitle = 'Login';
-  user = {
-    userName: '',
-    password: ''
-  }
 
-  constructor(public router: Router,
+  constructor(
+    public router: Router,
     private authenticationService: AuthenticationService,
-    private toastr: ToastrService) { }
+    private userService: UserService,
+    private toastr: ToastrService,
+  ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+
   }
 
   // ngAfterViewInit() {
@@ -30,27 +34,54 @@ export class LoginComponent implements OnInit {
   //   element.parentNode.removeChild(element);
   // }
 
-  togglePasswordFieldType() {
-    this.passwordType = !this.passwordType;
-  }
-
-  onSubmit() {
+  async confirmUser() {
     this.processing = true;
-    this.authenticationService.signin(this.user).subscribe((res: HTTPRESPONSE) => {
-      if (res.message) {
-        this.processing = false;
-        this.toastr.success(res.message, this.toastTitle);
-        this.router.navigate(['pages']);
+
+    try {
+      if ('enable' in window.web3.currentProvider) {
+        await window.web3.currentProvider.enable();
+        this.authenticationService.confirmUser({ publicAddress: window.web3.eth.coinbase }).subscribe(async (res: HTTPRESPONSE) => {
+          try {
+            let signMessage: any = await this.handleSignMessage(res.data)
+            this.login(signMessage);
+          } catch (error) {
+            this.processing = false;
+            this.toastr.error(error.message, this.toastTitle);
+          }
+        }, (err) => {
+          this.processing = false;
+          this.toastr.error(err.error.message, this.toastTitle);
+        });
       }
-    }, (err) => {
-      console.log("err", err);
+    } catch (error) {
       this.processing = false;
-      this.toastr.error('Error Login. Please try after sometime', this.toastTitle);
-    });
+      this.toastr.error(error.message, this.toastTitle);
+    }
   }
 
-  signup() {
-    this.router.navigate(['auth/register']);
+  handleSignMessage({ publicAddress, nonce }) {
+    return new Promise((resolve, reject) => {
+      window.web3.personal.sign(
+        window.web3.fromUtf8(`I am signing my one-time nonce: ${nonce}`),
+        publicAddress,
+        (err, signature) => {
+          if (err) reject(err);
+          resolve({ publicAddress, signature });
+        }
+      )
+    })
+  }
+
+  login(signMessage) {
+    this.authenticationService.signin({ publicAddress: signMessage.publicAddress, signature: signMessage.signature })
+      .subscribe((res: HTTPRESPONSE) => {
+        this.toastr.success(res.message, this.toastTitle);
+        this.processing = false;
+        this.router.navigate(['pages']);
+      }, (err) => {
+        this.processing = false;
+        this.toastr.error(err.error.message, this.toastTitle);
+      });
   }
 
 }

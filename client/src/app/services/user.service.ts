@@ -20,6 +20,10 @@ export class UserService extends HttpHelper {
         return this.http.get(this.apiUrl + '/user/' + this.user._id, this.getHttpOptions());
     }
 
+    getByPublicAddress(publicAddress: string): Observable<any> {
+        return this.http.get(this.apiUrl + '/user/getByPublicAddress/' + publicAddress, this.getHttpOptions());
+    }
+
     uploadProfile(profile: any): Observable<any> {
         console.log("profile", profile);
 

@@ -65,7 +65,7 @@ export class CreateNewGrantComponent implements OnInit {
     this.userService.getAll().subscribe((res: HTTPRESPONSE) => {
       this.userData = res.data;
       res.data.map((data) => {
-        if (data.hasOwnProperty('publicKey') && data.publicKey) {
+        if (data.hasOwnProperty('publicAddress') && data.publicAddress) {
           this.tagInputItems.push(data);
           this.managerTagInputItem.push(data);
         }
@@ -382,9 +382,9 @@ export class CreateNewGrantComponent implements OnInit {
     }
 
     data = {
-      grantees: this.grantForm.grantees.map((data) => { return data.publicKey }),
+      grantees: this.grantForm.grantees.map((data) => { return data.publicAddress }),
       amounts: this.grantForm.grantees.map((data) => { return data.allocationAmount }),
-      manager: this.grantForm.grantManager.publicKey,
+      manager: this.grantForm.grantManager.publicAddress,
       currency: this.grantForm.currency,
       targetFunding: this.grantForm.targetFunding,
       fundingExpiration: fundingExpiration,
@@ -420,7 +420,7 @@ export class CreateNewGrantComponent implements OnInit {
           data.userName = user.userName;
           data.allocationAmount = +data.allocationAmount;
           data["grantee"] = user._id;
-          data['publicKey'] = user.publicKey;
+          data['publicAddress'] = user.publicAddress;
           grantees.push(data)
         }
       })
@@ -432,7 +432,7 @@ export class CreateNewGrantComponent implements OnInit {
       if (user._id == this.grantForm.grantManager[0]._id) {
         grantManager = {
           _id: user._id,
-          publicKey: user.publicKey
+          publicAddress: user.publicAddress
         }
       }
     })

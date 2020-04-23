@@ -16,51 +16,78 @@ import {
 
 } from '@nestjs/swagger';
 
+import * as ethUtil from 'ethereumjs-util';
+
 @ApiTags('Auth')
 @Controller('api/v1/auth')
 export class AuthController {
     constructor(private authService: AuthService, private utils: Utils) { }
 
-    @Post('/signUp')
-    @ApiResponse({ status: 200, description: 'User added successfully.' })
-    async signUp(@Res() res, @Body() userModel: User, @Body() userswagger: authswagger) {
+    @Post('/confirmUser')
+    @ApiResponse({ status: 200, description: 'User fetched successfully.' })
+    async login(@Res() res, @Body() userModel: User) {
         try {
-            userModel.password = this.utils.encrypt(userModel.password);
-
-            userModel.userName = userModel.userName.toLocaleLowerCase();
-            userModel.email = userModel.email.toLocaleLowerCase();
-
-            let response = await this.authService.add(userModel);
-            delete response.password;
-            return res.status(httpStatus.OK).json(new APIResponse(response, 'User added successfully', httpStatus.OK));
+            let response = await this.authService.getByPublicAddress(userModel.publicAddress);
+            if (!response) {
+                response = await this.authService.add(userModel);
+            }
+            return res.status(httpStatus.OK).json(new APIResponse(response, 'User fetched successfully', httpStatus.OK));
         } catch (e) {
-            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse({}, 'Error adding user', httpStatus.INTERNAL_SERVER_ERROR, e));
+            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse({}, 'Error fetching user', httpStatus.INTERNAL_SERVER_ERROR, e));
         }
     }
 
     @Post('/login')
     @ApiResponse({ status: 200, description: 'Login successfully.' })
-    async login(@Res() res, @Body() user, @Body() login: Loginswagger) {
+    async verifySign(@Res() res, @Body() body) {
         try {
-            user.password = this.utils.encrypt(user.password);
-
-            let response = await this.authService.login(user);
+            let response = await this.authService.getByPublicAddress(body.publicAddress);
             if (response) {
-                response = JSON.parse(JSON.stringify(response));
-                const token = JWTHelper.getJWTToken({
-                    _id: response._id,
-                    email: response.email,
-                    userName: response.userName
-                });
+                const msg = `I am signing my one-time nonce: ${response.nonce}`;
 
-                response = {
-                    ...response,
-                    token: token
+                // const msgBufferHex = ethUtil.bufferToHex(Buffer.from(msg, 'utf8'));
+                // const address = sigUtil.recoverPersonalSignature({
+                //     data: msgBufferHex,
+                //     sig: body.signature
+                // });
+
+                const msgBuffer = Buffer.from(msg, 'utf8');
+
+                const msgHash = ethUtil.hashPersonalMessage(msgBuffer);
+
+                const signatureBuffer: any = ethUtil.toBuffer(body.signature);
+
+                const signatureParams = ethUtil.fromRpcSig(signatureBuffer);
+
+                const publicKey = ethUtil.ecrecover(
+                    msgHash,
+                    signatureParams.v,
+                    signatureParams.r,
+                    signatureParams.s
+                );
+
+                const addressBuffer = ethUtil.publicToAddress(publicKey);
+                const address = ethUtil.bufferToHex(addressBuffer);
+
+                if (address.toLowerCase() === body.publicAddress.toLowerCase()) {
+                    response.nonce = Math.floor(Math.random() * 1000000);
+                    await response.save();
+                    response = JSON.parse(JSON.stringify(response));
+                    const token = JWTHelper.getJWTToken({
+                        _id: response._id,
+                        email: response.email,
+                        userName: response.userName
+                    });
+
+                    response = {
+                        ...response,
+                        token: token
+                    }
+                    
+                    return res.status(httpStatus.OK).json(new APIResponse(response, 'Login successfully', httpStatus.OK));
                 }
-                delete response.password;
-                // delete response.privateKey;
+                return res.status(httpStatus.UNAUTHORIZED).json(new APIResponse(null, 'Authorizetion error', httpStatus.UNAUTHORIZED));
 
-                return res.status(httpStatus.OK).json(new APIResponse(response, 'Login successfully', httpStatus.OK));
             } else {
                 return res.status(httpStatus.UNAUTHORIZED).json(new APIResponse(null, 'Authorizetion error', httpStatus.UNAUTHORIZED));
             }

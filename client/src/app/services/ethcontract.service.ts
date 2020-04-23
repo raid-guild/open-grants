@@ -7,8 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AddressZero, Zero } from "ethers/constants";
 import { UtilsService } from './utils.service';
 import { AppSettings } from '../config/app.config';
-import * as ThreeboxFactory from '3box';
-
+// const Box = require('3box');
 
 declare let require: any;
 declare let window: any;
@@ -33,53 +32,7 @@ export class EthcontractService {
     constructor(
         private toastr: ToastrService,
         private utilsService: UtilsService
-    ) {
-        (async () => {
-            if (window.ethereum) {
-                this.web3Provider = window.ethereum;
-                window.web3 = new Web3(window.ethereum)
-                await window.ethereum.enable()
-            }
-            else if (window.web3) {
-                this.web3Provider = window.web3.currentProvider;
-                window.web3 = new Web3(window.web3.currentProvider)
-            }
-            else {
-                window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
-                // this.web3Provider = new Web3.providers.HttpProvider(AppSettings.ethersConfig.rpcURL);
-                // this.web3Provider = new Web3.providers.HttpProvider("http://localhost:8545");
-            }
-
-            let openBox = await this.openBox("0x6D48912C6c768e0CAd669b0154DD85F156284A21");
-            console.log("openBox",openBox)
-        })();
-
-        // window.web3.eth.getAccounts((err, accounts) => {
-        //     if (err) {
-        //         console.log("err", err);
-        //     } else {
-        //         console.log("accounts", accounts);
-        //     }
-        // });
-
-        window.ethereum.on('accountsChanged', (accounts) => {
-            console.log("accountsChanged");
-        });
-
-        window.ethereum.on('networkChanged', (network) => {
-            console.log("networkChanged");
-        });
-    }
-
-    public openBox(address?: string) {
-        return ThreeboxFactory.openBox(
-            address,
-            this.web3Provider
-        ).then(box => {
-            let res = box;
-            return res;
-        });
-    }
+    ) { }
 
     getAccountInfo(account) {
         return new Promise((resolve) => {
