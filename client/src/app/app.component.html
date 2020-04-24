@@ -37,3 +37,49 @@
   <ion-router-outlet>
   </ion-router-outlet>
 </ion-app>
+
+<!-- <ion-app>
+  <ion-menu contentId="main-content" type="overlay">
+    <ion-header mode="md" no-border>
+      <ion-toolbar mode="md" color="dark">
+        <ion-title class="logo">
+          <img src="assets/imgs/logo.svg" alt=""> &nbsp;&nbsp; Menu
+        </ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding" class="bg-dark">
+      <div class="create-grant">
+        <ion-button mode="md" color="success" (click)="createNewGrant()" expand="block">Create New Grant</ion-button>
+        <hr class="dassed-line">
+      </div>
+
+      <ion-list lines="none" mode="md">
+        <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
+          <ion-item [routerDirection]="'root'" [routerLink]="[p.url]" mode="md" routerLinkActive="active">
+            <ion-icon slot="start" [class]="p.icon"></ion-icon>
+            <ion-label>
+              {{p.title}}
+            </ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <ion-header mode="md" no-border>
+    <ion-toolbar mode="md">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title class="logo">
+        <img src="assets/imgs/logo.svg" alt="">
+      </ion-title>
+      <ion-buttons slot="end">
+        <ion-button mode="md" fill="solid" color="success" class="gbtn">sign in</ion-button>
+        <ion-button mode="md" fill="solid" color="success" class="gbtn">Register</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-router-outlet id="main-content"></ion-router-outlet>
+</ion-app> -->

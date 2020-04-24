@@ -49,71 +49,8 @@ export class PagesComponent implements OnInit {
     userData: any;
 
     constructor(
-        private platform: Platform,
-        private splashScreen: SplashScreen,
-        private statusBar: StatusBar,
-        private modalController: ModalController,
-        public events: Events,
-        public router: Router,
-        private userService: UserService,
-        private _zone: NgZone
-    ) {
-
-        (async () => {
-            let res: any = await this.userService.getUser().toPromise();
-            this.userData = res.data;
-            this.publicKeyModal();
-        })();
-
-        this.initializeApp();
-    }
-
-    initializeApp() {
-        this.platform.ready().then(() => {
-            this.statusBar.styleDefault();
-            this.splashScreen.hide();
-        });
-    }
+    ) { }
 
     ngOnInit() {
     }
-
-    async publicKeyModal() {
-        setTimeout(async () => {
-            if (this.userData && (!this.userData.hasOwnProperty('publicKey') || !this.userData.publicKey)) {
-                this._zone.run(async () => {
-                    const modal = await this.modalController.create({
-                        component: PublicKeyModelComponent,
-                        cssClass: 'custom-modal-style',
-                        backdropDismiss: false,
-                        mode: "ios"
-                    });
-                    return await modal.present();
-                })
-            }
-        }, 2000);
-    }
-
-
-    // async createNewGrant() {
-    //     console.log("New Grant")
-    //     const modal = await this.modalController.create({
-    //         component: CreateNewGrantComponent,
-    //         cssClass: 'custom-modal-style',
-    //         mode: "ios"
-    //     })
-
-    //     modal.onDidDismiss()
-    //         .then((data) => {
-    //             const reload = data['data'];
-    //             // console.log("reload", reload);
-    //             if (reload && reload.hasOwnProperty('reload') && reload.reload) {
-    //                 this.events.publish('my-grants', true);
-    //             }
-    //         });
-
-    //     return await modal.present();
-
-    // this.router.navigate(['pages/create-new-grant']);
-    // }
 }
