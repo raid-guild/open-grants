@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Platform, ModalController } from '@ionic/angular';
+import { Platform, ModalController, Events } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { NgxSpinnerService } from "ngx-spinner";
@@ -13,13 +13,36 @@ import { AuthService, AuthState } from './services/auth.service';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent implements OnInit {
-
-  public appPages = [
+  isLogin = false;
+  public appPages = [];
+  public pages = [
     // {
     //   title: 'Create New Grants',
     //   url: '/pages/create',
     //   icon: 'gp-grant'
     // },
+    {
+      title: 'Dashboard',
+      url: '/pages/dashboard',
+      icon: 'gp-grant'
+    },
+    {
+      title: 'Latest Grants',
+      url: '/pages/latest',
+      icon: 'gp-latest-grant'
+    }, {
+      title: 'Trending Grants',
+      url: '/pages/trending',
+      icon: 'gp-trending-grants'
+    },
+    // {
+    //     title: 'Transaction History',
+    //     url: '/pages/transaction-history',
+    //     icon: 'gp-transaction-history'
+    // }
+  ];
+
+  public allPage = [
     {
       title: 'Dashboard',
       url: '/pages/dashboard',
@@ -44,12 +67,7 @@ export class AppComponent implements OnInit {
       url: '/pages/profile',
       icon: 'gp-grant'
     },
-    // {
-    //     title: 'Transaction History',
-    //     url: '/pages/transaction-history',
-    //     icon: 'gp-transaction-history'
-    // }
-  ];
+  ]
 
   constructor(
     private platform: Platform,
@@ -58,9 +76,28 @@ export class AppComponent implements OnInit {
     private utilService: UtilsService,
     private modalController: ModalController,
     private spinner: NgxSpinnerService,
-    private authService: AuthService
+    private authService: AuthService,
+    public events: Events,
   ) {
     this.initializeApp();
+
+    let res = this.authService.getAuthState();
+    this.isLogin = res.is_logged_in;
+
+    this.events.subscribe('is_logged_in', (data) => {
+      this.isLogin = data;
+      if (this.isLogin) {
+        this.appPages = this.allPage;
+      } else {
+        this.appPages = this.pages;
+      }
+    });
+
+    if (this.isLogin) {
+      this.appPages = this.allPage;
+    } else {
+      this.appPages = this.pages;
+    }
   }
 
 

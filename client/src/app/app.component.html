@@ -16,7 +16,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding" class="bg-dark">
-      <div class="create-grant">
+      <div class="create-grant" *ngIf="isLogin">
         <ion-button mode="md" color="success" [routerLink]="['/pages/create']" expand="block">Create New Grant</ion-button>
         <hr class="dassed-line">
       </div>
