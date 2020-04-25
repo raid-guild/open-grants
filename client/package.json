@@ -50,7 +50,6 @@
     "rxjs": "~6.5.1",
     "sweetalert2": "^9.10.2",
     "tinymce": "^5.1.6",
-    "truffle-contract": "^4.0.31",
     "tslib": "^1.9.0",
     "web3": "0.20.5",
     "zone.js": "~0.9.1"

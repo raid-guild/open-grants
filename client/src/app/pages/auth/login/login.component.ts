@@ -4,8 +4,6 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 import { UserService } from 'src/app/services/user.service';
-import * as ethUtil from 'ethereumjs-util';
-import * as sigUtil from 'eth-sig-util';
 
 declare let window: any;
 

@@ -10,8 +10,6 @@ import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { HTTPRESPONSE } from '../common/http-helper/http-helper.class';
 import { async } from '@angular/core/testing';
-import { PublicKeyModelComponent } from './public-key-model/public-key-model.component';
-
 
 @Component({
     selector: 'app-pages',

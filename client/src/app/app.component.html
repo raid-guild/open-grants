@@ -1,44 +1,12 @@
 <!-- <ion-app>
-  <ion-split-pane>
-    <ion-menu type="overlay">
-      <ion-header no-border>
-        <ion-toolbar color="dark">
-          <ion-title class="logo">
-            <img src="assets/imgs/logo.svg" alt="">
-          </ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content padding class="bg-dark">
-        <div class="create-grant">
-          <ion-button mode="md" color="success" (click)="createNewGrant()" expand="block" >Create New Grant</ion-button>
-          <hr class="dassed-line">
-        </div>
-
-        <ion-list lines="none" mode="md">
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
-            <ion-item mode="md" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" [routerDirection]="'root'" [routerLink]="[p.url]">
-              <ion-icon slot="start" [class]="p.icon"></ion-icon>
-              <ion-label>
-                {{p.title}}
-              </ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-        </ion-list>
-      </ion-content>
-    </ion-menu>
-    <ion-router-outlet main></ion-router-outlet>
-  </ion-split-pane>
-</ion-app> -->
-
-<ion-app>
   <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-triangle-path">
     <p style="font-size: 20px; color: white">Loading...</p>
   </ngx-spinner>
   <ion-router-outlet>
   </ion-router-outlet>
-</ion-app>
+</ion-app> -->
 
-<!-- <ion-app>
+<ion-app>
   <ion-menu contentId="main-content" type="overlay">
     <ion-header mode="md" no-border>
       <ion-toolbar mode="md" color="dark">
@@ -49,7 +17,7 @@
     </ion-header>
     <ion-content class="ion-padding" class="bg-dark">
       <div class="create-grant">
-        <ion-button mode="md" color="success" (click)="createNewGrant()" expand="block">Create New Grant</ion-button>
+        <ion-button mode="md" color="success" [routerLink]="['/pages/create']" expand="block">Create New Grant</ion-button>
         <hr class="dassed-line">
       </div>
 
@@ -66,20 +34,6 @@
     </ion-content>
   </ion-menu>
 
-  <ion-header mode="md" no-border>
-    <ion-toolbar mode="md">
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-      <ion-title class="logo">
-        <img src="assets/imgs/logo.svg" alt="">
-      </ion-title>
-      <ion-buttons slot="end">
-        <ion-button mode="md" fill="solid" color="success" class="gbtn">sign in</ion-button>
-        <ion-button mode="md" fill="solid" color="success" class="gbtn">Register</ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-
+  <app-navbar></app-navbar>
   <ion-router-outlet id="main-content"></ion-router-outlet>
-</ion-app> -->
+</ion-app>

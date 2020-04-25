@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Events } from '@ionic/angular';
 
 import { PopoverController, ModalController } from '@ionic/angular';
-
-import { MenuPopoverComponent } from '../menu-popover/menu-popover.component';
 import { ViewGrantComponent } from '../view-grant/view-grant.component';
 import { ViewGrantRequestRefundComponent } from '../view-grant-request-refund/view-grant-request-refund.component';
 import { ViewGrantUnmarkAsCompleteComponent } from '../view-grant-unmark-as-complete/view-grant-unmark-as-complete.component';
@@ -37,24 +35,12 @@ export class MyGrantsComponent implements OnInit {
     private router: Router,
     public events: Events
   ) {
-
     this.getAllGrants();
     this.events.subscribe('my-grants', (data) => {
       if (data) {
         this.getAllGrants();
       }
     });
-  }
-
-  async userMenuPopover($event) {
-    const popover = await this.popoverCtrl.create({
-      component: MenuPopoverComponent,
-      event: event,
-      translucent: true,
-      cssClass: 'poopover-user-option'
-    })
-
-    return await popover.present();
   }
 
   async viewGrant(data: any) {
@@ -80,7 +66,7 @@ export class MyGrantsComponent implements OnInit {
   }
 
   grantDetails(id: string) {
-    this.router.navigate(['/pages/grant-details/' + id])
+    this.router.navigate(['/pages/grant/' + id])
   }
 
   async viewGrantRequestRefund() {

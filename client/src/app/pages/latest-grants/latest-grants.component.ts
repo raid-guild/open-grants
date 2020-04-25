@@ -1,6 +1,5 @@
 import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
-import { MenuPopoverComponent } from '../menu-popover/menu-popover.component';
 import { GrantService, IGrant } from 'src/app/services/grant.service';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 import { ENVIRONMENT } from 'src/environments/environment';
@@ -30,7 +29,7 @@ export class LatestGrantsComponent implements OnInit {
   }
 
   grantDetails(id: string) {
-    this.router.navigate(['/pages/grant-details/' + id])
+    this.router.navigate(['/pages/grant/' + id])
   }
 
   handleChange(e) {
@@ -43,17 +42,6 @@ export class LatestGrantsComponent implements OnInit {
       });
       // console.log("temp", this.allGrant);
     }
-  }
-
-  async userMenuPopover($event) {
-    const popover = await this.popoverCtrl.create({
-      component: MenuPopoverComponent,
-      event: event,
-      translucent: true,
-      cssClass: 'poopover-user-option'
-    })
-
-    return await popover.present();
   }
 
   async viewGrant(data: any) {
