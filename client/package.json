@@ -1,5 +1,5 @@
 {
-  "name": "grantPlatform",
+  "name": "grant-platform",
   "version": "0.0.1",
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
@@ -13,7 +13,7 @@
   },
   "private": true,
   "dependencies": {
-    "3box": "^1.17.1",
+    "3box": "^1.18.1",
     "@angular/animations": "^8.2.14",
     "@angular/cdk": "^8.2.3",
     "@angular/common": "~8.1.2",
@@ -35,6 +35,7 @@
     "@unilogin/provider": "^0.5.21",
     "angularfire2": "^5.3.0",
     "b64-to-blob": "^1.2.19",
+    "buffer": "^5.6.0",
     "core-js": "^2.5.4",
     "docker": "^1.0.0",
     "ethers": "^4.0.43",

@@ -28,6 +28,7 @@ export class AuthController {
     async login(@Res() res, @Body() userModel: User) {
         try {
             let response = await this.authService.getByPublicAddress(userModel.publicAddress);
+            console.log("response", response);
             if (!response) {
                 response = await this.authService.add(userModel);
             }
@@ -83,7 +84,7 @@ export class AuthController {
                         ...response,
                         token: token
                     }
-                    
+
                     return res.status(httpStatus.OK).json(new APIResponse(response, 'Login successfully', httpStatus.OK));
                 }
                 return res.status(httpStatus.UNAUTHORIZED).json(new APIResponse(null, 'Authorizetion error', httpStatus.UNAUTHORIZED));

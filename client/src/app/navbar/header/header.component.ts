@@ -139,6 +139,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     try {
       if ('enable' in window.web3.currentProvider) {
         await window.web3.currentProvider.enable();
+        console.log("window.web3.eth.coinbase",window.web3.eth.coinbase);
         this.authenticationService.confirmUser({ publicAddress: window.web3.eth.coinbase }).subscribe(async (res: HTTPRESPONSE) => {
           try {
             let signMessage: any = await this.handleSignMessage(res.data)

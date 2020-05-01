@@ -40,7 +40,7 @@ const routes: Routes = [{
             path: 'list',
             component: ListComponent
         }, {
-            path: 'grant',
+            path: 'grant/:id',
             component: GrantDetailsComponent,
         }, {
             path: 'profile',

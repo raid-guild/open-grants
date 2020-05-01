@@ -7,7 +7,7 @@
 </ion-app> -->
 
 <ion-app>
-  <ion-menu contentId="main-content" type="overlay">
+  <ion-menu contentId="main-content" type="overlay" swipeGesture="true">
     <ion-header mode="md" no-border>
       <ion-toolbar mode="md" color="dark">
         <ion-title class="logo">
@@ -17,7 +17,8 @@
     </ion-header>
     <ion-content class="ion-padding" class="bg-dark">
       <div class="create-grant" *ngIf="isLogin">
-        <ion-button mode="md" color="success" [routerLink]="['/pages/create']" expand="block">Create New Grant</ion-button>
+        <ion-button mode="md" color="success" [routerLink]="['/pages/create']" expand="block">Create New Grant
+        </ion-button>
         <hr class="dassed-line">
       </div>
 
@@ -35,5 +36,8 @@
   </ion-menu>
 
   <app-navbar></app-navbar>
+  <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-triangle-path">
+    <p style="font-size: 20px; color: white">Loading...</p>
+  </ngx-spinner>
   <ion-router-outlet id="main-content"></ion-router-outlet>
 </ion-app>

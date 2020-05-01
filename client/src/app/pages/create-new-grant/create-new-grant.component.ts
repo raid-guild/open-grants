@@ -440,7 +440,7 @@ export class CreateNewGrantComponent implements OnInit {
 
 
     try {
-      this.processing = true;
+      // this.processing = true;
       let contract: any = await this.deployeContract();
       console.log("contract", contract);
 

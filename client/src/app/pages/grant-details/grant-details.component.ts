@@ -10,6 +10,7 @@ import { async } from '@angular/core/testing';
 import { GrantFundService } from 'src/app/services/grantFund.service';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 import { PayoutService } from 'src/app/services/payout.service';
+import { ethers, providers, utils } from 'ethers';
 
 @Component({
   selector: 'app-grant-details',
@@ -175,9 +176,10 @@ export class GrantDetailsComponent implements OnInit {
 
   async grantAction() {
     let promise = [];
+    console.log("this.grant.contractId, this.user.publicAddress", this.grant.contractId, this.user.publicAddress)
     promise.push(
       this.ethcontractService.checkAvailableBalance(this.grant.contractId),
-      this.ethcontractService.remainingAllocation(this.grant.contractId, this.user.publicKey),
+      this.ethcontractService.remainingAllocation(this.grant.contractId, this.user.publicAddress),
       this.ethcontractService.canFund(this.grant.contractId)
     );
 
@@ -341,7 +343,11 @@ export class GrantDetailsComponent implements OnInit {
 
   async fundOnGrant() {
     try {
-      let funding: any = await this.ethcontractService.fund(this.grant.contractId, this.grantFund.amount);
+      let amount = this.grantFund.amount;
+      if (this.grant.currency == "ETH") {
+        amount = (ethers.utils.parseEther(this.grantFund.amount.toString())).toString();
+      }
+      let funding: any = await this.ethcontractService.fund(this.grant.contractId, amount);
       console.log("funding", funding);
       if (funding.status == "success") {
         this.grantFund.hash = funding.hash;
@@ -428,7 +434,10 @@ export class GrantDetailsComponent implements OnInit {
 
   async approvePayoutRequest(request, index) {
     try {
-      let approvePayout: any = await this.ethcontractService.approvePayout(request.grant.contractId, request.grantee.publicKey, request.requestAmount);
+      if (this.grant.currency == "ETH") {
+        request.requestAmount = (ethers.utils.parseEther(request.requestAmount.toString())).toString();
+      }
+      let approvePayout: any = await this.ethcontractService.approvePayout(request.grant.contractId, request.grantee.publicAddress, request.requestAmount);
       if (approvePayout.status == "success") {
         console.log("Success");
         this.payoutService.approve({ requestId: request._id, hash: approvePayout.hash }).subscribe((res: HTTPRESPONSE) => {

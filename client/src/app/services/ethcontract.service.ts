@@ -7,10 +7,13 @@ import { ToastrService } from 'ngx-toastr';
 import { AddressZero, Zero } from "ethers/constants";
 import { UtilsService } from './utils.service';
 import { AppSettings } from '../config/app.config';
-// const Box = require('3box');
+const Box = require('3box');
 
 declare let require: any;
 declare let window: any;
+window.global = window;
+// @ts-ignore
+window.Buffer = window.Buffer || require('buffer').Buffer;
 
 let tokenAbi = require('../../../abi.json');
 
@@ -24,7 +27,7 @@ export interface AcctInfo {
 })
 
 export class EthcontractService {
-    private web3Provider: any;
+    private web3Provider: any = window.web3.currentProvider;
 
     // private acctInfoSubject = new Subject<AcctInfo>();
     // acctInfo = this.acctInfoSubject.asObservable();
@@ -140,7 +143,12 @@ export class EthcontractService {
             // }
             let currency = AddressZero;
             if (data.currency == "ETH") {
-                data.amounts = (ethers.utils.parseEther(data.amounts.toString())).toString();
+                data.amounts = data.amounts.map((amount) => {
+                    amount = (ethers.utils.parseEther(amount.toString())).toString();
+                    return amount;
+                })
+
+                data.targetFunding = (ethers.utils.parseEther(data.targetFunding.toString())).toString();
             }
 
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
@@ -176,7 +184,7 @@ export class EthcontractService {
                 let provider = ethers.getDefaultProvider(AppSettings.ethersConfig.networks);
                 let contract = new ethers.Contract(contractAddress, tokenAbi.abi, provider);
                 let response = await contract.availableBalance();
-                response = ethers.utils.formatEther(response.toNumber());
+                response = ethers.utils.formatEther(response);
                 resolve(response);
             } catch (e) {
                 resolve(0);
@@ -250,7 +258,8 @@ export class EthcontractService {
                 const provider = new ethers.providers.Web3Provider(this.web3Provider);
                 let contract = new ethers.Contract(contractAddress, tokenAbi.abi, provider);
                 let response = await contract.remainingAllocation(userPublicKey);
-                resolve(response.toNumber());
+                response = ethers.utils.formatEther(response);
+                resolve(response);
             } catch (e) {
                 reject(0);
             }

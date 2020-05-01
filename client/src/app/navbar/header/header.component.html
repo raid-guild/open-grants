@@ -14,14 +14,17 @@
 
 <ion-header mode="md" no-border *ngIf="isLogin">
   <ion-toolbar mode="md" color="light">
-    
+
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-
-    <ion-title *ngIf="!searchBar">
-      {{path}}
+    <ion-title class="logo">
+      <img src="assets/imgs/logo.svg" alt="">
     </ion-title>
+    
+    <!-- <ion-title *ngIf="!searchBar">
+      {{path}}
+    </ion-title> -->
 
     <form [formGroup]="myForm" class="">
       <div>
