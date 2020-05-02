@@ -79,6 +79,10 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     public events: Events,
   ) {
+
+    var Buffer: any = window['Buffer']
+    window['Buffer'] = Buffer["Buffer"]
+
     this.initializeApp();
 
     let res = this.authService.getAuthState();

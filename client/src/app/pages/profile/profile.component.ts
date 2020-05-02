@@ -9,6 +9,7 @@ import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { ImageCropComponent } from '../image-crop/image-crop.component';
 import { EthcontractService } from 'src/app/services/ethcontract.service';
 import { Subscription } from 'rxjs';
+import { ThreeBoxService } from 'src/app/services/threeBox.service';
 declare let window: any;
 
 @Component({
@@ -18,6 +19,7 @@ declare let window: any;
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   userData: any;
+  userProfile: any;
   toastTitle = "User";
   profile: File;
   balance: any;
@@ -33,6 +35,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private ethcontractService: EthcontractService,
     private _zone: NgZone,
+    private threeBoxService: ThreeBoxService
   ) {
     this.getUserData();
 
@@ -46,7 +49,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   getUserData() {
-    // this.userData = JSON.parse(localStorage.getItem(AppSettings.localStorage_keys.userData));
     this.userService.getUser().subscribe((res: HTTPRESPONSE) => {
       this.userData = res.data;
       if (this.userData && this.userData.hasOwnProperty('picture') && this.userData.picture) {
@@ -60,6 +62,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   async getAccountInfo() {
     if (this.userData && this.userData.hasOwnProperty('publicAddress') && this.userData.publicAddress) {
+      this.userProfile = await this.threeBoxService.getProfile();
+      console.log("userProfile", this.userProfile);
+
       let data: any = await this.ethcontractService.getAccountInfo(this.userData.publicAddress);
       this.account = data.account;
       this.balance = data.balance;

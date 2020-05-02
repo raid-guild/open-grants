@@ -7,13 +7,9 @@ import { ToastrService } from 'ngx-toastr';
 import { AddressZero, Zero } from "ethers/constants";
 import { UtilsService } from './utils.service';
 import { AppSettings } from '../config/app.config';
-const Box = require('3box');
 
 declare let require: any;
 declare let window: any;
-window.global = window;
-// @ts-ignore
-window.Buffer = window.Buffer || require('buffer').Buffer;
 
 let tokenAbi = require('../../../abi.json');
 
@@ -28,7 +24,6 @@ export interface AcctInfo {
 
 export class EthcontractService {
     private web3Provider: any = window.web3.currentProvider;
-
     // private acctInfoSubject = new Subject<AcctInfo>();
     // acctInfo = this.acctInfoSubject.asObservable();
 

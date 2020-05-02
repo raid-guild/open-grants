@@ -34,6 +34,7 @@ import { ViewGrantNotificationsComponent } from './view-grant-notifications/view
 import { ProfileComponent } from './profile/profile.component';
 import { TransactionHistoryComponent } from './transaction-history/transaction-history.component';
 import { GrantDetailsComponent } from './grant-details/grant-details.component';
+import { ThreeBoxService } from '../services/threeBox.service';
 
 const PAGES_COMPONENTS = [
     PagesComponent,
@@ -80,6 +81,7 @@ const PAGES_COMPONENTS = [
         GrantService,
         GrantFundService,
         PayoutService,
+        ThreeBoxService
         // StatusBar,
         // SplashScreen,
         // { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
