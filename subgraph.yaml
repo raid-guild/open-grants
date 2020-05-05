@@ -8,6 +8,7 @@ dataSources:
     network: ropsten
     source:
       abi: Contract
+      startBlock: 7802695
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
