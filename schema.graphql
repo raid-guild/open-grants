@@ -7,12 +7,14 @@
 
 type Fund @entity {
   id: ID!
+  contract: Bytes!
   donor: Bytes! # address
   amount: BigInt!
 }
 
 type Payment @entity {
   id: ID!
+  contract: Bytes!
   grantee: Bytes! # address
   amount: BigInt!
 }

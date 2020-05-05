@@ -7,21 +7,13 @@ dataSources:
     name: Contract
     network: ropsten
     source:
-      address: "0xc5eb893cece277579add73e48bf4fec4d1bbe915"
       abi: Contract
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - LogSignal
-        - LogFundingComplete
-        - LogGrantCancellation
-        - LogFunding
-        - LogRefund
-        - LogPayment
-        - LogPaymentApproval
-        - LogRefundApproval
+        - Contract
       abis:
         - name: Contract
           file: ./abis/Contract.json

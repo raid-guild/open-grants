@@ -10,7 +10,7 @@ import {
   LogPaymentApproval,
   LogRefundApproval
 } from "../generated/Contract/Contract"
-import { ExampleEntity, Fund, Payment } from "../generated/schema"
+import { Fund, Payment } from "../generated/schema"
 
 export function handleLogSignal(event: LogSignal): void {
   // Entities can be loaded from the store using a string ID; this ID
@@ -78,6 +78,7 @@ export function handleLogGrantCancellation(event: LogGrantCancellation): void { 
 
 export function handleLogFunding(event: LogFunding): void {
   let fund = new Fund(event.params.donor.toHex());
+  fund.contract = event.address
   fund.donor = event.params.donor
   fund.amount = event.params.value
   fund.save()
@@ -88,6 +89,7 @@ export function handleLogRefund(event: LogRefund): void { }
 export function handleLogPayment(event: LogPayment): void {
   let payment = new Payment(event.params.grantee.toHex());
   payment.grantee = event.params.grantee
+  payment.contract = event.address
   payment.amount = event.params.value
   payment.save()
 }
