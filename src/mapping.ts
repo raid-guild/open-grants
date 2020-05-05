@@ -77,7 +77,7 @@ export function handleLogFundingComplete(event: LogFundingComplete): void { }
 export function handleLogGrantCancellation(event: LogGrantCancellation): void { }
 
 export function handleLogFunding(event: LogFunding): void {
-  let fund = new Fund(event.params.donor.toHex());
+  let fund = new Fund(event.transaction.hash.toHex());
   fund.contract = event.address
   fund.donor = event.params.donor
   fund.amount = event.params.value
@@ -87,7 +87,7 @@ export function handleLogFunding(event: LogFunding): void {
 export function handleLogRefund(event: LogRefund): void { }
 
 export function handleLogPayment(event: LogPayment): void {
-  let payment = new Payment(event.params.grantee.toHex());
+  let payment = new Payment(event.transaction.hash.toHex());
   payment.grantee = event.params.grantee
   payment.contract = event.address
   payment.amount = event.params.value
