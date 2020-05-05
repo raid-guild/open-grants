@@ -1,0 +1,45 @@
+specVersion: 0.0.2
+description: Grant for Ethereum
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Contract
+    network: ropsten
+    source:
+      address: "0xc5eb893cece277579add73e48bf4fec4d1bbe915"
+      abi: Contract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - LogSignal
+        - LogFundingComplete
+        - LogGrantCancellation
+        - LogFunding
+        - LogRefund
+        - LogPayment
+        - LogPaymentApproval
+        - LogRefundApproval
+      abis:
+        - name: Contract
+          file: Contract\abis\Contract.json
+      eventHandlers:
+        - event: LogSignal(indexed bool,indexed address,indexed address,uint256)
+          handler: handleLogSignal
+        - event: LogFundingComplete()
+          handler: handleLogFundingComplete
+        - event: LogGrantCancellation()
+          handler: handleLogGrantCancellation
+        - event: LogFunding(indexed address,uint256)
+          handler: handleLogFunding
+        - event: LogRefund(indexed address,uint256)
+          handler: handleLogRefund
+        - event: LogPayment(indexed address,uint256)
+          handler: handleLogPayment
+        - event: LogPaymentApproval(indexed address,uint256)
+          handler: handleLogPaymentApproval
+        - event: LogRefundApproval(uint256,uint256)
+          handler: handleLogRefundApproval
+      file: Contract\Contract.wasm
