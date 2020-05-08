@@ -1,27 +1,60 @@
+ion-card {
+  padding: 16px 24px 16px 24px;
+
+  &:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  ion-item {
+    &.heading {
+      --padding-start    : 0;
+      --inner-padding-end: 0;
+      --background       : transparent;
+
+      ion-label {
+        font-weight: 400;
+        font-size  : 16px;
+        color      : #000;
+
+      }
+
+      ion-button {
+        font-size: 28px;
+      }
+    }
+  }
+}
+
+
 .form-details {
   .name {
     padding: 0;
+
     .padding-0 {
       padding: 5px 25px;
     }
   }
 }
+
 ion-list.forms.md.list-md.list-lines-none.list-md-lines-none.hydrated {
   background-color: rgba(255, 255, 255, 0.25);
 }
 
 form {
-  ion-item,
+  ion-item {
+    border-radius: 10px;
+    border       : solid 1px rgb(220, 220, 220);
+  }
+
   tag-input {
-    border-radius: 40px;
-  }
-  ion-label {
-    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 10px;
   }
 }
-ion-card{
-    margin: 20px;
+
+ion-card {
+  margin: 20px;
 }
+
 .select-icon {
   display: none !important;
   opacity: 0;
@@ -29,54 +62,62 @@ ion-card{
 
 .total-amount {
   text-align: center;
- 
+  font-size : 20px !important;
 }
-.total-amount[_ngcontent-sur-c2]{
-    text-align: center;
-    font-weight: 700;
-    font-size: 20px;
+
+.total-amount[_ngcontent-sur-c2] {
+  text-align    : center;
+  // font-weight: 700;
+  font-size     : 20px !important;
 }
+
 .flot-right {
   float: right;
 }
+
 .close-circle {
   padding-top: 15px;
 }
-.close{
-    padding-top: 5px;
-    font-size: 30px;
+
+.close {
+  padding-top: 5px;
+  font-size  : 30px;
 }
-.close-circle{
-    padding-top: 15px;
+
+.close-circle {
+  padding-top: 15px;
 }
-ion-card{
+
+ion-card {
 
   margin: 0;
 }
-.img-resposive{
-  height: 40px;
-  width: 40px;
-  margin-left: 130px;
+
+.img-resposive {
+  height       : 40px;
+  width        : 40px;
+  margin-left  : 130px;
   border-radius: 50%;
 }
-.d-flex{
-  display: flex;
+
+.d-flex {
+  display        : flex;
   justify-content: space-between;
 }
 
 .dropdown-content {
-  display: none;
-  position: absolute;
+  display         : none;
+  position        : absolute;
   background-color: #f6f6f6;
-  min-width: 230px;
-  overflow: auto;
-  border: 1px solid #ddd;
-  z-index: 1;
-} 
+  min-width       : 230px;
+  overflow        : auto;
+  border          : 1px solid #ddd;
+  z-index         : 1;
+}
 
 .dropdown-content li {
-  color: black;
-  padding: 12px 16px;
+  color          : black;
+  padding        : 12px 16px;
   text-decoration: none;
-  display: block;
+  display        : block;
 }

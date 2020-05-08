@@ -96,6 +96,36 @@ ion-select {
     }
 }
 
+ion-select {
+    &.custom-arrow {
+        position: relative;
+
+        &:before {
+            content           : "\e901";
+            font-family       : 'grantsPlatform' !important;
+            position          : absolute;
+            right             : 0;
+            top               : 0;
+            bottom            : 0;
+            width             : 34px;
+            display           : -webkit-box;
+            display           : -ms-flexbox;
+            display           : flex;
+            -webkit-box-align : center;
+            -ms-flex-align    : center;
+            align-items       : center;
+            -webkit-box-pack  : center;
+            -ms-flex-pack     : center;
+            justify-content   : center;
+            font-size         : 10px;
+            background        : #fff;
+            z-index           : 9;
+            -webkit-transition: all .3s ease;
+            transition        : all .3s ease;
+        }
+    }
+}
+
 ion-item {
     &:hover {
         ion-select {

@@ -205,7 +205,7 @@ export class CreateNewGrantComponent implements OnInit {
       grantManager: ['', Validators.required],
       type: ['singleDeliveryDate', Validators.required],
       targetFunding: [null, Validators.required],
-      currency: ['ETH', Validators.required],
+      currency: ['', Validators.required],
       content: [''],
       singleDeliveryDate: this.fb.group({
         fundingExpiryDate: ['', Validators.required],
@@ -402,12 +402,12 @@ export class CreateNewGrantComponent implements OnInit {
     this.submitted = true;
     // console.log("content", this.myForm.value)
     if (this.myForm.controls.type.value == "singleDeliveryDate") {
-      if (this.myForm.controls.grantName.invalid || this.myForm.controls.singleDeliveryDate.invalid
+      if (this.myForm.controls.grantName.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.singleDeliveryDate.invalid
         || this.myForm.controls.grantManager.invalid || this.myForm.controls.grantees.invalid) {
         return
       }
     } else {
-      if (this.myForm.controls.grantName.invalid || this.myForm.controls.multipleMilestones.invalid
+      if (this.myForm.controls.grantName.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.multipleMilestones.invalid
         || this.myForm.controls.grantManager.invalid || this.myForm.controls.grantees.invalid) {
         return
       }
