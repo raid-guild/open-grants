@@ -21,6 +21,8 @@ export class ThreeBoxService {
   }
 
   async getProfile() {
+    await window.ethereum.enable()
+
     // this.box = await Box.openBox(window.web3.eth.coinbase, window.ethereum);
     // console.log("box", this.box);
 
@@ -50,7 +52,7 @@ export class ThreeBoxService {
       console.error("apps thread not in state");
       return;
     }
-    
+
     this.posts = await this.thread.getPosts();
     console.log("posts", this.posts);
     await this.thread.onUpdate(async () => {

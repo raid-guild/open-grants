@@ -35,6 +35,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { TransactionHistoryComponent } from './transaction-history/transaction-history.component';
 import { GrantDetailsComponent } from './grant-details/grant-details.component';
 import { ThreeBoxService } from '../services/threeBox.service';
+import { NavbarModule } from '../navbar/navbar.module';
 
 const PAGES_COMPONENTS = [
     PagesComponent,
@@ -69,7 +70,8 @@ const PAGES_COMPONENTS = [
         TagInputModule,
         EditorModule,
         NgxChartsModule,
-        NumberonlyDirectiveModule
+        NumberonlyDirectiveModule,
+        NavbarModule
         // MiscellaneousModule
     ],
     entryComponents: [

@@ -63,9 +63,9 @@ export class AppComponent implements OnInit {
       icon: 'gp-grant'
     },
     {
-      title: 'My Profile',
+      title: 'User Profile',
       url: '/pages/profile',
-      icon: 'gp-grant'
+      icon: 'gp-user'
     },
   ]
 

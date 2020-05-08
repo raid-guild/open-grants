@@ -4,7 +4,8 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title class="logo">
-      <img src="assets/imgs/logo.svg" alt="">
+      <!-- <img src="assets/imgs/logo.svg" alt=""> -->
+      Grant platform
     </ion-title>
     <ion-buttons slot="end">
       <ion-button mode="md" fill="solid" color="success" class="gbtn" (click)="confirmUser()">sign in</ion-button>
@@ -13,15 +14,16 @@
 </ion-header>
 
 <ion-header mode="md" no-border *ngIf="isLogin">
-  <ion-toolbar mode="md" color="light">
+  <ion-toolbar mode="md">
 
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title class="logo">
-      <img src="assets/imgs/logo.svg" alt="">
+      <!-- <img src="assets/imgs/logo.svg" alt=""> -->
+      Grant platform
     </ion-title>
-    
+
     <!-- <ion-title *ngIf="!searchBar">
       {{path}}
     </ion-title> -->
@@ -48,7 +50,7 @@
 
     <ion-buttons slot="end">
       <div class="user-icon">
-        <img class="image" *ngIf="picture" [src]="userData?.picture || ''" alt="" style="max-width: 20%;">
+        <img class="image" *ngIf="picture" [src]="userData?.picture || ''" alt="">
         <ion-icon *ngIf="!picture" size="large" name="person"></ion-icon>
       </div>
       <ion-button mode="md" class="user-profile-menu">

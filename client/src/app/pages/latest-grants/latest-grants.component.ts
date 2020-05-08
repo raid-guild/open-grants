@@ -6,6 +6,8 @@ import { ENVIRONMENT } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
 import { ViewGrantComponent } from '../view-grant/view-grant.component';
 import { Router } from '@angular/router';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-latest-grants',
@@ -14,8 +16,8 @@ import { Router } from '@angular/router';
 })
 export class LatestGrantsComponent implements OnInit {
   allGrant: any;
-  seachResult: any = [];
-
+  searchBox: FormControl;
+  searchResult: any = [];
   constructor(public popoverCtrl: PopoverController,
     public modalController: ModalController,
     private grantService: GrantService,
@@ -26,6 +28,26 @@ export class LatestGrantsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.searchBox = new FormControl('');
+
+    this.searchBox.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged()
+      )
+      .subscribe((val: string) => {
+        // console.log("val", val)
+        if (val == '') {
+          this.searchResult = [];
+          this.searchResult = this.allGrant;
+        } else {
+          this.searchResult = []
+          this.searchResult = this.allGrant.filter((data) => {
+            // console.log("data.name.toLowerCase()", data.name.toLowerCase());
+            return data.grantName.toLowerCase().includes(val.toLowerCase())
+          });
+        }
+      })
   }
 
   grantDetails(id: string) {
@@ -35,9 +57,9 @@ export class LatestGrantsComponent implements OnInit {
   handleChange(e) {
     console.log("e", e);
     if (e == '') {
-      this.seachResult = this.allGrant;
+      this.searchResult = this.allGrant;
     } else {
-      this.seachResult = this.allGrant.filter((data) => {
+      this.searchResult = this.allGrant.filter((data) => {
         return data.grantName.toLowerCase().includes(e.toLowerCase())
       });
       // console.log("temp", this.allGrant);
@@ -69,7 +91,7 @@ export class LatestGrantsComponent implements OnInit {
   getAllGrants() {
     this.grantService.getAll().subscribe((res: HTTPRESPONSE) => {
       this.allGrant = res.data;
-      this.seachResult = this.allGrant;
+      this.searchResult = this.allGrant;
     });
   }
 }

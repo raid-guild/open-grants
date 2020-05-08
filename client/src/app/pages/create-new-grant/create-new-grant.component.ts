@@ -119,6 +119,8 @@ export class CreateNewGrantComponent implements OnInit {
         'help',
       ],
       toolbar: true,
+      // toolbar: 'fontselect',
+      // font_formats: 'Arial=arial;Helvetica=helvetica;Sans-serif=sans-serif;Courier=courier;Courier New=courier new;Courier Prime=courier prime;Monospace=monospace;AkrutiKndPadmini=Akpdmi-n',
       quickbars_insert_toolbar: 'quicktable image media codesample',
       quickbars_selection_toolbar: 'bold italic underline | formatselect | blockquote quicklink',
       contextmenu: 'undo redo | inserttable | cell row column deletetable | help',

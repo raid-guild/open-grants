@@ -1,25 +1,19 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>
-      Home
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-navbar></app-navbar>
 
 <ion-content color="light">
   <ion-row class="page-row">
     <ion-col size="12">
       <ion-item mode="md" lines="none" class="heading">
-        <ion-label>Trending Grants</ion-label>
-        <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button>
+        <ion-label slot="start">Trending Grants</ion-label>
+        <ion-searchbar slot="end" [formControl]="searchBox" [showCancelButton]="shouldShowCancel"
+          (ionCancel)="onCancel($event)" [animated]="true" placeholder="Search Grant...">
+        </ion-searchbar>
+        <!-- <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button> -->
       </ion-item>
 
       <hr class="dassed-line">
 
-      <ion-card class="grant" mode="md" *ngFor="let lg of seachResult">
+      <ion-card class="grant" mode="md" *ngFor="let lg of searchResult">
         <ion-card-content>
           <ul class="multi-section">
             <li class="grants-details">
@@ -54,8 +48,8 @@
             <li class="cost-details">
               <ion-item mode="md" lines="none">
                 <ion-label text-right>
-                  <h3>$ {{lg.totalFunding - lg.totalPayed}}</h3>
-                  <p>OUT OF $ {{lg.targetFunding}}</p>
+                  <h3>Ξ {{lg.totalFunding - lg.totalPayed}} ETH</h3>
+                  <p>OUT OF Ξ {{lg.targetFunding}} ETH</p>
 
                   <ion-button class="details" mode="md" slot="end" (click)="viewGrant(lg)">Quick View</ion-button>&nbsp;
                   <ion-button class="details" mode="md" slot="end" (click)="grantDetails(lg._id)">Details View

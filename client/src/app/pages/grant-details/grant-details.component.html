@@ -1,305 +1,350 @@
+<app-navbar></app-navbar>
+
 <ion-content color="light">
-    <ion-row class="page-row">
+    <ion-row class="row">
         <ion-col size="12">
             <ion-item mode="md" lines="none" class="heading">
                 <ion-label>Grant Details</ion-label>
             </ion-item>
 
             <hr class="dassed-line">
-            <ion-card class="grant" mode="md">
-                <ion-card-content>
-                    <ion-row>
-                        <ion-col size="6">
-                            <ion-row>
-                                <div class="form-details">
-                                    <ion-item>
-                                        <ion-label class="grants-details">
-                                            <h1>{{ grant?.grantName }}</h1>
-                                            <h2>Type :
-                                                {{grant?.type == "singleDeliveryDate" ? 'Single Delivery' : 'Multiple Delivery' }}
-                                            </h2>
-                                            <h2>Status : {{grant?.status}}</h2>
-                                            <h2>Grant Manager : {{grant?.grantManager.userName}}</h2>
-                                            <h2>Your Remaining Allocation : {{remainingAlloc}}</h2>
 
-                                            <ion-button color="primary" (click)="ConfirmCancleGrant()">Cancle Grant
-                                            </ion-button>
-                                            <!-- <ion-button (click)="confiremApproveRefund()">
-                                                Approve Refund
-                                            </ion-button>
-                                            <ion-button (click)="confiremWithdrawRefund()">
-                                                Withdraw Refund
-                                            </ion-button>
-                                            <ion-button (click)="signal()">
-                                                signal
-                                            </ion-button> -->
-                                        </ion-label>
-                                    </ion-item>
-                                </div>
-                            </ion-row>
-                        </ion-col>
-                        <ion-col size="6">
-                            <ion-row>
-                                <div class="form-details">
-                                    <ion-item>
-                                        <ion-label class="grants-details">
-                                            <h1>Ξ {{ balance }} ETH</h1>
+            <ion-row>
+                <ion-col size="12" size-md="6" size-sm="12">
+                    <ion-card class="grant" mode="md">
+                        <div class="card-content">
+                            <ion-card-header>
+                                <h2>{{grant?.grantName}}</h2>
+                            </ion-card-header>
+
+                            <hr class="dassed-line">
+
+                            <ion-card-content>
+                                <ion-item mode="md" lines="none">
+                                    <ul style="list-style-type:none">
+                                        <li>Grant Manager</li>
+                                        <li>Status</li>
+                                        <li>Milestones Type</li>
+                                        <li *ngIf="userType == userEnum.GRANTEE">Your Remaining Allocation</li>
+                                        <li *ngIf="userType == userEnum.DONOR">Your Donation</li>
+                                    </ul>
+                                    <ul style="list-style-type:none">
+                                        <li>: </li>
+                                        <li>: </li>
+                                        <li>: </li>
+                                        <li *ngIf="userType == userEnum.GRANTEE">: </li>
+                                        <li *ngIf="userType == userEnum.DONOR">: </li>
+                                    </ul>
+                                    <ul style="list-style-type:none">
+                                        <li>{{grant?.grantManager.userName}}</li>
+                                        <li>{{grant?.status}}</li>
+                                        <li>
+                                            {{grant?.type == "singleDeliveryDate" ? 'Single Delivery' : 'Multiple Milestones' }}
+                                        </li>
+                                        <li *ngIf="userType == userEnum.GRANTEE">Ξ {{ remainingAlloc }} ETH</li>
+                                        <li *ngIf="userType == userEnum.DONOR">Ξ {{ totalFundByMe }} ETH</li>
+                                    </ul>
+                                </ion-item>
+                            </ion-card-content>
+                        </div>
+                    </ion-card>
+                </ion-col>
+
+                <ion-col size="12" size-md="6">
+                    <ion-card class="grant" mode="md">
+                        <div class="card-content">
+                            <ion-card-header>
+                                <h2>Grant Balance</h2>
+                            </ion-card-header>
+
+                            <hr class="dassed-line">
+
+                            <ion-card-content>
+                                <ion-item mode="md" lines="none">
+                                    <ul style="list-style-type:none">
+                                        <li>
+                                            <h1 class="ion-text-center">Ξ {{ balance }} ETH</h1>
+                                        </li>
+                                        <li>
                                             <h3>pledged of Ξ {{grant?.targetFunding}} ETH goal</h3>
-                                        </ion-label>
-                                    </ion-item>
+                                        </li>
+                                    </ul>
+                                    <ul style="list-style-type:none">
+                                        <li>
+                                            <ion-label class="ion-text-center">Grant Manager</ion-label>
+                                        </li>
+                                        <li>
+                                            <div class="users-container">
+                                                <div class="users">
+                                                    <img [src]="grant?.grantManager.picture || ''" alt="">
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <ion-label class="ion-text-center">{{grant?.grantManager.userName}}</ion-label>
+                                        </li>
+                                    </ul>
+                                </ion-item>
+                            </ion-card-content>
+                        </div>
+                    </ion-card>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col size="12" size-md="12">
+                    <ion-card class="grant" mode="md">
+                        <ion-card-content>
+                            <ion-row>
+                                <div *ngIf="canFund" class="footer-details">
+                                    <ion-row>
+                                        <ion-col size="8">
+                                            <ion-item lines="none">
+                                                <ion-input placeholder="Amount" type="text"
+                                                    [(ngModel)]="grantFund.amount" name="amount" [OnlyNumber]="true"
+                                                    #amount="ngModel" required>
+                                                </ion-input>
+                                            </ion-item>
+                                            <label *ngIf="submitted && amount.invalid" class="error">
+                                                Please Enter Amount
+                                            </label>
+                                            <label *ngIf="grantFund.amount > (grant?.targetFunding - balance)"
+                                                class="error">
+                                                Funding amount limit exceed
+                                            </label>
+                                        </ion-col>
+                                        <ion-col size="4">
+                                            <ion-button mode="md" expand="block"
+                                                [disabled]="processing || grantFund.amount > (grant?.targetFunding - balance)"
+                                                (click)="ConfirmFundGrant()">
+                                                Fund Grant
+                                            </ion-button>
+                                        </ion-col>
+                                    </ion-row>
+                                </div>
+                                <div *ngIf="canRequestPayout" class="footer-details">
+                                    <ion-row>
+                                        <ion-col size="8">
+                                            <ion-item lines="none">
+                                                <ion-input placeholder="Amount" type="text"
+                                                    [(ngModel)]="request.requestAmount" name="requestAmount"
+                                                    [OnlyNumber]="true" #requestAmount="ngModel" required>
+                                                </ion-input>
+                                            </ion-item>
+                                            <label *ngIf="submitted && requestAmount.invalid" class="error">
+                                                Please Enter Amount
+                                            </label>
+                                            <label *ngIf="submitted && request.requestAmount > remainingAlloc"
+                                                class="error">
+                                                Please enter valid amount
+                                            </label>
+                                        </ion-col>
+                                        <ion-col size="6">
+                                            <ion-button mode="md" expand="block" [disabled]="processing"
+                                                (click)="ConfirmRequestForPayout()">
+                                                Send Request for Payout
+                                            </ion-button>
+                                        </ion-col>
+                                    </ion-row>
                                 </div>
                             </ion-row>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <div *ngIf="canFund" class="footer-details">
-                            <ion-row>
-                                <!-- <form #form="ngForm" (ngSubmit)="f.form.valid && onSubmit()"> -->
-                                <ion-col size="8">
-                                    <ion-item lines="none">
-                                        <ion-input placeholder="Amount" type="text" [(ngModel)]="grantFund.amount"
-                                            name="amount" [OnlyNumber]="true" #amount="ngModel" required>
-                                        </ion-input>
-                                    </ion-item>
-                                    <label *ngIf="submitted && amount.invalid" class="error">
-                                        Please Enter Amount
-                                    </label>
-                                    <label *ngIf="grantFund.amount > (grant?.targetFunding - balance)" class="error">
-                                        Funding amount limit exceed
-                                    </label>
+                            <ion-row *ngIf="this.userType == 'donor'">
+                                <ion-col size="12">
+                                    <ion-grid mode="md">
+                                        <ion-row>
+                                            <ion-col size="6">
+                                                <h2><b>Funding Entries:</b></h2>
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row *ngFor="let task of grantFundTasks; index as i">
+                                            <ion-col>
+                                                {{task.amount}} ETH
+                                            </ion-col>
+                                            <ion-col>
+                                                {{task.status}}
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row>
+                                            <ion-col>
+                                                <h2><b>Total:</b></h2>
+                                            </ion-col>
+                                            <ion-col>
+                                                <h2><b>{{totalFundByMe}}</b></h2>
+                                            </ion-col>
+                                        </ion-row>
+                                    </ion-grid>
                                 </ion-col>
-                                <ion-col size="4">
-                                    <ion-button mode="md" expand="block"
-                                        [disabled]="processing || grantFund.amount > (grant?.targetFunding - balance)"
-                                        (click)="ConfirmFundGrant()">
-                                        Fund Grant
-                                    </ion-button>
-                                </ion-col>
-                                <!-- </form> -->
                             </ion-row>
-                        </div>
-                        <div *ngIf="canRequestPayout" class="footer-details">
-                            <ion-row>
-                                <!-- <form #form="ngForm" (ngSubmit)="f.form.valid && onSubmit()"> -->
-                                <ion-col size="8">
-                                    <ion-item lines="none">
-                                        <ion-input placeholder="Amount" type="text" [(ngModel)]="request.requestAmount"
-                                            name="requestAmount" [OnlyNumber]="true" #requestAmount="ngModel" required>
-                                        </ion-input>
-                                    </ion-item>
-                                    <label *ngIf="submitted && requestAmount.invalid" class="error">
-                                        Please Enter Amount
-                                    </label>
-                                    <label *ngIf="submitted && request.requestAmount > remainingAlloc" class="error">
-                                        Please enter valid amount
-                                    </label>
+                            <ion-row *ngIf="this.userType == 'grantee'">
+                                <ion-col size="12">
+                                    <ion-grid mode="md">
+                                        <ion-row>
+                                            <ion-col size="6">
+                                                <h2><b>Payout Pending Requests:</b></h2>
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row>
+                                            <ion-col>
+                                                <b>Date</b>
+                                            </ion-col>
+                                            <ion-col>
+                                                <b>Amount</b>
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row *ngFor="let request of pendingRequest; index as i">
+                                            <ion-col>
+                                                {{request.createdAt}}
+                                            </ion-col>
+                                            <ion-col>
+                                                {{request.requestAmount}} ETH
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row>
+                                            <ion-col size="6">
+                                                <h2><b>Payout Approved Requests:</b></h2>
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row>
+                                            <ion-col>
+                                                <b>Date</b>
+                                            </ion-col>
+                                            <ion-col>
+                                                <b>Status</b>
+                                            </ion-col>
+                                            <ion-col>
+                                                <b>Amount</b>
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row *ngFor="let request of approveRequest; index as i">
+                                            <ion-col>
+                                                {{request.createdAt}}
+                                            </ion-col>
+                                            <ion-col>
+                                                {{request.status}}
+                                            </ion-col>
+                                            <ion-col>
+                                                {{request.requestAmount}} ETH
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row>
+                                            <ion-col size="6">
+                                                <h2><b>Payout Rejected Requests:</b></h2>
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row>
+                                            <ion-col>
+                                                <b>Date</b>
+                                            </ion-col>
+                                            <ion-col>
+                                                <b>Amount</b>
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row *ngFor="let request of rejectRequest; index as i">
+                                            <ion-col>
+                                                {{request.createdAt}}
+                                            </ion-col>
+                                            <ion-col>
+                                                {{request.requestAmount}} ETH
+                                            </ion-col>
+                                        </ion-row>
+                                    </ion-grid>
                                 </ion-col>
-                                <ion-col size="6">
-                                    <ion-button mode="md" expand="block" [disabled]="processing"
-                                        (click)="ConfirmRequestForPayout()">
-                                        Send Request for Payout
-                                    </ion-button>
-                                </ion-col>
-                                <!-- </form> -->
                             </ion-row>
-                        </div>
-                        <!-- <span [innerHtml]='grant?.content'></span> -->
-                    </ion-row>
-                    <ion-row *ngIf="this.userType == 'donor'">
-                        <ion-col size="12">
-                            <ion-grid mode="md">
-                                <ion-row>
-                                    <ion-col size="6">
-                                        <h2><b>Funding Entries:</b></h2>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row *ngFor="let task of grantFundTasks; index as i">
-                                    <ion-col>
-                                        {{task.amount}} ETH
-                                    </ion-col>
-                                    <ion-col>
-                                        {{task.status}}
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
-                                        <h2><b>Total:</b></h2>
-                                    </ion-col>
-                                    <ion-col>
-                                        <h2><b>{{totalFundByMe}}</b></h2>
-                                    </ion-col>
-                                </ion-row>
-                            </ion-grid>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row *ngIf="this.userType == 'grantee'">
-                        <ion-col size="12">
-                            <ion-grid mode="md">
-                                <ion-row>
-                                    <ion-col size="6">
-                                        <h2><b>Payout Pending Requests:</b></h2>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
-                                        <b>Date</b>
-                                    </ion-col>
-                                    <ion-col>
-                                        <b>Amount</b>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row *ngFor="let request of pendingRequest; index as i">
-                                    <ion-col>
-                                        {{request.createdAt}}
-                                    </ion-col>
-                                    <ion-col>
-                                        {{request.requestAmount}} ETH
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col size="6">
-                                        <h2><b>Payout Approved Requests:</b></h2>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
-                                        <b>Date</b>
-                                    </ion-col>
-                                    <ion-col>
-                                        <b>Status</b>
-                                    </ion-col>
-                                    <ion-col>
-                                        <b>Amount</b>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row *ngFor="let request of approveRequest; index as i">
-                                    <ion-col>
-                                        {{request.createdAt}}
-                                    </ion-col>
-                                    <ion-col>
-                                        {{request.status}}
-                                    </ion-col>
-                                    <ion-col>
-                                        {{request.requestAmount}} ETH
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col size="6">
-                                        <h2><b>Payout Rejected Requests:</b></h2>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
-                                        <b>Date</b>
-                                    </ion-col>
-                                    <ion-col>
-                                        <b>Amount</b>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row *ngFor="let request of rejectRequest; index as i">
-                                    <ion-col>
-                                        {{request.createdAt}}
-                                    </ion-col>
-                                    <ion-col>
-                                        {{request.requestAmount}} ETH
-                                    </ion-col>
-                                </ion-row>
-                            </ion-grid>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row *ngIf="this.userType == 'manager'">
-                        <ion-col size="12">
-                            <ion-grid mode="md">
-                                <ion-row>
-                                    <ion-col size="6">
-                                        <h2><b>Payout Pending Requests:</b></h2>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
-                                        <b>Grantee</b>
-                                    </ion-col>
-                                    <ion-col>
-                                        <b>Amount</b>
-                                    </ion-col>
-                                    <ion-col>
-                                        <b>Action</b>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row *ngFor="let request of pendingRequest; index as i">
-                                    <ion-col>
-                                        <img class="image" [src]="request.grantee.picture || ''" alt=""
-                                            style="max-width: 30%; border-radius: 50px; ">{{request.grantee.userName}}
-                                    </ion-col>
-                                    <ion-col>
-                                        {{request.requestAmount}} ETH
-                                    </ion-col>
-                                    <ion-col>
-                                        <ion-button expand="block" [disabled]="processing"
-                                            (click)="confiremApprovePayout(request,i)">
-                                            Approve
-                                        </ion-button>
-                                        <ion-button expand="block" [disabled]="processing"
-                                            (click)="confiremRejectRequest(request,i)">
-                                            Reject
-                                        </ion-button>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col size="6">
-                                        <h2><b>Payout Approved Requests:</b></h2>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
-                                        <b>Grantee</b>
-                                    </ion-col>
-                                    <ion-col>
-                                        <b>Status</b>
-                                    </ion-col>
-                                    <ion-col>
-                                        <b>Amount</b>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row *ngFor="let request of approveRequest; index as i">
-                                    <ion-col>
-                                        <img class="image" [src]="request.grantee.picture || ''" alt=""
-                                            style="max-width: 20%; border-radius: 50px; ">{{request.grantee.userName}}
-                                    </ion-col>
-                                    <ion-col>
-                                        {{request.status}}
-                                    </ion-col>
-                                    <ion-col>
-                                        {{request.requestAmount}} ETH
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col size="6">
-                                        <h2><b>Payout Rejected Requests:</b></h2>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
-                                        <b>Grantee</b>
-                                    </ion-col>
-                                    <ion-col>
-                                        <b>Amount</b>
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row *ngFor="let request of rejectRequest; index as i">
-                                    <ion-col>
-                                        <img class="image" [src]="request.grantee.picture || ''" alt=""
-                                            style="max-width: 20%; border-radius: 50px; ">{{request.grantee.userName}}
-                                    </ion-col>
-                                    <ion-col>
-                                        {{request.requestAmount}} ETH
-                                    </ion-col>
-                                </ion-row>
-                            </ion-grid>
-                        </ion-col>
-                    </ion-row>
-                </ion-card-content>
-            </ion-card>
+                            <ion-row *ngIf="this.userType == 'manager'">
+                                <ion-col size="12">
+                                    <ion-grid mode="md">
+                                        <ion-row>
+                                            <ion-col size="6">
+                                                <h2><b>Payout Pending Requests:</b></h2>
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row>
+                                            <ion-col>
+                                                <b>Grantee</b>
+                                            </ion-col>
+                                            <ion-col>
+                                                <b>Amount</b>
+                                            </ion-col>
+                                            <ion-col>
+                                                <b>Action</b>
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row *ngFor="let request of pendingRequest; index as i">
+                                            <ion-col>
+                                                <img class="image" [src]="request.grantee.picture || ''" alt=""
+                                                    style="max-width: 30%; border-radius: 50px; ">{{request.grantee.userName}}
+                                            </ion-col>
+                                            <ion-col>
+                                                {{request.requestAmount}} ETH
+                                            </ion-col>
+                                            <ion-col>
+                                                <ion-button expand="block" [disabled]="processing"
+                                                    (click)="confiremApprovePayout(request,i)">
+                                                    Approve
+                                                </ion-button>
+                                                <ion-button expand="block" [disabled]="processing"
+                                                    (click)="confiremRejectRequest(request,i)">
+                                                    Reject
+                                                </ion-button>
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row>
+                                            <ion-col size="6">
+                                                <h2><b>Payout Approved Requests:</b></h2>
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row>
+                                            <ion-col>
+                                                <b>Grantee</b>
+                                            </ion-col>
+                                            <ion-col>
+                                                <b>Status</b>
+                                            </ion-col>
+                                            <ion-col>
+                                                <b>Amount</b>
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row *ngFor="let request of approveRequest; index as i">
+                                            <ion-col>
+                                                <img class="image" [src]="request.grantee.picture || ''" alt=""
+                                                    style="max-width: 20%; border-radius: 50px; ">{{request.grantee.userName}}
+                                            </ion-col>
+                                            <ion-col>
+                                                {{request.status}}
+                                            </ion-col>
+                                            <ion-col>
+                                                {{request.requestAmount}} ETH
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row>
+                                            <ion-col size="6">
+                                                <h2><b>Payout Rejected Requests:</b></h2>
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row>
+                                            <ion-col>
+                                                <b>Grantee</b>
+                                            </ion-col>
+                                            <ion-col>
+                                                <b>Amount</b>
+                                            </ion-col>
+                                        </ion-row>
+                                        <ion-row *ngFor="let request of rejectRequest; index as i">
+                                            <ion-col>
+                                                <img class="image" [src]="request.grantee.picture || ''" alt=""
+                                                    style="max-width: 20%; border-radius: 50px; ">{{request.grantee.userName}}
+                                            </ion-col>
+                                            <ion-col>
+                                                {{request.requestAmount}} ETH
+                                            </ion-col>
+                                        </ion-row>
+                                    </ion-grid>
+                                </ion-col>
+                            </ion-row>
+                        </ion-card-content>
+                    </ion-card>
+                </ion-col>
+            </ion-row>
         </ion-col>
     </ion-row>
 </ion-content>
