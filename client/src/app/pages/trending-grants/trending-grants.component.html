@@ -5,8 +5,8 @@
     <ion-col size="12">
       <ion-item mode="md" lines="none" class="heading">
         <ion-label slot="start">Trending Grants</ion-label>
-        <ion-searchbar slot="end" [formControl]="searchBox" [showCancelButton]="shouldShowCancel"
-          (ionCancel)="onCancel($event)" [animated]="true" placeholder="Search Grant...">
+        <ion-searchbar slot="end" [formControl]="searchBox" (ionCancel)="onCancel($event)" [animated]="true"
+          placeholder="Search Grant...">
         </ion-searchbar>
         <!-- <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button> -->
       </ion-item>

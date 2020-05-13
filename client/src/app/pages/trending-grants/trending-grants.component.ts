@@ -88,6 +88,8 @@ export class TrendingGrantsComponent implements OnInit {
     return await modal.present();
   }
 
+  onCancel(event) { }
+
   getTrendingGrants() {
     this.grantService.getTrendingGrants().subscribe((res: HTTPRESPONSE) => {
       this.trendingGrants = res.data;

@@ -21,21 +21,21 @@
 
                             <ion-card-content>
                                 <ion-item mode="md" lines="none">
-                                    <ul style="list-style-type:none">
+                                    <ul>
                                         <li>Grant Manager</li>
                                         <li>Status</li>
                                         <li>Milestones Type</li>
                                         <li *ngIf="userType == userEnum.GRANTEE">Your Remaining Allocation</li>
                                         <li *ngIf="userType == userEnum.DONOR">Your Donation</li>
                                     </ul>
-                                    <ul style="list-style-type:none">
+                                    <ul>
                                         <li>: </li>
                                         <li>: </li>
                                         <li>: </li>
                                         <li *ngIf="userType == userEnum.GRANTEE">: </li>
                                         <li *ngIf="userType == userEnum.DONOR">: </li>
                                     </ul>
-                                    <ul style="list-style-type:none">
+                                    <ul>
                                         <li>{{grant?.grantManager.userName}}</li>
                                         <li>{{grant?.status}}</li>
                                         <li>
@@ -61,7 +61,7 @@
 
                             <ion-card-content>
                                 <ion-item mode="md" lines="none">
-                                    <ul style="list-style-type:none">
+                                    <ul>
                                         <li>
                                             <h1 class="ion-text-center">Ξ {{ balance }} ETH</h1>
                                         </li>
@@ -69,7 +69,7 @@
                                             <h3>pledged of Ξ {{grant?.targetFunding}} ETH goal</h3>
                                         </li>
                                     </ul>
-                                    <ul style="list-style-type:none">
+                                    <ul>
                                         <li>
                                             <ion-label class="ion-text-center">Grant Manager</ion-label>
                                         </li>
@@ -81,7 +81,8 @@
                                             </div>
                                         </li>
                                         <li>
-                                            <ion-label class="ion-text-center">{{grant?.grantManager.userName}}</ion-label>
+                                            <ion-label class="ion-text-center">{{grant?.grantManager.userName}}
+                                            </ion-label>
                                         </li>
                                     </ul>
                                 </ion-item>
@@ -341,6 +342,16 @@
                                     </ion-grid>
                                 </ion-col>
                             </ion-row>
+                        </ion-card-content>
+                    </ion-card>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col size="12" size-md="12">
+                    <ion-card class="grant">
+                        <ion-card-content class="innerHTML">
+                            <p [innerHTML]="grant?.content"></p>
                         </ion-card-content>
                     </ion-card>
                 </ion-col>

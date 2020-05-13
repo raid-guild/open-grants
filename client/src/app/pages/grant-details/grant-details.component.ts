@@ -86,12 +86,12 @@ export class GrantDetailsComponent implements OnInit {
         this.grant.content = this.htmlDecode(this.grant.content);
         console.log("this.grant", this.grant);
 
-        if (this.grant.grantManager._id == this.user._id) {
+        if (this.grant.grantManager._id == this.user.publicAddress) {
           this.userType = this.userEnum.MANAGER;
         }
 
         this.grant.grantees.map((data) => {
-          if (data.grantee._id == this.user._id) {
+          if (data.grantee._id == this.user.publicAddress) {
             this.userType = this.userEnum.GRANTEE;
           }
         });
@@ -109,7 +109,6 @@ export class GrantDetailsComponent implements OnInit {
         }
 
         this.grantAction();
-        this.formateGrantData();
 
       } catch (e) {
         this.toastr.error('Error. Please try after sometime', 'Grant');
@@ -127,52 +126,6 @@ export class GrantDetailsComponent implements OnInit {
     return e.value;
   };
 
-  formateGrantData() {
-    if (this.grant.type == "multipleMilestones") {
-      this.multipleMilestones = true;
-
-      let tobereceived = true;
-      this.grant.multipleMilestones = this.grant.multipleMilestones.map((data: any) => {
-        let status: any;
-        let now = new Date().toISOString();
-
-        let isAfter = moment(data.completionDate).isAfter(moment(now));
-        // let isBefore = moment(data.completionDate).isBefore(moment(now));
-
-        if (isAfter) {
-          if (tobereceived) {
-            status = this.statusEnum.TOBERECEIVED;
-            tobereceived = false;
-          } else {
-            status = this.statusEnum.PENDING;
-          }
-        }
-
-        if (!isAfter) {
-          status = this.statusEnum.COMPLETED;
-        }
-
-        data.completionDate = moment(data.completionDate).format('DD/MM/YYYY');
-        data = {
-          ...data,
-          status: status
-        }
-        return data;
-      });
-    } else {
-      this.grant.singleDeliveryDate.completionDate = moment(this.grant.singleDeliveryDate.completionDate).format('DD/MM/YYYY');
-      this.grant.singleDeliveryDate.fundingExpiryDate = moment(this.grant.singleDeliveryDate.fundingExpiryDate).format('DD/MM/YYYY');
-
-      let now = new Date().toISOString();
-      let isAfter = moment(this.grant.singleDeliveryDate.completionDate).isAfter(moment(now));
-
-      if (isAfter) {
-        this.grant.singleDeliveryDate["status"] = this.statusEnum.COMPLETED;
-      } else {
-        this.grant.singleDeliveryDate["status"] = this.statusEnum.TOBERECEIVED;
-      }
-    }
-  }
 
   async grantAction() {
     let promise = [];

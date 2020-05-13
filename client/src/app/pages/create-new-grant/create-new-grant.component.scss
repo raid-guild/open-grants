@@ -121,3 +121,7 @@ ion-card {
   text-decoration: none;
   display        : block;
 }
+
+input[type="file"] {
+  display: none;
+}

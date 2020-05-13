@@ -36,6 +36,7 @@ import { TransactionHistoryComponent } from './transaction-history/transaction-h
 import { GrantDetailsComponent } from './grant-details/grant-details.component';
 import { ThreeBoxService } from '../services/threeBox.service';
 import { NavbarModule } from '../navbar/navbar.module';
+import { ImageUploadModule } from 'angular2-image-upload';
 
 const PAGES_COMPONENTS = [
     PagesComponent,
@@ -71,7 +72,8 @@ const PAGES_COMPONENTS = [
         EditorModule,
         NgxChartsModule,
         NumberonlyDirectiveModule,
-        NavbarModule
+        NavbarModule,
+        ImageUploadModule.forRoot(),
         // MiscellaneousModule
     ],
     entryComponents: [
@@ -83,7 +85,7 @@ const PAGES_COMPONENTS = [
         GrantService,
         GrantFundService,
         PayoutService,
-        ThreeBoxService
+        ThreeBoxService,
         // StatusBar,
         // SplashScreen,
         // { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }

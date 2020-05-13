@@ -76,8 +76,7 @@ export class AuthController {
                     response = JSON.parse(JSON.stringify(response));
                     const token = JWTHelper.getJWTToken({
                         _id: response._id,
-                        email: response.email,
-                        userName: response.userName
+                        publicAddress: response.publicAddress
                     });
 
                     response = {

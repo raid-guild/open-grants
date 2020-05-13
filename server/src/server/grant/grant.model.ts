@@ -19,7 +19,7 @@ export enum EnvConfig {
 }
 var currencyEnum = {
     WEI: "wei",
-    ETH : "ETH"
+    ETH: "ETH"
 }
 
 export enum currencyConfig {
@@ -28,6 +28,8 @@ export enum currencyConfig {
 export const GrantSchema = new mongoose.Schema(
     {
         grantName: { type: String, required: true },
+        images: [],
+        description: { type: String },
         type: { type: typeEnum, default: typeEnum.SINGLE },
         singleDeliveryDate: {
             fundingExpiryDate: Date,
@@ -39,22 +41,22 @@ export const GrantSchema = new mongoose.Schema(
                 completionDate: Date
             }
         ],
-        grantManager: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        grantManager: { type: String, required: true },
         grantees: [
             {
-                grantee: { type: Schema.Types.ObjectId, ref: "User", required: true },
+                grantee: { type: String, required: true },
                 allocationAmount: { type: Number, required: true },
                 payedAmount: { type: Number, default: 0 }
             }
         ],
-        donors: [{ type: Schema.Types.ObjectId, ref: "User", required: true }],
+        donors: [{ type: String, required: true }],
         targetFunding: { type: Number, required: true },
         totalFunding: { type: Number, default: 0 },
         totalPayed: { type: Number, default: 0 },
         canFund: { type: Boolean, default: true },
         currency: { type: currencyEnum, default: currencyEnum.WEI },
-        cancelBy: { type: Schema.Types.ObjectId, ref: "User" },
-        createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        cancelBy: { type: String },
+        createdBy: { type: String, required: true },
         status: { type: statusEnum, default: statusEnum.PENDING },
         contractId: { type: String, required: true },
         hash: { type: String, required: true },
@@ -157,7 +159,8 @@ export class grantUpdateswagger {
 export interface Grant extends mongoose.Document {
     _id: string;
     grantName: string;
-    grantLink: string;
+    images: [],
+    description: string,
     type: string;
     singleDeliveryDate: object;
     multipleMilestones: [

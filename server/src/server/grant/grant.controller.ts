@@ -44,7 +44,7 @@ export class GrantController {
     async add(@Req() req, @Res() res, @Body() grantModel: Grant, @Body() grantswagger: grantswagger) {
         try {
             console.log("grantModel", grantModel);
-            grantModel.createdBy = req.user._id;
+            grantModel.createdBy = req.user.publicAddress;
             let response = await this.grantService.add(grantModel);
             this.scheduleService.addJobForGrant(response._id, response.hash);
             return res.status(httpStatus.OK).json(new APIResponse(response, 'Grant added successfully', httpStatus.OK));
@@ -59,7 +59,6 @@ export class GrantController {
     @ApiResponse({ status: 200, description: 'Grants fetched successfully' })
     async getAll(@Req() req, @Res() res) {
         try {
-            // console.log("req", req.user);
             let response = await this.grantService.getAll();
             return res.status(httpStatus.OK).json(new APIResponse(response, 'Grants fetched successfully', httpStatus.OK));
         } catch (e) {

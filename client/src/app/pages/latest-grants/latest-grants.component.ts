@@ -50,6 +50,8 @@ export class LatestGrantsComponent implements OnInit {
       })
   }
 
+  onCancel(event) { }
+
   grantDetails(id: string) {
     this.router.navigate(['/pages/grant/' + id])
   }

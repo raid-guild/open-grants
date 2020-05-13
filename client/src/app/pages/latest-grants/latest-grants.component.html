@@ -6,8 +6,8 @@
       <ion-item mode="md" lines="none" class="heading">
         <ion-label slot="start">Latest Grants</ion-label>
 
-        <ion-searchbar slot="end" [formControl]="searchBox" [showCancelButton]="shouldShowCancel"
-          (ionCancel)="onCancel($event)" [animated]="true" placeholder="Search Grant...">
+        <ion-searchbar slot="end" [formControl]="searchBox" (ionCancel)="onCancel($event)" [animated]="true"
+          placeholder="Search Grant...">
         </ion-searchbar>
         <!-- <ion-input placeholder="grant ..." mode="md" type="search"></ion-input>
         <ion-button slot="end" color="primary" mode="md" (click)="onSearch()">

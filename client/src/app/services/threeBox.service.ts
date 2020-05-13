@@ -43,8 +43,12 @@ export class ThreeBoxService {
       } 
     }`
 
-    let res = await Box.profileGraphQL(query)
-    return res.profile
+    try {
+      let res = await Box.profileGraphQL(query)
+      return res.profile
+    } catch (e) {
+      return []
+    }
   }
 
   async getAppsThread() {

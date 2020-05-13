@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { AngularFireStorage } from 'angularfire2/storage';
 import { AppSettings } from '../config/app.config';
+import { resolve } from 'url';
 
 export interface ILoader {
     loading: boolean;
@@ -42,9 +43,6 @@ export class UtilsService {
     }
 
     dataURLtoFile(dataurl, filename) {
-        console.log('dataurl', dataurl);
-        console.log('filename', filename);
-
         if (dataurl) {
             let arr = dataurl.split(',');
             console.log('arr', arr);
@@ -60,21 +58,54 @@ export class UtilsService {
         }
     }
 
-    fileUpload(base64: any, folder) {
-        var file = this.dataURLtoFile(base64, 'content.jpeg');
-        // console.log("file", base64);
-        if (file) {
-            const fileName = `${new Date().getTime()}_${file.name}`;
-            const path = folder + '/' + fileName;
+    fileUpload(file: File, folderName: string) {
+        return new Promise((resolve) => {
+            if (file) {
+                const fileName = `${new Date().getTime()}_${file.name}`;
+                const path = folderName + '/' + fileName;
 
-            this.angularFireStorage.upload(path, file).then((snapshot) => {
-                if (snapshot.state = "success") {
-                    let downloadURL = 'https://firebasestorage.googleapis.com/v0/b/' + AppSettings.firebaseConfig.storageBucket + '/o/' + folder + '%2F' + fileName + '?alt=media';
+                this.angularFireStorage.upload(path, file).then((snapshot) => {
+                    if (snapshot.state = "success") {
+                        let downloadURL = 'https://firebasestorage.googleapis.com/v0/b/' + AppSettings.firebaseConfig.storageBucket + '/o/' + folderName + '%2F' + fileName + '?alt=media';
 
-                    return downloadURL;
-                }
-            });
-        }
+                        resolve(downloadURL);
+                    } else {
+                        resolve();
+                    }
+                }).catch((error) => {
+                    console.error(error);
+                    resolve();
+                });
+            } else {
+                resolve();
+            }
+        })
+    }
+
+    base64ImageUpload(base64: string, folderName: string) {
+        return new Promise((resolve) => {
+            var file = this.dataURLtoFile(base64, 'content.jpeg');
+
+            if (file) {
+                const fileName = `${new Date().getTime()}_${file.name}`;
+                const path = folderName + '/' + fileName;
+
+                this.angularFireStorage.upload(path, file).then((snapshot) => {
+                    if (snapshot.state = "success") {
+                        let downloadURL = 'https://firebasestorage.googleapis.com/v0/b/' + AppSettings.firebaseConfig.storageBucket + '/o/' + folderName + '%2F' + fileName + '?alt=media';
+
+                        resolve(downloadURL);
+                    } else {
+                        resolve();
+                    }
+                }).catch((error) => {
+                    console.error(error);
+                    resolve();
+                });
+            } else {
+                resolve();
+            }
+        })
     }
 
     getFormControlValues(form: FormGroup, controlName: string) {
