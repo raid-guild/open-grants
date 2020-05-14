@@ -127,6 +127,22 @@ export class GrantController {
         }
     }
 
+    @Get('getByContract/:contract')
+    @ApiBearerAuth()
+    @ApiParam({ name: 'contract', type: String })
+    @ApiResponse({ status: 200, description: 'Grants fetched successfully' })
+    async getByContract(@Req() req, @Res() res, @Param('contract') contract) {
+        try {
+            let response = await this.grantService.getByContract(contract);
+            if (response) {
+                return res.status(httpStatus.OK).json(new APIResponse(response, 'Grants fetched successfully', httpStatus.OK));
+            }
+            return res.status(httpStatus.BAD_REQUEST).json(new APIResponse({}, 'No Record Found', httpStatus.BAD_REQUEST));
+        } catch (e) {
+            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting grant', httpStatus.INTERNAL_SERVER_ERROR, e));
+        }
+    }
+
     @Get('createdByMe')
     @ApiBearerAuth()
     @ApiResponse({ status: 200, description: 'Grants fetched successfully' })

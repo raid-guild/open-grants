@@ -31,7 +31,7 @@
           </ion-item>
           <ion-item mode="md" lines="none">
             <ion-button class="details" mode="md" slot="start" (click)="viewGrant(create)">Quick View</ion-button><br>
-            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(create._id)">Details View
+            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(create.contractId)">Details View
             </ion-button>
           </ion-item>
         </ion-card-content>
@@ -67,7 +67,7 @@
 
           <ion-item mode="md" lines="none">
             <ion-button class="details" mode="md" slot="start" (click)="viewGrant(fund)">Quick View</ion-button>
-            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(fund._id)">Details View</ion-button>
+            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(fund.contractId)">Details View</ion-button>
           </ion-item>
         </ion-card-content>
       </ion-card>
@@ -129,7 +129,7 @@
 
           <ion-item mode="md" lines="none">
             <ion-button class="details" mode="md" slot="start" (click)="viewGrant(manage)">Quick View</ion-button>
-            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(manage._id)">Details View
+            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(manage.contractId)">Details View
             </ion-button>
           </ion-item>
 

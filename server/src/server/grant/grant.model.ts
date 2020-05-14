@@ -58,7 +58,7 @@ export const GrantSchema = new mongoose.Schema(
         cancelBy: { type: String },
         createdBy: { type: String, required: true },
         status: { type: statusEnum, default: statusEnum.PENDING },
-        contractId: { type: String, required: true },
+        contractId: { type: String, required: true, unique: true },
         hash: { type: String, required: true },
         failedReason: { type: String },
         content: { type: String },

@@ -26,6 +26,12 @@ export class GrantService {
         return response;
     }
 
+    async getByContract(contract: string): Promise<any> {
+        const response = await this.GrantModel.findOne({ contractId: contract })
+            .exec();
+        return response;
+    }
+
     async getForFunding(grantId: string, donor: string): Promise<any> {
         const response = await this.GrantModel.findOne({
             _id: grantId,

@@ -121,6 +121,7 @@ export class CreateNewGrantComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(async (val: string) => {
+        this.singleDeliveryControles.controls.completionDate.reset();
         this.minCompletionData = moment.utc(val).add(1, 'days').format('YYYY-MM-DD');
       });
 

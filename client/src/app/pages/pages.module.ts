@@ -37,6 +37,7 @@ import { GrantDetailsComponent } from './grant-details/grant-details.component';
 import { ThreeBoxService } from '../services/threeBox.service';
 import { NavbarModule } from '../navbar/navbar.module';
 import { ImageUploadModule } from 'angular2-image-upload';
+import { SubgraphService } from '../services/subgraph.service';
 
 const PAGES_COMPONENTS = [
     PagesComponent,
@@ -85,6 +86,7 @@ const PAGES_COMPONENTS = [
         GrantService,
         GrantFundService,
         PayoutService,
+        SubgraphService,
         ThreeBoxService,
         // StatusBar,
         // SplashScreen,

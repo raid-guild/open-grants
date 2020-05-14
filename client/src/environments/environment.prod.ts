@@ -15,6 +15,9 @@ const port = '';
 const trailUrl = 'api/v1';
 const webHost = 'http://grantsportal.rejoicehub.com/';
 
+const subgraphQuerie = "https://api.thegraph.com/subgraphs/name/dipaksavaliya/grant-platform";
+const subgraphSubscription = "wss://api.thegraph.com/subgraphs/name/dipaksavaliya/grant-platform";
+
 const hostUrl = `${protocol}://${host}${port ? ':' + port : ''}`;
 const endpoint = `${hostUrl}${trailUrl ? '/' + trailUrl : ''}`;
 
@@ -29,7 +32,9 @@ export const ENVIRONMENT = {
     webHost
   },
   API_ENDPOINT: endpoint,
-  TEMP_URL: hostUrl
+  TEMP_URL: hostUrl,
+  SUBGRAPH_QUERIE: subgraphQuerie,
+  SUBGRAPH_SUBSCRIPTION: subgraphSubscription
 };
 
 export interface APIOptions {

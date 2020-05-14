@@ -11,6 +11,7 @@ import { GrantFundService } from 'src/app/services/grantFund.service';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 import { PayoutService } from 'src/app/services/payout.service';
 import { ethers, providers, utils } from 'ethers';
+import { SubgraphService } from 'src/app/services/subgraph.service';
 
 @Component({
   selector: 'app-grant-details',
@@ -18,14 +19,8 @@ import { ethers, providers, utils } from 'ethers';
   styleUrls: ['./grant-details.component.scss'],
 })
 export class GrantDetailsComponent implements OnInit {
-  grantId = '';
-  privateKey = ''
-
-  statusEnum = {
-    PENDING: "pending",
-    COMPLETED: "completed",
-    TOBERECEIVED: "tobereceived"
-  }
+  toastTitle = "Grant"
+  contractAddress = "";
 
   userEnum = {
     MANAGER: "manager",
@@ -35,16 +30,15 @@ export class GrantDetailsComponent implements OnInit {
 
   userType = this.userEnum.DONOR;
   grant: any;
-  payoutRequests = [];
+  payouts = [];
   pendingRequest = [];
   approveRequest = [];
   rejectRequest = []
-  grantFundTasks = [];
+  myFunds = [];
   totalFundByMe = 0;
   totalPending = 0;
   totalApproved = 0;
   totalReject = 0;
-  toastTitle = "Grant"
   multipleMilestones = false;
   processing = false;
   submitted = false;
@@ -71,27 +65,28 @@ export class GrantDetailsComponent implements OnInit {
     private grantFundService: GrantFundService,
     private payoutService: PayoutService,
     private toastr: ToastrService,
+    private subgraphService: SubgraphService,
     private ethcontractService: EthcontractService,
   ) {
-    this.grantId = this.route.snapshot.params.id || '';
+    this.contractAddress = this.route.snapshot.params.id || '';
 
     (async () => {
       try {
         this.user = JSON.parse(localStorage.getItem(AppSettings.localStorage_keys.userData));
-        this.grantFund.grant = this.grantId;
-        this.request.grant = this.grantId;
 
-        let res = await this.grantService.getById(this.grantId).toPromise();
+        let res = await this.grantService.getByContract(this.contractAddress).toPromise();
         this.grant = res.data;
+        this.grantFund.grant = this.grant._id;
+        this.request.grant = this.grant._id;
         this.grant.content = this.htmlDecode(this.grant.content);
         console.log("this.grant", this.grant);
 
-        if (this.grant.grantManager._id == this.user.publicAddress) {
+        if (this.grant.grantManager == this.user.publicAddress) {
           this.userType = this.userEnum.MANAGER;
         }
 
         this.grant.grantees.map((data) => {
-          if (data.grantee._id == this.user.publicAddress) {
+          if (data.grantee == this.user.publicAddress) {
             this.userType = this.userEnum.GRANTEE;
           }
         });
@@ -108,7 +103,7 @@ export class GrantDetailsComponent implements OnInit {
           this.getDonorData();
         }
 
-        this.grantAction();
+        this.grantData();
 
       } catch (e) {
         this.toastr.error('Error. Please try after sometime', 'Grant');
@@ -118,6 +113,7 @@ export class GrantDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getGranteeData();
   }
 
   htmlDecode(input: any) {
@@ -127,9 +123,8 @@ export class GrantDetailsComponent implements OnInit {
   };
 
 
-  async grantAction() {
+  async grantData() {
     let promise = [];
-    console.log("this.grant.contractId, this.user.publicAddress", this.grant.contractId, this.user.publicAddress)
     promise.push(
       this.ethcontractService.checkAvailableBalance(this.grant.contractId),
       this.ethcontractService.remainingAllocation(this.grant.contractId, this.user.publicAddress),
@@ -153,15 +148,15 @@ export class GrantDetailsComponent implements OnInit {
   }
 
   getManagerData() {
-    this.payoutService.getByGrant(this.grantId).subscribe((res: HTTPRESPONSE) => {
-      this.payoutRequests = res.data;
+    this.payoutService.getByGrant(this.grant._id).subscribe((res: HTTPRESPONSE) => {
+      this.payouts = res.data;
       this.pendingRequest = [];
       this.approveRequest = [];
       this.rejectRequest = [];
       this.totalPending = 0;
       this.totalApproved = 0;
       this.totalReject = 0;
-      this.payoutRequests.map((data) => {
+      this.payouts.map((data) => {
         if (data.requestStatus == "pending") {
           this.pendingRequest.push(data);
           this.totalPending += data.requestAmount;
@@ -179,38 +174,31 @@ export class GrantDetailsComponent implements OnInit {
   }
 
   getGranteeData() {
-    this.payoutService.getByUserAndGrant(this.grantId).subscribe((res: HTTPRESPONSE) => {
-      this.payoutRequests = res.data;
-      console.log("this.payoutRequests", this.payoutRequests);
-      this.totalPending = 0;
-      this.totalApproved = 0;
-      this.totalReject = 0;
-      this.pendingRequest = [];
-      this.approveRequest = [];
-      this.rejectRequest = [];
-      this.payoutRequests.map((data) => {
-        if (data.requestStatus == "pending") {
-          this.pendingRequest.push(data);
-          this.totalPending += data.requestAmount;
+    this.subgraphService.getPaymentByContractAndDonor(this.contractAddress, this.user.publicAddress).subscribe((res: any) => {
+      this.payouts = res.data.payments;
+      this.payouts = this.payouts.map((task) => {
+        if (this.grant.currency == "ETH") {
+          task.amount = ethers.utils.formatEther(task.amount);
+          this.totalFundByMe += +task.amount;
+        } else {
+          this.totalFundByMe += +task.amount;
         }
-        if (data.requestStatus == "approved") {
-          this.approveRequest.push(data);
-          this.totalApproved += data.requestAmount;
-        }
-        if (data.requestStatus == "rejected") {
-          this.rejectRequest.push(data);
-          this.totalReject += data.requestAmount;
-        }
+        return task;
       });
     })
   }
 
   getDonorData() {
-    this.grantFundService.getGrantFundTask(this.grantId).subscribe((res: HTTPRESPONSE) => {
-      this.grantFundTasks = res.data;
-      this.totalFundByMe = 0;
-      this.grantFundTasks.map((task) => {
-        this.totalFundByMe += task.amount;
+    this.subgraphService.getFundByContractAndDonor(this.contractAddress, this.user.publicAddress).subscribe((res: any) => {
+      this.myFunds = res.data.funds;
+      this.myFunds = this.myFunds.map((task) => {
+        if (this.grant.currency == "ETH") {
+          task.amount = ethers.utils.formatEther(task.amount);
+          this.totalFundByMe += +task.amount;
+        } else {
+          this.totalFundByMe += +task.amount;
+        }
+        return task;
       });
     })
   }
@@ -259,7 +247,7 @@ export class GrantDetailsComponent implements OnInit {
 
       let cancelGrant: any = await this.ethcontractService.cancelGrant(this.grant.contractId);
       if (cancelGrant.status == "success") {
-        this.grantService.cancelGrant({ grant: this.grantId, hash: cancelGrant.hash }).subscribe((res: HTTPRESPONSE) => {
+        this.grantService.cancelGrant({ grant: this.grant._id, hash: cancelGrant.hash }).subscribe((res: HTTPRESPONSE) => {
           this.toastr.success('Successfully canceled grant');
         });
       }
@@ -302,17 +290,6 @@ export class GrantDetailsComponent implements OnInit {
       }
       let funding: any = await this.ethcontractService.fund(this.grant.contractId, amount);
       console.log("funding", funding);
-      if (funding.status == "success") {
-        this.grantFund.hash = funding.hash;
-        this.grantFundService.addGrantFund(this.grantFund).subscribe((res: HTTPRESPONSE) => {
-          this.processing = false;
-          this.submitted = false;
-          this.toastr.success('Successfully sent fund');
-          this.getDonorData();
-        });
-      } else {
-        this.toastr.error(funding.message, this.toastTitle);
-      }
     } catch (e) {
       this.processing = false;
       this.submitted = false;
@@ -472,7 +449,7 @@ export class GrantDetailsComponent implements OnInit {
         this.payoutService.approve(request._id).subscribe((res: HTTPRESPONSE) => {
           this.toastr.success(res.message, this.toastTitle);
           this.getManagerData();
-          this.grantAction();
+          this.grantData();
         }, (err) => {
           this.processing = false;
           this.toastr.error(err.error.message, this.toastTitle);
