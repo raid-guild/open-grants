@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<ion-content color="light">
+<!-- <ion-content color="light">
   <ion-row class="page-row">
     <ion-col size="12">
       <ion-item mode="md" lines="none" class="heading">
@@ -8,7 +8,7 @@
         <ion-searchbar slot="end" [formControl]="searchBox" (ionCancel)="onCancel($event)" [animated]="true"
           placeholder="Search Grant...">
         </ion-searchbar>
-        <!-- <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button> -->
+         <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button> 
       </ion-item>
 
       <hr class="dassed-line">
@@ -62,6 +62,37 @@
           </ul>
         </ion-card-content>
       </ion-card>
+    </ion-col>
+
+  </ion-row>
+</ion-content> -->
+
+<ion-content color="light">
+  <ion-row class="page-row">
+    <ion-col size="12">
+      <ion-item mode="md" lines="none" class="heading">
+        <ion-label slot="start">Latest Grants</ion-label>
+
+        <ion-searchbar slot="end" [formControl]="searchBox" (ionCancel)="onCancel($event)" [animated]="true"
+          placeholder="Search Grant...">
+        </ion-searchbar>
+      </ion-item>
+
+      <hr class="dassed-line">
+
+      <ion-row *ngFor="let grant of searchResult">
+        <ion-col size="12" (click)="grantDetails(grant.contractId)">
+          <div class="d-flex">
+            <img src="{{grant.images[0]}}" alt="" style="height: 150px;padding-right: 35px;">
+            <div class="">
+              <h3>{{grant?.grantName}}</h3>
+              <p>Target Funding : {{grant?.targetFunding}}</p>
+              <p>{{grant?.description}}</p>
+            </div>
+          </div>
+          <div class="line"></div>
+        </ion-col>
+      </ion-row>
     </ion-col>
 
   </ion-row>

@@ -10,56 +10,26 @@
                     placeholder="Search Grant...">
                 </ion-searchbar>
                 <!-- <ion-input placeholder="grant ..." mode="md" type="search"></ion-input>
-        <ion-button slot="end" color="primary" mode="md" (click)="onSearch()">
-          <ion-icon class="gp-search"></ion-icon>
-        </ion-button> -->
+                <ion-button slot="end" color="primary" mode="md" (click)="onSearch()">
+                    <ion-icon class="gp-search"></ion-icon>
+                </ion-button> -->
 
                 <!-- <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button> -->
             </ion-item>
 
             <hr class="dassed-line">
 
-            <ion-row>
-
-                <ion-col size="6">
+            <ion-row *ngFor="let grant of searchResult">
+                <ion-col size="12" (click)="grantDetails(grant.contractId)">
                     <div class="d-flex">
-                        <img src="../../../assets/imgs/2.jpg" alt="" style="height: 150px;padding-right: 35px;">
+                        <img src="{{grant.images[0]}}" alt="" style="height: 150px;padding-right: 35px;">
                         <div class="">
-                            <h3>A Garden in your plam</h3>
-                            <p>Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and a
-                                self-watering system. Anyone can do it!</p>
+                            <h3>{{grant?.grantName}}</h3>
+                            <p>Target Funding : {{grant?.targetFunding}}</p>
+                            <p>{{grant?.description}}</p>
                         </div>
                     </div>
                     <div class="line"></div>
-                    <div class="d-flex">
-                        <img src="../../../assets/imgs/2.jpg" alt="" style="height: 150px;padding-right: 35px;">
-                        <div class="">
-                            <h3>A Garden in your plam</h3>
-                            <p>Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and a
-                                self-watering system. Anyone can do it!</p>
-                        </div>
-                    </div>
-                </ion-col>
-
-                <ion-col size="6">
-                    <div class="d-flex">
-                        <img src="../../../assets/imgs/2.jpg" alt="" style="height: 150px;padding-right: 35px;">
-                        <div class="">
-                            <h3>A Garden in your plam</h3>
-                            <p>Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and a
-                                self-watering system. Anyone can do it!</p>
-                        </div>
-                    </div>
-                    <div class="line"></div>
-                    <div class="d-flex">
-                        <img src="../../../assets/imgs/2.jpg" alt="" style="height: 150px;padding-right: 35px;">
-
-                        <div class="">
-                            <h3>A Garden in your plam</h3>
-                            <p>Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and a
-                                self-watering system. Anyone can do it!</p>
-                        </div>
-                    </div>
                 </ion-col>
             </ion-row>
 

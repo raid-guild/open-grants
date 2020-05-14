@@ -57,11 +57,11 @@ export class AppComponent implements OnInit {
       url: '/pages/trending',
       icon: 'gp-trending-grants'
     },
-    {
-      title: 'My Grants',
-      url: '/pages/my-grants',
-      icon: 'gp-grant'
-    },
+    // {
+    //   title: 'My Grants',
+    //   url: '/pages/my-grants',
+    //   icon: 'gp-grant'
+    // },
     {
       title: 'User Profile',
       url: '/pages/profile',

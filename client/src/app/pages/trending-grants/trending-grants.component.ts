@@ -91,7 +91,7 @@ export class TrendingGrantsComponent implements OnInit {
   onCancel(event) { }
 
   getTrendingGrants() {
-    this.grantService.getTrendingGrants().subscribe((res: HTTPRESPONSE) => {
+    this.grantService.getAll().subscribe((res: HTTPRESPONSE) => {
       this.trendingGrants = res.data;
       this.searchResult = this.trendingGrants;
     });

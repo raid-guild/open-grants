@@ -427,7 +427,7 @@ export class CreateNewGrantComponent implements OnInit {
         this.grantService.createGrant(this.grantForm).subscribe((res: HTTPRESPONSE) => {
           this.processing = false;
           this.toastr.success(res.message, this.toastTitle);
-          this.router.navigate(['pages/my-grants']);
+          this.router.navigate(['pages/latest']);
         }, (err) => {
           this.processing = false;
           this.toastr.error(err.error.message, this.toastTitle);

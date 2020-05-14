@@ -18,6 +18,7 @@ export class LatestGrantsComponent implements OnInit {
   allGrant: any;
   searchBox: FormControl;
   searchResult: any = [];
+  data = [];
   constructor(public popoverCtrl: PopoverController,
     public modalController: ModalController,
     private grantService: GrantService,
@@ -48,24 +49,41 @@ export class LatestGrantsComponent implements OnInit {
           });
         }
       })
+
+
+    this.data = [
+      {
+        grantName: "PICO: A garden in your palm.",
+        images: "../../../assets/imgs/2.jpg",
+        description: "Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and aself-watering system. Anyone can do it!"
+      }, {
+        grantName: "PICO: A garden in your palm.",
+        images: "../../../assets/imgs/2.jpg",
+        description: "Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and aself-watering system. Anyone can do it!"
+      }, {
+        grantName: "PICO: A garden in your palm.",
+        images: "../../../assets/imgs/2.jpg",
+        description: "Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and aself-watering system. Anyone can do it!"
+      }, {
+        grantName: "PICO: A garden in your palm.",
+        images: "../../../assets/imgs/2.jpg",
+        description: "Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and aself-watering system. Anyone can do it!"
+      }, {
+        grantName: "PICO: A garden in your palm.",
+        images: "../../../assets/imgs/2.jpg",
+        description: "Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and aself-watering system. Anyone can do it!"
+      }, {
+        grantName: "PICO: A garden in your palm.",
+        images: "../../../assets/imgs/2.jpg",
+        description: "Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and aself-watering system. Anyone can do it!"
+      }
+    ]
   }
 
   onCancel(event) { }
 
   grantDetails(id: string) {
     this.router.navigate(['/pages/grant/' + id])
-  }
-
-  handleChange(e) {
-    console.log("e", e);
-    if (e == '') {
-      this.searchResult = this.allGrant;
-    } else {
-      this.searchResult = this.allGrant.filter((data) => {
-        return data.grantName.toLowerCase().includes(e.toLowerCase())
-      });
-      // console.log("temp", this.allGrant);
-    }
   }
 
   async viewGrant(data: any) {
