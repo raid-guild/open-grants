@@ -13,6 +13,8 @@ import { PayoutService } from 'src/app/services/payout.service';
 import { ethers, providers, utils } from 'ethers';
 import { SubgraphService } from 'src/app/services/subgraph.service';
 
+declare let window: any;
+
 @Component({
   selector: 'app-grant-details',
   templateUrl: './grant-details.component.html',
@@ -79,41 +81,43 @@ export class GrantDetailsComponent implements OnInit {
         this.grantFund.grant = this.grant._id;
         this.request.grant = this.grant._id;
         this.grant.content = this.htmlDecode(this.grant.content);
-        console.log("this.grant", this.grant);
 
-        if (this.grant.grantManager == this.user.publicAddress) {
-          this.userType = this.userEnum.MANAGER;
-        }
-
-        this.grant.grantees.map((data) => {
-          if (data.grantee == this.user.publicAddress) {
-            this.userType = this.userEnum.GRANTEE;
+        if (this.user.publicAddress) {
+          if (this.grant.grantManager == this.user.publicAddress) {
+            this.userType = this.userEnum.MANAGER;
           }
-        });
 
-        if (this.userType == this.userEnum.MANAGER) {
-          this.getManagerData();
+          this.grant.grantees.map((data) => {
+            if (data.grantee == this.user.publicAddress) {
+              this.userType = this.userEnum.GRANTEE;
+            }
+          });
+
+          if (this.userType == this.userEnum.MANAGER) {
+            this.getManagerData();
+          }
+
+          if (this.userType == this.userEnum.GRANTEE) {
+            this.getGranteeData();
+          }
+
+          if (this.userType == this.userEnum.DONOR) {
+            this.getDonorData();
+          }
+
+          this.grantData(this.user.publicAddress);
+
+        } else {
+          this.grantData(window.web3.eth.coinbase);
         }
-
-        if (this.userType == this.userEnum.GRANTEE) {
-          this.getGranteeData();
-        }
-
-        if (this.userType == this.userEnum.DONOR) {
-          this.getDonorData();
-        }
-
-        this.grantData();
-
       } catch (e) {
-        this.toastr.error('Error. Please try after sometime', 'Grant');
+        // this.toastr.error('Error. Please try after sometime', 'Grant');
       }
 
     })();
   }
 
   ngOnInit() {
-    this.getGranteeData();
   }
 
   htmlDecode(input: any) {
@@ -123,18 +127,18 @@ export class GrantDetailsComponent implements OnInit {
   };
 
 
-  async grantData() {
+  async grantData(granteeAddress) {
     let promise = [];
     promise.push(
       this.ethcontractService.checkAvailableBalance(this.grant.contractId),
-      this.ethcontractService.remainingAllocation(this.grant.contractId, this.user.publicAddress),
-      this.ethcontractService.canFund(this.grant.contractId)
+      this.ethcontractService.canFund(this.grant.contractId),
+      this.ethcontractService.remainingAllocation(this.grant.contractId, granteeAddress),
     );
 
     let promiseRes = await Promise.all(promise);
     this.balance = promiseRes[0];
-    this.remainingAlloc = promiseRes[1];
-    this.canFund = promiseRes[2];
+    this.canFund = promiseRes[1];
+    this.remainingAlloc = promiseRes[2];
 
     if (this.canFund) {
       if (this.userType == this.userEnum.MANAGER || this.userType == this.userEnum.GRANTEE) {
