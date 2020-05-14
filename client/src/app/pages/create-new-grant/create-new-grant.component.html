@@ -1,141 +1,133 @@
 <app-navbar></app-navbar>
 
 <ion-content color="light">
-  <ion-card class="grant" mode="md">
-    <ion-item class="heading" mode="md" lines="none">
-      <ion-label>Create New Grants</ion-label>
-    </ion-item>
+    <ion-card class="grant" mode="md">
+        <ion-item class="heading" mode="md" lines="none">
+            <ion-label>Create New Grants</ion-label>
+        </ion-item>
 
-    <hr class="dassed-line">
+        <hr class="dassed-line">
 
-    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
-      <div class="form-details">
-        <ion-list lines="none" class="forms" mode="md">
-          <ion-row class="name">
-            <ion-col size-lg="12" size-sm="12" size-xs="12" class="padding-0">
-              <ion-item>
-                <ion-label position="floating" for="grantName">Grant Name</ion-label>
-                <ion-input class="form-control" type="text" formControlName="grantName">
-                </ion-input>
-              </ion-item>
+        <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+            <div class="form-details">
+                <ion-list lines="none" class="forms" mode="md">
+                    <ion-row class="name">
+                        <ion-col size-lg="12" size-sm="12" size-xs="12" class="padding-0">
+                            <ion-item>
+                                <ion-label position="floating" for="grantName">Grant Name</ion-label>
+                                <ion-input class="form-control" type="text" formControlName="grantName">
+                                </ion-input>
+                            </ion-item>
 
-              <div *ngIf="submitted && form.grantName.invalid">
-                <span class="error">
+                            <div *ngIf="submitted && form.grantName.invalid">
+                                <span class="error">
                   Please Enter Name
                 </span>
-              </div>
-            </ion-col>
-          </ion-row>
+                            </div>
+                        </ion-col>
+                    </ion-row>
 
-          <ion-radio-group>
-            <ion-row class="radio name">
-              <ion-col size-lg="6" size-sm="12" class="padding-0">
-                <ion-item class="item-radio">
-                  <ion-label>Single Delivery Date</ion-label>
-                  <ion-radio mode="md" [checked]="true" color="secondary" slot="start"
-                    (click)="setradio('singleDeliveryDate')">
-                  </ion-radio>
-                </ion-item>
-              </ion-col>
-              <ion-col size-lg="6" size-sm="12" class="padding-0">
-                <ion-item class="item-radio">
-                  <ion-label>Multiple Milestones</ion-label>
-                  <ion-radio mode="md" [checked]="false" color="secondary" slot="start"
-                    (click)="setradio('multipleMilestones')">
-                  </ion-radio>
-                </ion-item>
-              </ion-col>
-            </ion-row>
-          </ion-radio-group>
+                    <ion-radio-group>
+                        <ion-row class="radio name">
+                            <ion-col size-lg="6" size-sm="12" class="padding-0">
+                                <ion-item class="item-radio">
+                                    <ion-label>Single Delivery Date</ion-label>
+                                    <ion-radio mode="md" [checked]="true" color="secondary" slot="start" (click)="setradio('singleDeliveryDate')">
+                                    </ion-radio>
+                                </ion-item>
+                            </ion-col>
+                            <ion-col size-lg="6" size-sm="12" class="padding-0">
+                                <ion-item class="item-radio">
+                                    <ion-label>Multiple Milestones</ion-label>
+                                    <ion-radio mode="md" [checked]="false" color="secondary" slot="start" (click)="setradio('multipleMilestones')">
+                                    </ion-radio>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+                    </ion-radio-group>
 
-          <div formGroupName="singleDeliveryDate" *ngIf="isSelected('singleDeliveryDate')" class="hide-show-section">
-            <ion-row class="name">
-              <ion-col size-lg="6" size-sm="12" class="padding-0">
-                <ion-item>
-                  <ion-label position="floating">Funding Expiry Date</ion-label>
-                  <ion-datetime class="form-control" [min]="minYear" [max]="maxYear" displayFormat="MMM DD YYYY"
-                    formControlName="fundingExpiryDate">
-                  </ion-datetime>
-                </ion-item>
+                    <div formGroupName="singleDeliveryDate" *ngIf="isSelected('singleDeliveryDate')" class="hide-show-section">
+                        <ion-row class="name">
+                            <ion-col size-lg="6" size-sm="12" class="padding-0">
+                                <ion-item>
+                                    <ion-label position="floating">Funding Expiry Date</ion-label>
+                                    <ion-datetime class="form-control" [min]="minYear" [max]="maxYear" displayFormat="MMM DD YYYY" formControlName="fundingExpiryDate">
+                                    </ion-datetime>
+                                </ion-item>
 
-                <div *ngIf="submitted && singleDelivery.fundingExpiryDate.invalid">
-                  <span class="error">
+                                <div *ngIf="submitted && singleDelivery.fundingExpiryDate.invalid">
+                                    <span class="error">
                     Please Enter Funding Expiry Date
                   </span>
-                </div>
-              </ion-col>
-              <ion-col size-lg="6" size-sm="12" class="padding-0">
-                <ion-item>
-                  <ion-label position="floating">Completion Date</ion-label>
-                  <ion-datetime class="form-control" [min]="minCompletionData" [max]="maxYear"
-                    displayFormat="MMM DD YYYY" formControlName="completionDate"
-                    [disabled]="singleDelivery.fundingExpiryDate.invalid">
-                  </ion-datetime>
-                </ion-item>
+                                </div>
+                            </ion-col>
+                            <ion-col size-lg="6" size-sm="12" class="padding-0">
+                                <ion-item>
+                                    <ion-label position="floating">Completion Date</ion-label>
+                                    <ion-datetime class="form-control" [min]="minCompletionData" [max]="maxYear" displayFormat="MMM DD YYYY" formControlName="completionDate" [disabled]="singleDelivery.fundingExpiryDate.invalid">
+                                    </ion-datetime>
+                                </ion-item>
 
-                <div *ngIf="submitted && singleDelivery.completionDate.invalid">
-                  <span class="error">
+                                <div *ngIf="submitted && singleDelivery.completionDate.invalid">
+                                    <span class="error">
                     Please Enter Completion Date
                   </span>
-                </div>
-              </ion-col>
-            </ion-row>
+                                </div>
+                            </ion-col>
+                        </ion-row>
 
-          </div>
+                    </div>
 
-          <div formArrayName="multipleMilestones" *ngIf="isSelected('multipleMilestones')" class="hide-show-section">
-            <ion-row class="items name" [formGroupName]="i"
-              *ngFor="let controls of multipleMilestonesControls.controls; let i=index">
-              <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
-                <ion-item>
-                  <ion-label position="floating">Milestone</ion-label>
-                  <ion-input class="form-control" type="text" [OnlyNumber]="true" formControlName="milestoneNumber">
-                  </ion-input>
-                </ion-item>
-                <div *ngIf="submitted && multipleMilestones[i].controls.milestoneNumber.invalid">
-                  <label class="error">
+                    <div formArrayName="multipleMilestones" *ngIf="isSelected('multipleMilestones')" class="hide-show-section">
+                        <ion-row class="items name" [formGroupName]="i" *ngFor="let controls of multipleMilestonesControls.controls; let i=index">
+                            <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
+                                <ion-item>
+                                    <ion-label position="floating">Milestone</ion-label>
+                                    <ion-input class="form-control" type="text" [OnlyNumber]="true" formControlName="milestoneNumber">
+                                    </ion-input>
+                                </ion-item>
+                                <div *ngIf="submitted && multipleMilestones[i].controls.milestoneNumber.invalid">
+                                    <label class="error">
                     Please Enter Milestone
                   </label>
-                </div>
-              </ion-col>
+                                </div>
+                            </ion-col>
 
-              <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
-                <ion-row>
-                  <ion-col [size]="multipleMilestones.length >1 ? '11' : '12'">
-                    <ion-item>
-                      <ion-label position="floating">Completion Date</ion-label>
-                      <ion-datetime class="form-control" [min]="minYear" [max]="maxYear" displayFormat="MMM DD YYYY"
-                        formControlName="completionDate">
-                      </ion-datetime>
-                    </ion-item>
-                    <div *ngIf="submitted && multipleMilestones[i].controls.completionDate.invalid">
-                      <label class="error">
+                            <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
+                                <ion-row>
+                                    <ion-col [size]="multipleMilestones.length >1 ? '11' : '12'">
+                                        <ion-item>
+                                            <ion-label position="floating">Completion Date</ion-label>
+                                            <ion-datetime class="form-control" [min]="minYear" [max]="maxYear" displayFormat="MMM DD YYYY" formControlName="completionDate">
+                                            </ion-datetime>
+                                        </ion-item>
+                                        <div *ngIf="submitted && multipleMilestones[i].controls.completionDate.invalid">
+                                            <label class="error">
                         Please Enter Completion Date
                       </label>
-                    </div>
-                  </ion-col>
-                  <ion-col size="1" *ngIf="multipleMilestones.length >1">
-                    <div class="close">
-                      <ion-icon (click)="removeMilestone(i)" name="close-circle"></ion-icon>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-            <ion-row class="name">
-              <ion-col size="12" class="padding-0">
-                <ion-button mode="md" fill="clear" class="tt-none dashed-border" expand="block"
-                  (click)="addNewMilestone()">
-                  Add New Milestone
-                </ion-button>
-              </ion-col>
-            </ion-row>
+                                        </div>
+                                    </ion-col>
+                                    <ion-col size="1" *ngIf="multipleMilestones.length >1">
+                                        <div class="close">
+                                            <ion-icon (click)="removeMilestone(i)" name="close-circle"></ion-icon>
+                                        </div>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row class="name">
+                            <ion-col size="12" class="padding-0">
+                                <ion-button mode="md" fill="clear" class="tt-none dashed-border" expand="block" (click)="addNewMilestone()">
+                                    Add New Milestone
+                                </ion-button>
+                            </ion-col>
+                        </ion-row>
 
-          </div>
+                    </div>
 
-          <div>
-            <ion-row class="name">
-              <!-- <ion-col size-lg="6" size-sm="12" class="padding-0">
+                    <div>
+                        <ion-row class="name">
+                            <!-- <ion-col size-lg="6" size-sm="12" class="padding-0">
                     <ion-item>
                       <tag-input [formControlName]="'grantManager'" [theme]="'bootstrap'" [onTextChangeDebounce]="500"
                         [secondaryPlaceholder]="'Grant Manager'" [onlyFromAutocomplete]="true" [maxItems]="1">
@@ -154,7 +146,7 @@
                     </div>
                   </ion-col> -->
 
-              <!-- <ion-col size-lg="6" size-sm="12" class="padding-0">
+                            <!-- <ion-col size-lg="6" size-sm="12" class="padding-0">
                     <ion-item>
                       <tag-input formControlName="grantees" [theme]="'bootstrap'" [placeholder]="'Add more grantee'"
                         [onTextChangeDebounce]="500" [secondaryPlaceholder]="'Enter grantees'" [onlyFromAutocomplete]="true"
@@ -174,12 +166,12 @@
                     </div>
                   </ion-col> -->
 
-            </ion-row>
-          </div>
+                        </ion-row>
+                    </div>
 
-          <ion-row class="inputs name">
-            <ion-col class="padding-0" size-lg="6" size-xs="12" size-sm="12">
-              <!-- <ion-item>
+                    <ion-row class="inputs name">
+                        <ion-col class="padding-0" size-lg="6" size-xs="12" size-sm="12">
+                            <!-- <ion-item>
                     <ion-input class="form-control" placeholder="Amount" type="text" [OnlyNumber]="true"
                       formControlName="targetFunding" required>
                     </ion-input>
@@ -191,151 +183,143 @@
                     </span>
                   </div> -->
 
-              <ion-item>
-                <ion-label position="floating">Grant Manager</ion-label>
-                <ion-input class="form-control" type="text" formControlName="grantManager">
-                </ion-input>
-              </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Grant Manager</ion-label>
+                                <ion-input class="form-control" type="text" formControlName="grantManager">
+                                </ion-input>
+                            </ion-item>
 
-              <div class="error">
-                <label *ngIf="submitted && form.grantManager.errors?.required">
+                            <div class="error">
+                                <label *ngIf="submitted && form.grantManager.errors?.required">
                   Please Add Grant Manager
                 </label>
-                <label *ngIf="!form.grantManager.errors?.required && form.grantManager.errors?.addressValid">
+                                <label *ngIf="!form.grantManager.errors?.required && form.grantManager.errors?.addressValid">
                   Grant Manager Address Not Valid
                 </label>
-                <label
-                  *ngIf="!form.grantManager.errors?.required && !form.grantManager.errors?.addressValid && managerAddressError">
+                                <label *ngIf="!form.grantManager.errors?.required && !form.grantManager.errors?.addressValid && managerAddressError">
                   Grant Manager Address Must Be Unique
                 </label>
-              </div>
-            </ion-col>
-            <ion-col class="padding-0" size-lg="6" size-xs="12" size-sm="12">
-              <ion-item>
-                <ion-label position="floating">Currency</ion-label>
-                <ion-select class="form-control" okText="Okay" cancelText="Dismiss" formControlName="currency">
-                  <ion-select-option *ngFor="let option of currency" [value]="option.value">{{ option.name}}
-                  </ion-select-option>
-                </ion-select>
-              </ion-item>
-              <div *ngIf="submitted && form.currency.invalid">
-                <label class="error">
+                            </div>
+                        </ion-col>
+                        <ion-col class="padding-0" size-lg="6" size-xs="12" size-sm="12">
+                            <ion-item>
+                                <ion-label position="floating">Currency</ion-label>
+                                <ion-select class="form-control" okText="Okay" cancelText="Dismiss" formControlName="currency">
+                                    <ion-select-option *ngFor="let option of currency" [value]="option.value">{{ option.name}}
+                                    </ion-select-option>
+                                </ion-select>
+                            </ion-item>
+                            <div *ngIf="submitted && form.currency.invalid">
+                                <label class="error">
                   Please Select Currency
                 </label>
-              </div>
-            </ion-col>
-          </ion-row>
+                            </div>
+                        </ion-col>
+                    </ion-row>
 
-          <div formArrayName="grantees">
-            <ion-row class="items name" [formGroupName]="i"
-              *ngFor="let controls of granteeControls.controls; let i=index">
-              <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
-                <ion-item>
-                  <ion-label position="floating">Grantee</ion-label>
-                  <ion-input class="form-control" type="text" formControlName="grantee">
-                  </ion-input>
-                </ion-item>
+                    <div formArrayName="grantees">
+                        <ion-row class="items name" [formGroupName]="i" *ngFor="let controls of granteeControls.controls; let i=index">
+                            <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
+                                <ion-item>
+                                    <ion-label position="floating">Grantee</ion-label>
+                                    <ion-input class="form-control" type="text" formControlName="grantee">
+                                    </ion-input>
+                                </ion-item>
 
-                <div class="error">
-                  <label *ngIf="submitted && grantee[i].controls.grantee.errors?.required">
+                                <div class="error">
+                                    <label *ngIf="submitted && grantee[i].controls.grantee.errors?.required">
                     Please Add Grantee
                   </label>
-                  <label
-                    *ngIf="!grantee[i].controls.grantee.errors?.required && grantee[i].controls.grantee.errors?.addressValid">
+                                    <label *ngIf="!grantee[i].controls.grantee.errors?.required && grantee[i].controls.grantee.errors?.addressValid">
                     Grantee Address Not Valid
                   </label>
-                  <label
-                    *ngIf="!grantee[i].controls.grantee.errors?.required && !grantee[i].controls.grantee.errors?.addressValid && granteeAddressError[i]">
+                                    <label *ngIf="!grantee[i].controls.grantee.errors?.required && !grantee[i].controls.grantee.errors?.addressValid && granteeAddressError[i]">
                     Grantee Address Must Be Unique
                   </label>
-                </div>
-              </ion-col>
+                                </div>
+                            </ion-col>
 
-              <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
-                <ion-row>
-                  <ion-col [size]="grantee.length >1 ? '11' : '12'">
-                    <ion-item>
-                      <ion-label position="floating">Amount</ion-label>
-                      <ion-input class="form-control" formControlName="allocationAmount" [OnlyNumber]="true">
-                      </ion-input>
-                    </ion-item>
-                    <div *ngIf="submitted && grantee[i].controls.allocationAmount.invalid">
-                      <label class="error">
+                            <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
+                                <ion-row>
+                                    <ion-col [size]="grantee.length >1 ? '11' : '12'">
+                                        <ion-item>
+                                            <ion-label position="floating">Amount</ion-label>
+                                            <ion-input class="form-control" formControlName="allocationAmount" [OnlyNumber]="true">
+                                            </ion-input>
+                                        </ion-item>
+                                        <div *ngIf="submitted && grantee[i].controls.allocationAmount.invalid">
+                                            <label class="error">
                         Please Enter Amount
                       </label>
+                                        </div>
+                                    </ion-col>
+                                    <ion-col size="1" *ngIf="grantee.length >1">
+                                        <div class="close">
+                                            <ion-icon (click)="removeGrantee(i)" name="close-circle"></ion-icon>
+                                        </div>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row class="name">
+                            <ion-col size="12" class="padding-0">
+                                <ion-button mode="md" fill="clear" class="tt-none dashed-border" expand="block" (click)="addNewGrantee()">
+                                    Add New Grantees
+                                </ion-button>
+                            </ion-col>
+                        </ion-row>
                     </div>
-                  </ion-col>
-                  <ion-col size="1" *ngIf="grantee.length >1">
-                    <div class="close">
-                      <ion-icon (click)="removeGrantee(i)" name="close-circle"></ion-icon>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </ion-col>
-            </ion-row>
-            <ion-row class="name">
-              <ion-col size="12" class="padding-0">
-                <ion-button mode="md" fill="clear" class="tt-none dashed-border" expand="block"
-                  (click)="addNewGrantee()">
-                  Add New Grantees
-                </ion-button>
-              </ion-col>
-            </ion-row>
-          </div>
 
-          <ion-row class="name">
-            <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
-              <ion-item>
-                <ion-label position="floating" for="description">Enter here short description...</ion-label>
-                <ion-textarea rows="3" cols="20" spellcheck="true" auto-grow="true" class="form-control" type="text"
-                  formControlName="description">
-                </ion-textarea>
-              </ion-item>
-            </ion-col>
+                    <ion-row class="name">
+                        <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
+                            <ion-item>
+                                <ion-label position="floating" for="description">Enter here short description...</ion-label>
+                                <ion-textarea rows="3" cols="20" spellcheck="true" auto-grow="true" class="form-control" type="text" formControlName="description">
+                                </ion-textarea>
+                            </ion-item>
+                        </ion-col>
 
 
-            <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
-              <image-upload buttonCaption="Upload Image" dropBoxMessage="OR Drop image here" #Image [max]="4"
-                name="imageUpload" id="imageUpload" #imageUpload>
-              </image-upload>
+                        <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
+                            <image-upload buttonCaption="Upload Image" dropBoxMessage="OR Drop image here" #Image [max]="4" name="imageUpload" id="imageUpload" #imageUpload>
+                            </image-upload>
 
-              <!-- <ion-item>
+                            <!-- <ion-item>
                 <label position="floating">
                   <input type="file" accept="image/*" (change)="fileChangeEvent($event)" />
                   Choose Image
                 </label> 
               </ion-item>-->
-            </ion-col>
-          </ion-row>
+                        </ion-col>
+                    </ion-row>
 
-          <ion-row class="name">
-            <ion-col class="padding-0">
+                    <ion-row class="name">
+                        <ion-col class="padding-0">
 
-              <editor formControlName="content" [init]="tinymceInit"></editor>
+                            <editor formControlName="content" [init]="tinymceInit"></editor>
 
-            </ion-col>
-          </ion-row>
+                        </ion-col>
+                    </ion-row>
 
-          <ion-row class="name">
-            <ion-col class="padding-0">
-              <div class="total-amount">
-                Target Funding : {{form.targetFunding.value ? form.targetFunding.value : "0"}}
-                {{form.currency.value ? form.currency.value : ""}}
-              </div>
-            </ion-col>
-          </ion-row>
+                    <ion-row class="name">
+                        <ion-col class="padding-0">
+                            <div class="total-amount">
+                                Target Funding : {{form.targetFunding.value ? form.targetFunding.value : "0"}} {{form.currency.value ? form.currency.value : ""}}
+                            </div>
+                        </ion-col>
+                    </ion-row>
 
-          <ion-row class="name">
-            <ion-col class="padding-0">
-              <div class="submit-button">
-                <ion-button mode="md" class="tt-none" [disabled]="processing" expand="block" type="ngSubmit">
-                  Create Grant
-                </ion-button>
-              </div>
-            </ion-col>
-          </ion-row>
-        </ion-list>
-      </div>
-    </form>
-  </ion-card>
+                    <ion-row class="name">
+                        <ion-col class="padding-0">
+                            <div class="submit-button">
+                                <ion-button mode="md" class="tt-none" [disabled]="processing" expand="block" type="ngSubmit">
+                                    Create Grant
+                                </ion-button>
+                            </div>
+                        </ion-col>
+                    </ion-row>
+                </ion-list>
+            </div>
+        </form>
+    </ion-card>
 </ion-content>
