@@ -16,7 +16,8 @@
                             <ion-row>
                                 <div class="users-container">
                                     <div class="users">
-                                        <img class="image" src="{{userData?.picture}}" alt="">
+                                        <img class="image" src="{{'https://ipfs.infura.io/ipfs/' + userProfile?.image}}"
+                                            alt="">
                                     </div>
                                     <div class="file-input-container">
                                         <label color="primary">
@@ -34,13 +35,7 @@
                                     <ion-item>
                                         <ion-label class="grants-details">
                                             <h2>Name : {{userProfile?.name}} {{ userProfile?.emoji}}</h2>
-                                            <!-- <h2>Full Name : {{ userData?.firstName ? userData?.firstName : '' }}
-                                                {{userData?.lastName ? userData?.lastName : ''}}
-                                            </h2> -->
                                             <h2>Email : {{userData?.email ? userData?.email : ''}}</h2>
-                                            <!-- <h2>Create Grant: 010</h2>
-                                            <h2>Manage Grant:123</h2>
-                                            <h2>Funded by Me :12</h2> -->
                                             <h2>Balance : {{balance}}</h2>
                                             <h2>Account : {{account}}</h2>
                                             <!-- <threebox-address data-address='0x6D48912C6c768e0CAd669b0154DD85F156284A21' data-display='full'>

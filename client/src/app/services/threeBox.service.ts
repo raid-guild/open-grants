@@ -34,21 +34,23 @@ export class ThreeBoxService {
 
     // this.getAppsThread()
 
-    // const profile = await Box.getProfile(window.web3.eth.coinbase)
+    const profile = await Box.getProfile(window.web3.eth.coinbase)
 
     const query = `{ 
       profile(id: "${window.web3.eth.coinbase}" ) {
+        image
         name
         emoji
+        location
       } 
     }`
 
-    try {
+    // try {
       let res = await Box.profileGraphQL(query)
       return res.profile
-    } catch (e) {
-      return []
-    }
+    // } catch (e) {
+    //   return []
+    // }
   }
 
   async getAppsThread() {
