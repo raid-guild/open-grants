@@ -25,7 +25,7 @@ export class AuthController {
 
     @Post('/confirmUser')
     @ApiResponse({ status: 200, description: 'User fetched successfully.' })
-    async login(@Res() res, @Body() userModel: User) {
+    async confirmUser(@Res() res, @Body() userModel: User) {
         try {
             let response = await this.authService.getByPublicAddress(userModel.publicAddress);
             console.log("response", response);

@@ -25,12 +25,13 @@ export class GrantDetailsComponent implements OnInit {
   contractAddress = "";
 
   userEnum = {
+    VISITOR: "visitor",
     MANAGER: "manager",
     GRANTEE: "grantee",
     DONOR: "donor",
   }
 
-  userType = this.userEnum.DONOR;
+  userType = this.userEnum.VISITOR;
   grant: any;
   payouts = [];
   pendingRequest = [];
@@ -105,13 +106,12 @@ export class GrantDetailsComponent implements OnInit {
             this.getDonorData();
           }
 
-          this.grantData(this.user.publicAddress);
+          this.grantData();
 
         } else {
-          this.grantData(window.web3.eth.coinbase);
+          this.grantData();
         }
       } catch (e) {
-        // this.toastr.error('Error. Please try after sometime', 'Grant');
       }
 
     })();
@@ -127,18 +127,16 @@ export class GrantDetailsComponent implements OnInit {
   };
 
 
-  async grantData(granteeAddress) {
+  async grantData() {
     let promise = [];
     promise.push(
       this.ethcontractService.checkAvailableBalance(this.grant.contractId),
       this.ethcontractService.canFund(this.grant.contractId),
-      this.ethcontractService.remainingAllocation(this.grant.contractId, granteeAddress),
     );
 
     let promiseRes = await Promise.all(promise);
     this.balance = promiseRes[0];
     this.canFund = promiseRes[1];
-    this.remainingAlloc = promiseRes[2];
 
     if (this.canFund) {
       if (this.userType == this.userEnum.MANAGER || this.userType == this.userEnum.GRANTEE) {
@@ -178,6 +176,7 @@ export class GrantDetailsComponent implements OnInit {
   }
 
   getGranteeData() {
+    this.remainingAlloc = this.ethcontractService.remainingAllocation(this.grant.contractId, this.user.publicAddress);
     this.subgraphService.getPaymentByContractAndDonor(this.contractAddress, this.user.publicAddress).subscribe((res: any) => {
       this.payouts = res.data.payments;
       this.payouts = this.payouts.map((task) => {
@@ -453,7 +452,6 @@ export class GrantDetailsComponent implements OnInit {
         this.payoutService.approve(request._id).subscribe((res: HTTPRESPONSE) => {
           this.toastr.success(res.message, this.toastTitle);
           this.getManagerData();
-          this.grantData();
         }, (err) => {
           this.processing = false;
           this.toastr.error(err.error.message, this.toastTitle);
