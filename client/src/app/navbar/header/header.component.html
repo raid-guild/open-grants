@@ -24,38 +24,14 @@
       Grant platform
     </ion-title>
 
-    <!-- <ion-title *ngIf="!searchBar">
-      {{path}}
-    </ion-title> -->
-
-    <form [formGroup]="myForm" class="">
-      <div>
-        <ion-item lines="none" class="custom-search" *ngIf="searchBar">
-          <ion-label slot="start">Find</ion-label>
-          <ion-input placeholder="grant ..." mode="md" type="search" formControlName="searchBox"></ion-input>
-          <ion-button slot="end" color="primary" mode="md" (click)="onSearch()">
-            <ion-icon class="gp-search"></ion-icon>
-          </ion-button>
-
-          <div *ngIf="searchResult.length" class="">
-            <ul class="">
-              <li *ngFor="let x of searchResult" (click)="selectGrant(x)">
-                {{ x.grantName }}
-              </li>
-            </ul>
-          </div>
-        </ion-item>
-      </div>
-    </form>
-
     <ion-buttons slot="end">
       <div class="user-icon">
-        <img class="image" *ngIf="picture" [src]="userData?.picture || ''" alt="">
-        <ion-icon *ngIf="!picture" size="large" name="person"></ion-icon>
+        <img class="image" *ngIf="isImage" src="{{'https://ipfs.infura.io/ipfs/' + user3BoxProfile?.image}}" alt="">
+        <ion-icon *ngIf="!isImage" size="large" name="person"></ion-icon>
       </div>
       <ion-button mode="md" class="user-profile-menu">
 
-        <span>{{userData?.userName ? userData?.userName : '' }}<i class="gp-arrow-down"
+        <span>{{user3BoxProfile?.name ? user3BoxProfile?.name : '' }}<i class=" gp-arrow-down"
             (click)="userMenuPopover($event)"></i></span>
       </ion-button>
     </ion-buttons>

@@ -57,11 +57,11 @@ export class AppComponent implements OnInit {
       url: '/pages/trending',
       icon: 'gp-trending-grants'
     },
-    // {
-    //   title: 'My Grants',
-    //   url: '/pages/my-grants',
-    //   icon: 'gp-grant'
-    // },
+    {
+      title: 'My Grants',
+      url: '/pages/my-grants',
+      icon: 'gp-grant'
+    },
     {
       title: 'User Profile',
       url: '/pages/profile',
@@ -84,24 +84,6 @@ export class AppComponent implements OnInit {
     window['Buffer'] = Buffer["Buffer"]
 
     this.initializeApp();
-
-    let res = this.authService.getAuthState();
-    this.isLogin = res.is_logged_in;
-
-    this.events.subscribe('is_logged_in', (data) => {
-      this.isLogin = data;
-      if (this.isLogin) {
-        this.appPages = this.allPage;
-      } else {
-        this.appPages = this.pages;
-      }
-    });
-
-    if (this.isLogin) {
-      this.appPages = this.allPage;
-    } else {
-      this.appPages = this.pages;
-    }
   }
 
 
@@ -111,17 +93,13 @@ export class AppComponent implements OnInit {
       this.splashScreen.hide();
     });
   }
+
   ngOnInit() {
     this.subscriptions();
-
-    this.authService.authState.subscribe((res: AuthState) => {
-      console.log("res.is_logged_in", res)
-    });
   }
 
   subscriptions() {
     this.utilService.onLoaderChange.subscribe((data: ILoader) => {
-      // console.log("spinner");
       if (data.loading) {
         this.spinner.show();
       } else {

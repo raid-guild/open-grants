@@ -20,7 +20,6 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireStorageModule } from 'angularfire2/storage';
 import { HttpCommonInterceptor } from './common/interceptors/http-common.interceptor';
 import { AppSettings } from './config/app.config';
-import { NavbarModule } from './navbar/navbar.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -42,7 +41,6 @@ import { NavbarModule } from './navbar/navbar.module';
     AngularFirestoreModule,
     AngularFireStorageModule,
     AppRoutingModule,
-    NavbarModule
   ],
   providers: [
     StatusBar,

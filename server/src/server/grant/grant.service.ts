@@ -32,6 +32,24 @@ export class GrantService {
         return response;
     }
 
+    async findCreatedByMe(publicAddress: string): Promise<any> {
+        const response = await this.GrantModel.find({ createdBy: publicAddress })
+            .exec();
+        return response;
+    }
+
+    async managedByMe(publicAddress: string): Promise<Grant[]> {
+        const response = await this.GrantModel.find({ grantManager: publicAddress })
+            .exec();
+        return response;
+    }
+
+    async findFundedByMe(publicAddress: string): Promise<Grant[]> {
+        const response = await this.GrantModel.find({ donors: { $in: [publicAddress] } })
+            .exec();
+        return response;
+    }
+
     async getForFunding(grantId: string, donor: string): Promise<any> {
         const response = await this.GrantModel.findOne({
             _id: grantId,
@@ -59,24 +77,6 @@ export class GrantService {
                 donors: { $in: [user] }
             }]
         })
-            .exec();
-        return response;
-    }
-
-    async findCreatedByMe(id: string): Promise<any> {
-        const response = await this.GrantModel.find({ createdBy: id })
-            .exec();
-        return response;
-    }
-
-    async findFundedByMe(id: string): Promise<Grant[]> {
-        const response = await this.GrantModel.find({ donors: { $in: [id] } })
-            .exec();
-        return response;
-    }
-
-    async managedByMe(id: string): Promise<Grant[]> {
-        const response = await this.GrantModel.find({ grantManager: id })
             .exec();
         return response;
     }

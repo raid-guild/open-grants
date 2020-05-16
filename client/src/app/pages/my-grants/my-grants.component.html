@@ -1,4 +1,7 @@
-<app-navbar></app-navbar>
+<ion-header mode="md" no-border>
+  <ion-toolbar mode="md">
+  </ion-toolbar>
+</ion-header>
 
 <ion-content color="light">
   <ion-row class="page-row">
@@ -67,7 +70,8 @@
 
           <ion-item mode="md" lines="none">
             <ion-button class="details" mode="md" slot="start" (click)="viewGrant(fund)">Quick View</ion-button>
-            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(fund.contractId)">Details View</ion-button>
+            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(fund.contractId)">Details View
+            </ion-button>
           </ion-item>
         </ion-card-content>
       </ion-card>

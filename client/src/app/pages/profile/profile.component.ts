@@ -19,7 +19,7 @@ declare let window: any;
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   userData: any;
-  userProfile: any;
+  user3BoxProfile: any;
   toastTitle = "User";
   profile: File;
   balance: any;
@@ -62,8 +62,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   async getAccountInfo() {
     if (this.userData && this.userData.hasOwnProperty('publicAddress') && this.userData.publicAddress) {
-      this.userProfile = await this.threeBoxService.getProfile();
-      console.log("userProfile", this.userProfile);
+      this.user3BoxProfile = await this.threeBoxService.getProfile(this.userData.publicAddress);
 
       let data: any = await this.ethcontractService.getAccountInfo(this.userData.publicAddress);
       this.account = data.account;

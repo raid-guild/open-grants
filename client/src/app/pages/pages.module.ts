@@ -34,10 +34,11 @@ import { ViewGrantNotificationsComponent } from './view-grant-notifications/view
 import { ProfileComponent } from './profile/profile.component';
 import { TransactionHistoryComponent } from './transaction-history/transaction-history.component';
 import { GrantDetailsComponent } from './grant-details/grant-details.component';
-import { ThreeBoxService } from '../services/threeBox.service';
-import { NavbarModule } from '../navbar/navbar.module';
 import { ImageUploadModule } from 'angular2-image-upload';
 import { SubgraphService } from '../services/subgraph.service';
+import { HeaderComponent } from '../navbar/header/header.component';
+import { MenuPopoverComponent } from '../navbar/menu-popover/menu-popover.component';
+import { AuthenticationService } from '../services/authentication.service';
 
 const PAGES_COMPONENTS = [
     PagesComponent,
@@ -45,6 +46,8 @@ const PAGES_COMPONENTS = [
 
 @NgModule({
     declarations: [
+        HeaderComponent,
+        MenuPopoverComponent,
         PagesComponent,
         HomeComponent,
         ListComponent,
@@ -73,11 +76,11 @@ const PAGES_COMPONENTS = [
         EditorModule,
         NgxChartsModule,
         NumberonlyDirectiveModule,
-        NavbarModule,
         ImageUploadModule.forRoot(),
         // MiscellaneousModule
     ],
     entryComponents: [
+        MenuPopoverComponent,
         ViewGrantComponent,
         ImageCropComponent
     ],
@@ -87,10 +90,7 @@ const PAGES_COMPONENTS = [
         GrantFundService,
         PayoutService,
         SubgraphService,
-        ThreeBoxService,
-        // StatusBar,
-        // SplashScreen,
-        // { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+        AuthenticationService
     ]
 })
 export class PagesModule {

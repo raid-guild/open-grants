@@ -11,6 +11,9 @@ import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 import { AuthService, AuthState } from 'src/app/services/auth.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ToastrService } from 'ngx-toastr';
+import { ThreeBoxService } from 'src/app/services/threeBox.service';
+import { async } from '@angular/core/testing';
+import { AppSettings } from 'src/app/config/app.config';
 
 declare let window: any;
 
@@ -25,6 +28,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   authsubscription: Subscription;
   isLogin = false;
+  user3BoxProfile: any;
   userData: any;
   allgrant: any;
 
@@ -34,7 +38,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   searchSubscription: Subscription;
   searchResult: any = [];
 
-  picture = false;
+  isImage = false;
 
   @Output() onChange = new EventEmitter();
 
@@ -43,13 +47,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     public popoverCtrl: PopoverController,
     public modalController: ModalController,
-    private route: ActivatedRoute,
-    private grantService: GrantService,
     public events: Events,
     private userService: UserService,
     private fb: FormBuilder,
     private authService: AuthService,
     private authenticationService: AuthenticationService,
+    private threeBoxService: ThreeBoxService
   ) {
 
     let res = this.authService.getAuthState();
@@ -57,18 +60,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.events.subscribe('is_logged_in', (data) => {
       this.isLogin = data;
-    });
 
-    if (this.isLogin) {
       if (this.isLogin) {
         this.getUserData();
-        this.events.subscribe('profile-change', (data) => {
-          if (data) {
-            this.getUserData();
-          }
-        });
       }
-    }
+    });
 
     // this.path = this.route.snapshot.pathFromRoot[3].url[0].path;
     // if (this.path == "my-grants" || this.path == "latest-grants" || this.path == "trending-grants") {
@@ -81,27 +77,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.searchSubscription = this.myForm.controls.searchBox.valueChanges
-    //   .pipe(
-    //     debounceTime(400),
-    //     distinctUntilChanged()
-    //   )
-    //   .subscribe((val: string) => {
-    //     // console.log("val", val)
-    //     if (val == '') {
-    //       this.searchResult = [];
-    //     } else {
-    //       this.searchResult = []
-    //       this.searchResult = this.allgrant.filter((data) => {
-    //         // console.log("data.name.toLowerCase()", data.name.toLowerCase());
-    //         return data.grantName.toLowerCase().includes(val.toLowerCase())
-    //       });
-    //       console.log("temp", this.searchResult);
-    //     }
-    //   })
+    this.getUserData();
   }
-
-
 
   async userMenuPopover($event) {
     const popover = await this.popoverCtrl.create({
@@ -114,23 +91,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return await popover.present();
   }
 
-  getUserData() {
-    // this.userData = JSON.parse(localStorage.getItem(AppSettings.localStorage_keys.userData));
-    this.userService.getUser().subscribe((res: HTTPRESPONSE) => {
-      this.userData = res.data;
-      if (this.userData && this.userData.hasOwnProperty('picture') && this.userData.picture) {
-        this.picture = true;
+  async getUserData() {
+    this.userData = JSON.parse(localStorage.getItem(AppSettings.localStorage_keys.userData));
+    if (this.userData && this.userData.hasOwnProperty('publicAddress') && this.userData.publicAddress) {
+      this.user3BoxProfile = await this.threeBoxService.getProfile(this.userData.publicAddress);
+      if (this.user3BoxProfile && this.user3BoxProfile.hasOwnProperty('image') && this.user3BoxProfile.image) {
+        this.isImage = true;
       }
-    });
-  }
-
-  onSearch() {
-    this.onChange.emit(this.myForm.controls.searchBox.value);
-  }
-
-  selectGrant(value: any) {
-    this.myForm.controls.searchBox.setValue(value.grantName);
-    this.onSearch();
+    }
   }
 
   async confirmUser() {
@@ -139,7 +107,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     try {
       if ('enable' in window.web3.currentProvider) {
         await window.web3.currentProvider.enable();
-        console.log("window.web3.eth.coinbase",window.web3.eth.coinbase);
         this.authenticationService.confirmUser({ publicAddress: window.web3.eth.coinbase }).subscribe(async (res: HTTPRESPONSE) => {
           try {
             let signMessage: any = await this.handleSignMessage(res.data)
@@ -174,10 +141,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   login(signMessage) {
     this.authenticationService.signin({ publicAddress: signMessage.publicAddress, signature: signMessage.signature })
-      .subscribe((res: HTTPRESPONSE) => {
+      .subscribe(async (res: HTTPRESPONSE) => {
         this.toastr.success(res.message, this.toastTitle);
         this.processing = false;
-        this.router.navigate(['pages/profile']);
       }, (err) => {
         this.processing = false;
         this.toastr.error(err.error.message, this.toastTitle);

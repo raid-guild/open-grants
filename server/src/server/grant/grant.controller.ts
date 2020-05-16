@@ -76,48 +76,6 @@ export class GrantController {
             let response = await this.grantService.getById(grantId);
 
             if (response) {
-                response = JSON.parse(JSON.stringify(response));
-
-                if (response.type == this.typeEnum.MULTIPLE) {
-                    let multipleMilestones = [];
-
-                    for (let i = 0; i < response.multipleMilestones.length; i++) {
-                        let data = response.multipleMilestones[i];
-
-                        let totalFundimg = 0;
-                        let fromDate: any;
-                        if (i == 0) {
-                            fromDate = response.createdAt;
-                        } else {
-                            fromDate = response.multipleMilestones[i - 1].completionDate;
-                        }
-
-                        let funding = await this.grantFundService.getBydate(grantId, fromDate, data.completionDate);
-                        funding.map((temp) => {
-                            totalFundimg += temp.fundingAmount;
-                        });
-
-                        multipleMilestones.push({
-                            ...JSON.parse(JSON.stringify(data)),
-                            funding: totalFundimg
-                        });
-                    }
-
-                    response.multipleMilestones = [...multipleMilestones];
-                } else {
-                    let totalFundimg = 0;
-                    let funding = await this.grantFundService.getBydate(grantId, response.createdAt, response.singleDeliveryDate.completionDate);
-
-                    funding.map((temp) => {
-                        totalFundimg += temp.fundingAmount;
-                    });
-
-                    response.singleDeliveryDate = {
-                        ...response.singleDeliveryDate,
-                        funding: totalFundimg
-                    }
-                }
-
                 return res.status(httpStatus.OK).json(new APIResponse(response, 'Grant fetched successfully', httpStatus.OK));
             } else {
                 return res.status(httpStatus.BAD_REQUEST).json(new APIResponse({}, 'No Record Found', httpStatus.BAD_REQUEST));
@@ -149,7 +107,7 @@ export class GrantController {
     async createdByMe(@Req() req, @Res() res) {
         try {
             console.log("id", req.user);
-            let response = await this.grantService.findCreatedByMe(req.user._id);
+            let response = await this.grantService.findCreatedByMe(req.user.publicAddress);
             return res.status(httpStatus.OK).json(new APIResponse(response, 'Grants fetched successfully', httpStatus.OK));
         } catch (e) {
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting grant', httpStatus.INTERNAL_SERVER_ERROR, e));
@@ -161,7 +119,7 @@ export class GrantController {
     @ApiResponse({ status: 200, description: 'Grants fetched successfully' })
     async fundedByMe(@Req() req, @Res() res) {
         try {
-            let response = await this.grantService.findFundedByMe(req.user._id);
+            let response = await this.grantService.findFundedByMe(req.user.publicAddress);
             return res.status(httpStatus.OK).json(new APIResponse(response, 'Grants fetched successfully', httpStatus.OK));
         } catch (e) {
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting grant', httpStatus.INTERNAL_SERVER_ERROR, e));
@@ -175,7 +133,7 @@ export class GrantController {
     async managedByMe(@Req() req, @Res() res) {
         try {
             // console.log("id", id);
-            let response = await this.grantService.managedByMe(req.user._id);
+            let response = await this.grantService.managedByMe(req.user.publicAddress);
             return res.status(httpStatus.OK).json(new APIResponse(response, 'Grants fetched successfully', httpStatus.OK));
         } catch (e) {
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting grant', httpStatus.INTERNAL_SERVER_ERROR, e));
