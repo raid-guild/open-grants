@@ -118,6 +118,7 @@ export class GrantDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+   
   }
 
   htmlDecode(input: any) {
