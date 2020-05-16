@@ -1,4 +1,39 @@
 .welcome-card img {
     max-height: 35vh;
     overflow: hidden;
-  }
+}
+
+.d-flex {
+    display: flex;
+}
+
+.line {
+    margin: 25px 0;
+    border: 1px solid #E8E8E8;
+    margin-left: 40px;
+}
+
+.border-right {
+    border-right: 2px solid #e8e8e8;
+}
+
+.image-responsive {
+    height: 100px;
+}
+
+.main-image {
+    height: 340px;
+}
+
+.margin-50 {
+    margin: 30px 60px;
+}
+
+.margin-35 {
+    margin: 0 35px;
+}
+
+h2 {
+    font-size: 21px;
+    margin: 0;
+}

@@ -3,7 +3,43 @@
 <ion-content color="light">
     <ion-row class="row">
         <ion-col size="12">
-            <ion-item mode="md" lines="none" class="heading">
+            <div class="row">
+                <div class="text-center">
+                    <h1>Cheat Sheets - Sheet Pan Cooking Reimagined</h1>
+                    <p>Meal prepping and one-pan dinners have never been this easy.</p>
+                </div>
+                <ion-row>
+                    <ion-col size="7">
+                        <img src="../../../assets/imgs/2.jpg" alt="">
+                    </ion-col>
+                    <ion-col size="5" class="padding-left-50">
+                        <div class="line"></div>
+                        <div class="padding-20 top-20">
+                            <h1 class="green">US$ 1,641,650</h1>
+                            <p>pledged of US$ 10,000 goal</p>
+                        </div>
+                        <div class="padding-20">
+                            <h1>19,507</h1>
+                            <p>backers</p>
+                        </div>
+                        <div class="padding-20">
+                            <h1>5</h1>
+                            <p>days to go</p>
+                        </div>
+                        <div class="positon">
+                            <ion-input placeholder="Amount" type="text" [(ngModel)]="request.requestAmount" name="requestAmount" [OnlyNumber]="true" #requestAmount="ngModel" required>
+                            </ion-input>
+                            <div class="new-doller">
+                                <span class="doller">$</span>
+                            </div>
+                        </div>
+                        <ion-button class="continue">Continue</ion-button>
+                    </ion-col>
+
+                </ion-row>
+
+            </div>
+            <!-- <ion-item mode="md" lines="none" class="heading">
                 <ion-label>Grant Details</ion-label>
             </ion-item>
 
@@ -78,36 +114,31 @@
 
             <ion-row *ngIf="canFund">
                 <ion-col size="12" size-md="12">
-                    <ion-card class="grant" mode="md">
-                        <ion-card-content>
+                    <div class="grant" mode="md">
+                        <div>
                             <ion-row>
                                 <div class="footer-details">
                                     <ion-row>
                                         <ion-col size="8">
                                             <ion-item lines="none">
-                                                <ion-input placeholder="Amount" type="text"
-                                                    [(ngModel)]="grantFund.amount" name="amount" [OnlyNumber]="true"
-                                                    #amount="ngModel" required>
+                                                <ion-input placeholder="Amount" type="text" [(ngModel)]="grantFund.amount" name="amount" [OnlyNumber]="true" #amount="ngModel" required>
                                                 </ion-input>
                                             </ion-item>
                                             <label *ngIf="submitted && amount.invalid" class="error">
                                                 Please Enter Amount
                                             </label>
-                                            <label *ngIf="grantFund.amount > (grant?.targetFunding - balance)"
-                                                class="error">
+                                            <label *ngIf="grantFund.amount > (grant?.targetFunding - balance)" class="error">
                                                 Funding amount limit exceed
                                             </label>
                                         </ion-col>
                                         <ion-col size="4">
-                                            <ion-button mode="md" expand="block"
-                                                [disabled]="processing || grantFund.amount > (grant?.targetFunding - balance)"
-                                                (click)="ConfirmFundGrant()">
+                                            <ion-button mode="md" expand="block" [disabled]="processing || grantFund.amount > (grant?.targetFunding - balance)" (click)="ConfirmFundGrant()">
                                                 Fund Grant
                                             </ion-button>
                                         </ion-col>
                                     </ion-row>
-                                </div>
-                                <!-- <div *ngIf="canRequestPayout" class="footer-details">
+                                </div> -->
+            <!-- <div *ngIf="canRequestPayout" class="footer-details">
                                     <ion-row>
                                         <ion-col size="8">
                                             <ion-item lines="none">
@@ -132,19 +163,20 @@
                                         </ion-col>
                                     </ion-row>
                                 </div> -->
-                            </ion-row>
-                        </ion-card-content>
-                    </ion-card>
+            <!-- </ion-row>
+                        </div>
+                    </div>
                 </ion-col>
-            </ion-row>
+            </ion-row> -->
 
             <ion-row *ngIf="grant?.content">
                 <ion-col size="12" size-md="12">
-                    <ion-card class="grant">
-                        <ion-card-content class="innerHTML">
-                            <p [innerHTML]="grant?.content"></p>
-                        </ion-card-content>
-                    </ion-card>
+                    <div class="grant">
+                        <div class="innerHTML">
+                            <span [innerHTML]="grant?.content"></span>
+
+                        </div>
+                    </div>
                 </ion-col>
             </ion-row>
         </ion-col>
