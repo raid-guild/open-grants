@@ -1,6 +1,6 @@
 <ion-header mode="md" no-border>
-  <ion-toolbar mode="md">
-  </ion-toolbar>
+    <ion-toolbar mode="md">
+    </ion-toolbar>
 </ion-header>
 
 <!-- <ion-content color="light">
@@ -71,32 +71,31 @@
 </ion-content> -->
 
 <ion-content color="light">
-  <ion-row class="page-row">
-    <ion-col size="12">
-      <ion-item mode="md" lines="none" class="heading">
-        <ion-label slot="start">Trending Grants</ion-label>
+    <ion-row class="page-row">
+        <ion-col size="12">
+            <ion-item mode="md" lines="none" class="heading">
+                <ion-label slot="start">Trending Grants</ion-label>
 
-        <ion-searchbar slot="end" [formControl]="searchBox" (ionCancel)="onCancel($event)" [animated]="true"
-          placeholder="Search Grant...">
-        </ion-searchbar>
-      </ion-item>
+                <ion-searchbar slot="end" [formControl]="searchBox" (ionCancel)="onCancel($event)" [animated]="true" placeholder="Search Grant...">
+                </ion-searchbar>
+            </ion-item>
 
-      <hr class="dassed-line">
+            <hr class="dassed-line">
 
-      <ion-row *ngFor="let grant of searchResult">
-        <ion-col size="12" (click)="grantDetails(grant.contractId)">
-          <div class="d-flex">
-            <img src="{{grant.images[0]}}" alt="" style="height: 150px;padding-right: 35px;">
-            <div class="">
-              <h3>{{grant?.grantName}}</h3>
-              <p>Target Funding : {{grant?.targetFunding}}</p>
-              <p>{{grant?.description}}</p>
-            </div>
-          </div>
-          <div class="line"></div>
+            <ion-row *ngFor="let grant of searchResult">
+                <ion-col size="12" (click)="grantDetails(grant.contractId)">
+                    <div class="d-flex">
+                        <img src="{{grant.images[0]}}" alt="" style="height: 150px;">
+                        <div class="" style="padding-left: 40px;">
+                            <h3>{{grant?.grantName}}</h3>
+                            <p>Target Funding : {{grant?.targetFunding}}</p>
+                            <p>{{grant?.description}}</p>
+                        </div>
+                    </div>
+                    <div class="line"></div>
+                </ion-col>
+            </ion-row>
         </ion-col>
-      </ion-row>
-    </ion-col>
 
-  </ion-row>
+    </ion-row>
 </ion-content>

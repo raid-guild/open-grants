@@ -3,6 +3,10 @@
     overflow: hidden;
 }
 
+img {
+    border-radius: 10px;
+}
+
 .d-flex {
     display: flex;
 }
@@ -18,11 +22,13 @@
 }
 
 .image-responsive {
-    height: 100px;
+    height: 126px;
+    width: 152px;
+    object-fit: cover;
 }
 
 .main-image {
-    height: 340px;
+    height: 362px;
 }
 
 .margin-50 {
