@@ -27,9 +27,10 @@ export class AuthController {
     @ApiResponse({ status: 200, description: 'User fetched successfully.' })
     async confirmUser(@Res() res, @Body() userModel: User) {
         try {
-            let response = await this.authService.getByPublicAddress(userModel.publicAddress);
+            let response = await this.authService.getByPublicAddress(userModel.publicAddress.toLowerCase());
             console.log("response", response);
             if (!response) {
+                userModel.publicAddress = userModel.publicAddress.toLowerCase();
                 response = await this.authService.add(userModel);
             }
             return res.status(httpStatus.OK).json(new APIResponse(response, 'User fetched successfully', httpStatus.OK));

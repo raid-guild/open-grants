@@ -8,176 +8,58 @@
         <ion-col size="12">
             <div class="row">
                 <div class="text-center">
-                    <h1>Cheat Sheets - Sheet Pan Cooking Reimagined</h1>
-                    <p>Meal prepping and one-pan dinners have never been this easy.</p>
+                    <h1>{{grant?.grantName}}</h1>
+                    <p>{{grant?.description}}</p>
                 </div>
                 <ion-row>
                     <ion-col size="7">
-                        <img src="../../../assets/imgs/2.jpg" alt="">
+                        <img src="{{grant?.images[0]}}" alt="">
                     </ion-col>
                     <ion-col size="5" class="padding-left-50">
                         <div class="line"></div>
                         <div class="padding-20 top-20">
-                            <h1 class="green">US$ 1,641,650</h1>
-                            <p>pledged of US$ 10,000 goal</p>
+                            <h1 class="green">Ξ {{balance}} {{grant?.currency}}</h1>
+                            <p>pledged of Ξ {{grant?.targetFunding}} {{grant?.currency}} goal</p>
+                        </div>
+                        <div *ngIf="userType == userEnum.DONOR" class="padding-20">
+                            <h1>Ξ {{userDonation}} {{grant?.currency}}</h1>
+                            <p>Your Donation</p>
                         </div>
                         <div class="padding-20">
-                            <h1>19,507</h1>
-                            <p>backers</p>
+                            <h1>{{noOfDonors}}</h1>
+                            <p>donors</p>
                         </div>
                         <div class="padding-20">
-                            <h1>5</h1>
-                            <p>days to go</p>
+                            <h1>{{noOfDayToExpiredFunding}}</h1>
+                            <p>days to go expired funding</p>
                         </div>
-                        <div class="positon">
-                            <ion-input placeholder="Amount" type="text" [(ngModel)]="request.requestAmount" name="requestAmount" [OnlyNumber]="true" #requestAmount="ngModel" required>
-                            </ion-input>
-                            <div class="new-doller">
-                                <span class="doller">$</span>
+                        <div *ngIf="this.canFund">
+                            <div class="positon">
+                                <div class="new-doller">
+                                    <span class="doller">Ξ</span>
+                                </div>
+                                <ion-input placeholder="Amount" type="text" [(ngModel)]="grantFund.amount" name="amount"
+                                    [OnlyNumber]="true" #amount="ngModel" required>
+                                </ion-input>
                             </div>
+                            <ion-button [disabled]="amount.invalid" class="continue" (click)="ConfirmFundGrant()">Fund
+                            </ion-button>
                         </div>
-                        <ion-button class="continue">Continue</ion-button>
+                        <div *ngIf="!this.canFund && (userType == userEnum.DONOR || userType == userEnum.VISITOR)"
+                            class="padding-20">
+                            <h2>Grant not open to funding</h2>
+                        </div>
                     </ion-col>
 
                 </ion-row>
 
             </div>
-            <!-- <ion-item mode="md" lines="none" class="heading">
-                <ion-label>Grant Details</ion-label>
-            </ion-item>
-
-            <hr class="dassed-line">
-
-            <ion-row>
-                <ion-col size="12" size-md="6" size-sm="12">
-                    <ion-card class="grant" mode="md">
-                        <div class="card-content">
-                            <ion-card-header>
-                                <h2>{{grant?.grantName}}</h2>
-                            </ion-card-header>
-
-                            <hr class="dassed-line">
-
-                            <ion-card-content>
-                                <ion-item mode="md" lines="none">
-                                    <ul>
-                                        <li>Grant Manager</li>
-                                        <li>Status</li>
-                                        <li>Milestones Type</li>
-                                        <li *ngIf="userType == userEnum.GRANTEE">Your Remaining Allocation</li>
-                                        <li *ngIf="userType == userEnum.DONOR">Your Donation</li>
-                                    </ul>
-                                    <ul>
-                                        <li>: </li>
-                                        <li>: </li>
-                                        <li>: </li>
-                                        <li *ngIf="userType == userEnum.GRANTEE">: </li>
-                                        <li *ngIf="userType == userEnum.DONOR">: </li>
-                                    </ul>
-                                    <ul>
-                                        <li>{{grant?.grantManager}}</li>
-                                        <li>{{grant?.status}}</li>
-                                        <li>
-                                            {{grant?.type == "singleDeliveryDate" ? 'Single Delivery' : 'Multiple Milestones' }}
-                                        </li>
-                                        <li *ngIf="userType == userEnum.GRANTEE">Ξ {{ remainingAlloc }} ETH</li>
-                                        <li *ngIf="userType == userEnum.DONOR">Ξ {{ totalFundByMe }} ETH</li>
-                                    </ul>
-                                </ion-item>
-                            </ion-card-content>
-                        </div>
-                    </ion-card>
-                </ion-col>
-
-                <ion-col size="12" size-md="6">
-                    <ion-card class="grant" mode="md">
-                        <div class="card-content">
-                            <ion-card-header>
-                                <h2>Grant Balance</h2>
-                            </ion-card-header>
-
-                            <hr class="dassed-line">
-
-                            <ion-card-content style="text-align: center;">
-                                <ion-item mode="md" lines="none">
-                                    <ul>
-                                        <li>
-                                            <h1 class="ion-text-center">Ξ {{ balance }} ETH</h1>
-                                        </li>
-                                        <li>
-                                            <h3>pledged of Ξ {{grant?.targetFunding}} ETH goal</h3>
-                                        </li>
-                                    </ul>
-                                </ion-item>
-                            </ion-card-content>
-                        </div>
-                    </ion-card>
-                </ion-col>
-            </ion-row>
-
-            <ion-row *ngIf="canFund">
-                <ion-col size="12" size-md="12">
-                    <div class="grant" mode="md">
-                        <div>
-                            <ion-row>
-                                <div class="footer-details">
-                                    <ion-row>
-                                        <ion-col size="8">
-                                            <ion-item lines="none">
-                                                <ion-input placeholder="Amount" type="text" [(ngModel)]="grantFund.amount" name="amount" [OnlyNumber]="true" #amount="ngModel" required>
-                                                </ion-input>
-                                            </ion-item>
-                                            <label *ngIf="submitted && amount.invalid" class="error">
-                                                Please Enter Amount
-                                            </label>
-                                            <label *ngIf="grantFund.amount > (grant?.targetFunding - balance)" class="error">
-                                                Funding amount limit exceed
-                                            </label>
-                                        </ion-col>
-                                        <ion-col size="4">
-                                            <ion-button mode="md" expand="block" [disabled]="processing || grantFund.amount > (grant?.targetFunding - balance)" (click)="ConfirmFundGrant()">
-                                                Fund Grant
-                                            </ion-button>
-                                        </ion-col>
-                                    </ion-row>
-                                </div> -->
-            <!-- <div *ngIf="canRequestPayout" class="footer-details">
-                                    <ion-row>
-                                        <ion-col size="8">
-                                            <ion-item lines="none">
-                                                <ion-input placeholder="Amount" type="text"
-                                                    [(ngModel)]="request.requestAmount" name="requestAmount"
-                                                    [OnlyNumber]="true" #requestAmount="ngModel" required>
-                                                </ion-input>
-                                            </ion-item>
-                                            <label *ngIf="submitted && requestAmount.invalid" class="error">
-                                                Please Enter Amount
-                                            </label>
-                                            <label *ngIf="submitted && request.requestAmount > remainingAlloc"
-                                                class="error">
-                                                Please enter valid amount
-                                            </label>
-                                        </ion-col>
-                                        <ion-col size="6">
-                                            <ion-button mode="md" expand="block" [disabled]="processing"
-                                                (click)="ConfirmRequestForPayout()">
-                                                Send Request for Payout
-                                            </ion-button>
-                                        </ion-col>
-                                    </ion-row>
-                                </div> -->
-            <!-- </ion-row>
-                        </div>
-                    </div>
-                </ion-col>
-            </ion-row> -->
 
             <ion-row *ngIf="grant?.content">
                 <ion-col size="12" size-md="12">
                     <div class="grant">
                         <div class="innerHTML">
                             <span [innerHTML]="grant?.content"></span>
-
                         </div>
                     </div>
                 </ion-col>

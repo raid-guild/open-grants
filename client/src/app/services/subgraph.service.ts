@@ -32,6 +32,22 @@ export class SubgraphService {
     })
   }
 
+  getFundByContract(contract: string) {
+    return this.apollo.query({
+      query: gql`query getFunds($contract: String){
+      funds(where: {
+        contract: $contract
+        }) {
+        id
+        contract
+        donor
+        amount
+        }
+      }`,
+      variables: { contract: contract }
+    })
+  }
+
   getPaymentByContractAndDonor(contract: string, grantee: string) {
     return this.apollo.query({
       query: gql`query getPayments($contract: String,$grantee: String){

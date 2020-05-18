@@ -43,7 +43,6 @@ export class GrantController {
     @ApiResponse({ status: 200, description: 'Grant added successfully.' })
     async add(@Req() req, @Res() res, @Body() grantModel: Grant, @Body() grantswagger: grantswagger) {
         try {
-            console.log("grantModel", grantModel);
             grantModel.createdBy = req.user.publicAddress;
             let response = await this.grantService.add(grantModel);
             this.scheduleService.addJobForGrant(response._id, response.hash);

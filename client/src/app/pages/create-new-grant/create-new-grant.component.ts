@@ -422,6 +422,12 @@ export class CreateNewGrantComponent implements OnInit {
         this.grantForm['hash'] = contract.hash;
         this.grantForm.content = this.grantForm.content.replace(/"/g, "&quot;");
 
+        this.grantForm.grantManager = this.grantForm.grantManager.toLowerCase();
+        this.grantForm.grantees = this.grantForm.grantees.map((data) => {
+          data.grantee = data.grantee.toLowerCase();
+          return data;
+        })
+
         // console.log("this.grantForm", this.grantForm);
 
         this.grantService.createGrant(this.grantForm).subscribe((res: HTTPRESPONSE) => {

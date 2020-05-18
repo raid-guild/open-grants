@@ -12,6 +12,9 @@ import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 import { PayoutService } from 'src/app/services/payout.service';
 import { ethers, providers, utils } from 'ethers';
 import { SubgraphService } from 'src/app/services/subgraph.service';
+import { Events } from '@ionic/angular';
+import { AuthService } from 'src/app/services/auth.service';
+import { ThreeBoxService } from 'src/app/services/threeBox.service';
 
 declare let window: any;
 
@@ -22,6 +25,7 @@ declare let window: any;
 })
 export class GrantDetailsComponent implements OnInit {
   toastTitle = "Grant"
+  isLogin = AuthService.isAuthenticated();
   contractAddress = "";
 
   userEnum = {
@@ -31,8 +35,14 @@ export class GrantDetailsComponent implements OnInit {
     DONOR: "donor",
   }
 
-  userType = this.userEnum.VISITOR;
   grant: any;
+  manager3boxProfile: any;
+  userType = this.userEnum.VISITOR;
+  noOfDonors = 0;
+  userDonation = 0;
+  noOfDayToExpiredFunding = 0;
+  canCancel = false;
+
   payouts = [];
   pendingRequest = [];
   approveRequest = [];
@@ -52,14 +62,8 @@ export class GrantDetailsComponent implements OnInit {
   remainingAlloc: any = 0;
 
   grantFund = {
-    grant: '',
-    amount: null,
-    hash: ''
-  }
-
-  request = {
-    grant: '',
-    requestAmount: null
+    contractAddress: '',
+    amount: null
   }
 
   constructor(
@@ -68,10 +72,14 @@ export class GrantDetailsComponent implements OnInit {
     private grantFundService: GrantFundService,
     private payoutService: PayoutService,
     private toastr: ToastrService,
+    public events: Events,
     private subgraphService: SubgraphService,
+    private authService: AuthService,
     private ethcontractService: EthcontractService,
+    private threeBoxService: ThreeBoxService
   ) {
     this.contractAddress = this.route.snapshot.params.id || '';
+    this.grantFund.contractAddress = this.contractAddress;
 
     (async () => {
       try {
@@ -79,46 +87,22 @@ export class GrantDetailsComponent implements OnInit {
 
         let res = await this.grantService.getByContract(this.contractAddress).toPromise();
         this.grant = res.data;
-        this.grantFund.grant = this.grant._id;
-        this.request.grant = this.grant._id;
         this.grant.content = this.htmlDecode(this.grant.content);
-
-        if (this.user.publicAddress) {
-          if (this.grant.grantManager == this.user.publicAddress) {
-            this.userType = this.userEnum.MANAGER;
-          }
-
-          this.grant.grantees.map((data) => {
-            if (data.grantee == this.user.publicAddress) {
-              this.userType = this.userEnum.GRANTEE;
-            }
-          });
-
-          if (this.userType == this.userEnum.MANAGER) {
-            this.getManagerData();
-          }
-
-          if (this.userType == this.userEnum.GRANTEE) {
-            this.getGranteeData();
-          }
-
-          if (this.userType == this.userEnum.DONOR) {
-            this.getDonorData();
-          }
-
-          this.grantData();
-
-        } else {
-          this.grantData();
-        }
-      } catch (e) {
-      }
-
+        this.checkRoll();
+        this.getContractData();
+        this.manager3boxProfile = await this.threeBoxService.getProfile(this.grant.manager.toLowerCase());
+        console.log("manager3boxProfile", this.manager3boxProfile);
+      } catch (e) { }
     })();
   }
 
   ngOnInit() {
-   
+    this.events.subscribe('is_logged_in', (data) => {
+      this.isLogin = data;
+      setTimeout(() => {
+        this.checkRoll();
+      }, 100);
+    });
   }
 
   htmlDecode(input: any) {
@@ -127,18 +111,60 @@ export class GrantDetailsComponent implements OnInit {
     return e.value;
   };
 
+  checkRoll() {
+    this.user = JSON.parse(localStorage.getItem(AppSettings.localStorage_keys.userData));
 
-  async grantData() {
+    if (this.isLogin && this.user && this.user.hasOwnProperty('publicAddress') && this.user.publicAddress) {
+      this.userType = this.userEnum.DONOR;
+
+      if (this.grant.grantManager.toLowerCase() == this.user.publicAddress.toLowerCase()) {
+        this.userType = this.userEnum.MANAGER;
+      }
+
+      this.grant.grantees.map((data) => {
+        if (data.grantee.toLowerCase() == this.user.publicAddress.toLowerCase()) {
+          this.userType = this.userEnum.GRANTEE;
+        }
+      });
+
+      if (this.userType == this.userEnum.MANAGER) {
+        this.getManagerData();
+      }
+
+      if (this.userType == this.userEnum.GRANTEE) {
+        this.getGranteeData();
+      }
+
+      if (this.userType == this.userEnum.DONOR) {
+        this.getDonorData();
+      }
+
+      this.canCancelGrant();
+    }
+  }
+
+  async getContractData() {
+    if (this.grant.type == "singleDeliveryDate") {
+      this.noOfDayToExpiredFunding = moment(this.grant.singleDeliveryDate.fundingExpiryDate).diff(moment(new Date), 'days')
+    } else {
+      this.noOfDayToExpiredFunding = moment(this.grant.multipleMilestones[this.grant.multipleMilestones.length - 1].completionDate).diff(moment(new Date), 'days')
+    }
+
+    this.subgraphService.getFundByContract(this.contractAddress).subscribe((res: any) => {
+      this.noOfDonors = res.data.funds.length;
+    })
+
     let promise = [];
     promise.push(
-      this.ethcontractService.checkAvailableBalance(this.grant.contractId),
-      this.ethcontractService.canFund(this.grant.contractId),
+      this.ethcontractService.checkAvailableBalance(this.contractAddress),
+      this.ethcontractService.canFund(this.contractAddress),
     );
 
     let promiseRes = await Promise.all(promise);
     this.balance = promiseRes[0];
     this.canFund = promiseRes[1];
 
+    console.log("this.userType", this.userType);
     if (this.canFund) {
       if (this.userType == this.userEnum.MANAGER || this.userType == this.userEnum.GRANTEE) {
         this.canFund = false;
@@ -198,13 +224,31 @@ export class GrantDetailsComponent implements OnInit {
       this.myFunds = this.myFunds.map((task) => {
         if (this.grant.currency == "ETH") {
           task.amount = ethers.utils.formatEther(task.amount);
-          this.totalFundByMe += +task.amount;
+          this.userDonation += +task.amount;
         } else {
-          this.totalFundByMe += +task.amount;
+          this.userDonation += +task.amount;
         }
         return task;
       });
     })
+  }
+
+  canCancelGrant() {
+    if (this.grant.grantManager._id != this.user._id) {
+      if (this.grant.type == "multipleMilestones") {
+        let date = moment(this.grant.multipleMilestones[this.grant.multipleMilestones.length - 1].completionDate, 'DD/MM/YYYY').toISOString();
+        let isAfter = moment(date).isAfter(moment(new Date().toISOString()));
+        if (!isAfter) {
+          this.canCancel = true;
+        }
+      } else {
+        let date = moment(this.grant.singleDeliveryDate.completionDate, 'DD/MM/YYYY').toISOString();
+        let isAfter = moment(date).isAfter(moment(new Date().toISOString()));
+        if (!isAfter) {
+          this.canCancel = true;
+        }
+      }
+    }
   }
 
   ConfirmCancleGrant() {
@@ -231,32 +275,10 @@ export class GrantDetailsComponent implements OnInit {
 
   async cancelGrant() {
     try {
-      // if (this.grant.grantManager._id != this.user._id) {
-      //   if (this.grant.type == "multipleMilestones") {
-      //     let date = moment(this.grant.multipleMilestones[this.grant.multipleMilestones.length - 1].completionDate, 'DD/MM/YYYY').toISOString();
-      //     let isAfter = moment(date).isAfter(moment(new Date().toISOString()));
-      //     if (isAfter) {
-      //       this.toastr.error('You can not cancel this grant !!');
-      //       return;
-      //     }
-      //   } else {
-      //     let date = moment(this.grant.singleDeliveryDate.completionDate, 'DD/MM/YYYY').toISOString();
-      //     let isAfter = moment(date).isAfter(moment(new Date().toISOString()));
-      //     if (isAfter) {
-      //       this.toastr.error('You can not cancel this grant !!');
-      //       return;
-      //     }
-      //   }
-      // }
-
       let cancelGrant: any = await this.ethcontractService.cancelGrant(this.grant.contractId);
       if (cancelGrant.status == "success") {
-        this.grantService.cancelGrant({ grant: this.grant._id, hash: cancelGrant.hash }).subscribe((res: HTTPRESPONSE) => {
-          this.toastr.success('Successfully canceled grant');
-        });
-      }
-
-      if (cancelGrant.status == "failed") {
+        this.toastr.success('Send Request to cancele grant');
+      } else {
         this.toastr.error(cancelGrant.message);
       }
     } catch (e) {
@@ -265,84 +287,90 @@ export class GrantDetailsComponent implements OnInit {
   }
 
   ConfirmFundGrant() {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      allowOutsideClick: false,
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-      reverseButtons: true
-    }).then(async (result) => {
-      if (result.value) {
-        this.fundOnGrant();
-        // Swal.fire('Deleted!', 'Your request has been sent', 'success');
-      } else if (
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        // Swal.fire('Cancelled', 'Your request cancelled :)', 'error');
-      }
-    })
+    if (this.isLogin) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        allowOutsideClick: false,
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        reverseButtons: true
+      }).then(async (result) => {
+        if (result.value) {
+          this.fundOnGrant();
+        } else if (
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+        }
+      })
+    } else {
+      this.toastr.warning("Please login the App", this.toastTitle);
+    }
   }
 
   async fundOnGrant() {
     try {
-      let amount = this.grantFund.amount;
       if (this.grant.currency == "ETH") {
-        amount = (ethers.utils.parseEther(this.grantFund.amount.toString())).toString();
+        this.grantFund.amount = (ethers.utils.parseEther(this.grantFund.amount.toString())).toString();
       }
-      let funding: any = await this.ethcontractService.fund(this.grant.contractId, amount);
-      console.log("funding", funding);
+      let funding: any = await this.ethcontractService.fund(this.grant.contractId, this.grantFund.amount);
+      this.grantFund.amount = null;
+      if (funding.status == "success") {
+        this.toastr.success('Send Fund to grant');
+      } else {
+        this.toastr.error(funding.message);
+      }
+
     } catch (e) {
       this.processing = false;
-      this.submitted = false;
       this.toastr.error('Something went wrong !!', this.toastTitle);
     }
   }
 
-  ConfirmRequestForPayout() {
-    this.submitted = true;
+  // ConfirmRequestForPayout() {
+  //   this.submitted = true;
 
-    if (!this.request.requestAmount) {
-      return
-    }
+  //   if (!this.request.requestAmount) {
+  //     return
+  //   }
 
-    if (this.request.requestAmount > this.remainingAlloc) {
-      return
-    }
+  //   if (this.request.requestAmount > this.remainingAlloc) {
+  //     return
+  //   }
 
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      allowOutsideClick: false,
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-      reverseButtons: true
-    }).then(async (result) => {
-      if (result.value) {
-        this.requestForPayout();
-      } else if (
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-      }
-    })
-  }
+  //   Swal.fire({
+  //     title: 'Are you sure?',
+  //     text: "You won't be able to revert this!",
+  //     icon: 'warning',
+  //     allowOutsideClick: false,
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Yes',
+  //     cancelButtonText: 'No',
+  //     reverseButtons: true
+  //   }).then(async (result) => {
+  //     if (result.value) {
+  //       this.requestForPayout();
+  //     } else if (
+  //       result.dismiss === Swal.DismissReason.cancel
+  //     ) {
+  //     }
+  //   })
+  // }
 
-  requestForPayout() {
-    this.payoutService.request(this.request).subscribe((res: HTTPRESPONSE) => {
-      this.request.requestAmount = null
-      this.submitted = false;
-      this.processing = false;
-      this.toastr.success(res.message, this.toastTitle);
-      this.getGranteeData();
-    }, (err) => {
-      this.processing = false;
-      this.toastr.error(err.error.message, this.toastTitle);
-    })
-  }
+  // requestForPayout() {
+  //   this.payoutService.request(this.request).subscribe((res: HTTPRESPONSE) => {
+  //     this.request.requestAmount = null
+  //     this.submitted = false;
+  //     this.processing = false;
+  //     this.toastr.success(res.message, this.toastTitle);
+  //     this.getGranteeData();
+  //   }, (err) => {
+  //     this.processing = false;
+  //     this.toastr.error(err.error.message, this.toastTitle);
+  //   })
+  // }
 
   confiremApprovePayout(request, index) {
     Swal.fire({
