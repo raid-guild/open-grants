@@ -3,7 +3,9 @@
         <ion-header mode="md" no-border>
             <ion-toolbar mode="md" color="dark">
                 <ion-title class="logo">
-                    <img src="assets/imgs/logo.svg" alt=""> &nbsp;&nbsp; Menu
+                    <img src="assets/imgs/logo.svg" alt=""><span style="position: absolute;
+                    top: 8px;
+                    left: 74px;">Menu</span>
                 </ion-title>
             </ion-toolbar>
         </ion-header>
@@ -16,8 +18,7 @@
 
             <ion-list lines="none" mode="md">
                 <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
-                    <ion-item [routerDirection]="'root'" [routerLink]="[p.url]" mode="md" routerLinkActive="active-link"
-                        [routerLinkActiveOptions]="{exact: true}">
+                    <ion-item [routerDirection]="'root'" [routerLink]="[p.url]" mode="md" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
                         <ion-icon slot="start" [class]="p.icon"></ion-icon>
                         <ion-label>
                             {{p.title}}
