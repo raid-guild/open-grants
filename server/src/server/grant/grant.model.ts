@@ -27,7 +27,7 @@ export enum currencyConfig {
 }
 export const GrantSchema = new mongoose.Schema(
     {
-        grantName: { type: String, required: true },
+        name: { type: String, required: true },
         images: [],
         description: { type: String },
         type: { type: typeEnum, default: typeEnum.SINGLE },
@@ -41,29 +41,21 @@ export const GrantSchema = new mongoose.Schema(
                 completionDate: Date
             }
         ],
-        grantManager: { type: String, required: true },
+        manager: { type: String, required: true },
         grantees: [
             {
                 grantee: { type: String, required: true },
-                allocationAmount: { type: Number, required: true },
-                payedAmount: { type: Number, default: 0 }
+                allocationAmount: { type: Number, required: true }
             }
         ],
-        donors: [{ type: String, required: true }],
         targetFunding: { type: Number, required: true },
-        totalFunding: { type: Number, default: 0 },
-        totalPayed: { type: Number, default: 0 },
-        canFund: { type: Boolean, default: true },
         currency: { type: currencyEnum, default: currencyEnum.WEI },
-        cancelBy: { type: String },
         createdBy: { type: String, required: true },
         status: { type: statusEnum, default: statusEnum.PENDING },
-        contractId: { type: String, required: true, unique: true },
+        contractAddress: { type: String, required: true, unique: true },
         hash: { type: String, required: true },
-        failedReason: { type: String },
         content: { type: String },
         isActive: { type: Boolean, default: true },
-        isCancel: { type: Boolean, default: false }
     },
     { timestamps: true }
 )
@@ -158,7 +150,7 @@ export class grantUpdateswagger {
 
 export interface Grant extends mongoose.Document {
     _id: string;
-    grantName: string;
+    name: string;
     images: [],
     description: string,
     type: string;
@@ -169,27 +161,20 @@ export interface Grant extends mongoose.Document {
             completionDate: Date
         }
     ];
-    grantManager: string;
+    manager: string;
     grantees: [
         {
             grantee: string,
             allocationAmount: number,
-            payedAmount: number
         }
     ];
-    donors: [];
     targetFunding: number;
-    totalFunding: number;
-    totalPayed: number;
     currency: string;
     createdBy: string;
-    cancelBy: string;
     status: string;
     content: string;
-    contractId: string;
+    contractAddress: string;
     hash: string;
-    canFund: boolean;
     createdAt: any;
-    isCancel: boolean
     isActive: boolean;
 }

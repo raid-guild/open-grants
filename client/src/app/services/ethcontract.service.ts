@@ -11,7 +11,7 @@ import { AppSettings } from '../config/app.config';
 declare let require: any;
 declare let window: any;
 
-let tokenAbi = require('../../../abi.json');
+let tokenAbi = require('../../assets/abi/Grant.json');
 
 export interface AcctInfo {
     account: String,

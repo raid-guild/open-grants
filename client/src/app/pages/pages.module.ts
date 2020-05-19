@@ -39,6 +39,7 @@ import { SubgraphService } from '../services/subgraph.service';
 import { HeaderComponent } from '../navbar/header/header.component';
 import { MenuPopoverComponent } from '../navbar/menu-popover/menu-popover.component';
 import { AuthenticationService } from '../services/authentication.service';
+import { PayoutComponent } from './payout/payout.component';
 
 const PAGES_COMPONENTS = [
     PagesComponent,
@@ -51,6 +52,7 @@ const PAGES_COMPONENTS = [
         PagesComponent,
         HomeComponent,
         ListComponent,
+        PayoutComponent,
         ProfileComponent,
         ImageCropComponent,
         MyGrantsComponent,
@@ -80,6 +82,7 @@ const PAGES_COMPONENTS = [
         // MiscellaneousModule
     ],
     entryComponents: [
+        PayoutComponent,
         MenuPopoverComponent,
         ViewGrantComponent,
         ImageCropComponent

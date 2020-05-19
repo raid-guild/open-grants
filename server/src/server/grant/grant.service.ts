@@ -27,7 +27,7 @@ export class GrantService {
     }
 
     async getByContract(contract: string): Promise<any> {
-        const response = await this.GrantModel.findOne({ contractId: contract })
+        const response = await this.GrantModel.findOne({ contractAddress: contract })
             .exec();
         return response;
     }
@@ -39,7 +39,7 @@ export class GrantService {
     }
 
     async managedByMe(publicAddress: string): Promise<Grant[]> {
-        const response = await this.GrantModel.find({ grantManager: publicAddress })
+        const response = await this.GrantModel.find({ manager: publicAddress })
             .exec();
         return response;
     }

@@ -6,15 +6,14 @@ import * as moment from 'moment';
 import Swal from 'sweetalert2';
 import { EthcontractService } from 'src/app/services/ethcontract.service';
 import { AppSettings } from 'src/app/config/app.config';
-import { async } from '@angular/core/testing';
-import { GrantFundService } from 'src/app/services/grantFund.service';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 import { PayoutService } from 'src/app/services/payout.service';
 import { ethers, providers, utils } from 'ethers';
 import { SubgraphService } from 'src/app/services/subgraph.service';
-import { Events } from '@ionic/angular';
+import { Events, ModalController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
 import { ThreeBoxService } from 'src/app/services/threeBox.service';
+import { PayoutComponent } from '../payout/payout.component'
 
 declare let window: any;
 
@@ -69,7 +68,7 @@ export class GrantDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private grantService: GrantService,
-    private grantFundService: GrantFundService,
+    public modalController: ModalController,
     private payoutService: PayoutService,
     private toastr: ToastrService,
     public events: Events,
@@ -105,6 +104,24 @@ export class GrantDetailsComponent implements OnInit {
     });
   }
 
+  async payoutModel(data: any) {
+    const modal = await this.modalController.create({
+      component: PayoutComponent,
+      cssClass: 'custom-modal-style',
+      mode: "ios",
+      componentProps: {
+        grantData: this.grant
+      }
+    });
+
+    modal.onDidDismiss()
+      .then((data) => {
+        const reload = data['data'];
+      });
+
+    return await modal.present();
+  }
+
   htmlDecode(input: any) {
     var e = document.createElement("textarea");
     e.innerHTML = input;
@@ -117,7 +134,7 @@ export class GrantDetailsComponent implements OnInit {
     if (this.isLogin && this.user && this.user.hasOwnProperty('publicAddress') && this.user.publicAddress) {
       this.userType = this.userEnum.DONOR;
 
-      if (this.grant.grantManager.toLowerCase() == this.user.publicAddress.toLowerCase()) {
+      if (this.grant.manager.toLowerCase() == this.user.publicAddress.toLowerCase()) {
         this.userType = this.userEnum.MANAGER;
       }
 
@@ -143,13 +160,13 @@ export class GrantDetailsComponent implements OnInit {
     }
   }
 
-  async getContractData() {
+  async getContractData() { 
     if (this.grant.type == "singleDeliveryDate") {
       this.noOfDayToExpiredFunding = moment(this.grant.singleDeliveryDate.fundingExpiryDate).diff(moment(new Date), 'days')
     } else {
       this.noOfDayToExpiredFunding = moment(this.grant.multipleMilestones[this.grant.multipleMilestones.length - 1].completionDate).diff(moment(new Date), 'days')
     }
-
+    
     this.subgraphService.getFundByContract(this.contractAddress).subscribe((res: any) => {
       this.noOfDonors = res.data.funds.length;
     })
@@ -164,6 +181,7 @@ export class GrantDetailsComponent implements OnInit {
     this.balance = promiseRes[0];
     this.canFund = promiseRes[1];
 
+    console.log("this.balance", this.balance);
     console.log("this.userType", this.userType);
     if (this.canFund) {
       if (this.userType == this.userEnum.MANAGER || this.userType == this.userEnum.GRANTEE) {
@@ -203,7 +221,7 @@ export class GrantDetailsComponent implements OnInit {
   }
 
   getGranteeData() {
-    this.remainingAlloc = this.ethcontractService.remainingAllocation(this.grant.contractId, this.user.publicAddress);
+    this.remainingAlloc = this.ethcontractService.remainingAllocation(this.grant.contractAddress, this.user.publicAddress);
     this.subgraphService.getPaymentByContractAndDonor(this.contractAddress, this.user.publicAddress).subscribe((res: any) => {
       this.payouts = res.data.payments;
       this.payouts = this.payouts.map((task) => {
@@ -234,7 +252,7 @@ export class GrantDetailsComponent implements OnInit {
   }
 
   canCancelGrant() {
-    if (this.grant.grantManager._id != this.user._id) {
+    if (this.grant.manager._id != this.user._id) {
       if (this.grant.type == "multipleMilestones") {
         let date = moment(this.grant.multipleMilestones[this.grant.multipleMilestones.length - 1].completionDate, 'DD/MM/YYYY').toISOString();
         let isAfter = moment(date).isAfter(moment(new Date().toISOString()));
@@ -256,6 +274,7 @@ export class GrantDetailsComponent implements OnInit {
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
       icon: 'warning',
+      backdrop: false,
       allowOutsideClick: false,
       showCancelButton: true,
       confirmButtonText: 'Yes',
@@ -275,7 +294,7 @@ export class GrantDetailsComponent implements OnInit {
 
   async cancelGrant() {
     try {
-      let cancelGrant: any = await this.ethcontractService.cancelGrant(this.grant.contractId);
+      let cancelGrant: any = await this.ethcontractService.cancelGrant(this.grant.contractAddress);
       if (cancelGrant.status == "success") {
         this.toastr.success('Send Request to cancele grant');
       } else {
@@ -292,6 +311,7 @@ export class GrantDetailsComponent implements OnInit {
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
         icon: 'warning',
+        backdrop: false,
         allowOutsideClick: false,
         showCancelButton: true,
         confirmButtonText: 'Yes',
@@ -315,7 +335,7 @@ export class GrantDetailsComponent implements OnInit {
       if (this.grant.currency == "ETH") {
         this.grantFund.amount = (ethers.utils.parseEther(this.grantFund.amount.toString())).toString();
       }
-      let funding: any = await this.ethcontractService.fund(this.grant.contractId, this.grantFund.amount);
+      let funding: any = await this.ethcontractService.fund(this.grant.contractAddress, this.grantFund.amount);
       this.grantFund.amount = null;
       if (funding.status == "success") {
         this.toastr.success('Send Fund to grant');
@@ -329,132 +349,12 @@ export class GrantDetailsComponent implements OnInit {
     }
   }
 
-  // ConfirmRequestForPayout() {
-  //   this.submitted = true;
-
-  //   if (!this.request.requestAmount) {
-  //     return
-  //   }
-
-  //   if (this.request.requestAmount > this.remainingAlloc) {
-  //     return
-  //   }
-
-  //   Swal.fire({
-  //     title: 'Are you sure?',
-  //     text: "You won't be able to revert this!",
-  //     icon: 'warning',
-  //     allowOutsideClick: false,
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Yes',
-  //     cancelButtonText: 'No',
-  //     reverseButtons: true
-  //   }).then(async (result) => {
-  //     if (result.value) {
-  //       this.requestForPayout();
-  //     } else if (
-  //       result.dismiss === Swal.DismissReason.cancel
-  //     ) {
-  //     }
-  //   })
-  // }
-
-  // requestForPayout() {
-  //   this.payoutService.request(this.request).subscribe((res: HTTPRESPONSE) => {
-  //     this.request.requestAmount = null
-  //     this.submitted = false;
-  //     this.processing = false;
-  //     this.toastr.success(res.message, this.toastTitle);
-  //     this.getGranteeData();
-  //   }, (err) => {
-  //     this.processing = false;
-  //     this.toastr.error(err.error.message, this.toastTitle);
-  //   })
-  // }
-
-  confiremApprovePayout(request, index) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      allowOutsideClick: false,
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-      reverseButtons: true
-    }).then(async (result) => {
-      if (result.value) {
-        this.approvePayoutRequest(request, index);
-        // Swal.fire('Deleted!', 'Your request has been sent', 'success');
-      } else if (
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        // Swal.fire('Cancelled', 'Your request cancelled :)', 'error');
-      }
-    })
-  }
-
-  async approvePayoutRequest(request, index) {
-    try {
-      if (this.grant.currency == "ETH") {
-        request.requestAmount = (ethers.utils.parseEther(request.requestAmount.toString())).toString();
-      }
-      let approvePayout: any = await this.ethcontractService.approvePayout(request.grant.contractId, request.grantee.publicAddress, request.requestAmount);
-      if (approvePayout.status == "success") {
-        console.log("Success");
-        this.payoutService.approve({ requestId: request._id, hash: approvePayout.hash }).subscribe((res: HTTPRESPONSE) => {
-          this.toastr.success(res.message, this.toastTitle);
-          this.getManagerData();
-        }, (err) => {
-          this.processing = false;
-          this.toastr.error(err.error.message, this.toastTitle);
-        })
-      } else {
-        this.processing = false;
-        this.toastr.error(approvePayout.message, this.toastTitle);
-      }
-    } catch (e) {
-      this.processing = false;
-      this.submitted = false;
-      this.toastr.error('Something went wrong !!', this.toastTitle);
-    }
-  }
-
-  confiremRejectRequest(request, index) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      allowOutsideClick: false,
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-      reverseButtons: true
-    }).then(async (result) => {
-      if (result.value) {
-        this.rejectPayoutRequest(request, index);
-      } else if (
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-      }
-    })
-  }
-
-  rejectPayoutRequest(request, index) {
-    this.payoutService.rejecte({ requestId: request._id }).subscribe((res: HTTPRESPONSE) => {
-      this.toastr.success(res.message, this.toastTitle);
-      this.getManagerData();
-    }, (err) => {
-      this.processing = false;
-      this.toastr.error(err.error.message, this.toastTitle);
-    })
-  }
-
   confiremApproveRefund(request, index) {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
       icon: 'warning',
+      backdrop: false,
       allowOutsideClick: false,
       showCancelButton: true,
       confirmButtonText: 'Yes',
@@ -498,6 +398,7 @@ export class GrantDetailsComponent implements OnInit {
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
       icon: 'warning',
+      backdrop: false,
       allowOutsideClick: false,
       showCancelButton: true,
       confirmButtonText: 'Yes',

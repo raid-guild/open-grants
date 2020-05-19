@@ -17,12 +17,12 @@
                     <ion-row class="name">
                         <ion-col size-lg="12" size-sm="12" size-xs="12" class="padding-0">
                             <ion-item>
-                                <ion-label position="floating" for="grantName">Grant Name</ion-label>
-                                <ion-input class="form-control" type="text" formControlName="grantName">
+                                <ion-label position="floating" for="name">Grant Name</ion-label>
+                                <ion-input class="form-control" type="text" formControlName="name">
                                 </ion-input>
                             </ion-item>
 
-                            <div *ngIf="submitted && form.grantName.invalid">
+                            <div *ngIf="submitted && form.name.invalid">
                                 <span class="error">
                                     Please Enter Name
                                 </span>
@@ -222,20 +222,19 @@
 
                             <ion-item>
                                 <ion-label position="floating">Grant Manager</ion-label>
-                                <ion-input class="form-control" type="text" formControlName="grantManager">
+                                <ion-input class="form-control" type="text" formControlName="manager">
                                 </ion-input>
                             </ion-item>
 
                             <div class="error">
-                                <label *ngIf="submitted && form.grantManager.errors?.required">
+                                <label *ngIf="submitted && form.manager.errors?.required">
                                     Please Add Grant Manager
                                 </label>
-                                <label
-                                    *ngIf="!form.grantManager.errors?.required && form.grantManager.errors?.addressValid">
+                                <label *ngIf="!form.manager.errors?.required && form.manager.errors?.addressValid">
                                     Grant Manager Address Not Valid
                                 </label>
                                 <label
-                                    *ngIf="!form.grantManager.errors?.required && !form.grantManager.errors?.addressValid && managerAddressError">
+                                    *ngIf="!form.manager.errors?.required && !form.manager.errors?.addressValid && managerAddressError">
                                     Grant Manager Address Must Be Unique
                                 </label>
                             </div>

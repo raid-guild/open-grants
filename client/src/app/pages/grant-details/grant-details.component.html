@@ -49,6 +49,10 @@
                             class="padding-20">
                             <h2>Grant not open to funding</h2>
                         </div>
+                        <div *ngIf="userType == userEnum.MANAGER">
+                            <ion-button class="" (click)="payoutModel()">Payout
+                            </ion-button>
+                        </div>
                     </ion-col>
 
                 </ion-row>

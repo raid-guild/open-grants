@@ -226,10 +226,10 @@ export class CreateNewGrantComponent implements OnInit {
 
   bindModel() {
     this.myForm = this.fb.group({
-      grantName: ['', Validators.required],
+      name: ['', Validators.required],
       description: [''],
       images: this.fb.array([]),
-      grantManager: ['', [Validators.required, addressValidator]],
+      manager: ['', [Validators.required, addressValidator]],
       type: ['singleDeliveryDate', Validators.required],
       targetFunding: [null, Validators.required],
       currency: ['', Validators.required],
@@ -418,7 +418,7 @@ export class CreateNewGrantComponent implements OnInit {
       // console.log("contract", contract);
 
       if (contract.status == "success") {
-        this.grantForm['contractId'] = contract.address;
+        this.grantForm['contractAddress'] = contract.address;
         this.grantForm['hash'] = contract.hash;
         this.grantForm.content = this.grantForm.content.replace(/"/g, "&quot;");
 

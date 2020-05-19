@@ -22,7 +22,7 @@
             <hr class="dassed-line">
 
             <ion-row *ngFor="let grant of searchResult">
-                <ion-col size="12" (click)="grantDetails(grant.contractId)">
+                <ion-col size="12" (click)="grantDetails(grant.contractAddress)">
                     <div class="d-flex">
                         <img src="{{grant.images[0]}}" alt="" style="height: 150px;">
                         <div class="" style="padding-left: 40px;">

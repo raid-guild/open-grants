@@ -43,7 +43,7 @@ export class GrantController {
     @ApiResponse({ status: 200, description: 'Grant added successfully.' })
     async add(@Req() req, @Res() res, @Body() grantModel: Grant, @Body() grantswagger: grantswagger) {
         try {
-            grantModel.createdBy = req.user.publicAddress;
+            // grantModel.createdBy = req.user.publicAddress;
             let response = await this.grantService.add(grantModel);
             this.scheduleService.addJobForGrant(response._id, response.hash);
             return res.status(httpStatus.OK).json(new APIResponse(response, 'Grant added successfully', httpStatus.OK));
@@ -139,28 +139,28 @@ export class GrantController {
         }
     }
 
-    @Get('trendingGrants')
-    async getTrendingGrants(@Res() res) {
-        try {
-            let allGrant = await this.grantService.getAll();
+    // @Get('trendingGrants')
+    // async getTrendingGrants(@Res() res) {
+    //     try {
+    //         let allGrant = await this.grantService.getAll();
 
-            allGrant = allGrant.sort(function (obj1, obj2) {
-                if ((obj1.totalFunding + obj1.totalPayed) == 0) {
-                    return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - 0;
-                }
+    //         allGrant = allGrant.sort(function (obj1, obj2) {
+    //             if ((obj1.totalFunding + obj1.totalPayed) == 0) {
+    //                 return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - 0;
+    //             }
 
-                if ((obj2.totalFunding + obj2.totalPayed) == 0) {
-                    return 0 - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
-                }
+    //             if ((obj2.totalFunding + obj2.totalPayed) == 0) {
+    //                 return 0 - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
+    //             }
 
-                return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
-            });
+    //             return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
+    //         });
 
-            return res.status(httpStatus.OK).json(new APIResponse(allGrant, 'Grants fetched successfully', httpStatus.OK));
-        } catch (e) {
-            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting grant', httpStatus.INTERNAL_SERVER_ERROR, e));
-        }
-    }
+    //         return res.status(httpStatus.OK).json(new APIResponse(allGrant, 'Grants fetched successfully', httpStatus.OK));
+    //     } catch (e) {
+    //         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting grant', httpStatus.INTERNAL_SERVER_ERROR, e));
+    //     }
+    // }
 
     @Put('')
     @ApiBearerAuth()
