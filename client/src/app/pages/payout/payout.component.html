@@ -26,11 +26,15 @@
           <label *ngIf="!form.granteeAddress.errors?.required && form.granteeAddress.errors?.addressValid">
             Grantee Address Not Valid
           </label>
+          <label *ngIf="granteeNotMatch && !form.granteeAddress.invalid">
+            Address Not Match With Any Grantee
+          </label>
         </div>
 
         <ion-item>
           <ion-label position="floating">Amount</ion-label>
-          <ion-input name="amount" [OnlyNumber]="true" formControlName="amount" type="text" required>
+          <ion-input name="amount" [OnlyNumber]="true"
+            formControlName="amount" type="text" required>
           </ion-input>
         </ion-item>
 

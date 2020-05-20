@@ -5,8 +5,9 @@ import { ToastrService } from 'ngx-toastr';
 import { ethers, providers, utils } from 'ethers';
 import { EthcontractService } from 'src/app/services/ethcontract.service';
 import Swal from 'sweetalert2';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { addressValidator } from 'src/app/common/validators/custom.validators';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-payout',
@@ -19,7 +20,9 @@ export class PayoutComponent implements OnInit {
 
   public myForm: FormGroup;
 
+  granteeNotMatch = false
   processing = false;
+
   constructor(
     public modalCtrl: ModalController,
     private toastr: ToastrService,
@@ -29,7 +32,6 @@ export class PayoutComponent implements OnInit {
   ) {
 
     this.grantData = navParams.get('grantData');
-
   }
 
   dismiss() {
@@ -38,9 +40,27 @@ export class PayoutComponent implements OnInit {
 
   ngOnInit() {
     this.myForm = this.fb.group({
-      granteeAddress: ['', [Validators.required, addressValidator]],
-      amount: [null, Validators.required],
-    })
+      granteeAddress: new FormControl('', [Validators.required, addressValidator]),
+      amount: new FormControl({ value: null, disabled: true }, Validators.required),
+    });
+
+    this.form.granteeAddress.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged()
+      )
+      .subscribe(async (val: string) => {
+        console.log("grantManager.valueChanges");
+        if (!this.form.granteeAddress.invalid) {
+          let match = this.grantData.grantees.find(data => data.grantee == val)
+          if (!match) {
+            this.granteeNotMatch = true;
+          } else {
+            this.granteeNotMatch = false;
+            console.log("this.form.amount", this.form.amount);
+          }
+        }
+      });
   }
 
   get form() {
@@ -48,6 +68,10 @@ export class PayoutComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.granteeNotMatch) {
+      return
+    }
+
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
