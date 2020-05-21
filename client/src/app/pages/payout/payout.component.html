@@ -13,35 +13,39 @@
     <form [formGroup]="myForm" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
         <div class="">
             <ion-list lines="none" class="forms" mode="md">
-                <ion-item style="margin: 25px;">
-                    <ion-label position="floating">Grantee Address</ion-label>
-                    <ion-input name="granteeAddress" formControlName="granteeAddress" type="text" required>
-                    </ion-input>
-                </ion-item>
+                <div class="" style="margin: 25px;">
+                    <ion-item>
+                        <ion-label position="floating">Grantee Address</ion-label>
+                        <ion-input name="granteeAddress" formControlName="granteeAddress" type="text" required>
+                        </ion-input>
+                    </ion-item>
+                    <div class="error">
+                        <label *ngIf="f.submitted && form.granteeAddress.errors?.required">
+                            Please Add Grantee Address
+                        </label>
+                        <label *ngIf="!form.granteeAddress.errors?.required && form.granteeAddress.errors?.addressValid">
+                            Grantee Address Not Valid
+                        </label>
+                        <label *ngIf="granteeNotMatch && !form.granteeAddress.invalid">
+                            Address Not Match With Any Grantee
+                        </label>
+                    </div>
+                </div>
+                <div class="" style="margin: 0 25px 25px 25px;">
+                    <ion-item>
+                        <ion-label position="floating">Amount</ion-label>
+                        <ion-input name="amount" [OnlyNumber]="true" formControlName="amount" type="text" required>
+                        </ion-input>
+                    </ion-item>
 
-                <div class="error" style="margin-left: 27px">
-                    <label *ngIf="f.submitted && form.granteeAddress.errors?.required">
-            Please Add Grantee Address
-          </label>
-                    <label *ngIf="!form.granteeAddress.errors?.required && form.granteeAddress.errors?.addressValid">
-            Grantee Address Not Valid
-          </label>
-                    <label *ngIf="granteeNotMatch && !form.granteeAddress.invalid">
-            Address Not Match With Any Grantee
-          </label>
+                    <div *ngIf="f.submitted && form.amount.invalid">
+                        <span class="error">
+                            Please Enter Amount
+                        </span>
+                    </div>
                 </div>
 
-                <ion-item style="margin: 25px;">
-                    <ion-label position="floating">Amount</ion-label>
-                    <ion-input name="amount" [OnlyNumber]="true" formControlName="amount" type="text" required>
-                    </ion-input>
-                </ion-item>
 
-                <div *ngIf="f.submitted && form.amount.invalid">
-                    <span class="error" style="margin-left: 27px;">
-            Please Enter Amount
-          </span>
-                </div>
             </ion-list>
         </div>
         <div class="submit-button">
