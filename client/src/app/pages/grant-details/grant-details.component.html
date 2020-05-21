@@ -38,16 +38,18 @@
                                 <div class="new-doller">
                                     <span class="doller">Ξ</span>
                                 </div>
-                                <ion-input placeholder="Amount" type="text" [(ngModel)]="grantFund.amount" name="amount" [OnlyNumber]="true" #amount="ngModel" required>
+                                <ion-input placeholder="Amount" type="text" [(ngModel)]="grantFund.amount" name="amount"
+                                    [OnlyNumber]="true" #amount="ngModel" required>
                                 </ion-input>
                             </div>
                             <ion-button [disabled]="amount.invalid" class="continue" (click)="ConfirmFundGrant()">Fund
                             </ion-button>
                         </div>
-                        <div *ngIf="!this.canFund && (userType == userEnum.DONOR || userType == userEnum.VISITOR)" class="padding-20">
+                        <div *ngIf="!this.canFund && (userType == userEnum.DONOR || userType == userEnum.VISITOR)"
+                            class="padding-20">
                             <h2>Grant not open to funding</h2>
                         </div>
-                        <div *ngIf="userType == userEnum.MANAGER">
+                        <div *ngIf="!this.canFund && userType == userEnum.MANAGER">
                             <ion-button class="" (click)="payoutModel()">Payout
                             </ion-button>
                         </div>
