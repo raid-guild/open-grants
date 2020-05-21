@@ -43,7 +43,7 @@ export class GrantController {
     @ApiResponse({ status: 200, description: 'Grant added successfully.' })
     async add(@Req() req, @Res() res, @Body() grantModel: Grant, @Body() grantswagger: grantswagger) {
         try {
-            // grantModel.createdBy = req.user.publicAddress;
+            grantModel.createdBy = req.user.publicAddress;
             let response = await this.grantService.add(grantModel);
             this.scheduleService.addJobForGrant(response._id, response.hash);
             return res.status(httpStatus.OK).json(new APIResponse(response, 'Grant added successfully', httpStatus.OK));

@@ -422,10 +422,17 @@ export class CreateNewGrantComponent implements OnInit {
       } catch (e) { }
     }
 
+    this.grantForm.grantees = this.grantForm.grantees.map((data) => {
+      delete data.allocationPercentage
+      return JSON.parse(JSON.stringify(data));
+    })
+
+    console.log("this.grantForm", this.grantForm);
+
     try {
       this.processing = true;
       let contract: any = await this.deployeContract();
-      // console.log("contract", contract);
+      console.log("contract", contract);
 
       if (contract.status == "success") {
         this.grantForm['contractAddress'] = contract.address;
