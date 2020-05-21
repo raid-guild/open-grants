@@ -429,7 +429,7 @@ export class CreateNewGrantComponent implements OnInit {
 
     console.log("this.grantForm", this.grantForm);
 
-    // try {
+    try {
       this.processing = true;
       let contract: any = await this.deployeContract();
       console.log("contract", contract);
@@ -459,10 +459,10 @@ export class CreateNewGrantComponent implements OnInit {
         this.processing = false;
         this.toastr.error(contract.message);
       }
-    // } catch (e) {
-    //   this.processing = false;
-    //   this.toastr.error('Something went wrong !!', this.toastTitle);
-    // }
+    } catch (e) {
+      this.processing = false;
+      this.toastr.error('Something went wrong !!', this.toastTitle);
+    }
   }
 
   dataURLtoFile(dataurl, filename) {
