@@ -26,6 +26,9 @@ ion-card {
         .padding-0 {
             padding: 5px 25px;
         }
+        .line-height-19 {
+            line-height: 19px !important;
+        }
     }
 }
 
@@ -119,4 +122,58 @@ input[type="file"] {
 
 // image-upload {
 //     padding: 30px 10px;
+// }
+ion-button.tt-none.md.button.button-block.button-solid.ion-activatable.ion-focusable.hydrated {
+    --ion-color-base: #05ce78 !important;
+    --ion-color-tint: #087445 !important;
+    --background-color: #05ce78;
+    -color: #fff;
+}
+
+.new-doller {
+    transition: all 300ms cubic-bezier(0.175, 0.885, 0.335, 1);
+    height: 100%;
+    position: absolute;
+    border-right: 1px solid #ddd;
+    top: 0;
+    left: 0;
+    right: 55px;
+    display: inline-flex;
+    align-items: center;
+    pointer-events: none;
+    z-index: 22;
+}
+
+.doller {
+    color: #05ce78;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    font-weight: bold;
+    white-space: nowrap;
+    // width: 4.2rem;
+    position: absolute;
+    right: -31px;
+}
+
+.positon {
+    // position: relative;
+}
+
+.continue {
+    margin-top: 20px;
+    float: right;
+    clear: both;
+}
+
+img {
+    border-radius: 10px;
+}
+
+// .leftmargin {
+//     margin-left: 45px;
+// }
+// ion-label#ion-input-4-lbl {
+//     margin-left: 45px;
 // }
