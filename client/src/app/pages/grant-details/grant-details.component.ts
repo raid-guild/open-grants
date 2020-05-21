@@ -181,8 +181,6 @@ export class GrantDetailsComponent implements OnInit {
     this.balance = promiseRes[0];
     this.canFund = promiseRes[1];
 
-    console.log("this.balance", this.balance);
-    console.log("this.userType", this.userType);
     if (this.canFund) {
       if (this.userType == this.userEnum.MANAGER || this.userType == this.userEnum.GRANTEE) {
         this.canFund = false;

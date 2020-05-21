@@ -20,6 +20,7 @@ export class PayoutComponent implements OnInit {
 
   public myForm: FormGroup;
 
+  remainingAllocation: any = 0;
   granteeNotMatch = false
   processing = false;
 
@@ -53,12 +54,20 @@ export class PayoutComponent implements OnInit {
         console.log("grantManager.valueChanges");
         if (!this.form.granteeAddress.invalid) {
           let match = this.grantData.grantees.find(data => data.grantee == val)
+          console.log("match", match);
           if (!match) {
             this.granteeNotMatch = true;
+            this.myForm.get('amount').reset();
+            this.myForm.get('amount').disable();
           } else {
             this.granteeNotMatch = false;
-            console.log("this.form.amount", this.form.amount);
+            this.remainingAllocation = await this.ethcontractService.remainingAllocation(this.grantData.contractAddress, this.form.amount.value);
+            console.log("this.remainingAllocation", this.remainingAllocation);
+            this.myForm.get('amount').enable();
           }
+        } else {
+          this.myForm.get('amount').reset();
+          this.myForm.get('amount').disable();
         }
       });
   }
