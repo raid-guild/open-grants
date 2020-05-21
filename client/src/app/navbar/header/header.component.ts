@@ -30,7 +30,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isLogin = false;
   user3BoxProfile: any;
   userData: any;
-  allgrant: any;
 
   path: any;
   searchBar: boolean = false;
@@ -55,16 +54,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private threeBoxService: ThreeBoxService
   ) {
 
-    // let res = this.authService.getAuthState();
-    // this.isLogin = res.is_logged_in;
+    let res = this.authService.getAuthState();
+    this.isLogin = res.is_logged_in;
 
-    // this.events.subscribe('is_logged_in', (data) => {
-    //   this.isLogin = data;
+    this.events.subscribe('is_logged_in', (data) => {
+      this.isLogin = data;
 
-    //   if (this.isLogin) {
-    //     this.getUserData();
-    //   }
-    // });
+      if (this.isLogin) {
+        this.getUserData();
+      }
+    });
 
     // this.path = this.route.snapshot.pathFromRoot[3].url[0].path;
     // if (this.path == "my-grants" || this.path == "latest-grants" || this.path == "trending-grants") {

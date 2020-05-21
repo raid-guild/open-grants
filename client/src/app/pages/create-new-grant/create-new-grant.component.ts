@@ -45,6 +45,7 @@ export class CreateNewGrantComponent implements OnInit {
   managerAddressError = false;
   granteeAddressError = [];
   currency = [];
+  totalPercentage = 0;
 
   tinymceInit: any;
   task: AngularFireUploadTask;
@@ -85,11 +86,10 @@ export class CreateNewGrantComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(async (val: string) => {
-        // let temp = 0;
-        // this.grantee.map((data) => {
-        //   temp += +data.controls.allocationAmount.value
-        // })
-        // this.myForm.controls.targetFunding.setValue(temp);
+        this.totalPercentage = 0;
+        this.grantee.map((data) => {
+          this.totalPercentage += +data.controls.allocationPercentage.value;
+        });
         this.checkAddress()
       });
 
@@ -218,7 +218,7 @@ export class CreateNewGrantComponent implements OnInit {
       images: this.fb.array([]),
       manager: ['', [Validators.required, addressValidator]],
       type: ['singleDeliveryDate', Validators.required],
-      targetFunding: [null, Validators.required],
+      targetFunding: [null, [Validators.required, Validators.min(1)]],
       currency: ['', Validators.required],
       content: [''],
       singleDeliveryDate: this.fb.group({
@@ -294,7 +294,7 @@ export class CreateNewGrantComponent implements OnInit {
     return this.fb.group({
       grantee: new FormControl('', [Validators.required, addressValidator]),
       allocationAmount: new FormControl(null, Validators.required),
-      allocationPercentage: new FormControl(null, Validators.required),
+      allocationPercentage: new FormControl(null, [Validators.required]),
     });
   }
 
@@ -318,6 +318,28 @@ export class CreateNewGrantComponent implements OnInit {
       return false;
     }
     return (this.form.type.value === name);
+  }
+
+  percentageChange(index: number) {
+    let temp = (this.grantee[index].controls.allocationPercentage.value * this.form.targetFunding.value) / 100;
+    this.grantee[index].controls.allocationAmount.setValue(temp);
+  }
+
+  targetFundingChange() {
+    this.grantee.map((data) => {
+      let temp = (data.controls.allocationPercentage.value * this.form.targetFunding.value) / 100;
+      data.controls.allocationAmount.setValue(temp);
+    })
+  }
+
+  onPercentageFocus(index: number) {
+    let totalPer = 0;
+    this.grantee.map((data, i) => {
+      if (index !== i) {
+        totalPer += +data.controls.allocationPercentage.value;
+      }
+    })
+    this.grantee[index].controls.allocationPercentage.setValidators([Validators.required, Validators.max(100 - totalPer), Validators.min(1)]);
   }
 
   checkAddress() {

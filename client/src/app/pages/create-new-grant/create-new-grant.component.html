@@ -31,8 +31,8 @@
                         <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
                             <ion-item>
                                 <ion-label position="floating" for="name">Target Funding Amount</ion-label>
-                                <ion-input class="form-control" [OnlyNumber]="true" type="text"
-                                    formControlName="targetFunding">
+                                <ion-input class="form-control" (ionChange)="targetFundingChange()" [OnlyNumber]="true"
+                                    type="text" formControlName="targetFunding">
                                 </ion-input>
                             </ion-item>
 
@@ -299,24 +299,30 @@
                             <ion-col size-lg="3" size-sm="12" size-xs="12" class="padding-0">
                                 <ion-item>
                                     <ion-label position="floating">Percentage</ion-label>
-                                    <ion-input class="form-control" formControlName="allocationPercentage"
-                                        [OnlyNumber]="true">
+                                    <ion-input class="form-control" (ionChange)="percentageChange(i)"
+                                        (ionFocus)="onPercentageFocus(i)" formControlName="allocationPercentage"
+                                        [OnlyNumber]="true" maxlength="3">
                                     </ion-input>
                                 </ion-item>
-                                <div *ngIf="submitted && grantee[i].controls.allocationPercentage.invalid">
-                                    <label class="error">
+                                <div class="error">
+                                    <label
+                                        *ngIf="submitted && grantee[i].controls.allocationPercentage.errors?.required">
                                         Please Enter Percentage
+                                    </label>
+                                    <label
+                                        *ngIf="grantee[i].controls.allocationPercentage.errors?.max || grantee[i].controls.allocationPercentage.errors?.min">
+                                        Please Enter Valid Percentage
                                     </label>
                                 </div>
                             </ion-col>
 
-                            <ion-col size-lg="3" size-sm="12" size-xs="12" class="padding-0">
+                            <ion-col size-lg=" 3" size-sm="12" size-xs="12" class="padding-0">
                                 <ion-row>
                                     <ion-col [size]="grantee.length >1 ? '11' : '12'">
                                         <ion-item>
                                             <ion-label position="floating">Amount</ion-label>
-                                            <ion-input class="form-control" formControlName="allocationAmount"
-                                                [OnlyNumber]="true">
+                                            <ion-input class="form-control" readonly="true"
+                                                formControlName="allocationAmount" [OnlyNumber]="true">
                                             </ion-input>
                                         </ion-item>
                                         <div *ngIf="submitted && grantee[i].controls.allocationAmount.invalid">
@@ -335,8 +341,8 @@
                         </ion-row>
                         <ion-row class="name">
                             <ion-col size="12" class="padding-0">
-                                <ion-button mode="md" fill="clear" class="tt-none dashed-border" expand="block"
-                                    (click)="addNewGrantee()">
+                                <ion-button mode="md" fill="clear" [disabled]="this.totalPercentage >= 100"
+                                    class="tt-none dashed-border" expand="block" (click)="addNewGrantee()">
                                     Add New Grantees
                                 </ion-button>
                             </ion-col>
@@ -354,13 +360,12 @@
                     <!-- <ion-row class="name">
                         <ion-col class="padding-0">
                             <div class="total-amount">
-                                Target Funding : {{form.targetFunding.value ? form.targetFunding.value : "0"}}
-                                {{form.currency.value ? form.currency.value : ""}}
+                                Target Funding : {{form.targetFunding.value ? form.targetFunding.value : "0"}} {{form.currency.value ? form.currency.value : ""}}
                             </div>
                         </ion-col>
                     </ion-row> -->
 
-                    <ion-row class="name">
+                    <ion-row class="name" style="margin-bottom: 70px;">
                         <ion-col class="padding-0">
                             <div class="submit-button">
                                 <ion-button mode="md" class="tt-none" [disabled]="processing" expand="block"
