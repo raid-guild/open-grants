@@ -17,21 +17,22 @@
         <ion-card-content>
           <ion-item mode="md" lines="none">
             <ion-label>
-              <h2>{{create.grantName}}</h2>
+              <h2>{{create.name}}</h2>
+              <h3>Ξ {{targetFunding}} ETH Target Funding</h3>
             </ion-label>
             <ion-label slot="end" text-right>
-              <h3>Ξ {{create.totalFunding - create.totalPayed}} ETH</h3>
-              <p>OUT OF Ξ {{create.targetFunding}} ETH</p>
+              <!-- <h3>Ξ {{create.totalFunding - create.totalPayed}} ETH</h3>
+              <p>OUT OF Ξ {{create.targetFunding}} ETH</p> -->
             </ion-label>
           </ion-item>
 
-          <ion-item mode="md" lines="none">
+          <!-- <ion-item mode="md" lines="none">
             <div class="users-container">
               <div class="users">
                 <img *ngFor="let user of create.donors | slice:0:6" [src]="user?.picture || ''" alt="">
               </div>
             </div>
-          </ion-item>
+          </ion-item> -->
           <ion-item mode="md" lines="none">
             <ion-button class="details" mode="md" slot="start" (click)="viewGrant(create)">Quick View</ion-button><br>
             <ion-button class="details" mode="md" slot="end" (click)="grantDetails(create.contractAddress)">Details View
@@ -51,21 +52,13 @@
         <ion-card-content>
           <ion-item mode="md" lines="none">
             <ion-label>
-              <h2>{{fund.grantName}}</h2>
-              <p>{{fund.grantLink}}</p>
+              <h2>{{fund.name}}</h2>
+              <h3>Ξ {{fund.targetFunding}} ETH Target Funding</h3>
             </ion-label>
             <ion-label slot="end" text-right>
-              <h3>Ξ {{fund.totalFunding- fund.totalPayed}} ETH</h3>
-              <p>OUT OF Ξ {{fund.targetFunding}} ETH</p>
+              <!-- <h3>Ξ {{fund.totalFunding- fund.totalPayed}} ETH</h3>
+              <p>OUT OF Ξ {{fund.targetFunding}} ETH</p> -->
             </ion-label>
-          </ion-item>
-
-          <ion-item mode="md" lines="none">
-            <div class="users-container">
-              <div class="users">
-                <img *ngFor="let user of fund.donors | slice:0:6" [src]="user?.picture || ''" alt="">
-              </div>
-            </div>
           </ion-item>
 
           <ion-item mode="md" lines="none">
@@ -114,21 +107,13 @@
         <ion-card-content>
           <ion-item mode="md" lines="none">
             <ion-label>
-              <h2>{{manage.grantName}}</h2>
-              <p>{{manage.grantLink}}</p>
+              <h2>{{manage.name}}</h2>
+              <h3>Ξ {{manage.targetFunding}} ETH Target Funding</h3>
+              <!-- <p>{{manage.description}}</p> -->
             </ion-label>
             <ion-label slot="end" text-right>
-              <h3>Ξ {{manage.totalFunding - manage.totalPayed}} ETH</h3>
-              <p>OUT OF Ξ {{manage.targetFunding}} ETH</p>
+              <!-- <p>OUT OF Ξ {{manage.targetFunding}} ETH</p> -->
             </ion-label>
-          </ion-item>
-
-          <ion-item mode="md" lines="none">
-            <div class="users-container">
-              <div class="users">
-                <img *ngFor="let user of manage.donors | slice:0:6" [src]="user?.picture || ''" alt="">
-              </div>
-            </div>
           </ion-item>
 
           <ion-item mode="md" lines="none">

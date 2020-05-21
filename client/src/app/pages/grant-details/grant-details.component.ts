@@ -55,6 +55,7 @@ export class GrantDetailsComponent implements OnInit {
   processing = false;
   submitted = false;
   user: any;
+  canFundByContract: any = false;
   canFund: any = false;
   canRequestPayout = false;
   balance: any = 0;
@@ -160,13 +161,13 @@ export class GrantDetailsComponent implements OnInit {
     }
   }
 
-  async getContractData() { 
+  async getContractData() {
     if (this.grant.type == "singleDeliveryDate") {
       this.noOfDayToExpiredFunding = moment(this.grant.singleDeliveryDate.fundingExpiryDate).diff(moment(new Date), 'days')
     } else {
       this.noOfDayToExpiredFunding = moment(this.grant.multipleMilestones[this.grant.multipleMilestones.length - 1].completionDate).diff(moment(new Date), 'days')
     }
-    
+
     this.subgraphService.getFundByContract(this.contractAddress).subscribe((res: any) => {
       this.noOfDonors = res.data.funds.length;
     })
@@ -179,9 +180,9 @@ export class GrantDetailsComponent implements OnInit {
 
     let promiseRes = await Promise.all(promise);
     this.balance = promiseRes[0];
-    this.canFund = promiseRes[1];
+    this.canFundByContract = promiseRes[1];
 
-    if (this.canFund) {
+    if (this.canFundByContract) {
       if (this.userType == this.userEnum.MANAGER || this.userType == this.userEnum.GRANTEE) {
         this.canFund = false;
       }
