@@ -38,8 +38,6 @@ export class CreateNewGrantComponent implements OnInit {
   toastTitle = 'Grant';
   userData: any;
   grantForm: any;
-  tagInputItems = [];
-  managerTagInputItem = [];
   minYear: any;
   maxYear: any;
   minCompletionData: any;
@@ -74,16 +72,6 @@ export class CreateNewGrantComponent implements OnInit {
 
 
     this.user = JSON.parse(localStorage.getItem(AppSettings.localStorage_keys.userData));
-
-    this.userService.getAll().subscribe((res: HTTPRESPONSE) => {
-      this.userData = res.data;
-      res.data.map((data) => {
-        if (data.hasOwnProperty('publicAddress') && data.publicAddress) {
-          this.tagInputItems.push(data);
-          this.managerTagInputItem.push(data);
-        }
-      });
-    })
   }
 
   ngOnInit() {
@@ -97,21 +85,20 @@ export class CreateNewGrantComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(async (val: string) => {
-        let temp = 0;
-        this.grantee.map((data) => {
-          temp += +data.controls.allocationAmount.value
-        })
-        this.myForm.controls.targetFunding.setValue(temp);
+        // let temp = 0;
+        // this.grantee.map((data) => {
+        //   temp += +data.controls.allocationAmount.value
+        // })
+        // this.myForm.controls.targetFunding.setValue(temp);
         this.checkAddress()
       });
 
-    this.form.grantManager.valueChanges
+    this.form.manager.valueChanges
       .pipe(
         debounceTime(400),
         distinctUntilChanged()
       )
       .subscribe(async (val: string) => {
-        console.log("grantManager.valueChanges");
         this.checkAddress()
       });
 
@@ -306,7 +293,8 @@ export class CreateNewGrantComponent implements OnInit {
     this.granteeAddressError.push(false)
     return this.fb.group({
       grantee: new FormControl('', [Validators.required, addressValidator]),
-      allocationAmount: new FormControl(null, Validators.required)
+      allocationAmount: new FormControl(null, Validators.required),
+      allocationPercentage: new FormControl(null, Validators.required),
     });
   }
 
@@ -337,14 +325,14 @@ export class CreateNewGrantComponent implements OnInit {
     this.managerAddressError = false;
     this.myForm.controls.grantees.value.map((map1, index) => {
       this.granteeAddressError[index] = false;
-      if (map1.grantee == this.myForm.controls.grantManager.value) {
+      if (map1.grantee.toLowerCase() == this.myForm.controls.manager.value.toLowerCase()) {
         this.managerAddressError = true;
         this.granteeAddressError[index] = true
         valid = false
       }
 
       this.myForm.controls.grantees.value.map((map2, i) => {
-        if (map1.grantee == map2.grantee && index != i) {
+        if (map1.grantee.toLowerCase() == map2.grantee.toLowerCase() && index != i) {
           this.granteeAddressError[index] = true
           this.granteeAddressError[i] = true
           valid = false
@@ -370,7 +358,7 @@ export class CreateNewGrantComponent implements OnInit {
     data = {
       grantees: this.grantForm.grantees.map((data) => { return data.grantee }),
       amounts: this.grantForm.grantees.map((data) => { return data.allocationAmount }),
-      manager: this.grantForm.grantManager,
+      manager: this.grantForm.manager,
       currency: this.grantForm.currency,
       targetFunding: this.grantForm.targetFunding,
       fundingExpiration: fundingExpiration,
@@ -386,13 +374,13 @@ export class CreateNewGrantComponent implements OnInit {
     this.submitted = true;
     // console.log("content", this.myForm.value)
     if (this.myForm.controls.type.value == "singleDeliveryDate") {
-      if (this.myForm.controls.grantName.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.singleDeliveryDate.invalid
-        || this.myForm.controls.grantManager.invalid || this.myForm.controls.grantees.invalid) {
+      if (this.myForm.controls.name.invalid || this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.singleDeliveryDate.invalid
+        || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid) {
         return
       }
     } else {
-      if (this.myForm.controls.grantName.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.multipleMilestones.invalid
-        || this.myForm.controls.grantManager.invalid || this.myForm.controls.grantees.invalid) {
+      if (this.myForm.controls.name.invalid || this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.multipleMilestones.invalid
+        || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid) {
         return
       }
     }
@@ -422,7 +410,7 @@ export class CreateNewGrantComponent implements OnInit {
         this.grantForm['hash'] = contract.hash;
         this.grantForm.content = this.grantForm.content.replace(/"/g, "&quot;");
 
-        this.grantForm.grantManager = this.grantForm.grantManager.toLowerCase();
+        this.grantForm.manager = this.grantForm.manager.toLowerCase();
         this.grantForm.grantees = this.grantForm.grantees.map((data) => {
           data.grantee = data.grantee.toLowerCase();
           return data;

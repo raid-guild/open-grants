@@ -21,7 +21,8 @@ export class PayoutComponent implements OnInit {
   public myForm: FormGroup;
 
   remainingAllocation: any = 0;
-  granteeNotMatch = false
+  granteeNotMatch = false;
+  maxAmountError = false;
   processing = false;
 
   constructor(
@@ -51,9 +52,8 @@ export class PayoutComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(async (val: string) => {
-        console.log("grantManager.valueChanges");
         if (!this.form.granteeAddress.invalid) {
-          let match = this.grantData.grantees.find(data => data.grantee == val)
+          let match = this.grantData.grantees.find(data => data.grantee.toLowerCase() == val.toLowerCase())
           console.log("match", match);
           if (!match) {
             this.granteeNotMatch = true;
@@ -61,13 +61,26 @@ export class PayoutComponent implements OnInit {
             this.myForm.get('amount').disable();
           } else {
             this.granteeNotMatch = false;
-            this.remainingAllocation = await this.ethcontractService.remainingAllocation(this.grantData.contractAddress, this.form.amount.value);
-            console.log("this.remainingAllocation", this.remainingAllocation);
+            let temp = await this.ethcontractService.remainingAllocation(this.grantData.contractAddress, this.form.granteeAddress.value);
+            this.remainingAllocation = +temp
             this.myForm.get('amount').enable();
           }
         } else {
           this.myForm.get('amount').reset();
           this.myForm.get('amount').disable();
+        }
+      });
+
+    this.form.amount.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged()
+      )
+      .subscribe(async (val: string) => {
+        if (this.form.amount.value > this.remainingAllocation) {
+          this.maxAmountError = true;
+        } else {
+          this.maxAmountError = false;
         }
       });
   }
@@ -77,7 +90,7 @@ export class PayoutComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.granteeNotMatch) {
+    if (this.granteeNotMatch || this.maxAmountError || this.form.amount.value == 0) {
       return
     }
 
