@@ -45,6 +45,9 @@
                             <ion-button [disabled]="amount.invalid" class="continue" (click)="ConfirmFundGrant()">Fund
                             </ion-button>
                         </div>
+                        <ion-button *ngIf="canCancel && userType != userEnum.VISITOR" class="continue"
+                            (click)="ConfirmCancleGrant()">Cancel Grant
+                        </ion-button>
                         <div *ngIf="!this.canFund && (userType == userEnum.DONOR || userType == userEnum.VISITOR)"
                             class="padding-20">
                             <h2>Grant not open to funding</h2>
@@ -52,6 +55,10 @@
                         <div *ngIf="!this.canFundByContract && userType == userEnum.MANAGER">
                             <ion-button class="" (click)="payoutModel()">Payout
                             </ion-button>
+                        </div>
+                        <div *ngIf="userType == userEnum.GRANTEE" class="padding-20">
+                            <h3> <b> Ξ {{remainingAlloc}} {{grant?.currency}}</b> Remaining</h3>
+                            <p>Total Allocation Ξ {{myAllocationAmount}} {{grant?.currency}}</p>
                         </div>
                     </ion-col>
 

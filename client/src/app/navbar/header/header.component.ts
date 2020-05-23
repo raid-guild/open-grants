@@ -62,6 +62,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
       if (this.isLogin) {
         this.getUserData();
+      } else {
+        this.isImage = false;
       }
     });
 

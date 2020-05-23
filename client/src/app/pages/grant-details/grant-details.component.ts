@@ -43,14 +43,10 @@ export class GrantDetailsComponent implements OnInit {
   canCancel = false;
 
   payouts = [];
-  pendingRequest = [];
-  approveRequest = [];
-  rejectRequest = []
+  remainingAlloc: any = 0;
+  myAllocationAmount = 0;
   myFunds = [];
   totalFundByMe = 0;
-  totalPending = 0;
-  totalApproved = 0;
-  totalReject = 0;
   multipleMilestones = false;
   processing = false;
   submitted = false;
@@ -59,7 +55,6 @@ export class GrantDetailsComponent implements OnInit {
   canFund: any = false;
   canRequestPayout = false;
   balance: any = 0;
-  remainingAlloc: any = 0;
 
   grantFund = {
     contractAddress: '',
@@ -89,9 +84,7 @@ export class GrantDetailsComponent implements OnInit {
         this.grant = res.data;
         this.grant.content = this.htmlDecode(this.grant.content);
         this.checkRoll();
-        this.getContractData();
         this.manager3boxProfile = await this.threeBoxService.getProfile(this.grant.manager.toLowerCase());
-        console.log("manager3boxProfile", this.manager3boxProfile);
       } catch (e) { }
     })();
   }
@@ -142,6 +135,7 @@ export class GrantDetailsComponent implements OnInit {
       this.grant.grantees.map((data) => {
         if (data.grantee.toLowerCase() == this.user.publicAddress.toLowerCase()) {
           this.userType = this.userEnum.GRANTEE;
+          this.myAllocationAmount = data.allocationAmount;
         }
       });
 
@@ -157,6 +151,8 @@ export class GrantDetailsComponent implements OnInit {
         this.getDonorData();
       }
 
+      this.getContractData();
+      console.log("this.userType", this.userType);
       this.canCancelGrant();
     }
   }
@@ -195,45 +191,27 @@ export class GrantDetailsComponent implements OnInit {
   }
 
   getManagerData() {
-    this.payoutService.getByGrant(this.grant._id).subscribe((res: HTTPRESPONSE) => {
-      this.payouts = res.data;
-      this.pendingRequest = [];
-      this.approveRequest = [];
-      this.rejectRequest = [];
-      this.totalPending = 0;
-      this.totalApproved = 0;
-      this.totalReject = 0;
-      this.payouts.map((data) => {
-        if (data.requestStatus == "pending") {
-          this.pendingRequest.push(data);
-          this.totalPending += data.requestAmount;
-        }
-        if (data.requestStatus == "approved") {
-          this.approveRequest.push(data);
-          this.totalApproved += data.requestAmount;
-        }
-        if (data.requestStatus == "rejected") {
-          this.rejectRequest.push(data);
-          this.totalReject += data.requestAmount;
-        }
-      });
-    })
   }
 
-  getGranteeData() {
-    this.remainingAlloc = this.ethcontractService.remainingAllocation(this.grant.contractAddress, this.user.publicAddress);
-    this.subgraphService.getPaymentByContractAndDonor(this.contractAddress, this.user.publicAddress).subscribe((res: any) => {
-      this.payouts = res.data.payments;
-      this.payouts = this.payouts.map((task) => {
-        if (this.grant.currency == "ETH") {
-          task.amount = ethers.utils.formatEther(task.amount);
-          this.totalFundByMe += +task.amount;
-        } else {
-          this.totalFundByMe += +task.amount;
-        }
-        return task;
-      });
-    })
+  async getGranteeData() {
+    try {
+      this.remainingAlloc = await this.ethcontractService.remainingAllocation(this.grant.contractAddress, this.user.publicAddress);
+    } catch (e) { }
+
+    // this.subgraphService.getPaymentByContractAndDonor(this.contractAddress, this.user.publicAddress).subscribe((res: any) => {
+    //   this.payouts = res.data.payments;
+    //   this.payouts = this.payouts.map((task) => {
+    //     if (this.grant.currency == "ETH") {
+    //       task.amount = ethers.utils.formatEther(task.amount);
+    //       this.myTotalPayout += +task.amount;
+    //     } else {
+    //       this.myTotalPayout += +task.amount;
+    //     }
+    //     return task;
+    //   });
+
+    //   console.log("this.myTotalPayout", this.myTotalPayout);
+    // })
   }
 
   getDonorData() {
@@ -252,21 +230,26 @@ export class GrantDetailsComponent implements OnInit {
   }
 
   canCancelGrant() {
-    if (this.grant.manager._id != this.user._id) {
+    if (this.userType != this.userEnum.MANAGER) {
       if (this.grant.type == "multipleMilestones") {
         let date = moment(this.grant.multipleMilestones[this.grant.multipleMilestones.length - 1].completionDate, 'DD/MM/YYYY').toISOString();
         let isAfter = moment(date).isAfter(moment(new Date().toISOString()));
-        if (!isAfter) {
+        if (isAfter) {
           this.canCancel = true;
         }
       } else {
         let date = moment(this.grant.singleDeliveryDate.completionDate, 'DD/MM/YYYY').toISOString();
         let isAfter = moment(date).isAfter(moment(new Date().toISOString()));
-        if (!isAfter) {
+        if (isAfter) {
           this.canCancel = true;
         }
       }
+    } else {
+      console.log("else")
+      this.canCancel = true;
     }
+
+    console.log("canCancel",this.canCancel)
   }
 
   ConfirmCancleGrant() {
@@ -332,10 +315,11 @@ export class GrantDetailsComponent implements OnInit {
 
   async fundOnGrant() {
     try {
+      let amount: any = 0;
       if (this.grant.currency == "ETH") {
-        this.grantFund.amount = (ethers.utils.parseEther(this.grantFund.amount.toString())).toString();
+        amount = (ethers.utils.parseEther(this.grantFund.amount.toString())).toString();
       }
-      let funding: any = await this.ethcontractService.fund(this.grant.contractAddress, this.grantFund.amount);
+      let funding: any = await this.ethcontractService.fund(this.grant.contractAddress, amount);
       this.grantFund.amount = null;
       if (funding.status == "success") {
         this.toastr.success('Send Fund to grant');
