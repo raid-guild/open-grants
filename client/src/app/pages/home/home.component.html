@@ -5,15 +5,27 @@
 
 <ion-row class="margin-50">
     <ion-col size="6" class="border-right">
-        <div class="">
-            <img src="../../../assets/imgs/2.jpg" class="main-image" alt="">
-            <h1>Otto's G32 – the first smart and modular gas grill.</h1>
-            <p>The G32 revolutionizes gas grilling and perfectly adjusts to your grilling needs</p>
+        <div class="" (click)="grantDetails(latestGrant.contractAddress)">
+            <img src="{{latestGrant?.images[0]}}" class="main-image" alt="">
+            <h1>{{latestGrant?.name}}</h1>
+            <p>{{latestGrant?.description}}</p>
         </div>
     </ion-col>
     <ion-col size="6">
-        <div class="d-flex">
-            <img src="../../../assets/imgs/2.jpg" class="image-responsive margin-35" alt="">
+        <div *ngFor="let grant of allGrant | slice:0:3">
+            <div class="d-flex" (click)="grantDetails(grant.contractAddress)">
+                <img src="{{grant?.images[0]}}" class="image-responsive margin-35" alt="">
+                <div class="">
+                    <h2>{{grant?.name}}</h2>
+                    <p>Target Funding : {{grant?.targetFunding}}</p>
+                    <!-- <p>{{grant?.description}}</p> -->
+                </div>
+            </div>
+            <div class="line "></div>
+        </div>
+
+        <!-- <div class="d-flex">
+            <img src="{{latestGrant?.images[0]}}" class="image-responsive margin-35" alt="">
             <div class="">
                 <h2>Otto's G32 – the first smart and modular gas grill.</h2>
                 <p>The G32 revolutionizes gas grilling and perfectly adjusts to your grilling needs</p>
@@ -21,19 +33,11 @@
         </div>
         <div class="line "></div>
         <div class="d-flex">
-            <img src="../../../assets/imgs/2.jpg" class="image-responsive margin-35" alt="">
+            <img src="{{latestGrant?.images[0]}}" class="image-responsive margin-35" alt="">
             <div class="">
                 <h2>Otto's G32 – the first smart and modular gas grill.</h2>
                 <p>The G32 revolutionizes gas grilling and perfectly adjusts to your grilling needs</p>
             </div>
-        </div>
-        <div class="line "></div>
-        <div class="d-flex">
-            <img src="../../../assets/imgs/2.jpg" class="image-responsive margin-35" alt="">
-            <div class="">
-                <h2>Otto's G32 – the first smart and modular gas grill.</h2>
-                <p>The G32 revolutionizes gas grilling and perfectly adjusts to your grilling needs</p>
-            </div>
-        </div>
+        </div> -->
     </ion-col>
 </ion-row>

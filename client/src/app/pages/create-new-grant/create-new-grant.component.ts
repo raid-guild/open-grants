@@ -45,7 +45,8 @@ export class CreateNewGrantComponent implements OnInit {
   managerAddressError = false;
   granteeAddressError = [];
   currency = [];
-  totalPercentage = 0;
+  totalPercentage = 0
+  isAllocationByPer = new FormControl(true)
 
   tinymceInit: any;
   task: AngularFireUploadTask;
@@ -293,7 +294,7 @@ export class CreateNewGrantComponent implements OnInit {
     this.granteeAddressError.push(false)
     return this.fb.group({
       grantee: new FormControl('', [Validators.required, addressValidator]),
-      allocationAmount: new FormControl(null, Validators.required),
+      allocationAmount: new FormControl(null, [Validators.required, Validators.min(1)]),
       allocationPercentage: new FormControl(null, [Validators.required]),
     });
   }
@@ -320,26 +321,89 @@ export class CreateNewGrantComponent implements OnInit {
     return (this.form.type.value === name);
   }
 
-  percentageChange(index: number) {
-    let temp = (this.grantee[index].controls.allocationPercentage.value * this.form.targetFunding.value) / 100;
-    this.grantee[index].controls.allocationAmount.setValue(temp);
-  }
-
-  targetFundingChange() {
-    this.grantee.map((data) => {
-      let temp = (data.controls.allocationPercentage.value * this.form.targetFunding.value) / 100;
-      data.controls.allocationAmount.setValue(temp);
-    })
+  onPercentageChange(index: number) {
+    if (this.isAllocationByPer.value) {
+      if (this.isAllocationByPer.value) {
+        let temp = (this.grantee[index].controls.allocationPercentage.value * this.form.targetFunding.value) / 100;
+        this.grantee[index].controls.allocationAmount.setValue(temp);
+      }
+    }
   }
 
   onPercentageFocus(index: number) {
-    let totalPer = 0;
-    this.grantee.map((data, i) => {
-      if (index !== i) {
-        totalPer += +data.controls.allocationPercentage.value;
+    if (this.isAllocationByPer.value) {
+      let totalPer = 0;
+      this.grantee.map((data, i) => {
+        if (index !== i) {
+          totalPer += +data.controls.allocationPercentage.value;
+        }
+      })
+      this.grantee[index].controls.allocationPercentage.setValidators([Validators.required, Validators.max(100 - totalPer), Validators.min(0.000001)]);
+    }
+  }
+
+  onAmountChange(index: number) {
+    if (!this.isAllocationByPer.value) {
+      let temp = (this.grantee[index].controls.allocationAmount.value * 100) / this.form.targetFunding.value;
+      if (this.form.targetFunding.value <= 0 || this.form.targetFunding.value == null) {
+        this.grantee[index].controls.allocationPercentage.setValue(0);
+      } else {
+        this.grantee[index].controls.allocationPercentage.setValue(temp);
       }
-    })
-    this.grantee[index].controls.allocationPercentage.setValidators([Validators.required, Validators.max(100 - totalPer), Validators.min(1)]);
+
+      let remainingAmount = 0;
+      this.grantee.map((data, i) => {
+        if (index !== i) {
+          remainingAmount += +data.controls.allocationAmount.value;
+        }
+      })
+
+      this.grantee[index].controls.allocationAmount.setValidators([Validators.required, Validators.max(this.form.targetFunding.value - remainingAmount), Validators.min(1)]);
+      this.grantee[index].controls.allocationAmount.setValue(this.grantee[index].controls.allocationAmount.value);
+
+    }
+  }
+
+  targetFundingChange() {
+    if (this.isAllocationByPer.value) {
+      this.grantee.map((data) => {
+        let temp = (data.controls.allocationPercentage.value * this.form.targetFunding.value) / 100;
+        data.controls.allocationAmount.setValue(temp);
+      })
+    } else {
+      let totalAllocated = 0;
+      this.grantee.map((data, index) => {
+
+        let temp = (data.controls.allocationAmount.value * 100) / this.form.targetFunding.value;
+        if (this.form.targetFunding.value <= 0 || this.form.targetFunding.value == null) {
+          data.controls.allocationPercentage.setValue(0);
+        } else {
+          data.controls.allocationPercentage.setValue(temp);
+        }
+
+        totalAllocated += +data.controls.allocationAmount.value;
+        if (totalAllocated > this.form.targetFunding.value) {
+          this.onAmountFocus(index);
+        } else {
+          this.grantee[index].controls.allocationAmount.setValidators([Validators.required, Validators.min(1)]);
+          this.grantee[index].controls.allocationAmount.setValue(this.grantee[index].controls.allocationAmount.value);
+        }
+      });
+    }
+  }
+
+  onAmountFocus(index: number) {
+    if (!this.isAllocationByPer.value) {
+      let remainingAmount = 0;
+      this.grantee.map((data, i) => {
+        if (index !== i) {
+          remainingAmount += +data.controls.allocationAmount.value;
+        }
+      })
+
+      this.grantee[index].controls.allocationAmount.setValidators([Validators.required, Validators.max(this.form.targetFunding.value - remainingAmount), Validators.min(1)]);
+      this.grantee[index].controls.allocationAmount.setValue(this.grantee[index].controls.allocationAmount.value);
+    }
   }
 
   checkAddress() {

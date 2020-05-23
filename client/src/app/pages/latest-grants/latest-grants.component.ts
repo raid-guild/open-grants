@@ -49,35 +49,6 @@ export class LatestGrantsComponent implements OnInit {
           });
         }
       })
-
-
-    this.data = [
-      {
-        grantName: "PICO: A garden in your palm.",
-        images: "../../../assets/imgs/2.jpg",
-        description: "Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and aself-watering system. Anyone can do it!"
-      }, {
-        grantName: "PICO: A garden in your palm.",
-        images: "../../../assets/imgs/2.jpg",
-        description: "Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and aself-watering system. Anyone can do it!"
-      }, {
-        grantName: "PICO: A garden in your palm.",
-        images: "../../../assets/imgs/2.jpg",
-        description: "Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and aself-watering system. Anyone can do it!"
-      }, {
-        grantName: "PICO: A garden in your palm.",
-        images: "../../../assets/imgs/2.jpg",
-        description: "Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and aself-watering system. Anyone can do it!"
-      }, {
-        grantName: "PICO: A garden in your palm.",
-        images: "../../../assets/imgs/2.jpg",
-        description: "Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and aself-watering system. Anyone can do it!"
-      }, {
-        grantName: "PICO: A garden in your palm.",
-        images: "../../../assets/imgs/2.jpg",
-        description: "Grow thriving plants everywhere—with telescopic LED grow lights, multiple mounts, and aself-watering system. Anyone can do it!"
-      }
-    ]
   }
 
   onCancel(event) { }

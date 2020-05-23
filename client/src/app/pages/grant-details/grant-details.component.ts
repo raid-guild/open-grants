@@ -181,6 +181,7 @@ export class GrantDetailsComponent implements OnInit {
     let promiseRes = await Promise.all(promise);
     this.balance = promiseRes[0];
     this.canFundByContract = promiseRes[1];
+    this.canFund = this.canFundByContract;
 
     if (this.canFundByContract) {
       if (this.userType == this.userEnum.MANAGER || this.userType == this.userEnum.GRANTEE) {
