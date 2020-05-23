@@ -14,10 +14,10 @@ contract AbstractGrant {
     address public currency;                     // (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.
     uint256 public targetFunding;                // (Optional) Funding threshold required to begin releasing funds.
     uint256 public totalFunding;                 // Cumulative funding donated by donors.
-    uint256 public totalPayed;                   // Cumulative funding payed to grantees.
+    uint256 public totalPaid;                    // Cumulative funding paid to grantees.
     uint256 public totalRefunded;                // Cumulative funding refunded to donors.
     uint256 public pendingPayments;              // Payments approved to grantees but not yet withdrawn.
-    uint256 public fundingExpiration;            // (Optional) Date after which signal OR funds cannot be sent.
+    uint256 public fundingDeadline;            // (Optional) Date after which signal OR funds cannot be sent.
     uint256 public contractExpiration;           // (Optional) Date after which payouts must be complete or anyone can trigger refunds.
     bool public grantCancelled;                  // Flag to indicate when grant is cancelled.
     mapping(address => Grantee) public grantees; // Grant recipients by address.
@@ -27,7 +27,7 @@ contract AbstractGrant {
 
     struct Grantee {
         uint256 targetFunding;   // Funding amount targeted for Grantee.
-        uint256 totalPayed;      // Cumulative funding received by Grantee.
+        uint256 totalPaid;      // Cumulative funding received by Grantee.
         uint256 payoutApproved;  // Pending payout approved by Manager.
     }
 
@@ -52,35 +52,35 @@ contract AbstractGrant {
     /**
      * @dev Grant received funding.
      * @param donor Address funding the grant.
-     * @param value Amount in WEI or GRAINS funded.
+     * @param value Amount in WEI or ATOMIC_UNITS funded.
      */
     event LogFunding(address indexed donor, uint256 value);
 
     /**
      * @dev Grant refunding funding.
      * @param donor Address receiving refund.
-     * @param value Amount in WEI or GRAINS refunded.
+     * @param value Amount in WEI or ATOMIC_UNITS refunded.
      */
     event LogRefund(address indexed donor, uint256 value);
 
     /**
      * @dev Grant paying grantee.
      * @param grantee Address receiving payment.
-     * @param value Amount in WEI or GRAINS payed.
+     * @param value Amount in WEI or ATOMIC_UNITS paid.
      */
     event LogPayment(address indexed grantee, uint256 value);
 
     /**
      * @dev Manager approving a payment.
      * @param grantee Address receiving payment.
-     * @param value Amount in WEI or GRAINS approved for payment.
+     * @param value Amount in WEI or ATOMIC_UNITS approved for payment.
      */
     event LogPaymentApproval(address indexed grantee, uint256 value);
 
     /**
      * @dev Manager approving a refund.
-     * @param amount Amount in WEI or GRAINS refunded across all donors.
-     * @param totalRefunded Cumulative amount in WEI or GRAINS refunded across all donors.
+     * @param amount Amount in WEI or ATOMIC_UNITS refunded across all donors.
+     * @param totalRefunded Cumulative amount in WEI or ATOMIC_UNITS refunded across all donors.
      */
     event LogRefundApproval(uint256 amount, uint256 totalRefunded);
 
@@ -107,7 +107,7 @@ contract AbstractGrant {
 
     /**
      * @dev Fund a grant proposal.
-     * @param value Amount in WEI or GRAINS to fund.
+     * @param value Amount in WEI or ATOMIC_UNITS to fund.
      * @return true if payment successful.
      */
     function fund(uint256 value)
@@ -116,7 +116,7 @@ contract AbstractGrant {
 
     /**
      * @dev Approve payment to a grantee.
-     * @param value Amount in WEI or GRAINS to pay.
+     * @param value Amount in WEI or ATOMIC_UNITS to pay.
      * @param grantee Recipient of payment.
      * @return true if payout successful.
      */

@@ -19,7 +19,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
     /*----------  Constants  ----------*/
 
-    uint256 GRAINS = 10 ** 18;
+    uint256 ATOMIC_UNITS = 10 ** 18;
 
 
     /*----------  Constructor  ----------*/
@@ -31,7 +31,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
      * @param _manager (Optional) Multisig or EOA address of grant manager.
      * @param _currency (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.
      * @param _targetFunding (Optional) Funding threshold required to release funds.
-     * @param _fundingExpiration (Optional) Date after which signaling OR funds cannot be sent.
+     * @param _fundingDeadline (Optional) Date after which signaling OR funds cannot be sent.
      * @param _contractExpiration (Optional) Date after which payouts must be complete or anyone can trigger refunds.
      */
     constructor(
@@ -40,21 +40,21 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         address _manager,
         address _currency,
         uint256 _targetFunding,
-        uint256 _fundingExpiration,
+        uint256 _fundingDeadline,
         uint256 _contractExpiration
     )
         public
     {
 
         require(
-            _fundingExpiration == 0 || _fundingExpiration < _contractExpiration,
-            "constructor::Invalid Argument. _fundingExpiration not < _contractExpiration."
+            _fundingDeadline == 0 || _fundingDeadline < _contractExpiration,
+            "constructor::Invalid Argument. _fundingDeadline not < _contractExpiration."
         );
 
         require(
         // solium-disable-next-line security/no-block-members
-            _fundingExpiration == 0 || _fundingExpiration > now,
-            "constructor::Invalid Argument. _fundingExpiration not > now."
+            _fundingDeadline == 0 || _fundingDeadline > now,
+            "constructor::Invalid Argument. _fundingDeadline not > now."
         );
 
         require(
@@ -77,7 +77,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         manager = _manager;
         currency = _currency;
         targetFunding = _targetFunding;
-        fundingExpiration = _fundingExpiration;
+        fundingDeadline = _fundingDeadline;
         contractExpiration = _contractExpiration;
 
         // Check _targetFunding against sum of _amounts array.
@@ -147,7 +147,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         returns(uint256)
     {
         return totalFunding
-            .sub(totalPayed)
+            .sub(totalPaid)
             .sub(totalRefunded)
             .sub(pendingPayments);
     }
@@ -163,7 +163,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
     {
         return (
             // solium-disable-next-line security/no-block-members
-            (fundingExpiration == 0 || fundingExpiration > now) &&
+            (fundingDeadline == 0 || fundingDeadline > now) &&
             totalFunding < targetFunding &&
             !grantCancelled
         );
@@ -179,7 +179,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         returns(uint256)
     {
         return grantees[grantee].targetFunding
-            .sub(grantees[grantee].totalPayed)
+            .sub(grantees[grantee].totalPaid)
             .sub(grantees[grantee].payoutApproved);
     }
 
@@ -188,7 +188,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
     /**
      * @dev Fund a grant proposal.
-     * @param value Amount in WEI or GRAINS to fund.
+     * @param value Amount in WEI or ATOMIC_UNITS to fund.
      * @return Cumulative funding received for this grant.
      */
     function fund(uint256 value)
@@ -240,7 +240,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
     /**
      * @dev Approve and make payment to a grantee.
-     * @param value Amount in WEI or GRAINS to fund.
+     * @param value Amount in WEI or ATOMIC_UNITS to fund.
      * @param grantee Recipient of payment.
      */
     function approvePayout(uint256 value, address grantee)
@@ -265,8 +265,8 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         );
 
         // Update state.
-        totalPayed = totalPayed.add(value);
-        grantees[grantee].totalPayed = grantees[grantee].totalPayed.add(value);
+        totalPaid = totalPaid.add(value);
+        grantees[grantee].totalPaid = grantees[grantee].totalPaid.add(value);
 
         // Send funds.
         if (currency == address(0)) {
@@ -301,11 +301,11 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
         if (!isManager(msg.sender)) {
             // Non-manager may cancel grant if:
-            //      1. Funding goal not met before fundingExpiration.
+            //      1. Funding goal not met before fundingDeadline.
             //      2. Funds not completely dispersed before contractExpiration.
             require(
                 // solium-disable-next-line security/no-block-members
-                (fundingExpiration != 0 && fundingExpiration <= now && totalFunding < targetFunding) ||
+                (fundingDeadline != 0 && fundingDeadline <= now && totalFunding < targetFunding) ||
                 (contractExpiration != 0 && contractExpiration <= now),
                 // solium-disable-previous-line security/no-block-members
                 "cancelGrant::Invalid Sender. Sender must be manager or expired."
@@ -356,7 +356,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
     /**
      * @dev Voting Signal Method.
      * @param support true if in support of grant false if opposed.
-     * @param value Number of signals denoted in Token GRAINs or WEI.
+     * @param value Number of signals denoted in Token ATOMIC_UNITS or WEI.
      * @return True if successful, otherwise false.
      */
     function signal(bool support, uint256 value)
@@ -424,14 +424,14 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
     {
 
         uint256 percentContributed = donors[donor].funded
-            .mul(GRAINS).div(
+            .mul(ATOMIC_UNITS).div(
                 totalFunding
             );
 
         // Donor's share of refund.
         uint256 eligibleRefund = totalRefunded
             .mul(percentContributed)
-            .div(GRAINS);
+            .div(ATOMIC_UNITS);
 
         require(
             eligibleRefund >= donors[donor].refunded,
