@@ -1,0 +1,92 @@
+# waffle
+https://ethereum-waffle.readthedocs.io/en/latest/getting-started.html
+
+# ether
+https://docs.ethers.io/ethers.js/html/
+
+https://docs.ethers.io/ethers.js/html/api-contract.html#meta-class-properties
+
+https://docs.ethers.io/ethers.js/html/api-contract.html#overrides
+
+1.
+const grantWithEther: Contract = await waffle.deployContract(
+      granteeWallet, // wallet to send ether
+      Grant,        // Contract to be deployed
+      [[granteeWallet.address], [1000], managerWallet.address, AddressZero, 1000, currentTime + 86400, currentTime + (86400 * 2)],
+      { gasLimit: 6e6 }  // arguments to be passed constructor of Grant Contract.
+    );
+
+i. granteeWallet used to send ether for deployment of contract.
+ii. msg.sender = granteeWallet.address
+
+2.
+const grantFromDonorWithEther: Contract = new Contract(grantWithEther.address, Grant.abi, donorWallet);
+i. initializes the ethersjs contract interface to connect to a specific deployed address for the contract
+   and send all future transactions using that interface using a specific wallet
+   msg.sender = donorWallet.address
+ii. the idea is that once deployed you can initialize more than one interfaces from more than one addresses
+
+
+3. About Signal Method
+The signal method is trying to transfer tokens on behalf of the sender
+The Grant contract has no permission to send tokens on behalf of the sender so it fails
+the error message is due to the way it fails
+If you see in later tests, there is a step to first call the `approve` method on the token
+and then signalin that case it should work
+
+IERC20(currency) lets us make calls to that contract address
+
+await _token.approve(_grantFromDonor.address, 1e6);
+this approves the grant address to move tokens on the sender's bahalf
+
+
+
+4. About ERC20
+i. await token.approve(grantFromDonor.address, 10000);
+token is deployed by donorWallet, so msg.sender = donorWallet.address
+donorWallet is approving that he will send the token to grant Contract.
+allowance[donorWallet.address][grantFromDonor.address] = 10000
+
+ii.
+await token.approve(grantFromDonor.address, 10000);
+await _grantFromDonor.fund(10000);   
+--->  IERC20(currency)  // converts to token, msg.sender = donorWallet.address
+        .transferFrom(msg.sender, address(this), netValue), // msg.sender = donorWallet.address because of _grantFromDonor
+                        // address(this) = grantFromDonor.address
+
+the grant does not have permission to move the donor's tokens
+making it impossible for the `fund` method to move tokens
+`approve` on the token gives the grant contract permission to move a specific amount of tokens
+after you approve, the grant is able to move the tokens and execute the logic in the `fund` method
+
+_allowances[owner][spender] = value;
+//owner = donorWallet.address, spender = donorWallet.address
+
+5.
+function allowance(address owner, address spender) public view returns (uint256) {
+        return _allowances[owner][spender];
+    }
+
+owner is who owns the tokens
+spender is who you're giving permission to move the tokens
+so both donors are owners and each need to give the same grant permission to move the tokens
+
+let balance = await token.balanceOf(_donorWallet.address);
+console.log('1. balance ' + balance);
+balance = await token.balanceOf(_secondDonorWallet.address);
+console.log('2. balance ' + balance);
+
+let receipt = await token.allowance(_donorWallet.address, _grantFromDonor.address);
+console.log('3. Receipt ' + receipt);
+      
+receipt = await token.allowance(_secondDonorWallet.address, tokenFromSecondDonor.address);
+console.log('4. Receipt ' + receipt);
+
+receipt = await token.allowance(_secondDonorWallet.address, _grantFromSecondDonor.address);
+console.log('5. Receipt ' + receipt);
+
+1. balance 1000000
+2. balance 1000000
+3. Receipt 1000
+4. Receipt 0
+5. Receipt 1000
