@@ -11,6 +11,14 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
+  "browser": {
+    "http": false,
+    "https":false,
+    "timers": false,
+    "browser": false,
+    "path": false,
+    "os": false
+  },
   "private": true,
   "dependencies": {
     "3box": "^1.19.0",
@@ -70,7 +78,7 @@
     "@angular-devkit/build-angular": "^0.803.26",
     "@angular-devkit/core": "~8.3.26",
     "@angular-devkit/schematics": "~8.3.26",
-    "@angular/cli": "~8.1.2",
+    "@angular/cli": "~8.3.26",
     "@angular/compiler": "~8.1.2",
     "@angular/compiler-cli": "~8.1.2",
     "@angular/language-service": "~8.1.2",
