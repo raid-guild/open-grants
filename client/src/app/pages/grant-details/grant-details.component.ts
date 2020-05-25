@@ -98,7 +98,7 @@ export class GrantDetailsComponent implements OnInit {
     });
   }
 
-  async payoutModel(data: any) {
+  async payoutModel() {
     const modal = await this.modalController.create({
       component: PayoutComponent,
       cssClass: 'custom-modal-style',
