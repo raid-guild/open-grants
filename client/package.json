@@ -13,7 +13,7 @@
   },
   "private": true,
   "dependencies": {
-    "3box": "^1.18.1",
+    "3box": "^1.19.0",
     "@angular/animations": "^8.2.14",
     "@angular/cdk": "^8.2.3",
     "@angular/common": "~8.1.2",
@@ -43,7 +43,7 @@
     "buffer": "^5.6.0",
     "core-js": "^2.5.4",
     "docker": "^1.0.0",
-    "ethers": "^4.0.43",
+    "ethers": "^4.0.47",
     "firebase": "^7.14.4",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
@@ -66,10 +66,10 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/architect": "~0.801.2",
-    "@angular-devkit/build-angular": "~0.801.2",
-    "@angular-devkit/core": "~8.1.2",
-    "@angular-devkit/schematics": "~8.1.2",
+    "@angular-devkit/architect": "~0.803.26",
+    "@angular-devkit/build-angular": "^0.803.26",
+    "@angular-devkit/core": "~8.3.26",
+    "@angular-devkit/schematics": "~8.3.26",
     "@angular/cli": "~8.1.2",
     "@angular/compiler": "~8.1.2",
     "@angular/compiler-cli": "~8.1.2",
