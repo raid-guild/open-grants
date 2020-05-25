@@ -141,27 +141,29 @@ CRON job to check status of pending transactions
 
 # TODO
 
-  - [ ] Do not ask user for address. Capture from Metamask or 3box.io integration
+  - [x] Do not ask user for address. Capture from Metamask or 3box.io integration
+  - [x] The Graph https://thegraph.com/ for queries
+  - [x] ETH/WEI and TOKEN/Atomic Uint conversion
+  - [x] Grantees and Manager should be address strings OR ens records
+  - [x] Permit views for non registered users (any 3box auth lets user in)
+  - [x] reset secrets
+  - [x] npm audit
+  - [x] Editor license
+  - [x] UI refactor for each ROLE’s { NULL, Manager, Grantee, Donor } grant view
   - [ ] Determine network from webprovider
-  - [ ] ETH/WEI and TOKEN/Atomic Uint conversion
-  - [ ] Grantees and Manager should be address strings OR ens records
-  - [ ] ENS integration
-  - [ ] Permit views for non registered users (any 3box auth lets user in)
   - [ ] move env to .env
-  - [ ] reset secrets
   - [ ] config external mongo service
-  - [ ] npm audit
   - [ ] SSL
-  - [ ] Editor license
   - [ ] DAI support
   - [ ] Arbitrary token support
-  - [ ] The Graph https://thegraph.com/ for queries
-  - [ ] UI refactor for each ROLE’s { NULL, Manager, Grantee, Donor } grant view
-  - [ ] Determine whether link to grant description stored in grant contract or defer to ENS
-  - [ ] Use factor contract to deploy new grants. Confirm factor has required events for tracking.
+  - [ ] Use factory contract to deploy new grants. Confirm factor has required events for tracking.
+  - [ ] ENS integration
+  - ~~[ ] Determine whether link to grant description stored in grant contract or defer to ENS~~
 
-
-
+#### Rev May 25, 2020
+  - [ ] remove web3js
+  - [ ] review use of npm package `docker`
+  - [ ] After factory contract used, capture all grant contract data from The Graph 
 
 # Dev Setup
 
