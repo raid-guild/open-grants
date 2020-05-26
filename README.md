@@ -111,8 +111,8 @@ Unfiltered list of recent grants. (click to view)
 
 Sign-in with metamask.
 
-![signin](docs/signin.png)
-![signin1](docs/signin1.png)
+<img src="docs/signin.png" alt="signin" width="300"/>
+<img src="docs/signin1.png" alt="signin1" width="300"/>
 
 
 ## app/services
