@@ -46,6 +46,20 @@ client root
 
 Client side routes `client/src/app/pages/pages-routing.module.ts`.
 
+### dashboard
+
+Unauthenticated landing page, shows a few of the latest grants.
+
+![landing](docs/dashboard.png)
+
+
+### grant view
+
+Detail view for grant:
+
+![grantview](docs/grantview.gif)
+
+
 ### my-grants
 
 Index view for all user grants. User would be one of a Donor, Grantee, or Manager. Grants arranged in columns based on role.
@@ -88,16 +102,17 @@ Post-funding
 
 ### latest-grants
 
-Unfiltered list of recent grants. 
+Unfiltered list of recent grants. (click to view)
 
 ![latest grants](docs/latest.png)
 
 
 ### auth
 
-Sign in / Register workflow temporary. Will migrate to 3box.io
+Sign-in with metamask.
 
-![auth](docs/auth.png)
+![signin](docs/signin.png)
+![signin1](docs/signin1.png)
 
 
 ## app/services
