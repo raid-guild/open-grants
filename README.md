@@ -171,23 +171,24 @@ CRON job to check status of pending transactions
 
 
 #### Rev May 25, 2020
+  - [ ] move env to .env
+  - [ ] config external mongo service
+  - [ ] SSL
   - [ ] After factory contract used, capture all grant contract data from The Graph 
   - [ ] remove web3js
-  - [ ] review use of npm package `docker`
+  - [ ] Grantee column for my grants
+  - [ ] Determine network from webprovider
   - [ ] Hide grants (user)
   - [ ] Delete grants from db (admin)
+  - [ ] review use of npm package `docker`
 
 
 #### Backlog
 
-  - [ ] Determine network from webprovider
-  - [ ] move env to .env
-  - [ ] config external mongo service
-  - [ ] SSL
   - [ ] DAI support
   - [ ] Arbitrary token support
   - [ ] ENS integration
-  - ~~[ ] Determine whether link to grant description stored in grant contract or defer to ENS~~
+  - [ ] (EIP related) Determine whether link to grant description stored in grant contract or defer to ENS
 
 # Dev Setup
 
