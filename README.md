@@ -89,16 +89,17 @@ Shows current state of grant. Based on role, more or less interaction options ex
 #### Donor View (grant details)
 
 Pre-funding
-![donor view grant details](docs/donorprefunded.png)
+![donor view grant details](docs/donor.png)
 
 Post-funding
-![donor view grant details](docs/donorfunded.png)
+![donor view grant details](docs/donortargetcomplete.png)
 
 
 #### Grant Manager View (grant details)
 
-![grant details](docs/grantdetail.png)
+![grant manager](docs/manager.png)
 
+![grant payout](docs/managerpaymentmodal.png)
 
 ### latest-grants
 
