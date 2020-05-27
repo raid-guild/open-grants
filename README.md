@@ -163,22 +163,30 @@ CRON job to check status of pending transactions
   - [x] Permit views for non registered users (any 3box auth lets user in)
   - [x] reset secrets
   - [x] npm audit
-  - [x] Editor license
+  - [ ] Editor license
   - [x] UI refactor for each ROLE’s { NULL, Manager, Grantee, Donor } grant view
+  - [ ] CI CD with docker
+  - [ ] Use factory contract to deploy new grants. Confirm factory has required events for tracking.
+
+
+#### Rev May 25, 2020
+  - [ ] After factory contract used, capture all grant contract data from The Graph 
+  - [ ] remove web3js
+  - [ ] review use of npm package `docker`
+  - [ ] Hide grants (user)
+  - [ ] Delete grants from db (admin)
+
+
+#### Backlog
+
   - [ ] Determine network from webprovider
   - [ ] move env to .env
   - [ ] config external mongo service
   - [ ] SSL
   - [ ] DAI support
   - [ ] Arbitrary token support
-  - [ ] Use factory contract to deploy new grants. Confirm factor has required events for tracking.
   - [ ] ENS integration
   - ~~[ ] Determine whether link to grant description stored in grant contract or defer to ENS~~
-
-#### Rev May 25, 2020
-  - [ ] remove web3js
-  - [ ] review use of npm package `docker`
-  - [ ] After factory contract used, capture all grant contract data from The Graph 
 
 # Dev Setup
 

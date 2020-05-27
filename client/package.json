@@ -13,7 +13,7 @@
   },
   "browser": {
     "http": false,
-    "https":false,
+    "https": false,
     "timers": false,
     "browser": false,
     "path": false,
