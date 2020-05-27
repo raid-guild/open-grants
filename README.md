@@ -46,6 +46,20 @@ client root
 
 Client side routes `client/src/app/pages/pages-routing.module.ts`.
 
+### dashboard
+
+Unauthenticated landing page, shows a few of the latest grants.
+
+![landing](docs/dashboard.png)
+
+
+### grant view
+
+Detail view for grant:
+
+![grantview](docs/grantview.gif)
+
+
 ### my-grants
 
 Index view for all user grants. User would be one of a Donor, Grantee, or Manager. Grants arranged in columns based on role.
@@ -75,29 +89,31 @@ Shows current state of grant. Based on role, more or less interaction options ex
 #### Donor View (grant details)
 
 Pre-funding
-![donor view grant details](docs/donorprefunded.png)
+![donor view grant details](docs/donor.png)
 
 Post-funding
-![donor view grant details](docs/donorfunded.png)
+![donor view grant details](docs/donortargetcomplete.png)
 
 
 #### Grant Manager View (grant details)
 
-![grant details](docs/grantdetail.png)
+![grant manager](docs/manager.png)
 
+![grant payout](docs/managerpaymentmodal.png)
 
 ### latest-grants
 
-Unfiltered list of recent grants. 
+Unfiltered list of recent grants. (click to view)
 
 ![latest grants](docs/latest.png)
 
 
 ### auth
 
-Sign in / Register workflow temporary. Will migrate to 3box.io
+Sign-in with metamask.
 
-![auth](docs/auth.png)
+<img src="docs/signin.png" alt="signin" width="300"/>
+<img src="docs/signin1.png" alt="signin1" width="300"/>
 
 
 ## app/services
@@ -141,27 +157,37 @@ CRON job to check status of pending transactions
 
 # TODO
 
-  - [ ] Do not ask user for address. Capture from Metamask or 3box.io integration
-  - [ ] Determine network from webprovider
-  - [ ] ETH/WEI and TOKEN/Atomic Uint conversion
-  - [ ] Grantees and Manager should be address strings OR ens records
-  - [ ] ENS integration
-  - [ ] Permit views for non registered users (any 3box auth lets user in)
-  - [ ] move env to .env
-  - [ ] reset secrets
-  - [ ] config external mongo service
-  - [ ] npm audit
-  - [ ] SSL
+  - [x] Do not ask user for address. Capture from Metamask or 3box.io integration
+  - [x] The Graph https://thegraph.com/ for queries
+  - [x] ETH/WEI and TOKEN/Atomic Uint conversion
+  - [x] Grantees and Manager should be address strings OR ens records
+  - [x] Permit views for non registered users (any 3box auth lets user in)
+  - [x] reset secrets
+  - [x] npm audit
   - [ ] Editor license
+  - [x] UI refactor for each ROLE’s { NULL, Manager, Grantee, Donor } grant view
+  - [ ] CI CD with docker
+  - [ ] Use factory contract to deploy new grants. Confirm factory has required events for tracking.
+
+
+#### Rev May 25, 2020
+  - [ ] After factory contract used, capture all grant contract data from The Graph 
+  - [ ] remove web3js
+  - [ ] review use of npm package `docker`
+  - [ ] Hide grants (user)
+  - [ ] Delete grants from db (admin)
+
+
+#### Backlog
+
+  - [ ] Determine network from webprovider
+  - [ ] move env to .env
+  - [ ] config external mongo service
+  - [ ] SSL
   - [ ] DAI support
   - [ ] Arbitrary token support
-  - [ ] The Graph https://thegraph.com/ for queries
-  - [ ] UI refactor for each ROLE’s { NULL, Manager, Grantee, Donor } grant view
-  - [ ] Determine whether link to grant description stored in grant contract or defer to ENS
-  - [ ] Use factor contract to deploy new grants. Confirm factor has required events for tracking.
-
-
-
+  - [ ] ENS integration
+  - ~~[ ] Determine whether link to grant description stored in grant contract or defer to ENS~~
 
 # Dev Setup
 

@@ -1,12 +1,13 @@
 import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
-import { MenuPopoverComponent } from '../menu-popover/menu-popover.component';
 import { GrantService, IGrant } from 'src/app/services/grant.service';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 import { ENVIRONMENT } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
 import { ViewGrantComponent } from '../view-grant/view-grant.component';
 import { Router } from '@angular/router';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-latest-grants',
@@ -15,8 +16,9 @@ import { Router } from '@angular/router';
 })
 export class LatestGrantsComponent implements OnInit {
   allGrant: any;
-  seachResult: any = [];
-
+  searchBox: FormControl;
+  searchResult: any = [];
+  data = [];
   constructor(public popoverCtrl: PopoverController,
     public modalController: ModalController,
     private grantService: GrantService,
@@ -27,33 +29,32 @@ export class LatestGrantsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.searchBox = new FormControl('');
+
+    this.searchBox.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged()
+      )
+      .subscribe((val: string) => {
+        // console.log("val", val)
+        if (val == '') {
+          this.searchResult = [];
+          this.searchResult = this.allGrant;
+        } else {
+          this.searchResult = []
+          this.searchResult = this.allGrant.filter((data) => {
+            // console.log("data.name.toLowerCase()", data.name.toLowerCase());
+            return data.grantName.toLowerCase().includes(val.toLowerCase())
+          });
+        }
+      })
   }
+
+  onCancel(event) { }
 
   grantDetails(id: string) {
-    this.router.navigate(['/pages/grant-details/' + id])
-  }
-
-  handleChange(e) {
-    console.log("e", e);
-    if (e == '') {
-      this.seachResult = this.allGrant;
-    } else {
-      this.seachResult = this.allGrant.filter((data) => {
-        return data.grantName.toLowerCase().includes(e.toLowerCase())
-      });
-      // console.log("temp", this.allGrant);
-    }
-  }
-
-  async userMenuPopover($event) {
-    const popover = await this.popoverCtrl.create({
-      component: MenuPopoverComponent,
-      event: event,
-      translucent: true,
-      cssClass: 'poopover-user-option'
-    })
-
-    return await popover.present();
+    this.router.navigate(['/pages/grant/' + id])
   }
 
   async viewGrant(data: any) {
@@ -81,7 +82,7 @@ export class LatestGrantsComponent implements OnInit {
   getAllGrants() {
     this.grantService.getAll().subscribe((res: HTTPRESPONSE) => {
       this.allGrant = res.data;
-      this.seachResult = this.allGrant;
+      this.searchResult = this.allGrant;
     });
   }
 }

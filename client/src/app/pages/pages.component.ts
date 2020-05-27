@@ -10,8 +10,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { HTTPRESPONSE } from '../common/http-helper/http-helper.class';
 import { async } from '@angular/core/testing';
-import { PublicKeyModelComponent } from './public-key-model/public-key-model.component';
-
+import { AuthService, AuthState } from '../services/auth.service';
 
 @Component({
     selector: 'app-pages',
@@ -19,24 +18,26 @@ import { PublicKeyModelComponent } from './public-key-model/public-key-model.com
     styleUrls: ['./pages.component.scss'],
 })
 export class PagesComponent implements OnInit {
-    public appPages = [
+    isLogin = false;
+    public appPages = [];
+    public pages = [
+        // {
+        //   title: 'Create New Grants',
+        //   url: '/pages/create',
+        //   icon: 'gp-grant'
+        // },
         {
-            title: 'Create New Grants',
-            url: '/pages/create-new-grant',
-            icon: 'gp-grant'
-        },
-        {
-            title: 'My Grants',
-            url: '/pages/my-grants',
+            title: 'Dashboard',
+            url: '/pages/dashboard',
             icon: 'gp-grant'
         },
         {
             title: 'Latest Grants',
-            url: '/pages/latest-grants',
+            url: '/pages/latest',
             icon: 'gp-latest-grant'
         }, {
             title: 'Trending Grants',
-            url: '/pages/trending-grants',
+            url: '/pages/trending',
             icon: 'gp-trending-grants'
         },
         // {
@@ -46,74 +47,59 @@ export class PagesComponent implements OnInit {
         // }
     ];
 
-    userData: any;
+    public allPage = [
+        {
+            title: 'Dashboard',
+            url: '/pages/dashboard',
+            icon: 'gp-grant'
+        },
+        {
+            title: 'Latest Grants',
+            url: '/pages/latest',
+            icon: 'gp-latest-grant'
+        }, {
+            title: 'Trending Grants',
+            url: '/pages/trending',
+            icon: 'gp-trending-grants'
+        },
+        {
+            title: 'My Grants',
+            url: '/pages/my-grants',
+            icon: 'gp-grant'
+        },
+        {
+            title: 'User Profile',
+            url: '/pages/profile',
+            icon: 'gp-user'
+        },
+    ]
 
     constructor(
-        private platform: Platform,
-        private splashScreen: SplashScreen,
-        private statusBar: StatusBar,
-        private modalController: ModalController,
-        public events: Events,
-        public router: Router,
-        private userService: UserService,
-        private _zone: NgZone
+        private authService: AuthService,
+        public events: Events
     ) {
+        let res = this.authService.getAuthState();
+        this.isLogin = res.is_logged_in;
 
-        (async () => {
-            let res: any = await this.userService.getUser().toPromise();
-            this.userData = res.data;
-            this.publicKeyModal();
-        })();
-
-        this.initializeApp();
-    }
-
-    initializeApp() {
-        this.platform.ready().then(() => {
-            this.statusBar.styleDefault();
-            this.splashScreen.hide();
+        this.events.subscribe('is_logged_in', (data) => {
+            this.isLogin = data;
+            if (this.isLogin) {
+                this.appPages = this.allPage;
+            } else {
+                this.appPages = this.pages;
+            }
         });
+
+        if (this.isLogin) {
+            this.appPages = this.allPage;
+        } else {
+            this.appPages = this.pages;
+        }
     }
 
     ngOnInit() {
+        this.authService.authState.subscribe((res: AuthState) => {
+            console.log("res.is_logged_in", res)
+        });
     }
-
-    async publicKeyModal() {
-        setTimeout(async () => {
-            if (this.userData && (!this.userData.hasOwnProperty('publicKey') || !this.userData.publicKey)) {
-                this._zone.run(async () => {
-                    const modal = await this.modalController.create({
-                        component: PublicKeyModelComponent,
-                        cssClass: 'custom-modal-style',
-                        backdropDismiss: false,
-                        mode: "ios"
-                    });
-                    return await modal.present();
-                })
-            }
-        }, 2000);
-    }
-
-
-    // async createNewGrant() {
-    //     console.log("New Grant")
-    //     const modal = await this.modalController.create({
-    //         component: CreateNewGrantComponent,
-    //         cssClass: 'custom-modal-style',
-    //         mode: "ios"
-    //     })
-
-    //     modal.onDidDismiss()
-    //         .then((data) => {
-    //             const reload = data['data'];
-    //             // console.log("reload", reload);
-    //             if (reload && reload.hasOwnProperty('reload') && reload.reload) {
-    //                 this.events.publish('my-grants', true);
-    //             }
-    //         });
-
-    //     return await modal.present();
-
-    // this.router.navigate(['pages/create-new-grant']);
-    // }
 }

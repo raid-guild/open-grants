@@ -16,8 +16,8 @@ var reqStatusEnum = {
 
 export const PayoutSchema = new mongoose.Schema(
     {
-        grantManager: { type: Schema.Types.ObjectId, ref: "User", required: true },
-        grantee: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        grantManager: { type: String },
+        grantee: { type: String },
         grant: { type: Schema.Types.ObjectId, ref: "Grant", required: true },
         requestAmount: { type: Number, required: true },
         status: { type: statusEnum },

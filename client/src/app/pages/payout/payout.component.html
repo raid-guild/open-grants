@@ -1,0 +1,61 @@
+<ion-header mode="md" no-border>
+    <ion-toolbar mode="md">
+        <h1 class="color-black">Payout</h1>
+        <ion-buttons slot="end">
+            <ion-button (click)="dismiss()" color="medium">
+                <ion-icon slot="icon-only" class="gp-close"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form [formGroup]="myForm" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
+        <div class="">
+            <ion-list lines="none" class="forms" mode="md">
+                <div class="" style="margin: 25px;">
+                    <ion-item>
+                        <ion-label position="floating">Grantee Address</ion-label>
+                        <ion-input name="granteeAddress" formControlName="granteeAddress" type="text" required>
+                        </ion-input>
+                    </ion-item>
+                    <div class="error">
+                        <label *ngIf="f.submitted && form.granteeAddress.errors?.required">
+              Please Add Grantee Address
+            </label>
+                        <label *ngIf="!form.granteeAddress.errors?.required && form.granteeAddress.errors?.addressValid">
+              Grantee Address Not Valid
+            </label>
+                        <label *ngIf="granteeNotMatch && !form.granteeAddress.invalid">
+              Address Not Match With Any Grantee
+            </label>
+                    </div>
+                </div>
+                <div class="" style="margin: 0 25px 25px 25px;">
+                    <ion-item>
+                        <ion-label position="floating">Amount</ion-label>
+                        <ion-input name="amount" [OnlyNumber]="true" formControlName="amount" type="text" required>
+                        </ion-input>
+                    </ion-item>
+
+                    <div class="error">
+                        <span *ngIf="f.submitted && form.amount.invalid">
+              Please Enter Amount
+            </span>
+                        <span *ngIf="form.amount.value==0 && !form.amount.invalid">
+              Please Enter Valid Amount
+            </span>
+                        <span *ngIf="maxAmountError && !form.amount.invalid">
+              Max Remaining Allocation is {{remainingAllocation}} {{grantData?.currency}} For This Grantee
+            </span>
+                    </div>
+                </div>
+            </ion-list>
+        </div>
+        <div class="submit-button">
+            <ion-button mode="md" class="tt-none" [disabled]="processing" expand="block" type="ngSubmit">
+                Submit
+            </ion-button>
+        </div>
+    </form>
+</ion-content>

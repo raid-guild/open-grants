@@ -15,10 +15,6 @@ export class GrantService {
 
     async getAll(): Promise<Grant[]> {
         const response = await this.GrantModel.find({})
-            .populate('grantManager')
-            .populate('grantees.grantee')
-            .populate('createdBy')
-            .populate('donors')
             .sort({ createdAt: -1 })
             .exec();
         return response;
@@ -26,10 +22,30 @@ export class GrantService {
 
     async getById(id: string): Promise<any> {
         const response = await this.GrantModel.findOne({ _id: id })
-            .populate('grantManager')
-            .populate('createdBy')
-            .populate('donors')
-            .populate('grantees.grantee')
+            .exec();
+        return response;
+    }
+
+    async getByContract(contract: string): Promise<any> {
+        const response = await this.GrantModel.findOne({ contractAddress: contract })
+            .exec();
+        return response;
+    }
+
+    async findCreatedByMe(publicAddress: string): Promise<any> {
+        const response = await this.GrantModel.find({ createdBy: publicAddress })
+            .exec();
+        return response;
+    }
+
+    async managedByMe(publicAddress: string): Promise<Grant[]> {
+        const response = await this.GrantModel.find({ manager: publicAddress })
+            .exec();
+        return response;
+    }
+
+    async findFundedByMe(publicAddress: string): Promise<Grant[]> {
+        const response = await this.GrantModel.find({ donors: { $in: [publicAddress] } })
             .exec();
         return response;
     }
@@ -61,36 +77,6 @@ export class GrantService {
                 donors: { $in: [user] }
             }]
         })
-            .exec();
-        return response;
-    }
-
-    async findCreatedByMe(id: string): Promise<any> {
-        const response = await this.GrantModel.find({ createdBy: id })
-            .populate('grantManager')
-            .populate('grantees.grantee')
-            .populate('createdBy')
-            .populate('donors')
-            .exec();
-        return response;
-    }
-
-    async findFundedByMe(id: string): Promise<Grant[]> {
-        const response = await this.GrantModel.find({ donors: { $in: [id] } })
-            .populate('grantManager')
-            .populate('grantees.grantee')
-            .populate('createdBy')
-            .populate('donors')
-            .exec();
-        return response;
-    }
-
-    async managedByMe(id: string): Promise<Grant[]> {
-        const response = await this.GrantModel.find({ grantManager: id })
-            .populate('grantManager')
-            .populate('grantees.grantee')
-            .populate('createdBy')
-            .populate('donors')
             .exec();
         return response;
     }

@@ -43,8 +43,7 @@ export class GrantController {
     @ApiResponse({ status: 200, description: 'Grant added successfully.' })
     async add(@Req() req, @Res() res, @Body() grantModel: Grant, @Body() grantswagger: grantswagger) {
         try {
-            console.log("grantModel", grantModel);
-            grantModel.createdBy = req.user._id;
+            grantModel.createdBy = req.user.publicAddress;
             let response = await this.grantService.add(grantModel);
             this.scheduleService.addJobForGrant(response._id, response.hash);
             return res.status(httpStatus.OK).json(new APIResponse(response, 'Grant added successfully', httpStatus.OK));
@@ -59,7 +58,6 @@ export class GrantController {
     @ApiResponse({ status: 200, description: 'Grants fetched successfully' })
     async getAll(@Req() req, @Res() res) {
         try {
-            // console.log("req", req.user);
             let response = await this.grantService.getAll();
             return res.status(httpStatus.OK).json(new APIResponse(response, 'Grants fetched successfully', httpStatus.OK));
         } catch (e) {
@@ -77,52 +75,26 @@ export class GrantController {
             let response = await this.grantService.getById(grantId);
 
             if (response) {
-                response = JSON.parse(JSON.stringify(response));
-
-                if (response.type == this.typeEnum.MULTIPLE) {
-                    let multipleMilestones = [];
-
-                    for (let i = 0; i < response.multipleMilestones.length; i++) {
-                        let data = response.multipleMilestones[i];
-
-                        let totalFundimg = 0;
-                        let fromDate: any;
-                        if (i == 0) {
-                            fromDate = response.createdAt;
-                        } else {
-                            fromDate = response.multipleMilestones[i - 1].completionDate;
-                        }
-
-                        let funding = await this.grantFundService.getBydate(grantId, fromDate, data.completionDate);
-                        funding.map((temp) => {
-                            totalFundimg += temp.fundingAmount;
-                        });
-
-                        multipleMilestones.push({
-                            ...JSON.parse(JSON.stringify(data)),
-                            funding: totalFundimg
-                        });
-                    }
-
-                    response.multipleMilestones = [...multipleMilestones];
-                } else {
-                    let totalFundimg = 0;
-                    let funding = await this.grantFundService.getBydate(grantId, response.createdAt, response.singleDeliveryDate.completionDate);
-
-                    funding.map((temp) => {
-                        totalFundimg += temp.fundingAmount;
-                    });
-
-                    response.singleDeliveryDate = {
-                        ...response.singleDeliveryDate,
-                        funding: totalFundimg
-                    }
-                }
-
                 return res.status(httpStatus.OK).json(new APIResponse(response, 'Grant fetched successfully', httpStatus.OK));
             } else {
                 return res.status(httpStatus.BAD_REQUEST).json(new APIResponse({}, 'No Record Found', httpStatus.BAD_REQUEST));
             }
+        } catch (e) {
+            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting grant', httpStatus.INTERNAL_SERVER_ERROR, e));
+        }
+    }
+
+    @Get('getByContract/:contract')
+    @ApiBearerAuth()
+    @ApiParam({ name: 'contract', type: String })
+    @ApiResponse({ status: 200, description: 'Grants fetched successfully' })
+    async getByContract(@Req() req, @Res() res, @Param('contract') contract) {
+        try {
+            let response = await this.grantService.getByContract(contract);
+            if (response) {
+                return res.status(httpStatus.OK).json(new APIResponse(response, 'Grants fetched successfully', httpStatus.OK));
+            }
+            return res.status(httpStatus.BAD_REQUEST).json(new APIResponse({}, 'No Record Found', httpStatus.BAD_REQUEST));
         } catch (e) {
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting grant', httpStatus.INTERNAL_SERVER_ERROR, e));
         }
@@ -134,7 +106,7 @@ export class GrantController {
     async createdByMe(@Req() req, @Res() res) {
         try {
             console.log("id", req.user);
-            let response = await this.grantService.findCreatedByMe(req.user._id);
+            let response = await this.grantService.findCreatedByMe(req.user.publicAddress);
             return res.status(httpStatus.OK).json(new APIResponse(response, 'Grants fetched successfully', httpStatus.OK));
         } catch (e) {
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting grant', httpStatus.INTERNAL_SERVER_ERROR, e));
@@ -146,7 +118,7 @@ export class GrantController {
     @ApiResponse({ status: 200, description: 'Grants fetched successfully' })
     async fundedByMe(@Req() req, @Res() res) {
         try {
-            let response = await this.grantService.findFundedByMe(req.user._id);
+            let response = await this.grantService.findFundedByMe(req.user.publicAddress);
             return res.status(httpStatus.OK).json(new APIResponse(response, 'Grants fetched successfully', httpStatus.OK));
         } catch (e) {
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting grant', httpStatus.INTERNAL_SERVER_ERROR, e));
@@ -160,35 +132,35 @@ export class GrantController {
     async managedByMe(@Req() req, @Res() res) {
         try {
             // console.log("id", id);
-            let response = await this.grantService.managedByMe(req.user._id);
+            let response = await this.grantService.managedByMe(req.user.publicAddress);
             return res.status(httpStatus.OK).json(new APIResponse(response, 'Grants fetched successfully', httpStatus.OK));
         } catch (e) {
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting grant', httpStatus.INTERNAL_SERVER_ERROR, e));
         }
     }
 
-    @Get('trendingGrants')
-    async getTrendingGrants(@Res() res) {
-        try {
-            let allGrant = await this.grantService.getAll();
+    // @Get('trendingGrants')
+    // async getTrendingGrants(@Res() res) {
+    //     try {
+    //         let allGrant = await this.grantService.getAll();
 
-            allGrant = allGrant.sort(function (obj1, obj2) {
-                if ((obj1.totalFunding + obj1.totalPayed) == 0) {
-                    return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - 0;
-                }
+    //         allGrant = allGrant.sort(function (obj1, obj2) {
+    //             if ((obj1.totalFunding + obj1.totalPayed) == 0) {
+    //                 return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - 0;
+    //             }
 
-                if ((obj2.totalFunding + obj2.totalPayed) == 0) {
-                    return 0 - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
-                }
+    //             if ((obj2.totalFunding + obj2.totalPayed) == 0) {
+    //                 return 0 - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
+    //             }
 
-                return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
-            });
+    //             return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
+    //         });
 
-            return res.status(httpStatus.OK).json(new APIResponse(allGrant, 'Grants fetched successfully', httpStatus.OK));
-        } catch (e) {
-            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting grant', httpStatus.INTERNAL_SERVER_ERROR, e));
-        }
-    }
+    //         return res.status(httpStatus.OK).json(new APIResponse(allGrant, 'Grants fetched successfully', httpStatus.OK));
+    //     } catch (e) {
+    //         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting grant', httpStatus.INTERNAL_SERVER_ERROR, e));
+    //     }
+    // }
 
     @Put('')
     @ApiBearerAuth()
@@ -205,53 +177,6 @@ export class GrantController {
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse({}, 'Error updating grant', httpStatus.INTERNAL_SERVER_ERROR, e));
         }
     }
-
-    // @Post('cancel/:id')
-    // @ApiBearerAuth()
-    // @ApiResponse({ status: 200, description: 'Grant cancel successfully' })
-    // async cancel(@Req() req, @Res() res, @Param('id') grantId) {
-    //     try {
-    //         let getByDonor = await this.grantService.getByIdAndDonorAndGrantee(grantId, req.user._id);
-
-    //         if (getByDonor) {
-    //             let grantData = getByDonor;
-    //             let now = new Date().toISOString();
-
-    //             if (grantData.type == "singleDeliveryDate") {
-    //                 const isAfter = moment(now).isAfter(moment(grantData.singleDeliveryDate.fundingExpiryDate));
-
-    //                 if (isAfter && grantData.totalFunding < grantData.targetFunding) {
-    //                     await this.grantService.cancel(grantData._id, req.user._id);
-    //                     return res.status(httpStatus.OK).json(new APIResponse(null, 'Grant cancel successfully', httpStatus.OK));
-    //                 }
-    //             }
-
-    //             if (grantData.type == "multipleMilestones") {
-    //                 const isAfter = moment(now).isAfter(moment(grantData.multipleMilestones[grantData.multipleMilestones.length - 1].completionDate));
-
-    //                 if (isAfter && grantData.totalFunding < grantData.targetFunding) {
-    //                     await this.grantService.cancel(grantData._id, req.user._id);
-    //                     return res.status(httpStatus.OK).json(new APIResponse(null, 'Grant cancel successfully', httpStatus.OK));
-    //                 }
-    //             }
-
-    //             return res.status(httpStatus.BAD_REQUEST).json(new APIResponse(null, 'Some thing went wrong', httpStatus.BAD_REQUEST));
-    //         }
-
-    //         let getByManager = await this.grantService.getByIdAndManager(grantId, req.user._id);
-
-    //         if (getByManager) {
-    //             await this.grantService.cancel(getByManager._id, req.user._id);
-    //             return res.status(httpStatus.OK).json(new APIResponse(null, 'Grant cancel successfully', httpStatus.OK));
-    //         }
-
-    //         return res.status(httpStatus.BAD_REQUEST).json(new APIResponse(getByManager, 'No Record Found', httpStatus.BAD_REQUEST));
-
-    //     } catch (e) {
-    //         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error cancling grant', httpStatus.INTERNAL_SERVER_ERROR, e));
-    //     }
-    // }
-
 
     @Post('cancel/:id')
     @ApiBearerAuth()

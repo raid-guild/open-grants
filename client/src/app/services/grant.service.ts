@@ -44,8 +44,12 @@ export class GrantService extends HttpHelper {
         return this.http.get(this.apiUrl + '/grant', this.getHttpOptions())
     }
 
-    getById(Id: any): Observable<any> {
+    getById(Id: string): Observable<any> {
         return this.http.get(this.apiUrl + '/grant/get/' + Id, this.getHttpOptions())
+    }
+
+    getByContract(contract: string): Observable<any> {
+        return this.http.get(this.apiUrl + '/grant/getByContract/' + contract, this.getHttpOptions())
     }
 
     getGrantCreatedByMe(): Observable<any> {

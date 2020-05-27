@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
-import { MenuPopoverComponent } from '../menu-popover/menu-popover.component';
 import { GrantService } from 'src/app/services/grant.service';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 import { ViewGrantComponent } from '../view-grant/view-grant.component';
 import { ENVIRONMENT } from 'src/environments/environment';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-trending-grants',
@@ -13,9 +14,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./trending-grants.component.scss'],
 })
 export class TrendingGrantsComponent implements OnInit {
-
   trendingGrants: any;
-  seachResult: any;
+  searchBox: FormControl;
+  searchResult: any = [];
 
   constructor(public popoverCtrl: PopoverController,
     public modalController: ModalController,
@@ -24,32 +25,41 @@ export class TrendingGrantsComponent implements OnInit {
   ) {
 
     this.getTrendingGrants();
+    this.searchBox = new FormControl('');
+
+    this.searchBox.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged()
+      )
+      .subscribe((val: string) => {
+        // console.log("val", val)
+        if (val == '') {
+          this.searchResult = [];
+          this.searchResult = this.trendingGrants;
+        } else {
+          this.searchResult = []
+          this.searchResult = this.trendingGrants.filter((data) => {
+            // console.log("data.name.toLowerCase()", data.name.toLowerCase());
+            return data.grantName.toLowerCase().includes(val.toLowerCase())
+          });
+        }
+      })
   }
 
   ngOnInit() {
   }
 
   grantDetails(id: string) {
-    this.router.navigate(['/pages/grant-details/' + id])
-  }
-
-  async userMenuPopover($event) {
-    const popover = await this.popoverCtrl.create({
-      component: MenuPopoverComponent,
-      event: event,
-      translucent: true,
-      cssClass: 'poopover-user-option'
-    })
-
-    return await popover.present();
+    this.router.navigate(['/pages/grant/' + id])
   }
 
   handleChange(e) {
     console.log("e", e);
     if (e == '') {
-      this.seachResult = this.trendingGrants;
+      this.searchResult = this.trendingGrants;
     } else {
-      this.seachResult = this.trendingGrants.filter((data) => {
+      this.searchResult = this.trendingGrants.filter((data) => {
         return data.grantName.toLowerCase().includes(e.toLowerCase())
       });
       // console.log("temp", this.allGrant);
@@ -78,10 +88,12 @@ export class TrendingGrantsComponent implements OnInit {
     return await modal.present();
   }
 
+  onCancel(event) { }
+
   getTrendingGrants() {
-    this.grantService.getTrendingGrants().subscribe((res: HTTPRESPONSE) => {
+    this.grantService.getAll().subscribe((res: HTTPRESPONSE) => {
       this.trendingGrants = res.data;
-      this.seachResult = this.trendingGrants;
+      this.searchResult = this.trendingGrants;
     });
   }
 }

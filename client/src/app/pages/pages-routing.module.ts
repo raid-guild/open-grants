@@ -1,6 +1,20 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { PagesComponent } from './pages.component';
+import { AuthGuard } from '../guard/auth.guard';
+import { HomeComponent } from './home/home.component';
+import { LatestGrantsComponent } from './latest-grants/latest-grants.component';
+import { TrendingGrantsComponent } from './trending-grants/trending-grants.component';
+import { ListComponent } from './list/list.component';
+import { ProfileComponent } from './profile/profile.component';
+import { MyGrantsComponent } from './my-grants/my-grants.component';
+import { GrantDetailsComponent } from './grant-details/grant-details.component';
+import { CreateNewGrantComponent } from './create-new-grant/create-new-grant.component';
+import { AmountsReceiveComponent } from './amounts-receive/amounts-receive.component';
+import { ViewGrantUnmarkAsCompleteComponent } from './view-grant-unmark-as-complete/view-grant-unmark-as-complete.component';
+import { ViewGrantRequestRefundComponent } from './view-grant-request-refund/view-grant-request-refund.component';
+import { ViewGrantNotificationsComponent } from './view-grant-notifications/view-grant-notifications.component';
+import { TransactionHistoryComponent } from './transaction-history/transaction-history.component';
 
 // import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 // import { TabsPageComponent } from './tabs-page/tabs-page.component';
@@ -11,50 +25,55 @@ const routes: Routes = [{
     children: [
         {
             path: '',
-            redirectTo: 'my-grants', pathMatch: 'full'
+            redirectTo: 'dashboard', pathMatch: 'full'
         },
         {
-            path: 'home',
-            loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+            path: 'dashboard',
+            component: HomeComponent
+        }, {
+            path: 'latest',
+            component: LatestGrantsComponent
+        }, {
+            path: 'trending',
+            component: TrendingGrantsComponent
         }, {
             path: 'list',
-            loadChildren: () => import('./list/list.module').then(m => m.ListModule),
+            component: ListComponent
+        }, {
+            path: 'grant/:id',
+            component: GrantDetailsComponent,
+        }, {
+            path: 'profile',
+            component: ProfileComponent,
+            canActivate: [AuthGuard]
         }, {
             path: 'my-grants',
-            loadChildren: () => import('./my-grants/my-grants.module').then(m => m.MyGrantsModule),
+            component: MyGrantsComponent,
+            canActivate: [AuthGuard]
         }, {
-            path: 'latest-grants',
-            loadChildren: () => import('./latest-grants/latest-grants.module').then(m => m.LatestGrantsModule),
-        }, {
-            path: 'create-new-grant',
-            loadChildren: () => import('./create-new-grant/create-new-grant.module').then(m => m.CreateNewGrantModule),
-        }, {
-            path: 'trending-grants',
-            loadChildren: () => import('./trending-grants/trending-grants.module').then(m => m.TrendingGrantsModule),
-        }, {
-            path: 'user-profile',
-            loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule),
+            path: 'create',
+            component: CreateNewGrantComponent,
+            canActivate: [AuthGuard]
         }, {
             path: 'transaction-history',
-            loadChildren: () => import('./transaction-history/transaction-history.module').then(m => m.TransactionHistoryModule),
-        }, {
-            path: 'view-grant',
-            loadChildren: () => import('./view-grant/view-grant.module').then(m => m.ViewGrantModule),
-        }, {
-            path: 'grant-details',
-            loadChildren: () => import('./grant-details/grant-details.module').then(m => m.GrantDetailsModule),
+            component: TransactionHistoryComponent,
+            canActivate: [AuthGuard]
         }, {
             path: 'view-grant-notifications',
-            loadChildren: () => import('./view-grant-notifications/view-grant-notifications.module').then(m => m.ViewGrantNotificationsModule),
+            component: ViewGrantNotificationsComponent,
+            canActivate: [AuthGuard]
         }, {
             path: 'view-grant-request-refund',
-            loadChildren: () => import('./view-grant-request-refund/view-grant-request-refund.module').then(m => m.ViewGrantRequestRefundModule),
+            component: ViewGrantRequestRefundComponent,
+            canActivate: [AuthGuard]
         }, {
             path: 'view-grant-unmark-as-complete',
-            loadChildren: () => import('./view-grant-unmark-as-complete/view-grant-unmark-as-complete.module').then(m => m.ViewGrantUnmarkAsCompleteModule),
+            component: ViewGrantUnmarkAsCompleteComponent,
+            canActivate: [AuthGuard]
         }, {
             path: 'amounts-receive',
-            loadChildren: () => import('./amounts-receive/amounts-receive.module').then(m => m.AmountsReceiveModule),
+            component: AmountsReceiveComponent,
+            canActivate: [AuthGuard]
         },
         // {
         //     path: '**',

@@ -1,7 +1,8 @@
-import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import * as jwt_decode from 'jwt-decode';
-import {AppSettings} from '../config/app.config';
+import { AppSettings } from '../config/app.config';
+import { Events } from '@ionic/angular';
 
 export interface AuthState {
     is_logged_in: boolean;
@@ -16,7 +17,9 @@ export class AuthService {
     authState = this.authSubject.asObservable();
     private applicationAuthState: AuthState;
 
-    constructor() {
+    constructor(
+        public events: Events,
+    ) {
         this.applicationAuthState = {
             is_logged_in: AuthService.isAuthenticated()
         };
@@ -38,6 +41,7 @@ export class AuthService {
     setAuthState(data: AuthState) {
         this.applicationAuthState = data;
         this.authSubject.next(data);
+        this.events.publish('is_logged_in', data.is_logged_in);
     }
 
     getAuthUserId() {
@@ -57,7 +61,7 @@ export class AuthService {
         localStorage.removeItem(AppSettings.localStorage_keys.token);
         localStorage.clear();
         console.log(localStorage.getItem(AppSettings.localStorage_keys.token));
-        this.setAuthState({is_logged_in: false});
+        this.setAuthState({ is_logged_in: false });
     }
 
 }

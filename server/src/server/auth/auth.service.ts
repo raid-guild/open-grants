@@ -15,6 +15,13 @@ export class AuthService {
         }).exec();
     }
 
+    async getByPublicAddress(publicAddress: string): Promise<any> {
+        const response = await this.UserModel.findOne({
+            publicAddress: publicAddress
+        }).exec();
+        return response;
+    }
+
     async add(data: User): Promise<User> {
         const user = new this.UserModel(data);
         let response = await user.save();

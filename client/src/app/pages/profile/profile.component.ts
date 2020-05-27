@@ -1,18 +1,15 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
-import { MenuPopoverComponent } from '../menu-popover/menu-popover.component';
 import { AppSettings } from 'src/app/config/app.config';
 import { UserService } from 'src/app/services/user.service';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
-import { ResetPasswordComponent } from '../reset-password/reset-password.component';
 import { ToastrService } from 'ngx-toastr';
 import { UserManagementService } from 'src/app/services/user-management.service';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { ImageCropComponent } from '../image-crop/image-crop.component';
 import { EthcontractService } from 'src/app/services/ethcontract.service';
 import { Subscription } from 'rxjs';
-import { PublicKeyModelComponent } from '../public-key-model/public-key-model.component';
-
+import { ThreeBoxService } from 'src/app/services/threeBox.service';
 declare let window: any;
 
 @Component({
@@ -22,6 +19,7 @@ declare let window: any;
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   userData: any;
+  user3BoxProfile: any;
   toastTitle = "User";
   profile: File;
   balance: any;
@@ -37,6 +35,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private ethcontractService: EthcontractService,
     private _zone: NgZone,
+    private threeBoxService: ThreeBoxService
   ) {
     this.getUserData();
 
@@ -47,43 +46,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
-  }
-
-  async userMenuPopover($event) {
-    const popover = await this.popoverCtrl.create({
-      component: MenuPopoverComponent,
-      event: event,
-      translucent: true,
-      cssClass: 'poopover-user-option'
-    })
-
-    return await popover.present();
-  }
-
-  async resetPassword(data: any) {
-    const modal = await this.modalController.create({
-      component: ResetPasswordComponent,
-      cssClass: 'custom-modal-style',
-      mode: "ios",
-    });
-    return await modal.present();
-  }
-
-  async changePublicKey() {
-    const modal = await this.modalController.create({
-      component: PublicKeyModelComponent,
-      cssClass: 'custom-modal-style',
-      mode: "ios",
-      componentProps: {
-        isAvailable: true
-      }
-    });
-    return await modal.present();
   }
 
   getUserData() {
-    // this.userData = JSON.parse(localStorage.getItem(AppSettings.localStorage_keys.userData));
     this.userService.getUser().subscribe((res: HTTPRESPONSE) => {
       this.userData = res.data;
       if (this.userData && this.userData.hasOwnProperty('picture') && this.userData.picture) {
@@ -96,8 +61,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   async getAccountInfo() {
-    if (this.userData && this.userData.hasOwnProperty('publicKey') && this.userData.publicKey) {
-      let data: any = await this.ethcontractService.getAccountInfo(this.userData.publicKey);
+    if (this.userData && this.userData.hasOwnProperty('publicAddress') && this.userData.publicAddress) {
+      this.user3BoxProfile = await this.threeBoxService.getProfile(this.userData.publicAddress);
+
+      let data: any = await this.ethcontractService.getAccountInfo(this.userData.publicAddress);
       this.account = data.account;
       this.balance = data.balance;
     }

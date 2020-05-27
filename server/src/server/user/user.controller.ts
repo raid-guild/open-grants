@@ -99,6 +99,19 @@ export class UserController {
         }
     }
 
+    @Get('getByPublicAddress/:publicAddress')
+    @ApiBearerAuth()
+    @ApiParam({ name: 'name', type: String })
+    @ApiResponse({ status: 200, description: 'Records fetched successfully.' })
+    async getByPublicAddress(@Res() res, @Param('publicAddress') publicAddress) {
+        try {
+            let response = await this.userService.searchBypublicAddress(publicAddress);
+            return res.status(httpStatus.OK).json(new APIResponse(response, 'Records fetched successfully', httpStatus.OK));
+        } catch (e) {
+            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting Record', httpStatus.INTERNAL_SERVER_ERROR, e));
+        }
+    }
+
     @Get('searchUser/search/:name*?')
     @ApiBearerAuth()
     @ApiParam({ name: 'name', type: String })
@@ -125,7 +138,6 @@ export class UserController {
 
             let response = await this.userService.update(userModel);
             if (response) {
-                delete response.password;
                 return res.status(httpStatus.OK).json(new APIResponse(response, 'Records updated succesfully', httpStatus.OK));
             } else {
                 return res.status(httpStatus.BAD_REQUEST).json(new APIResponse({}, 'No Record Found', httpStatus.BAD_REQUEST));

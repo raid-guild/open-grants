@@ -6,14 +6,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HomeComponent } from './home.component';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { HeaderModule } from '../header/header.module';
 import { RouterModule } from '@angular/router';
 import { GrantService } from 'src/app/services/grant.service';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
-  
+
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -21,7 +20,6 @@ describe('HomeComponent', () => {
         CommonModule,
         FormsModule,
         IonicModule,
-        HeaderModule,
         HttpClientModule,
         RouterModule],
       declarations: [HomeComponent],
@@ -44,6 +42,6 @@ describe('HomeComponent', () => {
     const service: GrantService = TestBed.get(GrantService);
     expect(service).toBeTruthy();
   });
-  
+
 })
 

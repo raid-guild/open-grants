@@ -18,7 +18,8 @@ export enum EnvConfig {
     MULTIPLE
 }
 var currencyEnum = {
-    WEI: "wei"
+    WEI: "wei",
+    ETH: "ETH"
 }
 
 export enum currencyConfig {
@@ -26,7 +27,9 @@ export enum currencyConfig {
 }
 export const GrantSchema = new mongoose.Schema(
     {
-        grantName: { type: String, required: true },
+        name: { type: String, required: true },
+        images: [],
+        description: { type: String },
         type: { type: typeEnum, default: typeEnum.SINGLE },
         singleDeliveryDate: {
             fundingExpiryDate: Date,
@@ -38,29 +41,21 @@ export const GrantSchema = new mongoose.Schema(
                 completionDate: Date
             }
         ],
-        grantManager: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        manager: { type: String, required: true },
         grantees: [
             {
-                grantee: { type: Schema.Types.ObjectId, ref: "User", required: true },
-                allocationAmount: { type: Number, required: true },
-                payedAmount: { type: Number, default: 0 }
+                grantee: { type: String, required: true },
+                allocationAmount: { type: Number, required: true }
             }
         ],
-        donors: [{ type: Schema.Types.ObjectId, ref: "User", required: true }],
         targetFunding: { type: Number, required: true },
-        totalFunding: { type: Number, default: 0 },
-        totalPayed: { type: Number, default: 0 },
-        canFund: { type: Boolean, default: true },
         currency: { type: currencyEnum, default: currencyEnum.WEI },
-        cancelBy: { type: Schema.Types.ObjectId, ref: "User" },
-        createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        createdBy: { type: String, required: true },
         status: { type: statusEnum, default: statusEnum.PENDING },
-        contractId: { type: String, required: true },
+        contractAddress: { type: String, required: true, unique: true },
         hash: { type: String, required: true },
-        failedReason: { type: String },
         content: { type: String },
         isActive: { type: Boolean, default: true },
-        isCancel: { type: Boolean, default: false }
     },
     { timestamps: true }
 )
@@ -155,8 +150,9 @@ export class grantUpdateswagger {
 
 export interface Grant extends mongoose.Document {
     _id: string;
-    grantName: string;
-    grantLink: string;
+    name: string;
+    images: [],
+    description: string,
     type: string;
     singleDeliveryDate: object;
     multipleMilestones: [
@@ -165,27 +161,20 @@ export interface Grant extends mongoose.Document {
             completionDate: Date
         }
     ];
-    grantManager: string;
+    manager: string;
     grantees: [
         {
             grantee: string,
             allocationAmount: number,
-            payedAmount: number
         }
     ];
-    donors: [];
     targetFunding: number;
-    totalFunding: number;
-    totalPayed: number;
     currency: string;
     createdBy: string;
-    cancelBy: string;
     status: string;
     content: string;
-    contractId: string;
+    contractAddress: string;
     hash: string;
-    canFund: boolean;
     createdAt: any;
-    isCancel: boolean
     isActive: boolean;
 }

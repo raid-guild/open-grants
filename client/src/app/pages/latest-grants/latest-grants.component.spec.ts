@@ -6,16 +6,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { LatestGrantsComponent } from './latest-grants.component';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { HeaderModule } from '../header/header.module';
 import { RouterModule } from '@angular/router';
 import { GrantService } from 'src/app/services/grant.service';
-import { MenuPopoverModule } from '../menu-popover/menu-popover.module';
-import { ViewGrantModule } from '../view-grant/view-grant.module';
 
 describe('LatestGrantsComponent', () => {
   let component: LatestGrantsComponent;
   let fixture: ComponentFixture<LatestGrantsComponent>;
-  
+
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -23,10 +20,7 @@ describe('LatestGrantsComponent', () => {
         CommonModule,
         FormsModule,
         IonicModule,
-        MenuPopoverModule,
-        HeaderModule,
         HttpClientModule,
-        ViewGrantModule,
         RouterModule],
       declarations: [LatestGrantsComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -49,6 +43,6 @@ describe('LatestGrantsComponent', () => {
     const service: GrantService = TestBed.get(GrantService);
     expect(service).toBeTruthy();
   });
-  
+
 })
 
