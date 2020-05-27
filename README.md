@@ -211,13 +211,10 @@ npm run start
 
 ```{sh}
 # Build the image
-docker-compose --build
-
-# Build the image && up
-docker-compose up --build
+docker-compose build
 
 # Docker up
-docker-compose up
+docker-compose up --build -V
 
 # Docker down
 docker-compose down
