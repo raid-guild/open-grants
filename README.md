@@ -76,7 +76,9 @@ Grant description is stored in back end db.
 
 ![create grant](docs/create.png)
 
+Grant funds may be split between grantees by indicating precise amounts or by diving into percentages
 
+![Grant Percentages](docs/newgrantpercentages.gif)
 
 ### grant-details
 
