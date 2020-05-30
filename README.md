@@ -1,67 +1,53 @@
-# Set up guide.
-1. Install NodeJs and NPM.
+# OpenGrant Smart Contracts
 
-2. Run following command to install all dependencies.
-        npm install
+Reference Implementation for OpenGrant proposed EIP.
 
-3. For Compilation and building of the contracts
-        ./node_modules/ethereum-waffle/bin/waffle waffle.js
+Write up and announcement here: https://medium.com/@jamesfickel/open-grants-standard-erc-6ed9e137d4fe
 
-4. For running all test cases.
-        ./node_modules/ts-mocha/bin/ts-mocha test/*
+EIP Draft: https://github.com/JFickel/EIPs/blob/draft_grant_standard/EIPS/eip-draft_grant_standard.md
 
-   or running individual test cases.
-        ./node_modules/ts-mocha/bin/ts-mocha test/<test-case-name>
+Front end project: https://github.com/NoahMarconi/grants-platform-mono
+
+Project Sponsors: https://github.com/JFickel & https://molochdao.com/
 
 
-# truffle commands
-Compile:        truffle compile
-Migrate:        truffle migrate
-                  or
-                truffle migrate -network development
-                or
-                truffle migrate --reset
-		or
-                truffle migrate --reset --all
+# Set up guide
 
-truffle create migration 1_hello_world
+```
+$ docker pull ethereum/solc:stable
+$ npm i
+```
 
+Tested with node/npm versions:
 
-to start truffle(development)
-truffle develop 
- 
+```
+$ node --version
+> v12.16.3
 
-to test contracts
-truffle test
-
-https://www.chaijs.com/api/assert/#method_equal
-https://ethereum-waffle.readthedocs.io/en/latest/fixtures.html
-https://www.chaijs.com/api/bdd/#method_ok
-
-Question. In Grant contructor, grantee means who will do the work in exchange of money.
-   Why grantee should be sending the money? Its donor that should be sending the money.
-
-   For Debugging
-   https://medium.com/linum-labs/error-vm-exception-while-processing-transaction-revert-8cd856633793
+$ npm --version
+> 6.14.4
+```
 
 
-https://ethereum-waffle.readthedocs.io/en/latest/matchers.html#revert
-https://web3js.readthedocs.io/en/v1.2.0/web3-eth-contract.html
-https://docs.ethers.io/ethers.js/html/api-contract.html#meta-class-properties
-https://medium.com/linum-labs/error-vm-exception-while-processing-transaction-revert-8cd856633793
+## Build Contracts
 
-# for new Contract
+```
+$ npm run build
+```
 
-const grantFromDonorWithEther: Contract = new Contract(grantWithEther.address, Grant.abi, donorWallet);
+## Test Contracts
 
-here gas fees are paid by the donorWallet
-AND in the contract msg.sender is the donor wallet address
+Run all tests
+```
+$ npm run test
+```
 
+Run single test
+```
+$ npm run test -- test/[FILENAME]
+```
 
-const grantFromManagerWithEther: Contract = new Contract(grantWithEther.address, Grant.abi, managerWallet);
+Test docs:
 
-here gas fees are paid by the managerWallet address
-AND in the contract msg.sender is the manager wallet address
+  - https://ethereum-waffle.readthedocs.io/
 
-new Contract is just to initialize an interface to access an already deployed contract
-new Contract allows you to change who sends gas fee for transactions using the interface you create

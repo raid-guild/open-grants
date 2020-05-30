@@ -17,7 +17,7 @@ describe("Grant", () => {
   async function fixture(provider: any, wallets: Wallet[]) {
     const currentTime = (await provider.getBlock(await provider.getBlockNumber())).timestamp;
     const [granteeWallet, donorWallet, managerWallet] = wallets;
-    const token: Contract = await waffle.deployContract(donorWallet, GrantToken, ["Grant Token", "GT", 18]);
+    const token: Contract = await waffle.deployContract(donorWallet, GrantToken, ["Grant Token", "GT"]);
 
     const grantWithToken: Contract = await waffle.deployContract(
       granteeWallet,
@@ -72,7 +72,7 @@ describe("Grant", () => {
       granteeWallet,
       donorWallet,
       managerWallet,
-      fundingExpiration: currentTime + 86400,
+      fundingDeadline: currentTime + 86400,
       contractExpiration: currentTime + 86400 * 2,
       provider,
       wallets

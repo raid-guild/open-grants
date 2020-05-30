@@ -1,4 +1,5 @@
-pragma solidity >=0.5.10 <0.6.0;
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.6.8 <0.7.0;
 pragma experimental ABIEncoderV2;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
@@ -35,7 +36,7 @@ contract GrantFactory {
      * @param _manager (Optional) Multisig or EOA address of grant manager.
      * @param _currency (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.
      * @param _targetFunding (Optional) Funding threshold required to release funds.
-     * @param _fundingExpiration (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.
+     * @param _fundingDeadline (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.
      * @param _contractExpiration (Optional) Block number after which payouts must be complete or anyone can trigger refunds.
      * @param _extraData Support for extensions to the Standard.
      * @return GUID for this grant.
@@ -46,7 +47,7 @@ contract GrantFactory {
         address _manager,
         address _currency,
         uint256 _targetFunding,
-        uint256 _fundingExpiration,
+        uint256 _fundingDeadline,
         uint256 _contractExpiration,
         bytes memory _extraData // implementation detail
     )
@@ -59,7 +60,7 @@ contract GrantFactory {
             _manager,
             _currency,
             _targetFunding,
-            _fundingExpiration,
+            _fundingDeadline,
             _contractExpiration
         );
 

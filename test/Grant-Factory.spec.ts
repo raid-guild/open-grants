@@ -19,7 +19,7 @@ describe("Grant", () => {
   async function fixture(provider: any, wallets: Wallet[]) {
     const currentTime = (await provider.getBlock(await provider.getBlockNumber())).timestamp;
     const [granteeWallet, donorWallet, managerWallet] = wallets;
-    const token: Contract = await waffle.deployContract(donorWallet, GrantToken, ["Grant Token", "GT", 18]);
+    const token: Contract = await waffle.deployContract(donorWallet, GrantToken, ["Grant Token", "GT"]);
 
     const grantWithToken: Contract = await waffle.deployContract(
       granteeWallet,
@@ -74,7 +74,7 @@ describe("Grant", () => {
       granteeWallet,
       donorWallet,
       managerWallet,
-      fundingExpiration: currentTime + 86400,
+      fundingDeadline: currentTime + 86400,
       contractExpiration: currentTime + 86400 * 2,
       provider,
       wallets
@@ -85,7 +85,7 @@ describe("Grant", () => {
     let _granteeAddress: string;
     let _granteeFactory: Contract;
     let _managerAddress: string;
-    let _fundingExpiration: BigNumber;
+    let _fundingDeadline: BigNumber;
     let _contractExpiration: BigNumber;
     let _grant: Contract;
     let _token: Contract;
@@ -100,7 +100,7 @@ describe("Grant", () => {
         token,
         granteeWallet,
         managerWallet,
-        fundingExpiration,
+        fundingDeadline,
         contractExpiration,
         provider,
         grantFactory,
@@ -110,7 +110,7 @@ describe("Grant", () => {
       _granteeAddress = granteeWallet.address;
       _granteeFactory = grantFactory;
       _managerAddress = managerWallet.address;
-      _fundingExpiration = fundingExpiration;
+      _fundingDeadline = fundingDeadline;
       _contractExpiration = contractExpiration;
       _grant = grantWithToken;
       _token = token;
@@ -120,7 +120,7 @@ describe("Grant", () => {
       currentTime = (await _provider.getBlock(await _provider.getBlockNumber())).timestamp;
     });
 
-    it("should fail if fundingExpiration greater than contractExpiration", async () => {
+    it("should fail if fundingDeadline greater than contractExpiration", async () => {
       await expect(
         _granteeFactory.create(
           [_granteeAddress],
@@ -133,10 +133,10 @@ describe("Grant", () => {
           "0x0",
           { gasLimit: 6e6 }
         )
-      ).to.be.revertedWith("constructor::Invalid Argument. _fundingExpiration not < _contractExpiration.");
+      ).to.be.revertedWith("constructor::Invalid Argument. _fundingDeadline not < _contractExpiration.");
     });
 
-    it("should fail if fundingExpiration less than now", async () => {
+    it("should fail if fundingDeadline less than now", async () => {
       await expect(
         _granteeFactory.create(
           [_granteeAddress],
@@ -149,7 +149,7 @@ describe("Grant", () => {
           "0x0",
           { gasLimit: 6e6 }
         )
-      ).revertedWith("constructor::Invalid Argument. _fundingExpiration not > now");
+      ).revertedWith("constructor::Invalid Argument. _fundingDeadline not > now");
     });
 
     it("should fail if contractExpiration less than now", async () => {
@@ -283,9 +283,9 @@ describe("Grant", () => {
       expect(currency).to.be.eq(_token.address);
     });
 
-    it("should persist the correct fundingExpiration", async () => {
-      const fundingExpiration = await _grant.fundingExpiration();
-      expect(fundingExpiration).to.be.eq(_fundingExpiration);
+    it("should persist the correct fundingDeadline", async () => {
+      const fundingDeadline = await _grant.fundingDeadline();
+      expect(fundingDeadline).to.be.eq(_fundingDeadline);
     });
 
     it("should persist the correct contractExpiration", async () => {

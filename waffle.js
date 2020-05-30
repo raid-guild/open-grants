@@ -4,6 +4,7 @@ module.exports = {
     "compilerOptions": {
         "evmVersion": "byzantium"
     },
-    "solcVersion": "v0.5.10+commit.5a6ea5b1"
+    "compilerType": "dockerized-solc",
+    "compilerVersion": "0.6.8"
 };
   

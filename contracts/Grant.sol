@@ -1,5 +1,5 @@
-pragma solidity >=0.5.10 <0.6.0;
-pragma experimental ABIEncoderV2;
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.6.8 <0.7.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
@@ -13,7 +13,7 @@ import "./ISignal.sol";
  * @dev Grant request, funding, and management.
  * @author @NoahMarconi @ameensol @JFickel @ArnaudBrousseau
  */
-contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
+contract Grant is AbstractGrant, ReentrancyGuard {
     using SafeMath for uint256;
 
 
@@ -22,6 +22,11 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
     uint256 ATOMIC_UNITS = 10 ** 18;
 
 
+    /*----------  Global Variables  ----------*/
+
+    uint256 totalGranteeAllocation; // Check _targetFunding against sum of _amounts array.
+                                    // OR used to calculate proportions of targetFunding is 0.
+    address[] granteeReference;     // Reference to grantee addresses to allow for allocation top up.
     /*----------  Constructor  ----------*/
 
     /**
@@ -47,19 +52,19 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
     {
 
         require(
-            _fundingDeadline == 0 || _fundingDeadline < _contractExpiration,
+            _fundingDeadline != 0 && _fundingDeadline < _contractExpiration,
             "constructor::Invalid Argument. _fundingDeadline not < _contractExpiration."
         );
 
         require(
         // solium-disable-next-line security/no-block-members
-            _fundingDeadline == 0 || _fundingDeadline > now,
+            _fundingDeadline != 0 && _fundingDeadline > now,
             "constructor::Invalid Argument. _fundingDeadline not > now."
         );
 
         require(
         // solium-disable-next-line security/no-block-members
-            _contractExpiration == 0 || _contractExpiration > now,
+            _contractExpiration != 0 && _contractExpiration > now,
             "constructor::Invalid Argument. _contractExpiration not > now."
         );
 
@@ -79,9 +84,6 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         targetFunding = _targetFunding;
         fundingDeadline = _fundingDeadline;
         contractExpiration = _contractExpiration;
-
-        // Check _targetFunding against sum of _amounts array.
-        uint256 totalFundingAmount;
 
         // Initialize Grantees.
         address lastAddress = address(0);
@@ -104,14 +106,17 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
                 "constructor::Invalid Argument. _manager cannot be a Grantee."
             );
 
-            totalFundingAmount = totalFundingAmount.add(currentAmount);
+            totalGranteeAllocation = totalGranteeAllocation.add(currentAmount);
             lastAddress = currentGrantee;
             grantees[currentGrantee].targetFunding = currentAmount;
+
+            // Store address as reference.
+            granteeReference.push(currentGrantee);
         }
 
         require(
-            totalFundingAmount == _targetFunding,
-            "constructor::Invalid Argument. _targetFunding must equal totalFundingAmount."
+            (_targetFunding != 0 && totalGranteeAllocation == _targetFunding),
+            "constructor::Invalid Argument. _targetFunding != totalGranteeAllocation."
         );
 
     }
@@ -143,28 +148,31 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
      */
     function availableBalance()
         public
+        override
         view
         returns(uint256)
     {
         return totalFunding
             .sub(totalPaid)
-            .sub(totalRefunded)
-            .sub(pendingPayments);
+            .sub(totalRefunded);
     }
 
     /**
      * @dev Funding status check.
+     * `fundingDeadline` may be 0, in which case `now` does not impact canFund response.
+     * `targetFunding` may be 0, in which case `totalFunding` oes not impact can fund response.
      * @return true if can fund grant.
      */
     function canFund()
         public
+        override
         view
         returns(bool)
     {
         return (
             // solium-disable-next-line security/no-block-members
             (fundingDeadline == 0 || fundingDeadline > now) &&
-            totalFunding < targetFunding &&
+            (targetFunding == 0 || totalFunding < targetFunding) &&
             !grantCancelled
         );
     }
@@ -193,6 +201,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
      */
     function fund(uint256 value)
         public
+        override
         nonReentrant // OpenZeppelin mutex due to sending change if over-funded.
         returns (bool)
     {
@@ -202,10 +211,20 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
             "fund::Status Error. Grant not open to funding."
         );
 
+        require(
+            !isManager(msg.sender),
+            "fund::Permission Error. Grant Manager cannot fund."
+        );
+
+        require(
+            grantees[msg.sender].targetFunding == 0,
+            "fund::Permission Error. Grantee cannot fund."
+        );
+
         uint256 newTotalFunding = totalFunding.add(value);
 
-        uint256 change;
-        if(newTotalFunding > targetFunding) {
+        uint256 change = 0;
+        if(targetFunding != 0 && newTotalFunding > targetFunding) {
             change = newTotalFunding.sub(targetFunding);
             newTotalFunding = targetFunding;
         }
@@ -218,6 +237,11 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         // Update funding tally.
         totalFunding = newTotalFunding;
 
+        // Perpetual funding.
+        if(targetFunding == 0 && totalFunding > totalGranteeAllocation) {
+            addFundsToGranteeAllocation();
+        }
+
         // Defer to correct funding method.
         if(currency == address(0)) {
             fundWithEther(value, change);
@@ -228,7 +252,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         // Log events.
         emit LogFunding(msg.sender, value.sub(change));
 
-        if(totalFunding == targetFunding) {
+        if(targetFunding != 0 && totalFunding == targetFunding) {
             emit LogFundingComplete();
         }
 
@@ -239,18 +263,19 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
     /*----------  Manager Methods  ----------*/
 
     /**
-     * @dev Approve and make payment to a grantee.
+     * @dev Approve payment to a grantee.
      * @param value Amount in WEI or ATOMIC_UNITS to fund.
      * @param grantee Recipient of payment.
      */
     function approvePayout(uint256 value, address grantee)
         public
+        override
         onlyManager
         returns(bool)
     {
 
         require(
-            targetFunding == totalFunding,
+            (targetFunding != 0 && targetFunding == totalFunding),
             "approvePayout::Status Error. Cannot approve if funding target not met."
         );
 
@@ -266,24 +291,9 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
         // Update state.
         totalPaid = totalPaid.add(value);
-        grantees[grantee].totalPaid = grantees[grantee].totalPaid.add(value);
+        grantees[grantee].payoutApproved = grantees[grantee].payoutApproved.add(value);
 
-        // Send funds.
-        if (currency == address(0)) {
-            require(
-                // solium-disable-next-line security/no-send
-                msg.sender.send(value),
-                "approvePayout::Transfer Error. Unable to send value to Grantee."
-            );
-        } else {
-            require(
-                IERC20(currency)
-                    .transfer(grantee, value),
-                "approvePayout::Transfer Error. ERC20 token transfer failed."
-            );
-        }
-
-        emit LogPayment(grantee, value);
+        emit LogPaymentApproval(grantee, value);
 
         return true;
     }
@@ -293,6 +303,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
      */
     function cancelGrant()
         public
+        override
     {
         require(
             !grantCancelled,
@@ -327,6 +338,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
      */
     function approveRefund(uint256 value, address grantee)
         public
+        override
         onlyManager
     {
 
@@ -351,64 +363,6 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
     }
 
 
-    /*----------  Signal Methods  ----------*/
-
-    /**
-     * @dev Voting Signal Method.
-     * @param support true if in support of grant false if opposed.
-     * @param value Number of signals denoted in Token ATOMIC_UNITS or WEI.
-     * @return True if successful, otherwise false.
-     */
-    function signal(bool support, uint256 value)
-        external
-        payable
-        returns (bool)
-    {
-
-        require(
-            totalFunding < targetFunding,
-            "signal::Status Error. Funding target reached."
-        );
-
-        emit LogSignal(support, msg.sender, currency, value);
-
-        // Prove signaler has control of funds.
-        if (currency == address(0)) {
-            require(
-                msg.value == value,
-                "signal::Invalid Argument. value must match msg.value."
-            );
-
-            require(
-                // solium-disable-next-line security/no-send
-                msg.sender.send(msg.value),
-                "signal::Transfer Error. Unable to send msg.value back to sender."
-            );
-        } else {
-            require(
-                msg.value == 0,
-                "signal::Currency Error. Cannot send Ether to a token funded grant."
-            );
-
-            // Transfer to this contract.
-            require(
-                IERC20(currency)
-                    .transferFrom(msg.sender, address(this), value),
-                "signal::Transfer Error. ERC20 token transferFrom failed."
-            );
-
-            // Transfer back to sender.
-            require(
-                IERC20(currency)
-                    .transfer(msg.sender, value),
-                "signal::Transfer Error. ERC20 token transfer failed."
-            );
-        }
-
-        return true;
-    }
-
-
     /*----------  Withdrawal Methods  ----------*/
 
     /**
@@ -417,9 +371,10 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
      * @param donor Donor address to refund.
      * @return true if withdraw successful.
      */
-    function withdrawRefund(address donor)
+    function withdrawRefund(address payable donor)
         public
-        nonReentrant
+        override
+        nonReentrant // OpenZeppelin mutex due to sending funds.
         returns(bool)
     {
 
@@ -448,7 +403,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         if (currency == address(0)) {
             require(
                 // solium-disable-next-line security/no-send
-                msg.sender.send(eligibleRefund),
+                donor.send(eligibleRefund),
                 "withdrawRefund::Transfer Error. Unable to send refundValue to Donor."
             );
         } else {
@@ -464,6 +419,47 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         return true;
     }
 
+    /**
+     * @dev Withdraws portion of the contract's available balance.
+     *      Amount grantee receives is their total payoutApproved - totalPaid.
+     * @param grantee Grantee address to refund.
+     * @return true if withdraw successful.
+     */
+    function withdrawPayout(address payable grantee)
+        public
+        override
+        nonReentrant // OpenZeppelin mutex due to sending funds.
+        returns(bool)
+    {
+
+        // Amount to be paid.
+        // Will throw if grantees[grantee].payoutApproved < grantees[grantee].totalPaid
+        uint256 eligiblePayout = grantees[grantee].payoutApproved
+            .sub(grantees[grantee].totalPaid);
+
+
+        // Update state.
+        grantees[grantee].totalPaid = grantees[grantee].totalPaid
+            .add(eligiblePayout);
+
+        // Send funds.
+        if (currency == address(0)) {
+            require(
+                // solium-disable-next-line security/no-send
+                grantee.send(eligiblePayout),
+                "approvePayout::Transfer Error. Unable to send value to Grantee."
+            );
+        } else {
+            require(
+                IERC20(currency)
+                    .transfer(grantee, eligiblePayout),
+                "approvePayout::Transfer Error. ERC20 token transfer failed."
+            );
+        }
+
+        emit LogPayment(grantee, eligiblePayout);
+    }
+
 
     /*----------  Private Methods  ----------*/
 
@@ -477,7 +473,7 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
 
         require(
             msg.value > 0,
-            "fundWithEther::Invalid Value. msg.value be greater than 0."
+            "fundWithEther::Invalid Value. msg.value must be greater than 0."
         );
 
         // Send change as refund.
@@ -498,6 +494,11 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
             "fundWithToken::Currency Error. Cannot send Ether to a token funded grant."
         );
 
+        require(
+            value > 0,
+            "fundWithToken::::Invalid Value. value must be greater than 0."
+        );
+
         // Subtract change before transferring to grant contract.
         uint256 netValue = value.sub(change);
         require(
@@ -507,10 +508,34 @@ contract Grant is AbstractGrant, ISignal, ReentrancyGuard {
         );
     }
 
+    function addFundsToGranteeAllocation()
+        private
+    {
+
+        for (uint256 i = 0; i < granteeReference.length; i++) {
+
+            address grantee = granteeReference[i];
+
+            uint256 percentAllocated = grantees[grantee].targetFunding
+                .mul(ATOMIC_UNITS).div(
+                    totalGranteeAllocation
+                );
+
+            // Grantee's share of funding.
+            uint256 eligibleAllocation = totalFunding
+                .mul(percentAllocated)
+                .div(ATOMIC_UNITS);
+
+            grantees[grantee].targetFunding = eligibleAllocation;
+        }
+
+        // Update global state.
+        totalGranteeAllocation = totalFunding;
+    }
 
     /*----------  Fallback  ----------*/
 
-    function ()
+    receive()
         external
         payable
     {

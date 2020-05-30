@@ -1,14 +1,14 @@
-pragma solidity >=0.5.10 <0.6.0;
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.6.8 <0.7.0;
 
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
+import "openzeppelin-solidity/contracts/presets/ERC20PresetMinterPauser.sol";
 
 
-contract GrantToken is ERC20Detailed, ERC20Mintable {
+contract GrantToken is ERC20PresetMinterPauser {
 
-    constructor (string memory name, string memory symbol, uint8 decimals)
+    constructor (string memory name, string memory symbol)
         public
-        ERC20Detailed(name, symbol, decimals)
+        ERC20PresetMinterPauser(name, symbol)
     {
         // solium-disable-previous-line no-empty-blocks
     }

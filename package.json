@@ -1,12 +1,12 @@
 {
   "name": "grant-contracts",
   "version": "1.0.0",
-  "description": "Ethereum Smart Contracts to encode grants",
+  "description": "Reference Implementation for OpenGrant EIP",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/ethereum-waffle/bin/waffle waffle.js && ./node_modules/ts-mocha/bin/ts-mocha test/*",
+    "test": "run(){ npx waffle && npx ts-mocha ${1-'test/*'}; }; run",
     "clean": "npx rimraf ./node_modules/",
-    "lint": "solium -d contracts/"
+    "lint": "npx solium -d contracts/"
   },
   "repository": {
     "type": "git",
@@ -20,23 +20,22 @@
     "smart",
     "contract"
   ],
-  "author": "Arnaud Brousseau",
+  "author": "Noah Marconi",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ArnaudBrousseau/grant-contracts/issues"
+    "url": "https://github.com/NoahMarconi/grant-contracts/issues"
   },
-  "homepage": "https://github.com/ArnaudBrousseau/grant-contracts#readme",
+  "homepage": "https://github.com/NoahMarconi/grant-contracts#readme",
   "dependencies": {
     "diff": ">=3.5.0",
-    "openzeppelin-solidity": "^2.3.0",
-    "solc": "^0.5.11",
-    "truffle": "^5.0.22"
+    "openzeppelin-solidity": "^3.0.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
-    "ethereum-waffle": "^2.0.14",
+    "ethereum-waffle": "^2.5.1",
+    "ethlint": "^1.2.5",
     "rimraf": "^3.0.0",
     "ts-mocha": "^6.0.0",
     "typescript": "^3.5.3"

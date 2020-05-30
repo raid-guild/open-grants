@@ -1,0 +1,74 @@
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.6.8 <0.7.0;
+
+
+import "./ISignal.sol";
+
+/**
+ * @title Signal Contract.
+ * @dev Mimics Carbon Vote contract https://github.com/EthFans/carbonvote/blob/master/contract/vote.sol.
+ * @author @NoahMarconi @ameensol @JFickel @ArnaudBrousseau
+ */
+contract Signal is ISignal {
+
+
+// TODO: mapping for contracts tracked. Events for signal. constructor needed?
+
+    /*----------  Signal Methods  ----------*/
+
+    /**
+     * @dev Voting Signal Method.
+     * @param support true if in support of grant false if opposed.
+     * @param value Number of signals denoted in Token ATOMIC_UNITS or WEI.
+     * @return True if successful, otherwise false.
+     */
+    function signal(bool support, uint256 value)
+        external
+        override
+        payable
+        returns (bool)
+    {
+
+        // require(
+        //     totalFunding < targetFunding,
+        //     "signal::Status Error. Funding target reached."
+        // );
+
+        // emit LogSignal(support, msg.sender, currency, value);
+
+        // Prove signaler has control of funds.
+        // if (currency == address(0)) {
+        //     require(
+        //         msg.value == value,
+        //         "signal::Invalid Argument. value must match msg.value."
+        //     );
+
+        //     require(
+        //         // solium-disable-next-line security/no-send
+        //         msg.sender.send(msg.value),
+        //         "signal::Transfer Error. Unable to send msg.value back to sender."
+        //     );
+        // } else {
+        //     require(
+        //         msg.value == 0,
+        //         "signal::Currency Error. Cannot send Ether to a token funded grant."
+        //     );
+
+        //     // Transfer to this contract.
+        //     require(
+        //         IERC20(currency)
+        //             .transferFrom(msg.sender, address(this), value),
+        //         "signal::Transfer Error. ERC20 token transferFrom failed."
+        //     );
+
+        //     // Transfer back to sender.
+        //     require(
+        //         IERC20(currency)
+        //             .transfer(msg.sender, value),
+        //         "signal::Transfer Error. ERC20 token transfer failed."
+        //     );
+        // }
+
+        return true;
+    }
+}
