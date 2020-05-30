@@ -13,7 +13,7 @@ import "./ISignal.sol";
  * @dev Grant request, funding, and management.
  * @author @NoahMarconi @ameensol @JFickel @ArnaudBrousseau
  */
-contract Grant is AbstractGrant, ReentrancyGuard {
+contract MangedCappedGrant is AbstractGrant, ReentrancyGuard {
     using SafeMath for uint256;
 
 

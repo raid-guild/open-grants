@@ -1,5 +1,5 @@
-import Grant from "../build/Grant.json";
-import GrantToken from "../build/GrantToken.json";
+import Grant from "../../build/MangedCappedGrant.json";
+import GrantToken from "../../build/GrantToken.json";
 import chai from "chai";
 import * as waffle from "ethereum-waffle";
 import { Contract, Wallet, constants } from "ethers";
