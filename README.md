@@ -1,5 +1,8 @@
 # OpenGrant Smart Contracts
 
+[![NoahMarconi](https://circleci.com/gh/NoahMarconi/grant-contracts.svg?style=shield)](https://circleci.com/gh/NoahMarconi/grant-contracts)
+
+
 Reference Implementation for OpenGrant proposed EIP.
 
 Write up and announcement here: https://medium.com/@jamesfickel/open-grants-standard-erc-6ed9e137d4fe
