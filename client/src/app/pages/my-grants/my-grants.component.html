@@ -18,7 +18,7 @@
           <ion-item mode="md" lines="none">
             <ion-label>
               <h2>{{create.name}}</h2>
-              <h3>Ξ {{create.targetFunding}} ETH Target Funding</h3>
+              <h3>Target Ξ {{create.targetFunding}} ETH</h3>
             </ion-label>
             <ion-label slot="end" text-right>
               <!-- <h3>Ξ {{create.totalFunding - create.totalPayed}} ETH</h3>
@@ -34,7 +34,7 @@
             </div>
           </ion-item> -->
           <ion-item mode="md" lines="none">
-            <ion-button class="details" mode="md" slot="start" (click)="viewGrant(create)">Quick View</ion-button><br>
+            <!-- <ion-button class="details" mode="md" slot="start" (click)="viewGrant(create)">Quick View</ion-button><br> -->
             <ion-button class="details" mode="md" slot="end" (click)="grantDetails(create.contractAddress)">Details View
             </ion-button>
           </ion-item>
@@ -53,7 +53,7 @@
           <ion-item mode="md" lines="none">
             <ion-label>
               <h2>{{fund.name}}</h2>
-              <h3>Ξ {{fund.targetFunding}} ETH Target Funding</h3>
+              <h3>Target Ξ {{fund.targetFunding}} ETH</h3>
             </ion-label>
             <ion-label slot="end" text-right>
               <!-- <h3>Ξ {{fund.totalFunding- fund.totalPayed}} ETH</h3>
@@ -62,7 +62,7 @@
           </ion-item>
 
           <ion-item mode="md" lines="none">
-            <ion-button class="details" mode="md" slot="start" (click)="viewGrant(fund)">Quick View</ion-button>
+            <!-- <ion-button class="details" mode="md" slot="start" (click)="viewGrant(fund)">Quick View</ion-button> -->
             <ion-button class="details" mode="md" slot="end" (click)="grantDetails(fund.contractAddress)">Details View
             </ion-button>
           </ion-item>
@@ -108,7 +108,7 @@
           <ion-item mode="md" lines="none">
             <ion-label>
               <h2>{{manage.name}}</h2>
-              <h3>Ξ {{manage.targetFunding}} ETH Target Funding</h3>
+              <h3>Target Ξ {{manage.targetFunding}} ETH</h3>
               <!-- <p>{{manage.description}}</p> -->
             </ion-label>
             <ion-label slot="end" text-right>
@@ -117,7 +117,7 @@
           </ion-item>
 
           <ion-item mode="md" lines="none">
-            <ion-button class="details" mode="md" slot="start" (click)="viewGrant(manage)">Quick View</ion-button>
+            <!-- <ion-button class="details" mode="md" slot="start" (click)="viewGrant(manage)">Quick View</ion-button> -->
             <ion-button class="details" mode="md" slot="end" (click)="grantDetails(manage.contractAddress)">Details View
             </ion-button>
           </ion-item>

@@ -154,6 +154,8 @@ export class GrantDetailsComponent implements OnInit {
       this.getContractData();
       console.log("this.userType", this.userType);
       this.canCancelGrant();
+    } else {
+      this.getContractData();
     }
   }
 
@@ -249,7 +251,7 @@ export class GrantDetailsComponent implements OnInit {
       this.canCancel = true;
     }
 
-    console.log("canCancel",this.canCancel)
+    console.log("canCancel", this.canCancel)
   }
 
   ConfirmCancleGrant() {

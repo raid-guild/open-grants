@@ -1,11 +1,13 @@
 import { Inject, Injectable } from '@angular/core';
 import Web3 from 'web3';
 import { BehaviorSubject } from 'rxjs';
-import * as ThreeboxFactory from '3box';
 import { BoxOptions, GetProfileOptions, Threebox } from './3box';
 import { AppSettings } from '../config/app.config';
 import { async } from '@angular/core/testing';
 import { id } from 'ethers/utils';
+// import * as ThreeboxFactory from '3box';
+// const ThreeboxFactory = require('3box');
+// const { profileGraphQL, getProfile, getProfiles, getVerifiedAccounts } = require('3box/lib/api')
 
 declare let window: any;
 
@@ -32,20 +34,20 @@ export class ThreeBoxService {
     this._box.next(box);
   }
 
-  public openBox(address?: string, options?: BoxOptions): Promise<Threebox> {
-    return ThreeboxFactory.openBox(address, window.web3.currentProvider, options
-    ).then(box => {
-      this.box = box;
-      return box;
-    });
-  }
+  // public openBox(address?: string, options?: BoxOptions): Promise<Threebox> {
+  //   return ThreeboxFactory.openBox(address, window.web3.currentProvider, options
+  //   ).then(box => {
+  //     this.box = box;
+  //     return box;
+  //   });
+  // }
 
   // public getProfile(address: string, options?: GetProfileOptions): Promise<Object> {
   //   return ThreeboxFactory.getProfile(address, options);
   // }
 
   async getProfile(address: string, options?: GetProfileOptions) {
-    await window.ethereum.enable()
+    // await window.ethereum.enable()
     // const profile = await Box.getProfile(window.web3.eth.coinbase)
 
     const query = `{ 
@@ -57,12 +59,15 @@ export class ThreeBoxService {
       } 
     }`
 
-    try {
-      let res = await ThreeboxFactory.profileGraphQL(query)
-      return res.profile;
-    } catch (e) {
-      return [];
-    }
+    // try {
+    //   let res = await profileGraphQL(query);
+    //   return res.profile;
+      
+    // } catch (e) {
+    //   return [];
+    // }
+
+    return [];
   }
 
   async getAppsThread() {

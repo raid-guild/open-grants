@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as Web3 from 'web3';
 import { ethers, providers, utils } from 'ethers';
-import UniLogin from '@unilogin/provider';
 import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { AddressZero, Zero } from "ethers/constants";

@@ -115,30 +115,25 @@ export class CreateNewGrantComponent implements OnInit {
 
     this.tinymceInit = {
       selector: 'textarea',
-      height: 500,
+      height: 470,
       menubar: true,
       plugins: [
-        'autolink',
-        'codesample',
-        'link',
-        'lists',
-        'media',
-        'powerpaste',
-        'table',
-        'image',
+        'advlist autolink lists link image charmap print preview anchor',
+        'searchreplace visualblocks advcode fullscreen',
+        'insertdatetime media table contextmenu powerpaste',
         'quickbars',
         'codesample',
         'code',
         'help',
       ],
-      toolbar: true,
-      // toolbar: 'fontselect',
+      toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image code',
+      powerpaste_allow_local_images: true,
+      powerpaste_word_import: 'prompt',
+      powerpaste_html_import: 'prompt',
       // font_formats: 'Arial=arial;Helvetica=helvetica;Sans-serif=sans-serif;Courier=courier;Courier New=courier new;Courier Prime=courier prime;Monospace=monospace;AkrutiKndPadmini=Akpdmi-n',
       quickbars_insert_toolbar: 'quicktable image media codesample',
       quickbars_selection_toolbar: 'bold italic underline | formatselect | blockquote quicklink',
       contextmenu: 'undo redo | inserttable | cell row column deletetable | help',
-      powerpaste_word_import: 'clean',
-      powerpaste_html_import: 'clean',
       image_advtab: true,
 
       file_picker_callback: (cb, value, meta) => {
@@ -461,12 +456,12 @@ export class CreateNewGrantComponent implements OnInit {
     // console.log("content", this.myForm.value)
     if (this.myForm.controls.type.value == "singleDeliveryDate") {
       if (this.myForm.controls.name.invalid || this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.singleDeliveryDate.invalid
-        || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid) {
+        || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid || !this.imageUpload.files.length) {
         return
       }
     } else {
       if (this.myForm.controls.name.invalid || this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.multipleMilestones.invalid
-        || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid) {
+        || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid || !this.imageUpload.files.length) {
         return
       }
     }
@@ -476,6 +471,7 @@ export class CreateNewGrantComponent implements OnInit {
     };
 
     this.grantForm = JSON.parse(JSON.stringify(this.myForm.value));
+    // console.log("this.grantForm", this.grantForm);
 
     for (let i = 0; i < this.imageUpload.files.length; i++) {
       try {

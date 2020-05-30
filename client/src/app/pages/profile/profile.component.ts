@@ -37,32 +37,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private _zone: NgZone,
     private threeBoxService: ThreeBoxService
   ) {
-    this.getUserData();
-
-    // (async () => {
-    // })();
-
-    // this.userData = JSON.parse(localStorage.getItem(AppSettings.localStorage_keys.userData));
+    this.userData = JSON.parse(localStorage.getItem(AppSettings.localStorage_keys.userData));
+    this.getAccountInfo();
   }
 
   ngOnInit() {
   }
 
-  getUserData() {
-    this.userService.getUser().subscribe((res: HTTPRESPONSE) => {
-      this.userData = res.data;
-      if (this.userData && this.userData.hasOwnProperty('picture') && this.userData.picture) {
-        this.isPicture = true;
-      }
-
-      console.log()
-      this.getAccountInfo();
-    });
-  }
-
   async getAccountInfo() {
     if (this.userData && this.userData.hasOwnProperty('publicAddress') && this.userData.publicAddress) {
       this.user3BoxProfile = await this.threeBoxService.getProfile(this.userData.publicAddress);
+      if (this.user3BoxProfile && this.user3BoxProfile.hasOwnProperty('image') && this.user3BoxProfile.image) {
+        this.isPicture = true;
+      }
 
       let data: any = await this.ethcontractService.getAccountInfo(this.userData.publicAddress);
       this.account = data.account;
