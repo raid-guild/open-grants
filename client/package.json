@@ -21,7 +21,6 @@
   },
   "private": true,
   "dependencies": {
-    "3box": "^1.19.0",
     "@angular/animations": "^8.2.14",
     "@angular/cdk": "^8.2.3",
     "@angular/common": "~8.1.2",
@@ -47,7 +46,6 @@
     "apollo-angular-link-http": "^1.10.0",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.9",
-    "b64-to-blob": "^1.2.19",
     "buffer": "^5.6.0",
     "core-js": "^2.5.4",
     "docker": "^1.0.0",
@@ -63,7 +61,6 @@
     "ngx-loading": "^8.0.0",
     "ngx-spinner": "^8.1.0",
     "ngx-toastr": "^11.2.1",
-    "profile-hover": "^1.1.2",
     "rxjs": "~6.5.1",
     "save": "^2.4.0",
     "stream": "0.0.2",
