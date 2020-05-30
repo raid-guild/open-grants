@@ -1,0 +1,24 @@
+version: 2.1
+
+commands:
+  setup_solc:
+    steps:
+      - run:
+          name: Setup native solc
+          command: sudo cp ~/project/.circleci/solc /bin
+
+jobs:
+  build-and-test:
+    docker:
+      - image: circleci/node:11.15
+    steps:
+      - checkout
+      - setup_solc
+      - run: cp circle_waffle.js waffle.js
+      - run: npm install
+      - run: npm test
+
+workflows:
+    build-and-test:
+      jobs:
+        - build-and-test
