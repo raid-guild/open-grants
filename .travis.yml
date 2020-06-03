@@ -1,3 +1,30 @@
-matrix:
-  include:
-  - ./client/.travis.yml
+language: node_js
+node_js:
+  - "12"
+sudo: required
+services:
+    client: # name of the first service
+      dist: client
+      volumes:
+        - ./client
+      branches:
+        only:
+          - sprint/june1
+      before_script:
+        - echo -e "machine bitbucket.org\n  login $BITBUCKET_USER_NAME\n  password $BITBUCKET_USER_PASSWORD" >~/.netrc
+        - git lfs pull 
+        - npm install -g --silent @ionic/angular-toolkit
+        - npm install -g --silent @angular/cli
+
+      install:
+        - npm install  
+
+      script:
+        - ng lint
+        - ng build --prod --aot
+  
+# matrix:
+#   include:
+#   - client: client/.travis.yml
+#     env: BITBUCKET_USER_NAME=dipaksavaliya
+#          BITBUCKET_USER_PASSWORD=Behappy@24
