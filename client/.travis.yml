@@ -1,0 +1,34 @@
+language: node_js
+node_js:
+  - "10.16.0"
+dist: trusty
+sudo: required
+branches:
+  only:
+  - sprint/june1 # will only build for this branch commits
+
+cache:
+  directories:
+     - ./node_modules
+
+before_script:
+  # - echo -e "machine bitbucket.com\n  login $BITBUCKET_TOKEN" > ~/.netrc
+  - echo -e "machine bitbucket.org\n  login $BITBUCKET_USER_NAME\n  password $BITBUCKET_USER_PASSWORD" >~/.netrc
+  - git lfs pull 
+  - npm install -g --silent @ionic/angular-toolkit
+  - npm install -g --silent @angular/cli
+
+install:
+  - npm install
+
+script:
+  - ng lint
+  - ng build --prod --aot
+
+# after_success:
+  -
+
+# notifications:
+#   email: # only receive email when the build status changes (someone broke the build!) 
+#     on_failure: 
+#     on_success: 
