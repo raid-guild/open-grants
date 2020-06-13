@@ -187,7 +187,6 @@ contract MangedCappedGrant is AbstractGrant, ReentrancyGuard {
         returns(uint256)
     {
         return grantees[grantee].targetFunding
-            .sub(grantees[grantee].totalPaid)
             .sub(grantees[grantee].payoutApproved);
     }
 
@@ -273,6 +272,11 @@ contract MangedCappedGrant is AbstractGrant, ReentrancyGuard {
         onlyManager
         returns(bool)
     {
+
+        require(
+            (value > 0),
+            "approvePayout::Value Error. Must be non-zero value."
+        );
 
         require(
             (targetFunding != 0 && targetFunding == totalFunding),
@@ -447,13 +451,13 @@ contract MangedCappedGrant is AbstractGrant, ReentrancyGuard {
             require(
                 // solium-disable-next-line security/no-send
                 grantee.send(eligiblePayout),
-                "approvePayout::Transfer Error. Unable to send value to Grantee."
+                "withdrawPayout::Transfer Error. Unable to send value to Grantee."
             );
         } else {
             require(
                 IERC20(currency)
                     .transfer(grantee, eligiblePayout),
-                "approvePayout::Transfer Error. ERC20 token transfer failed."
+                "withdrawPayout::Transfer Error. ERC20 token transfer failed."
             );
         }
 

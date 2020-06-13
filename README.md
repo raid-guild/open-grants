@@ -18,36 +18,38 @@ Project Sponsors: https://github.com/JFickel & https://molochdao.com/
 # Set up guide
 
 ```
-$ docker pull ethereum/solc:stable
-$ npm i
+docker pull ethereum/solc:stable
+npm i
 ```
 
 Tested with node/npm versions:
 
 ```
-$ node --version
-> v12.16.3
+node --version
+# > v12.16.3
 
-$ npm --version
-> 6.14.4
+npm --version
+# > 6.14.4
 ```
 
 ## Build Contracts
 
 ```
-$ npm run build
+npm run build
 ```
 
 ## Test Contracts
 
 Run all tests
 ```
-$ npm run test
+npm run test
 ```
 
 Run single test
 ```
-$ npm run test -- test/[FILENAME]
+# npm run test -- test/[FILENAME]
+# e.g.
+npm run test -- test/ManagedCapped/Grant-Funding.spec.ts
 ```
 
 Test docs:
