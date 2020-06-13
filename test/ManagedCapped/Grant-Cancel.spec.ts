@@ -6,79 +6,16 @@ import * as waffle from "ethereum-waffle";
 import { Contract, Wallet, constants } from "ethers";
 import { BigNumber } from "ethers/utils/bignumber";
 import { AddressZero, Zero } from "ethers/constants";
+import { helpers } from "../helpers/helpers";
+
+const fixture = helpers.fixtures.fixture;
+
 
 chai.use(waffle.solidity);
 const { expect, assert } = chai;
 
 describe("Grant", () => {
-  const _amounts = [1000];
-  const _targetFunding = _amounts.reduce((a, b) => a + b, 0);
 
-  async function fixture(provider: any, wallets: Wallet[]) {
-    const currentTime = (await provider.getBlock(await provider.getBlockNumber())).timestamp;
-    const [granteeWallet, donorWallet, managerWallet] = wallets;
-    const token: Contract = await waffle.deployContract(donorWallet, GrantToken, ["Grant Token", "GT"]);
-
-    const grantWithToken: Contract = await waffle.deployContract(
-      granteeWallet,
-      Grant,
-      [
-        [granteeWallet.address],
-        _amounts,
-        managerWallet.address,
-        token.address,
-        _targetFunding,
-        currentTime + 86400,
-        currentTime + 86400 * 2
-      ],
-      { gasLimit: 6e6 }
-    );
-
-    const grantWithEther: Contract = await waffle.deployContract(
-      granteeWallet,
-      Grant,
-      [
-        [granteeWallet.address],
-        _amounts,
-        managerWallet.address,
-        AddressZero,
-        _targetFunding,
-        currentTime + 86400,
-        currentTime + 86400 * 2
-      ],
-      { gasLimit: 6e6 }
-    );
-
-    const grantFactory: Contract = await waffle.deployContract(donorWallet, GrantFactory, undefined, { gasLimit: 6e6 });
-
-    // Initial token balance.
-    await token.mint(donorWallet.address, 1e6);
-
-    const grantFromDonor: Contract = new Contract(grantWithToken.address, Grant.abi, donorWallet);
-    const grantFromDonorWithEther: Contract = new Contract(grantWithEther.address, Grant.abi, donorWallet);
-    const grantFromManager: Contract = new Contract(grantWithToken.address, Grant.abi, managerWallet);
-    const grantFromManagerWithEther: Contract = new Contract(grantWithEther.address, Grant.abi, managerWallet);
-
-    return {
-      grantFactory,
-      grantWithToken,
-      grantWithEther,
-      grantFromDonor,
-      grantFromDonorWithEther,
-      grantFromManager,
-      grantFromManagerWithEther,
-      grantFromGrantee: grantWithToken,
-      token,
-      granteeWallet,
-      donorWallet,
-      managerWallet,
-      fundingDeadline: currentTime + 86400,
-      contractExpiration: currentTime + 86400 * 2,
-      provider,
-      wallets
-    };
-  }
-  
   describe("Cancelling Grant", () => {
     describe("With Ether", () => {
       let _donorWallet: Wallet;

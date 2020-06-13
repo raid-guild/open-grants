@@ -52,19 +52,19 @@ contract MangedCappedGrant is AbstractGrant, ReentrancyGuard {
     {
 
         require(
-            _fundingDeadline != 0 && _fundingDeadline < _contractExpiration,
+            _fundingDeadline == 0 || _fundingDeadline < _contractExpiration,
             "constructor::Invalid Argument. _fundingDeadline not < _contractExpiration."
         );
 
         require(
         // solium-disable-next-line security/no-block-members
-            _fundingDeadline != 0 && _fundingDeadline > now,
+            _fundingDeadline == 0 || _fundingDeadline > now,
             "constructor::Invalid Argument. _fundingDeadline not > now."
         );
 
         require(
         // solium-disable-next-line security/no-block-members
-            _contractExpiration != 0 && _contractExpiration > now,
+            _contractExpiration == 0 || _contractExpiration > now,
             "constructor::Invalid Argument. _contractExpiration not > now."
         );
 
@@ -115,7 +115,7 @@ contract MangedCappedGrant is AbstractGrant, ReentrancyGuard {
         }
 
         require(
-            (_targetFunding != 0 && totalGranteeAllocation == _targetFunding),
+            (_targetFunding == 0 || totalGranteeAllocation == _targetFunding),
             "constructor::Invalid Argument. _targetFunding != totalGranteeAllocation."
         );
 
@@ -279,7 +279,7 @@ contract MangedCappedGrant is AbstractGrant, ReentrancyGuard {
         );
 
         require(
-            (targetFunding != 0 && targetFunding == totalFunding),
+            (targetFunding == 0 || targetFunding == totalFunding),
             "approvePayout::Status Error. Cannot approve if funding target not met."
         );
 
@@ -353,12 +353,17 @@ contract MangedCappedGrant is AbstractGrant, ReentrancyGuard {
             );
 
             // Reduce allocation.
-            grantees[grantee].targetFunding.sub(value);
+            grantees[grantee].targetFunding = grantees[grantee].targetFunding.sub(value);
         }
 
         require(
             value <= availableBalance(),
             "approveRefund::Invalid Argument. Amount is greater than Available Balance."
+        );
+
+        require(
+            targetFunding != 0,
+            "approveRefund::Not Permitted. Partial Refunds not permitted if no targetFunding. cancelGrant instead."
         );
 
         totalRefunded = totalRefunded.add(value);
