@@ -18,69 +18,6 @@ const { expect, assert } = chai;
 
 describe("Grant", () => {
 
-
-  // async function fixture(provider: any, wallets: Wallet[]) {
-  //   const currentTime = (await provider.getBlock(await provider.getBlockNumber())).timestamp;
-  //   const [granteeWallet, donorWallet, managerWallet, secondDonorWallet, unknownWallet] = wallets;
-  //   const token: Contract = await waffle.deployContract(donorWallet, GrantToken, ["Grant Token", "GT"]);
-  //   const grantWithToken: Contract = await waffle.deployContract(
-  //     granteeWallet,
-  //     Grant,
-  //     [
-  //       [granteeWallet.address],
-  //       AMOUNTS,
-  //       managerWallet.address,
-  //       token.address,
-  //       TARGET_FUNDING,
-  //       currentTime + 86400,
-  //       currentTime + 86400 * 2
-  //     ],
-  //     { gasLimit: 6e6 }
-  //   );
-  //   const grantWithEther: Contract = await waffle.deployContract(
-  //     granteeWallet,
-  //     Grant,
-  //     [
-  //       [granteeWallet.address],
-  //       AMOUNTS,
-  //       managerWallet.address,
-  //       AddressZero,
-  //       TARGET_FUNDING,
-  //       currentTime + 86400,
-  //       currentTime + 86400 * 2
-  //     ],
-  //     { gasLimit: 6e6 }
-  //   );
-  //   const grantFactory: Contract = await waffle.deployContract(donorWallet, GrantFactory, undefined, { gasLimit: 6e6 });
-
-  //   // Initial token balance.
-  //   await token.mint(donorWallet.address, 1e6);
-
-  //   const grantFromDonor: Contract = new Contract(grantWithToken.address, Grant.abi, donorWallet);
-  //   const grantFromDonorWithEther: Contract = new Contract(grantWithEther.address, Grant.abi, donorWallet);
-  //   const grantFromManager: Contract = new Contract(grantWithToken.address, Grant.abi, managerWallet);
-  //   const grantFromManagerWithEther: Contract = new Contract(grantWithEther.address, Grant.abi, managerWallet);
-
-  //   return {
-  //     grantFactory,
-  //     grantWithToken,
-  //     grantWithEther,
-  //     grantFromDonor,
-  //     grantFromDonorWithEther,
-  //     grantFromManager,
-  //     grantFromManagerWithEther,
-  //     token,
-  //     granteeWallet,
-  //     donorWallet,
-  //     managerWallet,
-  //     fundingDeadline: currentTime + 86400,
-  //     contractExpiration: currentTime + 86400 * 2,
-  //     provider,
-  //     secondDonorWallet,
-  //     unknownWallet
-  //   };
-  // }
-
   describe("With Token", () => {
     describe("Approve Payout", () => {
       let _grantFromDonorWithToken: Contract;
