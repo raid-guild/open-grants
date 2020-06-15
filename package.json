@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "run(){ npx waffle && npx ts-mocha --timeout 10000 ${1-'test/*/*.spec.ts'}; }; run",
+    "build": "npx waffle",
     "clean": "npx rimraf ./node_modules/",
-    "lint": "npx solium -d contracts/"
+    "lint": "npx solhint contracts/*.sol"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ArnaudBrousseau/grant-contracts.git"
+    "url": "git+https://github.com/NoahMarconi/grant-contracts.git"
   },
   "keywords": [
     "ethereum",
@@ -35,8 +36,9 @@
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
     "ethereum-waffle": "^2.5.1",
-    "ethlint": "^1.2.5",
+    "mocha": "^8.0.1",
     "rimraf": "^3.0.0",
+    "solhint": "^3.0.0-rc.8",
     "ts-mocha": "^6.0.0",
     "typescript": "^3.5.3"
   }

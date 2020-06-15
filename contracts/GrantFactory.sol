@@ -16,7 +16,7 @@ contract GrantFactory {
 
 
     /*----------  Globals  ----------*/
-    uint256 id;
+    uint256 public id;
     mapping(uint256 => address) internal grants;  // Grants mapped by GUID.
 
 
@@ -29,6 +29,7 @@ contract GrantFactory {
 
     /*----------  Methods  ----------*/
 
+    /* solhint-disable max-line-length */
     /**
      * @dev Grant creation function. May be called by grantors, grantees, or any other relevant party.
      * @param _grantees Sorted recipients of unlocked funds.
@@ -41,6 +42,7 @@ contract GrantFactory {
      * @param _extraData Support for extensions to the Standard.
      * @return GUID for this grant.
      */
+    /* solhint-enable max-line-length */
     function create(
         address[] memory _grantees,
         uint256[] memory _amounts,
@@ -49,7 +51,7 @@ contract GrantFactory {
         uint256 _targetFunding,
         uint256 _fundingDeadline,
         uint256 _contractExpiration,
-        bytes memory _extraData // implementation detail
+        bytes memory _extraData // solhint-disable-line no-unused-vars
     )
         public
         returns (uint256)

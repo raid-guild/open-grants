@@ -16,7 +16,7 @@ const TARGET_FUNDING = helpers.constants.TARGET_FUNDING;
 chai.use(waffle.solidity);
 const { expect, assert } = chai;
 
-describe("Grant", () => {
+describe("Grant-Payout", () => {
 
   describe("With Token", () => {
     describe("Approve Payout", () => {

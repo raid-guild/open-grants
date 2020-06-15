@@ -10,6 +10,6 @@ contract GrantToken is ERC20PresetMinterPauser {
         public
         ERC20PresetMinterPauser(name, symbol)
     {
-        // solium-disable-previous-line no-empty-blocks
+
     }
 }

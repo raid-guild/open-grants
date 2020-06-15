@@ -44,7 +44,6 @@ contract Signal is ISignal {
         //     );
 
         //     require(
-        //         // solium-disable-next-line security/no-send
         //         msg.sender.send(msg.value),
         //         "signal::Transfer Error. Unable to send msg.value back to sender."
         //     );

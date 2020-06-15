@@ -17,7 +17,7 @@ const AMOUNTS = helpers.constants.AMOUNTS;
 chai.use(waffle.solidity);
 const { expect, assert } = chai;
 
-describe("Grant", () => {
+describe("Grant-Factory", () => {
 
   describe("Create Grant", () => {
     let _granteeWallet: Wallet;
@@ -96,7 +96,7 @@ describe("Grant", () => {
 
     it("should fail if contractExpiration less than now", async () => {
       await expect(
-        _granteeFactory.create([_granteeWallet.address], [1000], _managerWallet.address, AddressZero, 1000, 0, 1, "0x0", {
+        _granteeFactory.create([_granteeWallet.address], [1000], _managerWallet.address, AddressZero, 1000, 0, currentTime - 1, "0x0", {
           gasLimit: 6e6
         })
       ).to.be.revertedWith("constructor::Invalid Argument. _contractExpiration not > now.");

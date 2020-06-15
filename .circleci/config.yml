@@ -16,6 +16,7 @@ jobs:
       - setup_solc
       - run: cp circle_waffle.js waffle.js
       - run: npm install
+      - run: npm run lint
       - run: npm test
 
 workflows:

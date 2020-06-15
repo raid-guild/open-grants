@@ -14,7 +14,7 @@ const fixture = helpers.fixtures.fixture;
 chai.use(waffle.solidity);
 const { expect, assert } = chai;
 
-describe("Grant", () => {
+describe("Grant-Cancel", () => {
 
   describe("Cancelling Grant", () => {
     describe("With Ether", () => {
@@ -109,6 +109,9 @@ describe("Grant", () => {
 
         await tokenFromDonor.approve(grantFromDonorWithToken.address, 1000);
       });
+
+      it("should permit anyone to cancel if past funding deadline");
+      it("should permit anyone to cancel if past contract expiration");
 
       it("should fail if not GrantManager", async () => {
         await expect(_grantFromDonorWithToken.cancelGrant()).to.be.revertedWith(

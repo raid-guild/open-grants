@@ -95,7 +95,7 @@ async function fixtureForMoreDonors(provider: any, wallets: Wallet[]) {
 chai.use(waffle.solidity);
 const { expect } = chai;
 
-describe("Grant", () => {
+describe("Grant-Refunds-MultipleDonors", () => {
   describe("With multiple donors & grantee", () => {
 
     describe(`Handling correct dilution for fund -> approve refund -> withdraw refund 

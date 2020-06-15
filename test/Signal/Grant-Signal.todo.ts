@@ -79,6 +79,111 @@ describe("Grant", () => {
     };
   }
 
+  // describe("Signaling", () => {
+
+  //   describe("When Ether", () => {
+  //     let _grantFromDonor: Contract;
+  //     let _donorAddress: string;
+  //     let _provider: any;
+      
+
+  //     before(async () => {
+  //       const {
+  //         grantFromDonorWithEther,
+  //         donorWallet,
+  //         provider
+  //       } = await waffle.loadFixture(fixture);
+  //       _donorAddress = donorWallet.address;
+  //       _grantFromDonor = grantFromDonorWithEther;
+  //       _provider = provider;
+  //     });
+
+
+  //     it("should fail if ether sent does not match value arg", async () => {
+  //       await expect(
+  //         _grantFromDonor.signal(1e6)
+  //       ).to.be.revertedWith("signal::Invalid Argument. value must match msg.value.");
+  //     });
+
+  //     it("should emit LogSignal event", async () => {
+  //       await expect(_grantFromDonor.signal(1e6, { value: 1e6 }))
+  //         .to.emit(_grantFromDonor, "LogSignal")
+  //         .withArgs(_donorAddress, constants.AddressZero, 1e6);
+  //     });
+
+  //     it("sender should have their funds returned", async () => {
+  //       const startingBalance = await _provider.getBalance(_donorAddress);
+  //       // Set gas price to 1 to make it simple to calc gas spent in eth. 
+  //       const receipt = await (await _grantFromDonor.signal(1e6, { value: 1e6, gasPrice: 1 })).wait();
+  //       const endingBalance = await _provider.getBalance(_donorAddress);
+
+  //       expect(endingBalance).to.eq(startingBalance.sub(receipt.gasUsed));
+  //     });
+
+  //     describe("After funding success", () => {
+
+  //       before(async () => {
+  //         await _grantFromDonor.fund(10000, { value: 10000 });
+  //       });
+
+  //       it("should revert", async () => {
+  //         await expect(_grantFromDonor.signal(1e6, { value: 1e6 }))
+  //           .to.be.revertedWith("signal::Status Error. Must be GrantStatus.INIT to signal.");
+  //       });
+
+  //     });
+  //   });
+
+  //   describe("When Token", () => {
+  //     let _grantFromDonor: Contract;
+  //     let _token: Contract;
+  //     let _donorAddress: string;
+
+  //     before(async () => {
+  //       const {
+  //         grantFromDonor,
+  //         token,
+  //         donorWallet
+  //       } = await waffle.loadFixture(fixture);
+  //       _donorAddress = donorWallet.address;
+  //       _grantFromDonor = grantFromDonor;
+  //       _token = token;
+  //     });
+
+      
+  //     it("should fail if tokens no approved", async () => {
+  //       await expect(_grantFromDonor.signal(1e6))
+  //         .to.be.revertedWith("SafeMath: subtraction overflow");
+  //     });
+        
+  //     describe("When approved", async () => {
+        
+  //       beforeEach(async () => {
+  //         await _token.approve(_grantFromDonor.address, 1e6);
+  //       });
+          
+  //       it("should reject ether signalling for token funded grants", async () => {
+  //         await expect(_grantFromDonor.signal(1e6, { value: 1e6 }))
+  //           .to.be.revertedWith("signal::Currency Error. Cannot send Ether to a token funded grant.");
+  //       });
+
+  //       it("should emit LogSignal event", async () => {
+  //         await expect(_grantFromDonor.signal(1e6))
+  //           .to.emit(_grantFromDonor, "LogSignal")
+  //           .withArgs(_donorAddress, _token.address, 1e6);
+  //       });
+
+  //       it("sender should have their funds returned", async () => {
+  //         await _grantFromDonor.signal(1e6);
+  //         const endingBalance = await _token.balanceOf(_donorAddress);
+
+  //         expect(endingBalance).to.eq(1e6);
+  //       });
+  //     });
+
+  //   });
+
+  // });
   describe("Signaling", () => {
     const _positiveSupport = true;
     const _negativeSupport = false;

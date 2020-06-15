@@ -1,7 +1,7 @@
 # OpenGrant Smart Contracts
 
 [![NoahMarconi](https://circleci.com/gh/NoahMarconi/grant-contracts.svg?style=shield)](https://circleci.com/gh/NoahMarconi/grant-contracts)
-
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 Reference Implementation for OpenGrant proposed EIP.
 
@@ -30,6 +30,12 @@ node --version
 
 npm --version
 # > 6.14.4
+```
+
+## Lint Contracts
+
+```
+npm run lint
 ```
 
 ## Build Contracts
