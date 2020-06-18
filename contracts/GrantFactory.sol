@@ -3,7 +3,7 @@ pragma solidity >=0.6.8 <0.7.0;
 pragma experimental ABIEncoderV2;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./MangedCappedGrant.sol";
+import "./ManagedCappedGrant.sol";
 
 
 /**
@@ -56,7 +56,7 @@ contract GrantFactory {
         public
         returns (uint256)
     {
-        MangedCappedGrant grant = new MangedCappedGrant(
+        ManagedCappedGrant grant = new ManagedCappedGrant(
             _grantees,
             _amounts,
             _manager,

@@ -1,7 +1,9 @@
 # OpenGrant Smart Contracts
 
 [![NoahMarconi](https://circleci.com/gh/NoahMarconi/grant-contracts.svg?style=shield)](https://circleci.com/gh/NoahMarconi/grant-contracts)
+[![codecov](https://codecov.io/gh/NoahMarconi/grant-contracts/branch/master/graph/badge.svg)](https://codecov.io/gh/NoahMarconi/grant-contracts)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+
 
 Reference Implementation for OpenGrant proposed EIP.
 

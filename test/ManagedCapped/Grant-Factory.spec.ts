@@ -1,14 +1,13 @@
-import Grant from "../../build/MangedCappedGrant.json";
-import GrantToken from "../../build/GrantToken.json";
-import GrantFactory from "../../build/GrantFactory.json";
+import Grant from "../../build/ManagedCappedGrant.json";
 import chai from "chai";
 import * as waffle from "ethereum-waffle";
-import { Contract, Wallet, constants } from "ethers";
+import { Contract, Wallet, constants, Signer } from "ethers";
 import { BigNumber } from "ethers/utils/bignumber";
 import { Web3Provider, Provider } from "ethers/providers";
 import { bigNumberify, randomBytes, solidityKeccak256, id } from "ethers/utils";
 import { AddressZero, Zero } from "ethers/constants";
 import { helpers } from "../helpers/helpers";
+import bre from '@nomiclabs/buidler';
 
 const fixture = helpers.fixtures.fixture;
 const TARGET_FUNDING = helpers.constants.TARGET_FUNDING;
@@ -20,14 +19,14 @@ const { expect, assert } = chai;
 describe("Grant-Factory", () => {
 
   describe("Create Grant", () => {
-    let _granteeWallet: Wallet;
-    let _managerWallet: Wallet;
-    let _donorWallet: Wallet;
-    let _secondDonorWallet: Wallet;
-    let _unknownWallet: Wallet;
+    let _granteeWallet: Signer;
+    let _managerWallet: Signer;
+    let _donorWallet: Signer;
+    let _secondDonorWallet: Signer;
+    let _unknownWallet: Signer;
     let _granteeFactory: Contract;
-    let _fundingDeadline: BigNumber;
-    let _contractExpiration: BigNumber;
+    let _fundingDeadline: Number;
+    let _contractExpiration: Number;
     let _token: Contract;
     let _provider: Provider;
 
@@ -46,7 +45,7 @@ describe("Grant-Factory", () => {
         provider,
         grantFactory,
 
-      } = await waffle.loadFixture(fixture);
+      } = await fixture(bre);
 
       _granteeWallet = granteeWallet;
       _managerWallet = managerWallet;
@@ -65,9 +64,9 @@ describe("Grant-Factory", () => {
     it("should fail if fundingDeadline greater than contractExpiration", async () => {
       await expect(
         _granteeFactory.create(
-          [_granteeWallet.address],
+          [await _granteeWallet.getAddress()],
           [1000],
-          _managerWallet.address,
+          await _managerWallet.getAddress(),
           AddressZero,
           1000,
           currentTime + 86400 * 2,
@@ -81,9 +80,9 @@ describe("Grant-Factory", () => {
     it("should fail if fundingDeadline less than now", async () => {
       await expect(
         _granteeFactory.create(
-          [_granteeWallet.address],
+          [await _granteeWallet.getAddress()],
           [1000],
-          _managerWallet.address,
+          await _managerWallet.getAddress(),
           AddressZero,
           1000,
           currentTime - 1,
@@ -96,7 +95,7 @@ describe("Grant-Factory", () => {
 
     it("should fail if contractExpiration less than now", async () => {
       await expect(
-        _granteeFactory.create([_granteeWallet.address], [1000], _managerWallet.address, AddressZero, 1000, 0, currentTime - 1, "0x0", {
+        _granteeFactory.create([await _granteeWallet.getAddress()], [1000], await _managerWallet.getAddress(), AddressZero, 1000, 0, currentTime - 1, "0x0", {
           gasLimit: 6e6
         })
       ).to.be.revertedWith("constructor::Invalid Argument. _contractExpiration not > now.");
@@ -107,7 +106,7 @@ describe("Grant-Factory", () => {
         _granteeFactory.create(
           [],
           [1000],
-          _managerWallet.address,
+          await _managerWallet.getAddress(),
           AddressZero,
           1000,
           currentTime + 86400,
@@ -121,9 +120,9 @@ describe("Grant-Factory", () => {
     it("should fail if number of grantees and amounts are unequal", async () => {
       await expect(
         _granteeFactory.create(
-          [_granteeWallet.address],
+          [await _granteeWallet.getAddress()],
           [],
-          _managerWallet.address,
+          await _managerWallet.getAddress(),
           AddressZero,
           1000,
           currentTime + 86400,
@@ -137,9 +136,9 @@ describe("Grant-Factory", () => {
     it("should fail if one amount in amount array is not > 0", async () => {
       await expect(
         _granteeFactory.create(
-          [_granteeWallet.address],
+          [await _granteeWallet.getAddress()],
           [0],
-          _managerWallet.address,
+          await _managerWallet.getAddress(),
           AddressZero,
           1000,
           currentTime + 86400,
@@ -153,9 +152,9 @@ describe("Grant-Factory", () => {
     it("should fail if duplicate grantee exists", async () => {
       await expect(
         _granteeFactory.create(
-          [_granteeWallet.address, _unknownWallet.address, _granteeWallet.address],
+          [await _granteeWallet.getAddress(), await _unknownWallet.getAddress(), await _granteeWallet.getAddress()],
           [1000, 1000, 1000],
-          _managerWallet.address,
+          await _managerWallet.getAddress(),
           AddressZero,
           3000,
           currentTime + 86400,
@@ -169,9 +168,9 @@ describe("Grant-Factory", () => {
     it("should fail if manager is included in list of grantee", async () => {
       await expect(
         _granteeFactory.create(
-          [_granteeWallet.address],
+          [await _granteeWallet.getAddress()],
           [1000],
-          _granteeWallet.address,
+          await _granteeWallet.getAddress(),
           AddressZero,
           1000,
           currentTime + 86400,
@@ -186,9 +185,9 @@ describe("Grant-Factory", () => {
 
       await expect(
         _granteeFactory.create(
-          [_granteeWallet.address, _unknownWallet.address],
+          [await _granteeWallet.getAddress(), await _unknownWallet.getAddress()],
           [1000, 1000],
-          _managerWallet.address,
+          await _managerWallet.getAddress(),
           AddressZero,
           3000,
           currentTime + 86400,
@@ -204,9 +203,9 @@ describe("Grant-Factory", () => {
       let _receipt: any;
       before(async ()=> {
         _receipt = await (await _granteeFactory.create(
-          [_granteeWallet.address],
+          [await _granteeWallet.getAddress()],
           AMOUNTS,
-          _managerWallet.address,
+          await _managerWallet.getAddress(),
           _token.address,
           TARGET_FUNDING,
           _fundingDeadline,
@@ -227,7 +226,7 @@ describe("Grant-Factory", () => {
       });
   
       it("should persist the correct funding target of a grantee", async () => {
-        const { targetFunding } = await _grant.grantees(_granteeWallet.address);
+        const { targetFunding } = await _grant.grantees(await _granteeWallet.getAddress());
         expect(targetFunding).to.be.eq(TARGET_FUNDING);
       });
   
@@ -238,7 +237,7 @@ describe("Grant-Factory", () => {
   
       it("should persist the correct manager", async () => {
         const managerAddress = await _grant.manager();
-        expect(managerAddress).to.be.eq(_managerWallet.address);
+        expect(managerAddress).to.be.eq(await _managerWallet.getAddress());
       });
   
       it("should persist the correct currency", async () => {

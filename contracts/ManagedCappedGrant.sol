@@ -16,7 +16,7 @@ interface TrustedToken is IERC20 {
  * @dev Grant request, funding, and management.
  * @author @NoahMarconi @ameensol @JFickel @ArnaudBrousseau
  */
-contract MangedCappedGrant is AbstractGrant, ReentrancyGuard {
+contract ManagedCappedGrant is AbstractGrant, ReentrancyGuard {
     using SafeMath for uint256;
 
 

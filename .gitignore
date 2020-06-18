@@ -2,3 +2,8 @@
 node_modules
 .vscode
 build/*
+.coverage*
+coverage/
+coverage.json
+.DS_Store
+cache/

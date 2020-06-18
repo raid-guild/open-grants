@@ -14,10 +14,12 @@ jobs:
     steps:
       - checkout
       - setup_solc
-      - run: cp circle_waffle.js waffle.js
       - run: npm install
       - run: npm run lint
+      - run: npm run build
       - run: npm test
+      - run: npm run coverage
+      - run: bash <(curl -s https://codecov.io/bash)
 
 workflows:
     build-and-test:
