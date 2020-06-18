@@ -11,7 +11,7 @@ import bre from '@nomiclabs/buidler';
 
 const fixture = helpers.fixtures.fixture;
 const TARGET_FUNDING = helpers.constants.TARGET_FUNDING;
-const AMOUNTS = helpers.constants.AMOUNTS;
+const { AMOUNTS, URI } = helpers.constants;
 
 chai.use(waffle.solidity);
 const { expect, assert } = chai;
@@ -71,6 +71,7 @@ describe("Grant-Factory", () => {
           1000,
           currentTime + 86400 * 2,
           currentTime + 86400,
+          bre.ethers.utils.toUtf8Bytes(URI),
           "0x0",
           { gasLimit: 6e6 }
         )
@@ -87,6 +88,7 @@ describe("Grant-Factory", () => {
           1000,
           currentTime - 1,
           currentTime + 86400,
+          bre.ethers.utils.toUtf8Bytes(URI),
           "0x0",
           { gasLimit: 6e6 }
         )
@@ -95,9 +97,18 @@ describe("Grant-Factory", () => {
 
     it("should fail if contractExpiration less than now", async () => {
       await expect(
-        _granteeFactory.create([await _granteeWallet.getAddress()], [1000], await _managerWallet.getAddress(), AddressZero, 1000, 0, currentTime - 1, "0x0", {
-          gasLimit: 6e6
-        })
+        _granteeFactory.create(
+          [await _granteeWallet.getAddress()],
+          [1000],
+          await _managerWallet.getAddress(),
+          AddressZero,
+          1000,
+          0,
+          currentTime - 1,
+          bre.ethers.utils.toUtf8Bytes(URI),
+          "0x0",
+          { gasLimit: 6e6 }
+        )
       ).to.be.revertedWith("constructor::Invalid Argument. _contractExpiration not > now.");
     });
 
@@ -111,6 +122,7 @@ describe("Grant-Factory", () => {
           1000,
           currentTime + 86400,
           currentTime + 86400 * 2,
+          bre.ethers.utils.toUtf8Bytes(URI),
           "0x0",
           { gasLimit: 6e6 }
         )
@@ -127,6 +139,7 @@ describe("Grant-Factory", () => {
           1000,
           currentTime + 86400,
           currentTime + 86400 * 2,
+          bre.ethers.utils.toUtf8Bytes(URI),
           "0x0",
           { gasLimit: 6e6 }
         )
@@ -143,6 +156,7 @@ describe("Grant-Factory", () => {
           1000,
           currentTime + 86400,
           currentTime + 86400 * 2,
+          bre.ethers.utils.toUtf8Bytes(URI),
           "0x0",
           { gasLimit: 6e6 }
         )
@@ -159,6 +173,7 @@ describe("Grant-Factory", () => {
           3000,
           currentTime + 86400,
           currentTime + 86400 * 2,
+          bre.ethers.utils.toUtf8Bytes(URI),
           "0x0",
           { gasLimit: 6e6 }
         )
@@ -175,6 +190,7 @@ describe("Grant-Factory", () => {
           1000,
           currentTime + 86400,
           currentTime + 86400 * 2,
+          bre.ethers.utils.toUtf8Bytes(URI),
           "0x0",
           { gasLimit: 6e6 }
         )
@@ -192,6 +208,7 @@ describe("Grant-Factory", () => {
           3000,
           currentTime + 86400,
           currentTime + 86400 * 2,
+          bre.ethers.utils.toUtf8Bytes(URI),
           "0x0",
           { gasLimit: 6e6 }
         )
@@ -210,6 +227,7 @@ describe("Grant-Factory", () => {
           TARGET_FUNDING,
           _fundingDeadline,
           _contractExpiration,
+          bre.ethers.utils.toUtf8Bytes(URI),
           "0x0",
           { gasLimit: 6e6 }
         )).wait();
@@ -258,6 +276,11 @@ describe("Grant-Factory", () => {
       it("should persist the status as not cancelled", async () => {
         const cancelled = await _grant.grantCancelled();
         expect(cancelled).to.be.eq(false);
+      });
+  
+      it("should persist the correct URI", async () => {
+        const uri = bre.ethers.utils.toUtf8String(await _grant.uri());
+        expect(uri).to.be.eq(URI);
       });
     });
   });

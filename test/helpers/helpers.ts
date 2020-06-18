@@ -6,6 +6,8 @@ const TARGET_FUNDING = AMOUNTS.reduce((a, b) => a + b, 0);
 const AMOUNTS_1 = [1400, 1000];
 const TARGET_FUNDING_1 = AMOUNTS_1.reduce((a, b) => a + b, 0);
 
+const URI = '/orbitdb/Qmd8TmZrWASypEp4Er9tgWP4kCNQnW4ncSnvjvyHQ3EVSU/';
+
 async function fixture(bre: BuidlerRuntimeEnvironment) {
   const provider = bre.waffle.provider;
   const ethers = bre.ethers;
@@ -39,7 +41,8 @@ async function fixture(bre: BuidlerRuntimeEnvironment) {
       token.address,           // Currency
       TARGET_FUNDING,          // Target Funding
       currentTime + 86400,     // Funding deadline
-      currentTime + 86400 * 2  // Contract Expiration
+      currentTime + 86400 * 2, // Contract Expiration,
+      bre.ethers.utils.toUtf8Bytes(URI)
   );
 
   const managedCappedGrantWithEther = await ManagedCappedGrant.deploy(
@@ -49,7 +52,8 @@ async function fixture(bre: BuidlerRuntimeEnvironment) {
       AddressZero,                  // Currency
       TARGET_FUNDING,               // Target Funding
       currentTime + 86400,          // Funding deadline
-      currentTime + 86400 * 2       // Contract Expiration
+      currentTime + 86400 * 2,      // Contract Expiration,
+      bre.ethers.utils.toUtf8Bytes(URI)
   );
 
   const grantFactory = await GrantFactory.deploy();
@@ -137,9 +141,10 @@ async function fixtureWithMultipleGrantee(bre: BuidlerRuntimeEnvironment) {
         AMOUNTS_1,                 // Allocations
         await managerWallet.getAddress(),   // Manager address
         token.address,           // Currency
-        TARGET_FUNDING_1,          // Target Funding
+        TARGET_FUNDING_1,        // Target Funding
         currentTime + 86400,     // Funding deadline
-        currentTime + 86400 * 2  // Contract Expiration
+        currentTime + 86400 * 2, // Contract Expiration,
+        bre.ethers.utils.toUtf8Bytes(URI)
     );
 
     const managedCappedGrantWithEther = await ManagedCappedGrant.deploy(
@@ -147,9 +152,10 @@ async function fixtureWithMultipleGrantee(bre: BuidlerRuntimeEnvironment) {
         AMOUNTS_1,                      // Allocations
         await managerWallet.getAddress(),   // Manager address
         AddressZero,                  // Currency
-        TARGET_FUNDING_1,               // Target Funding
+        TARGET_FUNDING_1,             // Target Funding
         currentTime + 86400,          // Funding deadline
-        currentTime + 86400 * 2       // Contract Expiration
+        currentTime + 86400 * 2,      // Contract Expiration,
+        bre.ethers.utils.toUtf8Bytes(URI)
     );
 
 
@@ -203,7 +209,8 @@ export const helpers = {
         AMOUNTS,
         TARGET_FUNDING,
         AMOUNTS_1,
-        TARGET_FUNDING_1
+        TARGET_FUNDING_1,
+        URI
     },
     fixtures: {
         fixture,

@@ -16,7 +16,6 @@ Front end project: https://github.com/NoahMarconi/grants-platform-mono
 Project Sponsors: https://github.com/JFickel & https://molochdao.com/
 
 
-## Build Contracts
 # Set up guide
 
 ```
@@ -53,6 +52,11 @@ Run all tests
 npm run test
 ```
 
+Check code coverage
+```
+npm run coverage
+```
+
 Run single test
 ```
 # npm run test -- test/[FILENAME]
@@ -64,3 +68,10 @@ Test docs:
 
   - https://ethereum-waffle.readthedocs.io/
 
+## Deploy
+
+First set up the `.env` file by renaming .example-env: `cp .example-env .env` and filling in the private key and infura project ID.
+
+```
+npm run factory:deploy:ropsten
+```

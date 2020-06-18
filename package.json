@@ -8,7 +8,8 @@
     "build": "npx buidler compile",
     "clean": "npx rimraf ./cache",
     "lint": "npx solhint contracts/*.sol",
-    "coverage": "npx buidler coverage --network coverage --solcoverjs .solcover.js"
+    "coverage": "npx buidler coverage --network coverage --solcoverjs .solcover.js",
+    "factory:deploy:ropsten": "npx buidler run scripts/deploy-factory.ts --network ropsten"
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,7 @@
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
+    "dotenv": "^8.2.0",
     "ethereum-waffle": "^2.5.1",
     "ethers": "^4.0.27",
     "mocha": "^8.0.1",

@@ -1,8 +1,12 @@
 import { task, usePlugin, BuidlerConfig } from "@nomiclabs/buidler/config";
+require('dotenv').config();
 
 usePlugin("@nomiclabs/buidler-waffle");
 usePlugin("@nomiclabs/buidler-ganache");
 usePlugin("solidity-coverage");
+
+const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID;
+const ROPSTEN_PRIVATE_KEY = process.env.ROPSTEN_PRIVATE_KEY;
 
 const config: BuidlerConfig = {
     solc: {
@@ -18,8 +22,12 @@ const config: BuidlerConfig = {
           // blockGasLimit: 0xfffffffffff,
           // gas: 0xfffffffffff,
           // gasPrice: 0x01
+        },
+        ropsten: {
+          url: `https://ropsten.infura.io/v3/${INFURA_PROJECT_ID}`,
+          accounts: [`0x${ROPSTEN_PRIVATE_KEY}`]
         }
-      }
+      },
 };
 
 export default config;

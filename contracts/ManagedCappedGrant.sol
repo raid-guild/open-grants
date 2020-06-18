@@ -41,6 +41,7 @@ contract ManagedCappedGrant is AbstractGrant, ReentrancyGuard {
      * @param _targetFunding (Optional) Funding threshold required to release funds.
      * @param _fundingDeadline (Optional) Date after which signaling OR funds cannot be sent.
      * @param _contractExpiration (Optional) Date after which payouts must be complete or anyone can trigger refunds.
+     * @param _uri URI for additional (off-chain) grant details such as description, milestones, etc.
      */
     constructor(
         address[] memory _grantees,
@@ -49,7 +50,8 @@ contract ManagedCappedGrant is AbstractGrant, ReentrancyGuard {
         address _currency,
         uint256 _targetFunding,
         uint256 _fundingDeadline,
-        uint256 _contractExpiration
+        uint256 _contractExpiration,
+        bytes memory _uri
     )
         public
     {
@@ -87,6 +89,7 @@ contract ManagedCappedGrant is AbstractGrant, ReentrancyGuard {
         );
 
         // Initialize globals.
+        uri = _uri;
         manager = _manager;
         currency = _currency;
         targetFunding = _targetFunding;

@@ -11,6 +11,7 @@ abstract contract AbstractGrant {
     /*----------  Globals  ----------*/
 
     /* solhint-disable max-line-length */
+    bytes public uri;                            // URI for additional (off-chain) grant details such as description, milestones, etc.
     address public manager;                      // Multisig or EOA address to manage grant.
     address public currency;                     // (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.
     uint256 public targetFunding;                // (Optional) Funding threshold required to begin releasing funds.

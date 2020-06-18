@@ -39,6 +39,7 @@ contract GrantFactory {
      * @param _targetFunding (Optional) Funding threshold required to release funds.
      * @param _fundingDeadline (Optional) Block number after which votes OR funds (dependant on GrantType) cannot be sent.
      * @param _contractExpiration (Optional) Block number after which payouts must be complete or anyone can trigger refunds.
+     * @param _uri URI for additional (off-chain) grant details such as description, milestones, etc.
      * @param _extraData Support for extensions to the Standard.
      * @return GUID for this grant.
      */
@@ -51,6 +52,7 @@ contract GrantFactory {
         uint256 _targetFunding,
         uint256 _fundingDeadline,
         uint256 _contractExpiration,
+        bytes memory _uri,
         bytes memory _extraData // solhint-disable-line no-unused-vars
     )
         public
@@ -63,7 +65,8 @@ contract GrantFactory {
             _currency,
             _targetFunding,
             _fundingDeadline,
-            _contractExpiration
+            _contractExpiration,
+            _uri
         );
 
         // Store grant info.
