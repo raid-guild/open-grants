@@ -1,7 +1,6 @@
-import { BigInt } from "@graphprotocol/graph-ts"
+import { Bytes, Address, BigInt } from "@graphprotocol/graph-ts";
 import {
-  Contract,
-  LogSignal,
+  ManagedCappedGrant,
   LogFundingComplete,
   LogGrantCancellation,
   LogFunding,
@@ -9,79 +8,65 @@ import {
   LogPayment,
   LogPaymentApproval,
   LogRefundApproval
-} from "../generated/Contract/Contract"
-import { Fund, Payment } from "../generated/schema"
+} from "../generated/ManagedCappedGrant/ManagedCappedGrant"
 
-export function handleLogSignal(event: LogSignal): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
-  // let entity = ExampleEntity.load(event.transaction.from.toHex())
+import { LogNewGrant } from "../generated/GrantFactory/GrantFactory"
+import { returnGrantsInfo } from "./getters"
+import { Fund, Payment, Contract } from "../generated/schema"
 
-  // // Entities only exist after they have been saved to the store;
-  // // `null` checks allow to create entities on demand
-  // if (entity == null) {
-  //   entity = new ExampleEntity(event.transaction.from.toHex())
+export function handleLogNewGrant(event: LogNewGrant): void {
+  let id = event.params.grant.toHexString()
 
-  //   // Entity fields can be set using simple assignments
-  //   entity.count = BigInt.fromI32(0)
-  // }
+  let returnedGrant = returnGrantsInfo(event.params.grant);
 
-  // // BigInt and BigDecimal math are supported
-  // entity.count = entity.count + BigInt.fromI32(1)
+  let contract = new Contract(id);
+  contract.contractAddress = event.address
+  contract.grantId = event.params.id
+  contract.grantAddress = event.params.grant
 
-  // // Entity fields can be set based on event parameters
-  // entity.support = event.params.support
-  // entity.signaler = event.params.signaler
+  contract.manager = returnedGrant.manager;
+  contract.currency = returnedGrant.currency;
+  contract.targetFunding = returnedGrant.targetFunding;
+  contract.totalFunding = returnedGrant.totalFunding;
+  contract.totalPayed = returnedGrant.totalPayed;
+  contract.availableBalance = returnedGrant.availableBalance;
+  contract.canFund = returnedGrant.canFund;
+  contract.grantCancelled = returnedGrant.grantCancelled;
+  contract.fundingExpiration = returnedGrant.fundingDeadline;
+  contract.contractExpiration = returnedGrant.contractExpiration;
 
-  // // Entities can be written to the store with `.save()`
-  // entity.save()
-
-  // Note: If a handler doesn't require existing field values, it is faster
-  // _not_ to load the entity from the store. Instead, create it fresh with
-  // `new Entity(...)`, set the fields that should be updated and save the
-  // entity back to the store. Fields that were not set or unset remain
-  // unchanged, allowing for partial updates to be applied.
-
-  // It is also possible to access smart contracts from mappings. For
-  // example, the contract that has emitted the event can be connected to
-  // with:
-  //
-  // let contract = Contract.bind(event.address)
-  //
-  // The following functions can then be called on this contract to access
-  // state variables and other data:
-  //
-  // - contract.fundingExpiration(...)
-  // - contract.manager(...)
-  // - contract.grantCancelled(...)
-  // - contract.grantees(...)
-  // - contract.contractExpiration(...)
-  // - contract.totalPayed(...)
-  // - contract.donors(...)
-  // - contract.totalRefunded(...)
-  // - contract.currency(...)
-  // - contract.targetFunding(...)
-  // - contract.pendingPayments(...)
-  // - contract.totalFunding(...)
-  // - contract.isManager(...)
-  // - contract.availableBalance(...)
-  // - contract.canFund(...)
-  // - contract.remainingAllocation(...)
-  // - contract.fund(...)
-  // - contract.approvePayout(...)
-  // - contract.withdrawRefund(...)
+  contract.save();
 }
 
 export function handleLogFundingComplete(event: LogFundingComplete): void { }
 
-export function handleLogGrantCancellation(event: LogGrantCancellation): void { }
+export function handleLogGrantCancellation(event: LogGrantCancellation): void {
+  let contract = Contract.load(event.address.toHexString());
+
+  contract.grantCancelled = false;
+  contract.canFund = false;
+}
 
 export function handleLogFunding(event: LogFunding): void {
   let fund = new Fund(event.transaction.hash.toHex());
-  fund.contract = event.address
+  fund.grantAddress = event.address
   fund.donor = event.params.donor
   fund.amount = event.params.value
   fund.save()
+
+  let contract = Contract.load(event.address.toHexString());
+
+  if (contract != null) {
+    let returnedGrant = returnGrantsInfo(event.address);
+
+    contract.totalFunding = returnedGrant.totalFunding;
+    contract.availableBalance = returnedGrant.availableBalance;
+    contract.canFund = returnedGrant.canFund;
+
+    contract.save();
+
+  }
+
 }
 
 export function handleLogRefund(event: LogRefund): void { }
@@ -89,9 +74,22 @@ export function handleLogRefund(event: LogRefund): void { }
 export function handleLogPayment(event: LogPayment): void {
   let payment = new Payment(event.transaction.hash.toHex());
   payment.grantee = event.params.grantee
-  payment.contract = event.address
+  payment.grantAddress = event.address
   payment.amount = event.params.value
-  payment.save()
+  payment.save();
+
+
+  let contract = Contract.load(event.address.toHexString());
+
+  if (contract != null) {
+    let returnedGrant = returnGrantsInfo(event.address);
+
+    contract.totalPayed = returnedGrant.totalPayed;
+    contract.availableBalance = returnedGrant.availableBalance;
+
+    contract.save();
+  }
+
 }
 
 export function handleLogPaymentApproval(event: LogPaymentApproval): void { }

@@ -1,20 +1,37 @@
-# type ExampleEntity @entity {
-#   id: ID!
-#   count: BigInt!
-#   support: Boolean! # bool
-#   signaler: Bytes! # address
+type Contract @entity {
+  id: ID!
+  contractAddress: Bytes!
+  # count: BigInt!
+  grantId: BigInt! # uint256
+  grantAddress: Bytes! # address
+  manager: Bytes!
+  currency: Bytes!
+  targetFunding: BigInt!
+  totalFunding: BigInt
+  totalPayed: BigInt
+  availableBalance: BigInt
+  canFund: Boolean
+  grantCancelled: Boolean
+  fundingExpiration: BigInt!
+  contractExpiration: BigInt!
+}
+
+
+# type grantee @entity {
+#   grantee: Bytes!
+#   targetFunding: String!
 # }
 
 type Fund @entity {
   id: ID!
-  contract: Bytes!
+  grantAddress: Bytes!
   donor: Bytes! # address
   amount: BigInt!
 }
 
 type Payment @entity {
   id: ID!
-  contract: Bytes!
+  grantAddress: Bytes!
   grantee: Bytes! # address
   amount: BigInt!
 }

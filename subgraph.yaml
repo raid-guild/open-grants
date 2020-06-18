@@ -1,38 +1,68 @@
 specVersion: 0.0.2
-description: Grant for Ethereum
+description: Managed Capped Grant for Ethereum
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: Contract
+    name: ManagedCappedGrant
     network: ropsten
     source:
-      abi: Contract
+      abi: ManagedCappedGrant
       startBlock: 7802695
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - Contract
+        - LogFunding
+        - LogFundingComplete
+        - LogGrantCancellation
+        - LogPayment
+        - LogPaymentApproval
+        - LogRefund
+        - LogRefundApproval
       abis:
-        - name: Contract
-          file: ./abis/Contract.json
+        - name: ManagedCappedGrant
+          file: ./abis/ManagedCappedGrant.json
+        - name: GrantFactory
+          file: ./abis/GrantFactory.json
       eventHandlers:
-        - event: LogSignal(indexed bool,indexed address,indexed address,uint256)
-          handler: handleLogSignal
+        - event: LogFunding(indexed address,uint256)
+          handler: handleLogFunding
         - event: LogFundingComplete()
           handler: handleLogFundingComplete
         - event: LogGrantCancellation()
           handler: handleLogGrantCancellation
-        - event: LogFunding(indexed address,uint256)
-          handler: handleLogFunding
-        - event: LogRefund(indexed address,uint256)
-          handler: handleLogRefund
         - event: LogPayment(indexed address,uint256)
           handler: handleLogPayment
         - event: LogPaymentApproval(indexed address,uint256)
           handler: handleLogPaymentApproval
+        - event: LogRefund(indexed address,uint256)
+          handler: handleLogRefund
         - event: LogRefundApproval(uint256,uint256)
           handler: handleLogRefundApproval
+
+      file: ./src/mapping.ts
+
+  - kind: ethereum/contract
+    name: GrantFactory
+    network: ropsten
+    source:
+      abi: GrantFactory
+      startBlock: 7802695
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - GrantFactory
+      abis:
+        - name: ManagedCappedGrant
+          file: ./abis/ManagedCappedGrant.json
+        - name: GrantFactory
+          file: ./abis/GrantFactory.json
+      eventHandlers:
+        - event: LogNewGrant(indexed uint256,address)
+          handler: handleLogNewGrant
+
       file: ./src/mapping.ts

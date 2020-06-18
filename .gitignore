@@ -62,6 +62,7 @@ typings/
 
 # Editor 
 .history
+.vscode
 
 build/
 generated/
