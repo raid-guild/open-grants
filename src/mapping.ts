@@ -24,6 +24,7 @@ export function handleLogNewGrant(event: LogNewGrant): void {
   contract.grantId = event.params.id
   contract.grantAddress = event.params.grant
 
+  contract.uri = returnedGrant.uri;
   contract.manager = returnedGrant.manager;
   contract.currency = returnedGrant.currency;
   contract.targetFunding = returnedGrant.targetFunding;

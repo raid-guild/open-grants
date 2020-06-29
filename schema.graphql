@@ -4,6 +4,7 @@ type Contract @entity {
   # count: BigInt!
   grantId: BigInt! # uint256
   grantAddress: Bytes! # address
+  uri: Bytes
   manager: Bytes!
   currency: Bytes!
   targetFunding: BigInt!
@@ -15,7 +16,6 @@ type Contract @entity {
   fundingExpiration: BigInt!
   contractExpiration: BigInt!
 }
-
 
 # type grantee @entity {
 #   grantee: Bytes!

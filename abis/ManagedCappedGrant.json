@@ -19,7 +19,8 @@
         "internalType": "uint256",
         "name": "_contractExpiration",
         "type": "uint256"
-      }
+      },
+      { "internalType": "bytes", "name": "_uri", "type": "bytes" }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
@@ -280,6 +281,13 @@
     "inputs": [],
     "name": "totalRefunded",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "uri",
+    "outputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }],
     "stateMutability": "view",
     "type": "function"
   },

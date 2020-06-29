@@ -9,6 +9,7 @@ import { ManagedCappedGrant } from "../generated/GrantFactory/ManagedCappedGrant
 import { GrantFactory } from "../generated/GrantFactory/GrantFactory";
 
 class GrantObject {
+    uri: Bytes;
     manager: Address;
     currency: Address;
     targetFunding: BigInt;
@@ -37,6 +38,7 @@ export function returnGrantsInfo(
     let grantCancelled = grantInstance.try_grantCancelled();
     let fundingDeadline = grantInstance.try_fundingDeadline();
     let contractExpiration = grantInstance.try_contractExpiration();
+    let uri = grantInstance.try_uri();
 
     if (!canFund.reverted) {
         grantObject.canFund = canFund.value;
@@ -76,6 +78,10 @@ export function returnGrantsInfo(
 
     if (!contractExpiration.reverted) {
         grantObject.contractExpiration = contractExpiration.value;
+    }
+
+    if (!uri.reverted) {
+        grantObject.uri = uri.value;
     }
 
     return grantObject;

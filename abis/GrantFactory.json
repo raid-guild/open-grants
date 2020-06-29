@@ -39,11 +39,19 @@
         "name": "_contractExpiration",
         "type": "uint256"
       },
+      { "internalType": "bytes", "name": "_uri", "type": "bytes" },
       { "internalType": "bytes", "name": "_extraData", "type": "bytes" }
     ],
     "name": "create",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "id",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
     "type": "function"
   }
 ]
