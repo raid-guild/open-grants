@@ -13,13 +13,16 @@
                 </div>
                 <ion-row>
                     <ion-col size-md="7" size-sm="12">
-                        <img src="{{grant?.images[0]}}" alt="">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media"
+                            alt="">
                     </ion-col>
                     <ion-col size-md="5" size-sm="12" class="padding-left-50">
                         <div class="line"></div>
                         <div class="padding-20 top-20">
-                            <h1 class="green">Ξ {{balance}} {{grant?.currency}}</h1>
-                            <p>pledged of Ξ {{grant?.targetFunding}} {{grant?.currency}} goal</p>
+                            <h1 class="green">Ξ {{currencyCovert(grantData?.currency,grantData?.availableBalance)}} ETH
+                            </h1>
+                            <p>pledged of Ξ {{currencyCovert(grantData?.currency,grantData?.targetFunding)}} ETH goal
+                            </p>
                         </div>
                         <div *ngIf="userType == userEnum.DONOR" class="padding-20">
                             <h1>Ξ {{userDonation}} {{grant?.currency}}</h1>

@@ -30,6 +30,7 @@
     "@nestjs/swagger": "^4.1.2",
     "@types/eth-sig-util": "^2.1.0",
     "@types/jsonwebtoken": "^8.3.5",
+    "aws-sdk": "^2.693.0",
     "cross-env": "^6.0.3",
     "ethereumjs-util": "^6.2.0",
     "ethers": "^4.0.46",

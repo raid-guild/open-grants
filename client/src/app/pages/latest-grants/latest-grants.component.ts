@@ -8,6 +8,9 @@ import { ViewGrantComponent } from '../view-grant/view-grant.component';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { SubgraphService } from 'src/app/services/subgraph.service';
+import { ethers, providers, utils } from 'ethers';
+import { AddressZero, Zero } from "ethers/constants";
 
 @Component({
   selector: 'app-latest-grants',
@@ -22,6 +25,7 @@ export class LatestGrantsComponent implements OnInit {
   constructor(public popoverCtrl: PopoverController,
     public modalController: ModalController,
     private grantService: GrantService,
+    private subgraphService: SubgraphService,
     private router: Router,
   ) {
 
@@ -82,7 +86,21 @@ export class LatestGrantsComponent implements OnInit {
   getAllGrants() {
     this.grantService.getAll().subscribe((res: HTTPRESPONSE) => {
       this.allGrant = res.data;
+      console.log("allGrant", this.allGrant);
       this.searchResult = this.allGrant;
     });
+
+
+    this.subgraphService.getGrantList().subscribe((res: any) => {
+      console.log("res", res.data.contracts);
+      this.searchResult = res.data.contracts;
+    })
+  }
+
+  currencyCovert(currencyType, amount) {
+    if (currencyType == AddressZero) {
+      return ethers.utils.formatEther(amount);
+    }
+    return amount;
   }
 }

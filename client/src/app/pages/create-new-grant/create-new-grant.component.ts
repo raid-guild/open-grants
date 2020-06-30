@@ -19,6 +19,7 @@ import { ethers, providers, utils } from 'ethers';
 import * as Web3 from 'web3';
 import { addressValidator } from '../../common/validators/custom.validators';
 import { ImageUploadComponent, FileHolder } from 'angular2-image-upload';
+import { OrbitService } from 'src/app/services/orbit.service';
 
 declare let window: any;
 
@@ -64,7 +65,8 @@ export class CreateNewGrantComponent implements OnInit {
     public router: Router,
     private fb: FormBuilder,
     private ethcontractService: EthcontractService,
-    private utils: UtilsService
+    private utils: UtilsService,
+    private orbitService: OrbitService
   ) {
 
     this.bindModel();
@@ -447,11 +449,11 @@ export class CreateNewGrantComponent implements OnInit {
     }
 
     // console.log("data", data);
-    let contract = await this.ethcontractService.deployContract(data);
+    let contract = await this.ethcontractService.createGrant(data);
     return contract;
   }
 
-  async  onSubmit() {
+  async onSubmit() {
     this.submitted = true;
     // console.log("content", this.myForm.value)
     if (this.myForm.controls.type.value == "singleDeliveryDate") {
@@ -487,7 +489,7 @@ export class CreateNewGrantComponent implements OnInit {
       return JSON.parse(JSON.stringify(data));
     })
 
-    console.log("this.grantForm", this.grantForm);
+    // console.log("this.grantForm", this.grantForm);
 
     try {
       this.processing = true;
@@ -505,16 +507,18 @@ export class CreateNewGrantComponent implements OnInit {
           return data;
         })
 
-        // console.log("this.grantForm", this.grantForm);
+        this.toastr.success(contract.status, this.toastTitle);
+        this.router.navigate(['pages/latest']);
 
-        this.grantService.createGrant(this.grantForm).subscribe((res: HTTPRESPONSE) => {
-          this.processing = false;
-          this.toastr.success(res.message, this.toastTitle);
-          this.router.navigate(['pages/latest']);
-        }, (err) => {
-          this.processing = false;
-          this.toastr.error(err.error.message, this.toastTitle);
-        });
+        // console.log("this.grantForm", this.grantForm);
+        // this.grantService.createGrant(this.grantForm).subscribe((res: HTTPRESPONSE) => {
+        //   this.processing = false;
+        //   this.toastr.success(res.message, this.toastTitle);
+        //   this.router.navigate(['pages/latest']);
+        // }, (err) => {
+        //   this.processing = false;
+        //   this.toastr.error(err.error.message, this.toastTitle);
+        // });
       } else {
         this.processing = false;
         this.toastr.error(contract.message);

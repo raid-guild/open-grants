@@ -142,75 +142,75 @@ export class GrantController {
     // @Get('trendingGrants')
     // async getTrendingGrants(@Res() res) {
     //     try {
-    //         let allGrant = await this.grantService.getAll();
+            let allGrant = await this.grantService.getAll();
 
-    //         allGrant = allGrant.sort(function (obj1, obj2) {
-    //             if ((obj1.totalFunding + obj1.totalPayed) == 0) {
-    //                 return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - 0;
-    //             }
+allGrant = allGrant.sort(function (obj1, obj2) {
+    if ((obj1.totalFunding + obj1.totalPayed) == 0) {
+        return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - 0;
+    }
 
-    //             if ((obj2.totalFunding + obj2.totalPayed) == 0) {
-    //                 return 0 - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
-    //             }
+    if ((obj2.totalFunding + obj2.totalPayed) == 0) {
+        return 0 - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
+    }
 
-    //             return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
-    //         });
+    return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
+});
 
-    //         return res.status(httpStatus.OK).json(new APIResponse(allGrant, 'Grants fetched successfully', httpStatus.OK));
-    //     } catch (e) {
-    //         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting grant', httpStatus.INTERNAL_SERVER_ERROR, e));
-    //     }
-    // }
+//         return res.status(httpStatus.OK).json(new APIResponse(allGrant, 'Grants fetched successfully', httpStatus.OK));
+//     } catch (e) {
+//         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error Getting grant', httpStatus.INTERNAL_SERVER_ERROR, e));
+//     }
+// }
 
-    @Put('')
-    @ApiBearerAuth()
-    @ApiResponse({ status: 200, description: 'Grants updated successfully' })
-    async update(@Res() res, @Body() grantModel: Grant, @Body() grantUpdateswagger: grantUpdateswagger) {
-        try {
-            let response = await this.grantService.update(grantModel);
-            if (response) {
-                return res.status(httpStatus.OK).json(new APIResponse(response, 'Grants updated succesfully', httpStatus.OK));
-            } else {
-                return res.status(httpStatus.BAD_REQUEST).json(new APIResponse({}, 'No Record Found', httpStatus.BAD_REQUEST));
+@Put('')
+@ApiBearerAuth()
+@ApiResponse({ status: 200, description: 'Grants updated successfully' })
+async update(@Res() res, @Body() grantModel: Grant, @Body() grantUpdateswagger: grantUpdateswagger) {
+    try {
+        let response = await this.grantService.update(grantModel);
+        if (response) {
+            return res.status(httpStatus.OK).json(new APIResponse(response, 'Grants updated succesfully', httpStatus.OK));
+        } else {
+            return res.status(httpStatus.BAD_REQUEST).json(new APIResponse({}, 'No Record Found', httpStatus.BAD_REQUEST));
+        }
+    } catch (e) {
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse({}, 'Error updating grant', httpStatus.INTERNAL_SERVER_ERROR, e));
+    }
+}
+
+@Post('cancel/:id')
+@ApiBearerAuth()
+@ApiResponse({ status: 200, description: 'Grant cancel successfully' })
+async cancel(@Req() req, @Res() res, @Body() body) {
+    try {
+        this.scheduleService.addJobForCancelGrant(body.grant, body.hash);
+        return res.status(httpStatus.OK).json(new APIResponse(null, 'Grant cancel successfully', httpStatus.OK));
+    } catch (e) {
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error cancling grant', httpStatus.INTERNAL_SERVER_ERROR, e));
+    }
+}
+
+@Post('/uploadedFile')
+@UseInterceptors(
+    FileInterceptor('file', {
+        storage: multer.diskStorage({
+            destination: 'files/',
+            filename: (req, file, cb) => {
+                const extension = file.originalname.split('.');
+                const filename = `${Date.now()}.${extension[extension.length - 1]}`;
+                return cb(null, filename)
             }
-        } catch (e) {
-            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse({}, 'Error updating grant', httpStatus.INTERNAL_SERVER_ERROR, e));
-        }
-    }
-
-    @Post('cancel/:id')
-    @ApiBearerAuth()
-    @ApiResponse({ status: 200, description: 'Grant cancel successfully' })
-    async cancel(@Req() req, @Res() res, @Body() body) {
-        try {
-            this.scheduleService.addJobForCancelGrant(body.grant, body.hash);
-            return res.status(httpStatus.OK).json(new APIResponse(null, 'Grant cancel successfully', httpStatus.OK));
-        } catch (e) {
-            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse(null, 'Error cancling grant', httpStatus.INTERNAL_SERVER_ERROR, e));
-        }
-    }
-
-    @Post('/uploadedFile')
-    @UseInterceptors(
-        FileInterceptor('file', {
-            storage: multer.diskStorage({
-                destination: 'files/',
-                filename: (req, file, cb) => {
-                    const extension = file.originalname.split('.');
-                    const filename = `${Date.now()}.${extension[extension.length - 1]}`;
-                    return cb(null, filename)
-                }
-            })
         })
-    )
-    async uploadedFile(@Res() res, @UploadedFile() file) {
-        try {
-            let imagePath = await this.imageUploadService.uploadImage(file);
+    })
+)
+async uploadedFile(@Res() res, @UploadedFile() file) {
+    try {
+        let imagePath = await this.imageUploadService.uploadImage(file);
 
-            return res.status(httpStatus.OK).json(new APIResponse({ url: imagePath }, 'File upload successfully', httpStatus.OK));
-        } catch (e) {
-            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse({}, 'Error adding user', httpStatus.INTERNAL_SERVER_ERROR, e));
-        }
+        return res.status(httpStatus.OK).json(new APIResponse({ url: imagePath }, 'File upload successfully', httpStatus.OK));
+    } catch (e) {
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(new APIResponse({}, 'Error adding user', httpStatus.INTERNAL_SERVER_ERROR, e));
     }
+}
 
 }

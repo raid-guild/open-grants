@@ -52,7 +52,7 @@ export const GrantSchema = new mongoose.Schema(
         currency: { type: currencyEnum, default: currencyEnum.WEI },
         createdBy: { type: String, required: true },
         status: { type: statusEnum, default: statusEnum.PENDING },
-        contractAddress: { type: String, required: true, unique: true },
+        contractAddress: { type: String, unique: true },
         hash: { type: String, required: true },
         content: { type: String },
         isActive: { type: Boolean, default: true },

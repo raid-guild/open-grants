@@ -82,6 +82,7 @@ export class AppComponent implements OnInit {
 
     var Buffer: any = window['Buffer']
     window['Buffer'] = Buffer["Buffer"]
+    console.log("window", window);
 
     this.initializeApp();
   }

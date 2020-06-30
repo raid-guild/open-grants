@@ -9,7 +9,8 @@
             <ion-item mode="md" lines="none" class="heading">
                 <ion-label slot="start">Latest Grants</ion-label>
 
-                <ion-searchbar slot="end" [formControl]="searchBox" (ionCancel)="onCancel($event)" [animated]="true" placeholder="Search Grant...">
+                <ion-searchbar slot="end" [formControl]="searchBox" (ionCancel)="onCancel($event)" [animated]="true"
+                    placeholder="Search Grant...">
                 </ion-searchbar>
                 <!-- <ion-input placeholder="grant ..." mode="md" type="search"></ion-input>
                 <ion-button slot="end" color="primary" mode="md" (click)="onSearch()">
@@ -22,13 +23,17 @@
             <hr class="dassed-line">
 
             <ion-row *ngFor="let grant of searchResult" style="cursor: pointer;">
-                <ion-col size="12" (click)="grantDetails(grant.contractAddress)">
+                <ion-col size="12" (click)="grantDetails(grant.id)">
                     <div class="d-flex">
-                        <img src="{{grant.images[0]}}" alt="" style="height: 150px;">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media"
+                            alt="" style="height: 150px;">
                         <div class="" style="padding-left: 40px;">
-                            <h3>{{grant?.name}}</h3>
-                            <p>Target Funding : {{grant?.targetFunding}}</p>
-                            <p>{{grant?.description}}</p>
+                            <!-- <h3>{{grant?.name}}</h3> -->
+                            <p>Manager : {{grant?.manager}}</p>
+                            <p>Target Funding : {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH</p>
+                            <p>Total Funding : {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</p>
+                            <p>Available Balance : {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH</p>
+                            <!-- <p>{{grant?.description}}</p> -->
                         </div>
                     </div>
                     <div class="line"></div>

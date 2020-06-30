@@ -15,6 +15,53 @@ export class SubgraphService {
     })
   }
 
+  getGrantList() {
+    return this.apollo.query({
+      query: gql`query getContracts{
+        contracts(orderBy:grantId) {
+          id
+          contractAddress
+          grantId
+          grantAddress
+          canFund
+          grantAddress
+          manager
+          currency
+          targetFunding
+          totalFunding
+          availableBalance
+          grantCancelled
+          fundingExpiration
+          contractExpiration
+        }
+      }`,
+    })
+  }
+
+  getGrantByAddress(grantAddress: string) {
+    return this.apollo.query({
+      query: gql`query getContract($grantAddress: String){
+        contract(id: $grantAddress) {
+          id
+          contractAddress
+          grantId
+          grantAddress
+          canFund
+          grantAddress
+          manager
+          currency
+          targetFunding
+          totalFunding
+          availableBalance
+          grantCancelled
+          fundingExpiration
+          contractExpiration
+        }
+      }`,
+      variables: { grantAddress: grantAddress }
+    })
+  }
+
   getFundByContractAndDonor(contract: string, donor: string) {
     return this.apollo.query({
       query: gql`query getFunds($contract: String,$donor: String){

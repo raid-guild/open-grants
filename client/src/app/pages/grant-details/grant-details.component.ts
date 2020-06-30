@@ -14,6 +14,7 @@ import { Events, ModalController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
 import { ThreeBoxService } from 'src/app/services/threeBox.service';
 import { PayoutComponent } from '../payout/payout.component'
+import { AddressZero, Zero } from "ethers/constants";
 
 declare let window: any;
 
@@ -35,6 +36,7 @@ export class GrantDetailsComponent implements OnInit {
   }
 
   grant: any;
+  grantData: any;
   manager3boxProfile: any;
   userType = this.userEnum.VISITOR;
   noOfDonors = 0;
@@ -80,11 +82,15 @@ export class GrantDetailsComponent implements OnInit {
       try {
         this.user = JSON.parse(localStorage.getItem(AppSettings.localStorage_keys.userData));
 
+        let response: any = await this.subgraphService.getGrantByAddress(this.contractAddress).toPromise();
+        this.grantData = response.data.contract;
+        // console.log("response", response.data.contract)
+
         let res = await this.grantService.getByContract(this.contractAddress).toPromise();
         this.grant = res.data;
         this.grant.content = this.htmlDecode(this.grant.content);
         this.checkRoll();
-        this.manager3boxProfile = await this.threeBoxService.getProfile(this.grant.manager.toLowerCase());
+        this.manager3boxProfile = await this.threeBoxService.getProfile(this.grantData.manager.toLowerCase());
       } catch (e) { }
     })();
   }
@@ -96,6 +102,13 @@ export class GrantDetailsComponent implements OnInit {
         this.checkRoll();
       }, 100);
     });
+  }
+
+  currencyCovert(currencyType, amount) {
+    if (currencyType == AddressZero) {
+      return ethers.utils.formatEther(amount);
+    }
+    return amount;
   }
 
   async payoutModel() {

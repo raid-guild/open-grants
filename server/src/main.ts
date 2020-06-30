@@ -31,7 +31,7 @@ async function bootstrap() {
 
   // app.useGlobalGuards(new Guard());
 
-  let port = 7001;
+  let port = process.env.PORT || 7001;
   await app.listen(port);
   console.log("Server running on port", port);
 
