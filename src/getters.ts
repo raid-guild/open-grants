@@ -28,6 +28,7 @@ export function returnGrantsInfo(
     let grantInstance = ManagedCappedGrant.bind(address);
     let grantObject = new GrantObject();
 
+    let uri = grantInstance.try_uri();
     let canFund = grantInstance.try_canFund();
     let manager = grantInstance.try_manager();
     let currency = grantInstance.try_currency();
@@ -38,7 +39,10 @@ export function returnGrantsInfo(
     let grantCancelled = grantInstance.try_grantCancelled();
     let fundingDeadline = grantInstance.try_fundingDeadline();
     let contractExpiration = grantInstance.try_contractExpiration();
-    let uri = grantInstance.try_uri();
+
+    // TODO: migrate blockchain contract 
+    // let grantees = grantInstance.try_grantees();
+    // let amount = grantInstance.try_amounts();
 
     if (!canFund.reverted) {
         grantObject.canFund = canFund.value;
