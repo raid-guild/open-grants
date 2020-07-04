@@ -18,7 +18,7 @@ export class MenuPopoverComponent implements OnInit {
     private toastr: ToastrService,
     public popoverCtrl: PopoverController,
     private authService: AuthService
-    ) { }
+  ) { }
 
   ngOnInit() { }
 
@@ -29,7 +29,7 @@ export class MenuPopoverComponent implements OnInit {
   signOut() {
     this.authService.logout();
     this.toastr.success("Sign out successfully", this.toastTitle);
-    this.router.navigate(['pages/home']);
+    // this.router.navigate(['pages/home']);
     this.dismiss();
   }
 

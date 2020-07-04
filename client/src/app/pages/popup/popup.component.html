@@ -1,0 +1,13 @@
+<ion-content>
+  <div *ngIf="loging">
+    <h1>Loging</h1>
+    <ion-button (click)="dismiss()" color="medium">Close</ion-button>
+  </div>
+  <div *ngIf="loginSuccess">
+    <h1>Success</h1>
+  </div>
+  <div *ngIf="loginError">
+    <h1>Error</h1>
+    <ion-button (click)="dismiss()" color="medium">Close</ion-button>
+  </div>
+</ion-content>

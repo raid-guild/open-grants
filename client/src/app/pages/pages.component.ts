@@ -1,15 +1,5 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { Events } from '@ionic/angular';
-
-import { Platform, ModalController } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { CreateNewGrantComponent } from './create-new-grant/create-new-grant.component';
-import { ethers } from 'ethers';
-import { Router } from '@angular/router';
-import { UserService } from '../services/user.service';
-import { HTTPRESPONSE } from '../common/http-helper/http-helper.class';
-import { async } from '@angular/core/testing';
 import { AuthService, AuthState } from '../services/auth.service';
 
 @Component({

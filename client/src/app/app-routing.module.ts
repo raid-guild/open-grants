@@ -8,12 +8,6 @@ const routes: Routes = [
     path: 'pages',
     loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule),
   },
-  // {
-  //   path: 'auth',
-  //   loadChildren: './pages/auth/auth.module#AuthModule',
-  //   // canActivate: [AuthPreventGuard],
-  //   // data: { preload: true, delay: true }
-  // },
   { path: '', redirectTo: 'pages', pathMatch: 'full' },
   { path: '**', redirectTo: 'pages' },
 ];

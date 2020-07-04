@@ -17,14 +17,11 @@ export class ThreeBoxService {
   space: any;
   thread: any;
   posts: any;
-  user: any;
 
   private _box = new BehaviorSubject<Threebox>(null);
   public box$ = this._box.asObservable();
 
-  constructor() {
-    this.user = JSON.parse(localStorage.getItem(AppSettings.localStorage_keys.userData));
-  }
+  constructor() { }
 
   public get box(): Threebox {
     return this._box.getValue();
@@ -62,7 +59,7 @@ export class ThreeBoxService {
     // try {
     //   let res = await profileGraphQL(query);
     //   return res.profile;
-      
+
     // } catch (e) {
     //   return [];
     // }

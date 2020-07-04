@@ -27,27 +27,19 @@ export class AuthService {
 
     static isAuthenticated(): boolean {
         // @todo ===> check token expire time here to determine if token is expired or not <===
-        return !!localStorage.getItem(AppSettings.localStorage_keys.token);
+        return !!localStorage.getItem(AppSettings.localStorage_keys.userEthAddress);
     }
 
-    getDecodedAccessToken(token: string): any {
-        try {
-            return jwt_decode(token);
-        } catch (Error) {
-            return null;
-        }
-    }
-
-    setAuthState(data: AuthState) {
+    setAuthState(data) {
         this.applicationAuthState = data;
         this.authSubject.next(data);
         this.events.publish('is_logged_in', data.is_logged_in);
     }
 
     getAuthUserId() {
-        const token = localStorage.getItem(AppSettings.localStorage_keys.token);
-        if (token) {
-            return this.getDecodedAccessToken(token.replace('Bearer ', '')).id;
+        const userEthAddress = localStorage.getItem(AppSettings.localStorage_keys.userEthAddress);
+        if (userEthAddress) {
+            return userEthAddress;
         } else {
             return null;
         }
@@ -58,9 +50,8 @@ export class AuthService {
     }
 
     logout() {
-        localStorage.removeItem(AppSettings.localStorage_keys.token);
+        localStorage.removeItem(AppSettings.localStorage_keys.userEthAddress);
         localStorage.clear();
-        console.log(localStorage.getItem(AppSettings.localStorage_keys.token));
         this.setAuthState({ is_logged_in: false });
     }
 

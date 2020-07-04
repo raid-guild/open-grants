@@ -1,7 +1,9 @@
 export const AppSettings = Object.freeze({
     localStorage_keys: {
-        token: 'token',
-        userData: 'userData'
+        userEthAddress: 'userEthAddress',
+        currentNetwork: 'currentNetwork',
+        userSign: 'userSign',
+        nouce: 'nouce'
     },
     firebaseConfig: {
         apiKey: "AIzaSyBd8SxIrn4VBHIOOYI8yxPNlMhHczJkM0Q",

@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { GrantService } from 'src/app/services/grant.service';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 import { Router } from '@angular/router';
+import { SubgraphService } from 'src/app/services/subgraph.service';
+import { ethers, providers, utils } from 'ethers';
+import { AddressZero, Zero } from "ethers/constants";
 
 @Component({
   selector: 'app-home',
@@ -14,13 +16,20 @@ export class HomeComponent {
 
   constructor(
     private router: Router,
-    private grantService: GrantService
+    private subgraphService: SubgraphService,
   ) {
-    this.grantService.getAll().subscribe((res: HTTPRESPONSE) => {
-      this.allGrant = res.data;
+    this.subgraphService.getGrantList().subscribe((res: any) => {
+      this.allGrant = res.data.contracts;
       this.latestGrant = this.allGrant[0];
       this.allGrant.splice(0, 1);
-    });
+    })
+  }
+
+  currencyCovert(currencyType, amount) {
+    if (currencyType == AddressZero) {
+      return ethers.utils.formatEther(amount);
+    }
+    return amount;
   }
 
   grantDetails(id: string) {

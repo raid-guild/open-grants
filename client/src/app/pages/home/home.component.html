@@ -5,20 +5,25 @@
 
 <ion-row class="margin-50">
     <ion-col size="6" class="border-right">
-        <div class="" (click)="grantDetails(latestGrant.contractAddress)">
-            <img src="{{latestGrant?.images[0]}}" class="main-image" alt="">
-            <h1>{{latestGrant?.name}}</h1>
-            <p>{{latestGrant?.description}}</p>
+        <div class="" (click)="grantDetails(latestGrant.id)">
+            <img src="https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media"
+                alt="" style="height: 150px;">
+            <p>Manager : {{latestGrant?.manager}}</p>
+            <p>Target Funding : {{currencyCovert(latestGrant?.currency,latestGrant?.targetFunding)}} ETH</p>
+            <p>Total Funding : {{currencyCovert(latestGrant?.currency,latestGrant?.totalFunding)}} ETH</p>
+            <p>Available Balance : {{currencyCovert(latestGrant?.currency,latestGrant?.availableBalance)}} ETH</p>
         </div>
     </ion-col>
     <ion-col size="6">
         <div *ngFor="let grant of allGrant | slice:0:3">
-            <div class="d-flex" (click)="grantDetails(grant.contractAddress)">
-                <img src="{{grant?.images[0]}}" class="image-responsive margin-35" alt="">
+            <div class="d-flex" (click)="grantDetails(grant.id)">
+                <img src="https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media"
+                    alt="" style="height: 150px;">
                 <div class="">
-                    <h2>{{grant?.name}}</h2>
-                    <p>Target Funding : {{grant?.targetFunding}}</p>
-                    <!-- <p>{{grant?.description}}</p> -->
+                    <p>Manager : {{grant?.manager}}</p>
+                    <p>Target Funding : {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH</p>
+                    <p>Total Funding : {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</p>
+                    <p>Available Balance : {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH</p>
                 </div>
             </div>
             <div class="line "></div>

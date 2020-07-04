@@ -2,9 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { IGrant, GrantService } from 'src/app/services/grant.service';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
-import { UserService } from 'src/app/services/user.service';
 import { Subscription, Observable, of } from 'rxjs';
 import { FormControl, FormGroup, Validators, FormBuilder, Form, FormArray, AbstractControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
@@ -33,7 +31,6 @@ export class CreateNewGrantComponent implements OnInit {
 
   @ViewChild(ImageUploadComponent, { static: false }) imageUpload: ImageUploadComponent;
 
-  user: any;
   processing = false;
   submitted = false;
   toastTitle = 'Grant';
@@ -58,8 +55,6 @@ export class CreateNewGrantComponent implements OnInit {
   public myForm: FormGroup;
 
   constructor(public modalCtrl: ModalController,
-    private grantService: GrantService,
-    private userService: UserService,
     private angularFireStorage: AngularFireStorage,
     private toastr: ToastrService,
     public router: Router,
@@ -73,9 +68,6 @@ export class CreateNewGrantComponent implements OnInit {
     let curruntDate = new Date();
     this.maxYear = curruntDate.getFullYear() + 100;
     this.minYear = moment(curruntDate).add(1, 'days').format('YYYY-MM-DD')
-
-
-    this.user = JSON.parse(localStorage.getItem(AppSettings.localStorage_keys.userData));
   }
 
   setData() {

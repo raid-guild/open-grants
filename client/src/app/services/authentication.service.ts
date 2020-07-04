@@ -11,30 +11,29 @@ import { ethers, providers, utils } from 'ethers';
 
 @Injectable()
 export class AuthenticationService extends HttpHelper {
-    user: any;
 
-    constructor(private http: HttpClient,
+    constructor(
+        private http: HttpClient,
         private userManagementService: UserManagementService,
-        private authService: AuthService) {
+        private authService: AuthService
+    ) {
         super();
-
-        this.user = JSON.parse(localStorage.getItem(AppSettings.localStorage_keys.userData));
     }
 
-    confirmUser(data: { publicAddress: string }): Observable<any> {
-        return this.http.post(`${this.apiUrl}/auth/confirmUser`, data);
-    }
+    // confirmUser(data: { publicAddress: string }): Observable<any> {
+    //     return this.http.post(`${this.apiUrl}/auth/confirmUser`, data);
+    // }
 
-    signin(data: { publicAddress: string, signature: string }): Observable<any> {
-        return this.http.post(`${this.apiUrl}/auth/login`, data)
-            .pipe(
-                map((res: HTTPRESPONSE) => {
-                    localStorage.setItem(AppSettings.localStorage_keys.token, res.data.token);
-                    delete res.data.token;
-                    this.userManagementService.setUserData(res.data);
-                    this.authService.setAuthState({ is_logged_in: true });
-                    return res;
-                })
-            );
-    }
+    // signin(data: { publicAddress: string, signature: string }): Observable<any> {
+    //     return this.http.post(`${this.apiUrl}/auth/login`, data)
+    //         .pipe(
+    //             map((res: HTTPRESPONSE) => {
+    //                 localStorage.setItem(AppSettings.localStorage_keys.token, res.data.token);
+    //                 delete res.data.token;
+    //                 this.userManagementService.setUserData(res.data);
+    //                 this.authService.setAuthState({ is_logged_in: true });
+    //                 return res;
+    //             })
+    //         );
+    // }
 }

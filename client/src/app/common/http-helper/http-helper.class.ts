@@ -39,7 +39,7 @@ export class HttpHelper {
     protected getHttpOptions(options?: CustomHttpHeaderOptions) {
 
         let headers: HttpHeaders = new HttpHeaders();
-        headers = headers.append('Authorization', localStorage.getItem(AppSettings.localStorage_keys.token) || 'Bearer ');
+        headers = headers.append('Authorization', localStorage.getItem(AppSettings.localStorage_keys.userEthAddress) || 'Bearer ');
 
         if (options && options.loader === false) {
             headers = headers.append('InterceptorNoLoader', '');

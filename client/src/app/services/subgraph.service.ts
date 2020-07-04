@@ -62,53 +62,53 @@ export class SubgraphService {
     })
   }
 
-  getFundByContractAndDonor(contract: string, donor: string) {
+  getFundByContractAndDonor(grantAddress: string, donor: string) {
     return this.apollo.query({
-      query: gql`query getFunds($contract: String,$donor: String){
+      query: gql`query getFunds($grantAddress: String,$donor: String){
       funds(where: {
-        contract: $contract,
+        grantAddress: $grantAddress,
         donor: $donor
         }) {
         id
-        contract
+        grantAddress
         donor
         amount
         }
       }`,
-      variables: { contract: contract, donor: donor }
+      variables: { grantAddress: grantAddress, donor: donor }
     })
   }
 
-  getFundByContract(contract: string) {
+  getFundByContract(grantAddress: string) {
     return this.apollo.query({
-      query: gql`query getFunds($contract: String){
+      query: gql`query getFunds($grantAddress: String){
       funds(where: {
-        contract: $contract
+        grantAddress: $grantAddress
         }) {
         id
-        contract
+        grantAddress
         donor
         amount
         }
       }`,
-      variables: { contract: contract }
+      variables: { grantAddress: grantAddress }
     })
   }
 
-  getPaymentByContractAndDonor(contract: string, grantee: string) {
+  getPaymentByContractAndDonor(grantAddress: string, grantee: string) {
     return this.apollo.query({
-      query: gql`query getPayments($contract: String,$grantee: String){
+      query: gql`query getPayments($grantAddress: String,$grantee: String){
       payments(where: {
-        contract: $contract,
+        grantAddress: $grantAddress,
         grantee: $grantee
         }) {
         id
-        contract
+        grantAddress
         grantee
         amount
         }
       }`,
-      variables: { contract: contract, grantee: grantee }
+      variables: { grantAddress: grantAddress, grantee: grantee }
     })
   }
 }

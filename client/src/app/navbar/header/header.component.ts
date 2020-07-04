@@ -4,8 +4,6 @@ import { Subscription } from 'rxjs';
 import { EventEmitter } from '@angular/core'
 import { PopoverController, ModalController, Events } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GrantService } from 'src/app/services/grant.service';
-import { UserService } from 'src/app/services/user.service';
 import { MenuPopoverComponent } from '../menu-popover/menu-popover.component';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 import { AuthService, AuthState } from 'src/app/services/auth.service';
@@ -14,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ThreeBoxService } from 'src/app/services/threeBox.service';
 import { async } from '@angular/core/testing';
 import { AppSettings } from 'src/app/config/app.config';
+import { PopupComponent } from 'src/app/pages/popup/popup.component';
 
 declare let window: any;
 
@@ -29,7 +28,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   authsubscription: Subscription;
   isLogin = false;
   user3BoxProfile: any;
-  userData: any;
+  userEthAddress: any;
 
   path: any;
   searchBar: boolean = false;
@@ -47,7 +46,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public popoverCtrl: PopoverController,
     public modalController: ModalController,
     public events: Events,
-    private userService: UserService,
     private fb: FormBuilder,
     private authService: AuthService,
     private authenticationService: AuthenticationService,
@@ -66,11 +64,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.isImage = false;
       }
     });
-
-    // this.path = this.route.snapshot.pathFromRoot[3].url[0].path;
-    // if (this.path == "my-grants" || this.path == "latest-grants" || this.path == "trending-grants") {
-    //   this.searchBar = true;
-    // }
 
     this.myForm = this.fb.group({
       searchBox: new FormControl()
@@ -93,62 +86,30 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async getUserData() {
-    this.userData = JSON.parse(localStorage.getItem(AppSettings.localStorage_keys.userData));
-    if (this.userData && this.userData.hasOwnProperty('publicAddress') && this.userData.publicAddress) {
-      this.user3BoxProfile = await this.threeBoxService.getProfile(this.userData.publicAddress);
+    this.userEthAddress = localStorage.getItem(AppSettings.localStorage_keys.userEthAddress);
+    if (this.userEthAddress) {
+      this.user3BoxProfile = await this.threeBoxService.getProfile(this.userEthAddress);
       if (this.user3BoxProfile && this.user3BoxProfile.hasOwnProperty('image') && this.user3BoxProfile.image) {
         this.isImage = true;
       }
     }
   }
 
-  async confirmUser() {
-    this.processing = true;
-
-    try {
-      if ('enable' in window.web3.currentProvider) {
-        await window.web3.currentProvider.enable();
-        this.authenticationService.confirmUser({ publicAddress: window.web3.eth.coinbase }).subscribe(async (res: HTTPRESPONSE) => {
-          try {
-            let signMessage: any = await this.handleSignMessage(res.data)
-            this.login(signMessage);
-          } catch (error) {
-            this.processing = false;
-            this.toastr.error(error.message, this.toastTitle);
-          }
-        }, (err) => {
-          this.processing = false;
-          this.toastr.error(err.error.message, this.toastTitle);
-        });
+  async login() {
+    const modal = await this.modalController.create({
+      component: PopupComponent,
+      cssClass: 'custom-modal-style',
+      mode: "ios",
+      componentProps: {
+        type: "login"
       }
-    } catch (error) {
-      this.processing = false;
-      this.toastr.error("Non-Ethereum browser detected. You should consider trying MetaMask!");
-    }
-  }
+    });
 
-  handleSignMessage({ publicAddress, nonce }) {
-    return new Promise((resolve, reject) => {
-      window.web3.personal.sign(
-        window.web3.fromUtf8(`I am signing my one-time nonce: ${nonce}`),
-        publicAddress,
-        (err, signature) => {
-          if (err) reject(err);
-          resolve({ publicAddress, signature });
-        }
-      )
-    })
-  }
-
-  login(signMessage) {
-    this.authenticationService.signin({ publicAddress: signMessage.publicAddress, signature: signMessage.signature })
-      .subscribe(async (res: HTTPRESPONSE) => {
-        this.toastr.success(res.message, this.toastTitle);
-        this.processing = false;
-      }, (err) => {
-        this.processing = false;
-        this.toastr.error(err.error.message, this.toastTitle);
+    modal.onDidDismiss()
+      .then((data) => {
       });
+
+    return await modal.present();
   }
 
   ngOnDestroy() {

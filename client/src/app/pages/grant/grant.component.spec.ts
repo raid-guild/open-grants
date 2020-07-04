@@ -1,22 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImageCropComponent } from './image-crop.component';
+import { GrantComponent } from './grant.component';
 
-describe('ImageCropComponent', () => {
-  let component: ImageCropComponent;
-  let fixture: ComponentFixture<ImageCropComponent>;
+describe('GrantComponent', () => {
+  let component: GrantComponent;
+  let fixture: ComponentFixture<GrantComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ImageCropComponent ],
+      declarations: [ GrantComponent ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ImageCropComponent);
+    fixture = TestBed.createComponent(GrantComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

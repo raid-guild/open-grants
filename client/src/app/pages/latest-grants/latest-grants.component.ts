@@ -1,10 +1,6 @@
 import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
-import { GrantService, IGrant } from 'src/app/services/grant.service';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
-import { ENVIRONMENT } from 'src/environments/environment';
-import { Subscription } from 'rxjs';
-import { ViewGrantComponent } from '../view-grant/view-grant.component';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -24,7 +20,6 @@ export class LatestGrantsComponent implements OnInit {
   data = [];
   constructor(public popoverCtrl: PopoverController,
     public modalController: ModalController,
-    private grantService: GrantService,
     private subgraphService: SubgraphService,
     private router: Router,
   ) {
@@ -61,36 +56,7 @@ export class LatestGrantsComponent implements OnInit {
     this.router.navigate(['/pages/grant/' + id])
   }
 
-  async viewGrant(data: any) {
-    const modal = await this.modalController.create({
-      component: ViewGrantComponent,
-      cssClass: 'custom-modal-style',
-      mode: "ios",
-      componentProps: {
-        grantData: data
-      }
-    });
-
-    modal.onDidDismiss()
-      .then((data) => {
-        const reload = data['data'];
-        // console.log(reload)
-        if (reload && reload.hasOwnProperty('reload') && reload.reload) {
-          this.getAllGrants();
-        }
-      });
-
-    return await modal.present();
-  }
-
   getAllGrants() {
-    this.grantService.getAll().subscribe((res: HTTPRESPONSE) => {
-      this.allGrant = res.data;
-      console.log("allGrant", this.allGrant);
-      this.searchResult = this.allGrant;
-    });
-
-
     this.subgraphService.getGrantList().subscribe((res: any) => {
       console.log("res", res.data.contracts);
       this.searchResult = res.data.contracts;
