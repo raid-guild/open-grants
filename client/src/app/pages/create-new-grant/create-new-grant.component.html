@@ -7,6 +7,8 @@
     <ion-card class="grant" mode="md">
         <ion-item class="heading" mode="md" lines="none">
             <ion-label>Create New Grants</ion-label>
+            <ion-button type="button" (click)="setData()">Set data</ion-button>
+            <ion-button type="button" (click)="getData()">Get data</ion-button>
         </ion-item>
 
         <hr class="dassed-line">
@@ -326,12 +328,12 @@
                                 </div>
                             </ion-col>
 
-                            <ion-col size-lg="1" size-sm="12" size-xs="12" *ngIf="grantee.length == 1" class="padding-0">
+                            <ion-col size-lg="1" size-sm="12" size-xs="12" *ngIf="grantee.length == 1"
+                                class="padding-0">
                                 <!-- <ion-item> -->
-                                    <!-- <ion-label>Allocate Amount to Grantee By Percentage</ion-label> -->
-                                    <ion-toggle [formControl]="isAllocationByPer"
-                                        [disabled]="grantee.length > 1">
-                                    </ion-toggle>
+                                <!-- <ion-label>Allocate Amount to Grantee By Percentage</ion-label> -->
+                                <ion-toggle [formControl]="isAllocationByPer" [disabled]="grantee.length > 1">
+                                </ion-toggle>
                                 <!-- </ion-item> -->
                             </ion-col>
 

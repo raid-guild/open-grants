@@ -123,7 +123,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     } catch (error) {
       this.processing = false;
-      this.toastr.error(error.message, this.toastTitle);
+      this.toastr.error("Non-Ethereum browser detected. You should consider trying MetaMask!");
     }
   }
 

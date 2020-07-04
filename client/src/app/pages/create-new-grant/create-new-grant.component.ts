@@ -78,6 +78,15 @@ export class CreateNewGrantComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem(AppSettings.localStorage_keys.userData));
   }
 
+  setData() {
+    this.orbitService.setData();
+  }
+
+
+  getData() {
+    this.orbitService.getData();
+  }
+
   ngOnInit() {
     this.currency = [
       { name: "ETH", value: "ETH" }
