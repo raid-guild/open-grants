@@ -163,7 +163,6 @@ export class EthcontractService {
 
     createGrant(data) {
         return new Promise((resolve, reject) => {
-            this.utilsService.startLoader();
             // data = {
             //     currency: "ETH",
             //     grantees: ['0x6D48912C6c768e0CAd669b0154DD85F156284A21'],
@@ -195,7 +194,6 @@ export class EthcontractService {
                     console.log("Create", response)
                     try {
                         let temp = await response.wait();
-                        this.utilsService.stopLoader();
                         resolve({
                             status: "success",
                             message: "Grant Created successfully",
@@ -203,7 +201,6 @@ export class EthcontractService {
                             hash: response.hash
                         });
                     } catch (e) {
-                        this.utilsService.stopLoader();
                         resolve({
                             hash: '',
                             address: '',
@@ -213,7 +210,6 @@ export class EthcontractService {
                     }
                 }, (error) => {
                     console.log(error)
-                    this.utilsService.stopLoader();
                     resolve({
                         hash: '',
                         address: '',
@@ -267,7 +263,6 @@ export class EthcontractService {
 
     fund(contractAddress, amount) {
         return new Promise(async (resolve, reject) => {
-            this.utilsService.startLoader();
 
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
@@ -280,7 +275,6 @@ export class EthcontractService {
             })
                 .then((response) => {
                     console.log("response", response);
-                    this.utilsService.stopLoader();
                     resolve({
                         status: "success",
                         message: "Reqest sent successfully",
@@ -288,7 +282,6 @@ export class EthcontractService {
                     });
                 }, (error) => {
                     console.log(error)
-                    this.utilsService.stopLoader();
                     resolve({
                         hash: '',
                         status: "failed",
@@ -431,14 +424,12 @@ export class EthcontractService {
 
     cancelGrant(contractAddress) {
         return new Promise(async (resolve, reject) => {
-            this.utilsService.startLoader();
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
             let contract = new ethers.Contract(contractAddress, MangedCappedGrantAbi.abi, provider);
             let contractWithSigner = contract.connect(signer);
             contractWithSigner.cancelGrant({ gasLimit: AppSettings.ethersConfig.gasLimit }).then(async (response) => {
-                console.log("response", response);
-                this.utilsService.stopLoader();
+                // console.log("response", response);
                 resolve({
                     status: "success",
                     message: "Reqest sent successfully",
@@ -446,8 +437,6 @@ export class EthcontractService {
                 });
 
             }, (error) => {
-                console.log(error)
-                this.utilsService.stopLoader();
                 resolve({
                     status: "failed",
                     message: error.message,

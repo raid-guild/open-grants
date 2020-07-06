@@ -53,24 +53,24 @@ export class TrendingGrantsComponent implements OnInit {
     this.router.navigate(['/pages/grant/' + id])
   }
 
-  handleChange(e) {
-    console.log("e", e);
-    if (e == '') {
-      this.searchResult = this.trendingGrants;
-    } else {
-      this.searchResult = this.trendingGrants.filter((data) => {
-        return data.grantName.toLowerCase().includes(e.toLowerCase())
-      });
-      // console.log("temp", this.allGrant);
-    }
-  }
-
   onCancel(event) { }
 
   getTrendingGrants() {
     this.subgraphService.getGrantList().subscribe((res: any) => {
-      console.log("res", res.data.contracts);
-      this.searchResult = res.data.contracts;
+      this.trendingGrants = res.data.contracts
+      // this.trendingGrants = this.trendingGrants.sort(function (obj1, obj2) {
+      //   if ((obj1.totalFunding + obj1.totalPayed) == 0) {
+      //     return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - 0;
+      //   }
+
+      //   if ((obj2.totalFunding + obj2.totalPayed) == 0) {
+      //     return 0 - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
+      //   }
+
+      //   return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
+      // });
+
+      this.searchResult = this.trendingGrants;
     })
   }
 

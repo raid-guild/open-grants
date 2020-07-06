@@ -18,6 +18,7 @@ import * as Web3 from 'web3';
 import { addressValidator } from '../../common/validators/custom.validators';
 import { ImageUploadComponent, FileHolder } from 'angular2-image-upload';
 import { OrbitService } from 'src/app/services/orbit.service';
+import { PopupComponent } from '../popup/popup.component';
 
 declare let window: any;
 
@@ -54,7 +55,8 @@ export class CreateNewGrantComponent implements OnInit {
 
   public myForm: FormGroup;
 
-  constructor(public modalCtrl: ModalController,
+  constructor(
+    public modalController: ModalController,
     private angularFireStorage: AngularFireStorage,
     private toastr: ToastrService,
     public router: Router,
@@ -427,7 +429,7 @@ export class CreateNewGrantComponent implements OnInit {
     return valid;
   }
 
-  async deployeContract() {
+  arrangeData() {
     let data, fundingExpiration, contractExpiration;
 
     if (this.grantForm.type == "singleDeliveryDate") {
@@ -449,9 +451,7 @@ export class CreateNewGrantComponent implements OnInit {
       contractExpiration: contractExpiration
     }
 
-    // console.log("data", data);
-    let contract = await this.ethcontractService.createGrant(data);
-    return contract;
+    return data;
   }
 
   async onSubmit() {
@@ -490,58 +490,26 @@ export class CreateNewGrantComponent implements OnInit {
       return JSON.parse(JSON.stringify(data));
     })
 
-    // console.log("this.grantForm", this.grantForm);
+    this.grantForm.content = this.grantForm.content.replace(/"/g, "&quot;");
+    let contractData = this.arrangeData();
 
-    try {
-      this.processing = true;
-      let contract: any = await this.deployeContract();
-      console.log("contract", contract);
-
-      if (contract.status == "success") {
-        this.grantForm['contractAddress'] = contract.address;
-        this.grantForm['hash'] = contract.hash;
-        this.grantForm.content = this.grantForm.content.replace(/"/g, "&quot;");
-
-        this.grantForm.manager = this.grantForm.manager.toLowerCase();
-        this.grantForm.grantees = this.grantForm.grantees.map((data) => {
-          data.grantee = data.grantee.toLowerCase();
-          return data;
-        })
-
-        this.toastr.success(contract.status, this.toastTitle);
-        this.router.navigate(['pages/latest']);
-
-        // console.log("this.grantForm", this.grantForm);
-        // this.grantService.createGrant(this.grantForm).subscribe((res: HTTPRESPONSE) => {
-        //   this.processing = false;
-        //   this.toastr.success(res.message, this.toastTitle);
-        //   this.router.navigate(['pages/latest']);
-        // }, (err) => {
-        //   this.processing = false;
-        //   this.toastr.error(err.error.message, this.toastTitle);
-        // });
-      } else {
-        this.processing = false;
-        this.toastr.error(contract.message);
+    const modal = await this.modalController.create({
+      component: PopupComponent,
+      cssClass: 'custom-modal-style',
+      mode: "ios",
+      componentProps: {
+        modelType: "deployContract",
+        data: contractData
       }
-    } catch (e) {
-      this.processing = false;
-      this.toastr.error('Something went wrong !!', this.toastTitle);
-    }
-  }
+    });
 
-  dataURLtoFile(dataurl, filename) {
+    modal.onDidDismiss()
+      .then((data: any) => {
+        if (data && data.hasOwnProperty('redirect') && data.redirect) {
+          this.router.navigate(['/pages/latest']);
+        }
+      });
 
-    var arr = dataurl.split(','),
-      mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n);
-
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-
-    return new File([u8arr], filename, { type: mime });
+    return await modal.present();
   }
 }

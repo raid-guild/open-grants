@@ -4,6 +4,7 @@ import { NavParams } from '@ionic/angular';
 import { UserManagementService } from 'src/app/services/user-management.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { AppSettings } from 'src/app/config/app.config';
+import { EthcontractService } from 'src/app/services/ethcontract.service';
 
 declare let window: any;
 
@@ -13,18 +14,53 @@ declare let window: any;
   styleUrls: ['./popup.component.scss'],
 })
 export class PopupComponent implements OnInit {
+  modelType: string;
+  data: any;
   loging = false;
   loginSuccess = false;
   loginError = false;
+
+  deploying = false;
+  deploySuccess = false;
+  deployError = false;
+
+  canceling = false;
+  canceledSuccess = false;
+  canceledFail = false;
+
+  funding = false;
+  fundingSuccess = false;
+  fundingError = false;
 
   constructor(
     public modalCtrl: ModalController,
     private navParams: NavParams,
     private authService: AuthService,
+    private ethcontractService: EthcontractService,
     private userManagementService: UserManagementService
-  ) { }
+  ) {
+    this.modelType = this.navParams.get('modelType');
+    this.data = this.navParams.get('data');
+    console.log("modelType", this.modelType, this.data);
+  }
 
-  ngOnInit() { }
+  ngOnInit() {
+    if (this.modelType == 'login') {
+      this.login();
+    }
+
+    if (this.modelType == 'deployContract') {
+      this.deployContract();
+    }
+
+    if (this.modelType == 'cancelContract') {
+      this.cancelContract();
+    }
+
+    if (this.modelType == 'fundingContract') {
+      this.fundingContract();
+    }
+  }
 
   dismiss() {
     this.modalCtrl.dismiss()
@@ -34,7 +70,9 @@ export class PopupComponent implements OnInit {
     try {
       this.loging = true;
       let nouce = Math.floor(Math.random() * 1000000);
-      let userEthAddress = window.web3.currentProvider
+      let userEthAddress = window.web3.eth.coinbase
+      console.log("userEthAddress", userEthAddress);
+
       let signMessage: any = await this.handleSignMessage(userEthAddress, nouce)
       this.userManagementService.setUserEthAddress(userEthAddress);
       localStorage.setItem(AppSettings.localStorage_keys.currentNetwork, "Ropsten");
@@ -65,5 +103,56 @@ export class PopupComponent implements OnInit {
         }
       )
     })
+  }
+
+  async deployContract() {
+    this.deploying = true;
+    let contract: any = await this.ethcontractService.createGrant(this.data);
+
+    if (contract.status == "success") {
+      this.deploying = false;
+      this.deploySuccess = true;
+
+      setTimeout(() => {
+        this.modalCtrl.dismiss({ redirect: true })
+      }, 2000)
+    } else {
+      this.deploying = false;
+      this.deployError = true;
+    }
+  }
+
+  async cancelContract() {
+    this.canceling = true;
+    let contract: any = await this.ethcontractService.cancelGrant(this.data);
+
+    if (contract.status == "success") {
+      this.canceling = false;
+      this.canceledSuccess = true;
+
+      setTimeout(() => {
+        this.modalCtrl.dismiss({ reload: true })
+      }, 2000)
+    } else {
+      this.canceling = false;
+      this.canceledFail = true;
+    }
+  }
+
+  async fundingContract() {
+    this.funding = true;
+    let funding: any = await this.ethcontractService.fund(this.data.grantAddress, this.data.amount);
+
+    if (funding.status == "success") {
+      this.funding = false;
+      this.fundingSuccess = true;
+
+      setTimeout(() => {
+        this.modalCtrl.dismiss({ reload: true })
+      }, 2000)
+    } else {
+      this.funding = false;
+      this.fundingError = true;
+    }
   }
 }

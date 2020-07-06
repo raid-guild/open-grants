@@ -57,4 +57,8 @@ export class MyGrantsComponent implements OnInit {
       });
     }
   }
+
+  grantDetails(id: string) {
+    this.router.navigate(['/pages/grant/' + id])
+  }
 }

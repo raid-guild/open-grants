@@ -101,7 +101,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       cssClass: 'custom-modal-style',
       mode: "ios",
       componentProps: {
-        type: "login"
+        modelType: "login"
       }
     });
 
