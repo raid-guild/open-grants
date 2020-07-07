@@ -1,13 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as IPFS from 'ipfs';
 import * as OrbitDB from 'orbit-db';
-import * as Store from 'orbit-db-store';
-import { async } from '@angular/core/testing';
-import { keccak256 } from 'ethers/utils';
-// const IPFS = require('ipfs')
-// const OrbitDB = require('orbit-db')
-// const Store = require('orbit-db-store');
-const Identities = require('orbit-db-identity-provider')
 
 declare let require: any;
 declare let window: any;

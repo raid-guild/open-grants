@@ -4,8 +4,9 @@
 </ion-header>
 
 <ion-content color="light">
+
   <ion-row class="row" *ngIf="userRoll == 'visitor'">
-    <ion-col size="12">
+    <ion-col size="12" class="container">
       <div class="row">
         <div class="text-center">
           <h1>grant name</h1>
@@ -55,9 +56,8 @@
     </ion-col>
   </ion-row>
 
-
   <ion-row class="row" *ngIf="userRoll == 'donor'">
-    <ion-col size="12">
+    <ion-col size="12" class="container">
       <div class="row">
         <div class="text-center">
           <h1>grant name</h1>
@@ -109,7 +109,7 @@
 
 
   <ion-row class="row" *ngIf="userRoll == 'manager'">
-    <ion-col size="12">
+    <ion-col size="12" class="container">
       <div class="row">
         <div class="text-center">
           <h1>grant name</h1>
@@ -137,10 +137,12 @@
               <h1>{{noOfDayToExpiredFunding}}</h1>
               <p>days to go expired funding</p>
             </div>
-            <ion-button *ngIf="!grantData?.canFund || !grantData?.grantCancelled" class="" (click)="payoutModel()">
-              Release Payout</ion-button>
-            <ion-button *ngIf="!grantData?.grantCancelled" class="continue" (click)="cancelGrant()">Cancel Grant
-            </ion-button>
+            <div style="display: flex;align-items: center;margin-top: 0px;">
+              <ion-button *ngIf="!grantData?.canFund || !grantData?.grantCancelled" class="" (click)="payoutModel()">
+                Release Payout</ion-button>
+              <ion-button *ngIf="!grantData?.grantCancelled" class="" (click)="cancelGrant()">Cancel Grant
+              </ion-button>
+            </div>
           </ion-col>
         </ion-row>
       </div>
@@ -150,7 +152,7 @@
 
 
   <ion-row class="row" *ngIf="userRoll == 'grantee'">
-    <ion-col size="12">
+    <ion-col size="12" class="container">
       <div class="row">
         <div class="text-center">
           <h1>grant name</h1>

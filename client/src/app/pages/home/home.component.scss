@@ -1,45 +1,78 @@
 .welcome-card img {
-    max-height: 35vh;
-    overflow: hidden;
+  max-height: 35vh;
+  overflow: hidden;
 }
 
 img {
-    border-radius: 10px;
+  border-radius: 10px;
 }
 
 .d-flex {
-    display: flex;
+  display: flex;
 }
 
 .line {
-    margin: 25px 0;
-    border: 1px solid #E8E8E8;
-    margin-left: 40px;
+  margin: 25px 0;
+  border: 1px solid #e8e8e8;
+  margin-left: 40px;
 }
 
 .border-right {
-    border-right: 2px solid #e8e8e8;
+  flex-basis: 50%;
+  height: 600px;
+  border: px solid #e8e8e8;
+  padding-right: -15px !important;
+}
+
+.border-right {
+  flex-basis: 45%;
+  height: 600px;
+  border: 1px solid 0;
+  padding-right: -15px !important;
+  border-right: 1px solid #e8e8e8;
+  padding-right: 70px;
+}
+
+.border-left {
+  flex-basis: 50%;
+  height: 600px;
+  border: 1px solid red($color: #000000);
+  padding-right: -15px !important;
 }
 
 .image-responsive {
-    height: 126px;
-    width: 152px;
-    object-fit: cover;
+  height: 126px;
+  width: 152px;
+  object-fit: cover;
 }
 
 .main-image {
-    height: 362px;
+  height: 362px;
 }
 
 .margin-50 {
-    margin: 30px 60px;
+  margin: 30px 60px;
 }
 
 .margin-35 {
-    margin: 0 35px;
+  margin: 0 35px;
 }
 
 h2 {
-    font-size: 21px;
-    margin: 0;
+  font-size: 21px;
+  margin: 0;
+}
+
+.imgage img {
+  width: 975px;
+  height: 500px !important;
+}
+.container {
+  display: flex;
+  justify-content: space-around;
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .container {
+    display: block;
+  }
 }

@@ -32,13 +32,7 @@ export class EthcontractService {
     constructor(
         private toastr: ToastrService,
         private utilsService: UtilsService
-    ) {
-        (async () => {
-            const provider = new ethers.providers.Web3Provider(this.web3Provider);
-            let transactionReceipt = await provider.getTransactionReceipt("0x579dad093174b895c8e07de2c48258a0cd58ff2a05c8197558d18fa269c68fa4")
-            // console.log("transactionReceipt", transactionReceipt)
-        })();
-    }
+    ) { }
 
     getAccountInfo(account) {
         return new Promise((resolve) => {
@@ -193,7 +187,7 @@ export class EthcontractService {
                 .then(async (response) => {
                     console.log("Create", response)
                     try {
-                        let temp = await response.wait();
+                        // let temp = await response.wait();
                         resolve({
                             status: "success",
                             message: "Grant Created successfully",

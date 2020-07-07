@@ -57,6 +57,7 @@
     "graphql-tag": "^2.10.3",
     "ionic-angular": "^3.9.9",
     "ipfs": "^0.40.0",
+    "ipfs-types": "^1.0.25",
     "jwt-decode": "^2.2.0",
     "moment": "^2.24.0",
     "ngx-chips": "2.0.2",
