@@ -1,11 +1,15 @@
 type Contract @entity {
   id: ID!
+  input: Bytes
   contractAddress: Bytes!
   # count: BigInt!
   grantId: BigInt! # uint256
   grantAddress: Bytes! # address
   uri: Bytes
   manager: Bytes!
+  createBy: Bytes!
+  # grantees: ByteArray
+  # amounts: ByteArray
   currency: Bytes!
   targetFunding: BigInt!
   totalFunding: BigInt

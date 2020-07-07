@@ -3,6 +3,7 @@ import {
     BigDecimal,
     log,
     Bytes,
+    ByteArray,
     Address,
 } from "@graphprotocol/graph-ts";
 import { ManagedCappedGrant } from "../generated/GrantFactory/ManagedCappedGrant";
@@ -11,6 +12,8 @@ import { GrantFactory } from "../generated/GrantFactory/GrantFactory";
 class GrantObject {
     uri: Bytes;
     manager: Address;
+    grantees: ByteArray;
+    amounts: ByteArray;
     currency: Address;
     targetFunding: BigInt;
     totalFunding: BigInt;

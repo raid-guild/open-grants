@@ -26,6 +26,7 @@ export function handleLogNewGrant(event: LogNewGrant): void {
 
   contract.uri = returnedGrant.uri;
   contract.manager = returnedGrant.manager;
+  contract.createBy = event.transaction.from;
   contract.currency = returnedGrant.currency;
   contract.targetFunding = returnedGrant.targetFunding;
   contract.totalFunding = returnedGrant.totalFunding;
@@ -35,6 +36,8 @@ export function handleLogNewGrant(event: LogNewGrant): void {
   contract.grantCancelled = returnedGrant.grantCancelled;
   contract.fundingExpiration = returnedGrant.fundingDeadline;
   contract.contractExpiration = returnedGrant.contractExpiration;
+
+  contract.input = event.transaction.input;
 
   contract.save();
 }
