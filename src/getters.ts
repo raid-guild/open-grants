@@ -43,10 +43,6 @@ export function returnGrantsInfo(
     let fundingDeadline = grantInstance.try_fundingDeadline();
     let contractExpiration = grantInstance.try_contractExpiration();
 
-    // TODO: migrate blockchain contract 
-    // let grantees = grantInstance.try_grantees();
-    // let amount = grantInstance.try_amounts();
-
     if (!canFund.reverted) {
         grantObject.canFund = canFund.value;
     }

@@ -13,31 +13,42 @@ import {
 import { LogNewGrant } from "../generated/GrantFactory/GrantFactory"
 import { returnGrantsInfo } from "./getters"
 import { Fund, Payment, Contract } from "../generated/schema"
+import { ethers } from 'ethers';
+
+// import * as moment from 'moment';
 
 export function handleLogNewGrant(event: LogNewGrant): void {
   let id = event.params.grant.toHexString()
 
-  let returnedGrant = returnGrantsInfo(event.params.grant);
 
   let contract = new Contract(id);
   contract.contractAddress = event.address
   contract.grantId = event.params.id
   contract.grantAddress = event.params.grant
 
-  contract.uri = returnedGrant.uri;
-  contract.manager = returnedGrant.manager;
-  contract.createBy = event.transaction.from;
-  contract.currency = returnedGrant.currency;
+  const ABI = [{ "anonymous": false, "inputs": [{ "indexed": true, "name": "id", "type": "uint256" }, { "indexed": false, "name": "grant", "type": "address" }], "name": "LogNewGrant", "type": "event" }, { "constant": false, "inputs": [{ "name": "_grantees", "type": "address[]" }, { "name": "_amounts", "type": "uint256[]" }, { "name": "_manager", "type": "address" }, { "name": "_currency", "type": "address" }, { "name": "_targetFunding", "type": "uint256" }, { "name": "_fundingExpiration", "type": "uint256" }, { "name": "_contractExpiration", "type": "uint256" }, { "name": "_extraData", "type": "bytes" }], "name": "create", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }]
+  const iface = new ethers.utils.Interface(ABI);
+  const input = iface.parseTransaction({ data: event.transaction.input })
+
+  contract.createBy = event.transaction.from;;
+  contract.grantees = input.args[0];
+  contract.amounts = input.args[1].map((amount) => {
+    return ethers.utils.formatEther(amount);
+  });
+  contract.manager = input.args[2];
+  contract.currency = input.args[3];
+  contract.fundingDeadline = input.args[5].toString(16).toUpperCase();
+  contract.contractExpiration = input.args[6].toString(16).toUpperCase();
+  contract.uri = input.args[7]
+
+  let returnedGrant = returnGrantsInfo(event.params.grant);
+
   contract.targetFunding = returnedGrant.targetFunding;
   contract.totalFunding = returnedGrant.totalFunding;
   contract.totalPayed = returnedGrant.totalPayed;
   contract.availableBalance = returnedGrant.availableBalance;
   contract.canFund = returnedGrant.canFund;
   contract.grantCancelled = returnedGrant.grantCancelled;
-  contract.fundingExpiration = returnedGrant.fundingDeadline;
-  contract.contractExpiration = returnedGrant.contractExpiration;
-
-  contract.input = event.transaction.input;
 
   contract.save();
 }
@@ -47,8 +58,14 @@ export function handleLogFundingComplete(event: LogFundingComplete): void { }
 export function handleLogGrantCancellation(event: LogGrantCancellation): void {
   let contract = Contract.load(event.address.toHexString());
 
-  contract.grantCancelled = false;
-  contract.canFund = false;
+  if (contract != null) {
+    let returnedGrant = returnGrantsInfo(event.address);
+
+    contract.grantCancelled = returnedGrant.grantCancelled;
+    contract.canFund = returnedGrant.canFund;
+
+    contract.save();
+  }
 }
 
 export function handleLogFunding(event: LogFunding): void {
@@ -58,18 +75,21 @@ export function handleLogFunding(event: LogFunding): void {
   fund.amount = event.params.value
   fund.save()
 
-  let contract = Contract.load(event.address.toHexString());
+  // let contract = Contract.load(event.address.toHexString());
 
-  if (contract != null) {
-    let returnedGrant = returnGrantsInfo(event.address);
+  // if (contract != null) {
+  //   let returnedGrant = returnGrantsInfo(event.address);
 
-    contract.totalFunding = returnedGrant.totalFunding;
-    contract.availableBalance = returnedGrant.availableBalance;
-    contract.canFund = returnedGrant.canFund;
+  //   contract.totalFunding = returnedGrant.totalFunding;
+  //   contract.availableBalance = returnedGrant.availableBalance;
+  //   contract.canFund = returnedGrant.canFund;
 
-    contract.save();
+  //   if (!contract.donors.find((donor) => donor == event.params.donor)) {
+  //     contract.donors.push(event.params.donor);
+  //   }
 
-  }
+  // contract.save();
+  // }
 
 }
 

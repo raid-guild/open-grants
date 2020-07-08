@@ -6,10 +6,11 @@ type Contract @entity {
   grantId: BigInt! # uint256
   grantAddress: Bytes! # address
   uri: Bytes
-  manager: Bytes!
   createBy: Bytes!
-  # grantees: ByteArray
-  # amounts: ByteArray
+  manager: Bytes!
+  grantees: [Bytes!]
+  donors: [Bytes!]
+  amounts: [BigInt!]
   currency: Bytes!
   targetFunding: BigInt!
   totalFunding: BigInt
@@ -17,7 +18,7 @@ type Contract @entity {
   availableBalance: BigInt
   canFund: Boolean
   grantCancelled: Boolean
-  fundingExpiration: BigInt!
+  fundingDeadline: BigInt!
   contractExpiration: BigInt!
 }
 
