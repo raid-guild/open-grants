@@ -220,7 +220,7 @@ export class EthcontractService {
                 let provider = ethers.getDefaultProvider(AppSettings.ethersConfig.networks);
                 let contract = new ethers.Contract(contractAddress, MangedCappedGrantAbi.abi, provider);
                 let response = await contract.availableBalance();
-                response = ethers.utils.formatEther(response);
+                // response = ethers.utils.formatEther(response);
                 resolve(response);
             } catch (e) {
                 resolve(0);
@@ -291,7 +291,7 @@ export class EthcontractService {
                 const provider = new ethers.providers.Web3Provider(this.web3Provider);
                 let contract = new ethers.Contract(contractAddress, MangedCappedGrantAbi.abi, provider);
                 let response = await contract.remainingAllocation(userPublicKey);
-                response = ethers.utils.formatEther(response);
+                // response = ethers.utils.formatEther(response);
                 resolve(response);
             } catch (e) {
                 reject(0);

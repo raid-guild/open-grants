@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController, Events } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
@@ -13,18 +13,19 @@ import * as moment from 'moment';
 import Swal from 'sweetalert2';
 import { PayoutComponent } from '../payout/payout.component';
 import { PopupComponent } from '../popup/popup.component';
-
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-grant',
   templateUrl: './grant.component.html',
   styleUrls: ['./grant.component.scss'],
 })
-export class GrantComponent implements OnInit {
+export class GrantComponent implements OnInit, OnDestroy {
   grantAddress: string;
   grantData: any;
   userEthAddress: string;
   noOfDayToExpiredFunding: number = 0;
+  canCancelByGranteeAndDonor: boolean = false;
 
   userEnum = {
     VISITOR: "visitor",
@@ -37,8 +38,8 @@ export class GrantComponent implements OnInit {
   grantFunds = [];
   userFunds = [];
   userDonation: any = 0;
-  userAlloc: any = 0;
-  userRemainingAlloc: any = 0;
+  userAlloc: any = '0';
+  userRemainingAlloc: any = '0';
 
   fundingModel = {
     amount: null
@@ -46,12 +47,13 @@ export class GrantComponent implements OnInit {
 
   constructor(
     public events: Events,
+    public router: Router,
     private toastr: ToastrService,
     private route: ActivatedRoute,
+    private authService: AuthService,
+    private utils: UtilsService,
     public modalController: ModalController,
     private subgraphService: SubgraphService,
-    private authService: AuthService,
-    public router: Router,
     private ethcontractService: EthcontractService,
     private userManagementService: UserManagementService,
   ) {
@@ -60,11 +62,18 @@ export class GrantComponent implements OnInit {
     (async () => {
       let response: any = await this.subgraphService.getGrantByAddress(this.grantAddress).toPromise();
       this.grantData = response.data.contract;
-      this.checkRoll()
+      this.grantData = JSON.parse(JSON.stringify(this.grantData));
+
+      this.grantData.input = this.utils.parseTransaction(this.grantData.input);
+      this.grantData['grantees'] = this.grantData.input.grantees;
+      this.grantData['amounts'] = this.grantData.input.amounts;
+
       console.log("grantData", this.grantData);
 
+      this.checkRoll();
+
       this.noOfDayToExpiredFunding = moment(+this.grantData.fundingExpiration).diff(moment(new Date), 'days')
-      console.log("fundingExpiration", moment(+this.grantData.fundingExpiration).format())
+      this.canCancelByGranteeAndDonor = moment(+this.grantData.fundingExpiration).isBefore(new Date());
 
       this.subgraphService.getFundByContract(this.grantAddress).subscribe((res: any) => {
         this.grantFunds = res.data.funds;
@@ -85,7 +94,7 @@ export class GrantComponent implements OnInit {
 
   getUserEthAddress() {
     this.userEthAddress = this.authService.getAuthUserId();
-    console.log("userEthAddress", this.userEthAddress)
+    // console.log("userEthAddress", this.userEthAddress)
   }
 
   currencyCovert(currencyType, amount) {
@@ -101,9 +110,16 @@ export class GrantComponent implements OnInit {
     if (this.userEthAddress) {
       this.userRoll = this.userEnum.DONOR;
 
-      if (this.grantData.manager.toLowerCase() == this.userEthAddress.toLowerCase()) {
+      if (this.userEthAddress && this.grantData.manager.toLowerCase() == this.userEthAddress.toLowerCase()) {
         this.userRoll = this.userEnum.MANAGER;
       }
+
+      this.grantData.grantees.map((data, index) => {
+        if (this.userEthAddress && data.toLowerCase() == this.userEthAddress.toLowerCase()) {
+          this.userAlloc = this.grantData.amounts[index];
+          this.userRoll = this.userEnum.GRANTEE;
+        }
+      });
 
       if (this.userRoll == this.userEnum.DONOR) {
         this.getDonorData();
@@ -154,7 +170,8 @@ export class GrantComponent implements OnInit {
       cssClass: 'custom-modal-style',
       mode: "ios",
       componentProps: {
-        grantAddress: this.grantAddress
+        grantAddress: this.grantAddress,
+        grantees: this.grantData.grantees
       }
     });
 
@@ -164,7 +181,6 @@ export class GrantComponent implements OnInit {
 
     return await modal.present();
   }
-
 
   cancelGrant() {
     Swal.fire({
@@ -262,4 +278,7 @@ export class GrantComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.grantData = [];
+  }
 }

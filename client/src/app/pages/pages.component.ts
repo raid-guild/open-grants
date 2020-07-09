@@ -89,7 +89,7 @@ export class PagesComponent implements OnInit {
 
     ngOnInit() {
         this.authService.authState.subscribe((res: AuthState) => {
-            console.log("res.is_logged_in", res)
+            // console.log("res.is_logged_in", res)
         });
     }
 }

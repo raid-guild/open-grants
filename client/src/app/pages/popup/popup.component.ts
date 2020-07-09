@@ -32,6 +32,10 @@ export class PopupComponent implements OnInit {
   fundingSuccess = false;
   fundingError = false;
 
+  payouting = false;
+  payoutSuccess = false;
+  payoutError = false;
+
   constructor(
     public modalCtrl: ModalController,
     private navParams: NavParams,
@@ -59,6 +63,10 @@ export class PopupComponent implements OnInit {
 
     if (this.modelType == 'fundingContract') {
       this.fundingContract();
+    }
+
+    if (this.modelType == 'payout') {
+      this.contractPayout();
     }
   }
 
@@ -153,6 +161,23 @@ export class PopupComponent implements OnInit {
     } else {
       this.funding = false;
       this.fundingError = true;
+    }
+  }
+
+  async contractPayout() {
+    this.payouting = true;
+    let payoutRes: any = await this.ethcontractService.approvePayout(this.data.grantAddress, this.data.grantee, this.data.amount)
+
+    if (payoutRes.status == "success") {
+      this.payouting = false;
+      this.payoutSuccess = true;
+
+      setTimeout(() => {
+        this.modalCtrl.dismiss({ reload: true })
+      }, 2000)
+    } else {
+      this.payouting = false;
+      this.payoutError = true;
     }
   }
 }

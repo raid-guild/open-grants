@@ -3,7 +3,8 @@ import { Subject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { AngularFireStorage } from 'angularfire2/storage';
 import { AppSettings } from '../config/app.config';
-import { resolve } from 'url';
+import { ethers, providers, utils } from 'ethers';
+import * as moment from 'moment';
 
 export interface ILoader {
     loading: boolean;
@@ -115,6 +116,25 @@ export class UtilsService {
         } else {
             return undefined;
         }
+    }
+
+    parseTransaction(input) {
+        const ABI = [{ "anonymous": false, "inputs": [{ "indexed": true, "name": "id", "type": "uint256" }, { "indexed": false, "name": "grant", "type": "address" }], "name": "LogNewGrant", "type": "event" }, { "constant": false, "inputs": [{ "name": "_grantees", "type": "address[]" }, { "name": "_amounts", "type": "uint256[]" }, { "name": "_manager", "type": "address" }, { "name": "_currency", "type": "address" }, { "name": "_targetFunding", "type": "uint256" }, { "name": "_fundingDeadline", "type": "uint256" }, { "name": "_contractExpiration", "type": "uint256" }, { "name": "_extraData", "type": "bytes" }], "name": "create", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }]
+        const iface = new ethers.utils.Interface(ABI);
+        let parseData = iface.parseTransaction({ data: input })
+
+        let data = {
+            grantees: parseData.args[0],
+            amounts: parseData.args[1],
+            manager: parseData.args[2],
+            currency: parseData.args[3],
+            targetFunding: ethers.utils.formatEther(parseData.args[4]),
+            fundingDeadline: moment(+parseData.args[5].toString(16).toUpperCase()).format(),
+            contractExpiration: moment(+parseData.args[6].toString(16).toUpperCase()).format(),
+            uri: parseData.args[7]
+        }
+
+        return data;
     }
 
     generateUUID(length: number = 16, options?: { numericOnly: boolean }) {

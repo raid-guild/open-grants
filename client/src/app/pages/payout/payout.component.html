@@ -15,20 +15,18 @@
             <ion-list lines="none" class="forms" mode="md">
                 <div class="" style="margin: 25px;">
                     <ion-item>
-                        <ion-label position="floating">Grantee Address</ion-label>
-                        <ion-input name="granteeAddress" formControlName="granteeAddress" type="text" required>
-                        </ion-input>
+                        <ion-label position="floating">Grantee</ion-label>
+                        <ion-select class="form-control" okText="Okay" cancelText="Dismiss" name="granteeAddress"
+                            formControlName="granteeAddress" required>
+                            <ion-select-option *ngFor="let grantee of grantees" [value]="grantee">
+                                {{ grantee}}
+                            </ion-select-option>
+                        </ion-select>
                     </ion-item>
                     <div class="error">
-                        <label *ngIf="f.submitted && form.granteeAddress.errors?.required">
-              Please Add Grantee Address
-            </label>
-                        <label *ngIf="!form.granteeAddress.errors?.required && form.granteeAddress.errors?.addressValid">
-              Grantee Address Not Valid
-            </label>
-                        <label *ngIf="granteeNotMatch && !form.granteeAddress.invalid">
-              Address Not Match With Any Grantee
-            </label>
+                        <label *ngIf="f.submitted && form.granteeAddress.invalid">
+                            Please Select Grantee Address
+                        </label>
                     </div>
                 </div>
                 <div class="" style="margin: 0 25px 25px 25px;">
@@ -39,15 +37,15 @@
                     </ion-item>
 
                     <div class="error">
-                        <span *ngIf="f.submitted && form.amount.invalid">
-              Please Enter Amount
-            </span>
-                        <span *ngIf="form.amount.value==0 && !form.amount.invalid">
-              Please Enter Valid Amount
-            </span>
-                        <span *ngIf="maxAmountError && !form.amount.invalid">
-              Max Remaining Allocation is {{remainingAllocation}} {{grantData?.currency}} For This Grantee
-            </span>
+                        <!-- <span *ngIf=" form.amount.invalid">
+                            Please Enter Amount
+                        </span> -->
+                        <span *ngIf="f.submitted && form.amount.errors?.required">
+                            Please Enter Valid Amount
+                        </span>
+                        <span *ngIf="form.amount.errors?.max && !form.amount.errors?.required">
+                            Max Remaining Allocation is {{remainingAllocation}} For This Grantee
+                        </span>
                     </div>
                 </div>
             </ion-list>

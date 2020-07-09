@@ -20,50 +20,42 @@ export class OrbitService {
   constructor() {
 
     // Create IPFS instance
-    const ipfs = new IPFS()
+    const ipfs = new IPFS({
+      repo: '/orbitdb/examples/browser/new/ipfs/0.33.1',
+      start: true,
+      preload: {
+        enabled: false
+      },
+      EXPERIMENTAL: {
+        pubsub: true,
+      },
+      config: {
+        Addresses: {
+          Swarm: [
+            // Use IPFS dev signal server
+            // '/dns4/star-signal.cloud.ipfs.team/wss/p2p-webrtc-star',
+            '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star',
+            // Use local signal server
+            // '/ip4/0.0.0.0/tcp/9090/wss/p2p-webrtc-star',
+          ]
+        },
+      }
+    });
+
     ipfs.on('ready', async () => {
       this.orbitdb = await OrbitDB.createInstance(ipfs);
       // this.getData();
       // this.setData();
       // this.replicate();
     })
-
-    // ipfs.on('ready', async () => {
-    //   const orbitdb = await OrbitDB.createInstance(ipfs)
-    //   console.log("orbitdb", orbitdb);
-    //   console.log("orbitdb.identity.id", orbitdb.identity.id);
-    //   const options = {
-    //     // Give write access to everyonez
-    //     accessController: {
-    //       write: ['*']
-    //     }
-    //   }
-
-    // const db1 = await orbitdb.keyvalue('/orbitdb/zdpuAqchjTEsoExUHaSmMePf2CMzjaP2UgaHTZxzxcuLUMstY/first-database', options)
-    // console.log("db1", db1);
-    // console.log("address", db1.address.toString())
-    // // await db1.put('name', 'demo')
-    // // await db1.put('fName', 'john', { pin: true })
-    // // await db1.put('lName', 'doe', { pin: true })
-    // await db1.close()
-
-    // const db2 = await orbitdb.keyvalue('/orbitdb/zdpuAqchjTEsoExUHaSmMePf2CMzjaP2UgaHTZxzxcuLUMstY/first-database')
-    // console.log("db2", db2);
-    // await db2.load()
-    // const name = db2.get('name')
-    // const fname = db2.get('fName')
-    // const lname = db2.get('lName')
-    // console.log("name", name);
-    // console.log("fname", fname);
-    // console.log("lname", lname);
-    // })
   }
 
   async setData() {
-    const db = await this.orbitdb.docs('/orbitdb/zdpuAtYA3B4zYYaWKsWuLT46fFR8yP1fCWzZiqAXpKDqJyHgY/grant')
+    const db = await this.orbitdb.docs('grant')
     // console.log("db", db.address.toString())
 
-    const hash = await db.put({ _id: 'QmAwesomeIpfsHasm', name: 'grant', followers: 501 });
+    let value = { _id: new Date().toISOString(), name: 'grant', followers: 501 };
+    const hash = await db.put(value);
 
     const grants = db.get('')
     console.log("grants", grants);
@@ -71,7 +63,7 @@ export class OrbitService {
   }
 
   async getData() {
-    const db = await this.orbitdb.docs('/orbitdb/zdpuAtYA3B4zYYaWKsWuLT46fFR8yP1fCWzZiqAXpKDqJyHgY/grant')
+    const db = await this.orbitdb.docs('grant')
     await db.load();
     const grants = db.get('')
     console.log("grants", grants);

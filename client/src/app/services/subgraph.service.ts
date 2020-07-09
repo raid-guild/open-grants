@@ -43,6 +43,7 @@ export class SubgraphService {
       query: gql`query getContract($grantAddress: String){
         contract(id: $grantAddress) {
           id
+          input
           contractAddress
           grantId
           grantAddress

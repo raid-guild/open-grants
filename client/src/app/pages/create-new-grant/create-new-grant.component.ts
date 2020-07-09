@@ -115,7 +115,8 @@ export class CreateNewGrantComponent implements OnInit {
       )
       .subscribe(async (val: string) => {
         this.singleDeliveryControles.controls.completionDate.reset();
-        this.minCompletionData = moment.utc(val).add(1, 'days').format('YYYY-MM-DD');
+        this.singleDeliveryControles.controls.completionDate.setValue(moment(val).add(1, 'days').format(''));
+        this.minCompletionData = moment(val).add(1, 'days').format('');
       });
 
     this.tinymceInit = {
@@ -433,12 +434,18 @@ export class CreateNewGrantComponent implements OnInit {
     let data, fundingExpiration, contractExpiration;
 
     if (this.grantForm.type == "singleDeliveryDate") {
-      fundingExpiration = moment(this.grantForm.singleDeliveryDate.fundingExpiryDate).format("X");
-      contractExpiration = moment(this.grantForm.singleDeliveryDate.completionDate).format("X");
+      fundingExpiration = new Date(this.grantForm.singleDeliveryDate.fundingExpiryDate).getTime();
+      contractExpiration = new Date(this.grantForm.singleDeliveryDate.completionDate).getTime();
+
+      console.log('fundingExpiration', fundingExpiration, moment(fundingExpiration).format());
+      console.log('contractExpiration', contractExpiration, moment(contractExpiration).format());
+
     } else {
       // console.log("this.grantForm.multipleMilestones", this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate);
-      fundingExpiration = moment(this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate).format("X");
-      contractExpiration = moment(this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate).add(1, 'days').format("X");
+      fundingExpiration = new Date(this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate).getTime();
+      let temp = moment(this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate).add(1, 'days').format();
+      contractExpiration = new Date(temp).getTime();
+
     }
 
     data = {
@@ -492,6 +499,8 @@ export class CreateNewGrantComponent implements OnInit {
 
     this.grantForm.content = this.grantForm.content.replace(/"/g, "&quot;");
     let contractData = this.arrangeData();
+
+    console.log("contractData", contractData);
 
     const modal = await this.modalController.create({
       component: PopupComponent,

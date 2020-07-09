@@ -8,6 +8,10 @@ import Swal from 'sweetalert2';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { addressValidator } from 'src/app/common/validators/custom.validators';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { async } from '@angular/core/testing';
+import { SubgraphService } from 'src/app/services/subgraph.service';
+import { AddressZero, Zero } from "ethers/constants";
+import { PopupComponent } from '../popup/popup.component';
 
 @Component({
   selector: 'app-payout',
@@ -16,7 +20,9 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 })
 export class PayoutComponent implements OnInit {
   toastTitle = "Payout"
-  @Input() grantData: any;
+  grantAddress: string;
+  grantees = [];
+
 
   public myForm: FormGroup;
 
@@ -24,16 +30,27 @@ export class PayoutComponent implements OnInit {
   granteeNotMatch = false;
   maxAmountError = false;
   processing = false;
+  grantData: any;
 
   constructor(
     public modalCtrl: ModalController,
     private toastr: ToastrService,
     private navParams: NavParams,
     private fb: FormBuilder,
+    public modalController: ModalController,
+    private subgraphService: SubgraphService,
     private ethcontractService: EthcontractService,
   ) {
 
-    this.grantData = navParams.get('grantData');
+    this.grantAddress = navParams.get('grantAddress');
+    this.grantees = navParams.get('grantees');
+
+    (async () => {
+      let response: any = await this.subgraphService.getGrantByAddress(this.grantAddress).toPromise();
+      this.grantData = response.data.contract;
+      console.log("grantData", this.grantData);
+    })();
+
   }
 
   dismiss() {
@@ -42,55 +59,50 @@ export class PayoutComponent implements OnInit {
 
   ngOnInit() {
     this.myForm = this.fb.group({
-      granteeAddress: new FormControl('', [Validators.required, addressValidator]),
+      granteeAddress: new FormControl('', Validators.required),
       amount: new FormControl({ value: null, disabled: true }, Validators.required),
     });
 
     this.form.granteeAddress.valueChanges
-      .pipe(
-        debounceTime(400),
-        distinctUntilChanged()
-      )
       .subscribe(async (val: string) => {
         if (!this.form.granteeAddress.invalid) {
-          let match = this.grantData.grantees.find(data => data.grantee.toLowerCase() == val.toLowerCase())
-          console.log("match", match);
-          if (!match) {
-            this.granteeNotMatch = true;
-            this.myForm.get('amount').reset();
-            this.myForm.get('amount').disable();
-          } else {
-            this.granteeNotMatch = false;
-            let temp = await this.ethcontractService.remainingAllocation(this.grantData.contractAddress, this.form.granteeAddress.value);
-            this.remainingAllocation = +temp
-            this.myForm.get('amount').enable();
-          }
+          let temp = await this.ethcontractService.remainingAllocation(this.grantAddress, this.form.granteeAddress.value);
+          this.remainingAllocation = +this.currencyCovert(this.grantData.currency, temp);
+          this.form.amount.setValidators([Validators.required, Validators.max(this.remainingAllocation), Validators.min(1)]);
+          this.myForm.get('amount').enable();
         } else {
           this.myForm.get('amount').reset();
           this.myForm.get('amount').disable();
         }
       });
 
-    this.form.amount.valueChanges
-      .pipe(
-        debounceTime(400),
-        distinctUntilChanged()
-      )
-      .subscribe(async (val: string) => {
-        if (this.form.amount.value > this.remainingAllocation) {
-          this.maxAmountError = true;
-        } else {
-          this.maxAmountError = false;
-        }
-      });
+    // this.form.amount.valueChanges
+    //   .pipe(
+    //     debounceTime(400),
+    //     distinctUntilChanged()
+    //   )
+    //   .subscribe(async (val: string) => {
+    //     if (this.form.amount.value > this.remainingAllocation) {
+    //       this.maxAmountError = true;
+    //     } else {
+    //       this.maxAmountError = false;
+    //     }
+    //   });
   }
 
   get form() {
     return this.myForm.controls;
   }
 
+  currencyCovert(currencyType, amount) {
+    if (currencyType == AddressZero) {
+      return ethers.utils.formatEther(amount);
+    }
+    return amount;
+  }
+
   onSubmit() {
-    if (this.granteeNotMatch || this.maxAmountError || this.form.amount.value == 0) {
+    if (this.form.amount.invalid || this.form.granteeAddress.invalid) {
       return
     }
 
@@ -106,21 +118,32 @@ export class PayoutComponent implements OnInit {
       reverseButtons: true
     }).then(async (result) => {
       if (result.value) {
-        try {
-          this.processing = true;
-          console.log("this.form", this.form);
-          let amount = (ethers.utils.parseEther(this.form.amount.value.toString())).toString();
-          console.log("amount", amount)
-          let approvePayout: any = await this.ethcontractService.approvePayout(this.grantData.contractId, this.form.granteeAddress.value, amount)
-          if (approvePayout.status == "success") {
-            this.toastr.success(approvePayout.message, this.toastTitle);
-          } else {
-            this.toastr.error(approvePayout.message, this.toastTitle);
-          }
-        } catch (e) {
-          this.processing = false;
-          this.toastr.error('Something went wrong !!', this.toastTitle);
+
+        let amount: any = this.form.amount.value;
+        if (this.grantData.currency == AddressZero) {
+          amount = (ethers.utils.parseEther(this.form.amount.value.toString())).toString();
         }
+
+        const modal = await this.modalController.create({
+          component: PopupComponent,
+          cssClass: 'custom-modal-style',
+          mode: "ios",
+          componentProps: {
+            modelType: "payout",
+            data: { grantAddress: this.grantAddress, grantee: this.form.granteeAddress.value, amount: amount }
+          }
+        });
+
+        modal.onDidDismiss()
+          .then((data: any) => {
+            data = data.data;
+            console.log("data", data);
+            if (data && data.hasOwnProperty('reload') && data.reload) {
+              console.log("data", data);
+            }
+          });
+
+        return await modal.present();
       } else if (
         result.dismiss === Swal.DismissReason.cancel
       ) {

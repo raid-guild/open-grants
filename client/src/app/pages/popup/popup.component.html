@@ -86,4 +86,27 @@
       <ion-button (click)="dismiss()" color="medium">Close</ion-button>
     </div>
   </div>
+
+
+  <div *ngIf="modelType == 'payout'">
+    <div *ngIf="payouting" style="padding: 99px;">
+      <img src="../../../assets/imgs/wallate.png" alt="">
+      <h1>Payout</h1>
+      <p>Confirm the message in your <br> Web3 wallet to continue</p>
+      <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+      <h1>Processing...</h1>
+      <ion-button (click)="dismiss()" color="medium">Close</ion-button>
+    </div>
+    <div *ngIf="payoutSuccess" style="padding: 99px;">
+      <i class="fa fa-check-circle fa-5x" aria-hidden="true"></i>
+      <h1>Success</h1>
+      <p>Payout request sent successfully</p>
+    </div>
+    <div *ngIf="payoutError" style="padding: 99px;">
+      <i class="fa fa-exclamation-triangle fa-5x" aria-hidden="true"></i>
+      <h1>Error</h1>
+      <p>There was an error in payout</p>
+      <ion-button (click)="dismiss()" color="medium">Close</ion-button>
+    </div>
+  </div>
 </ion-content>

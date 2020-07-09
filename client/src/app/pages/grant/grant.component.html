@@ -100,6 +100,8 @@
             <div *ngIf="!grantData?.canFund" class="padding-20">
               <h2>Grant not open to funding</h2>
             </div>
+            <ion-button *ngIf="canCancelByGranteeAndDonor" class="" (click)="cancelGrant()">Cancel Grant
+            </ion-button>
           </ion-col>
         </ion-row>
       </div>
@@ -138,7 +140,7 @@
               <p>days to go expired funding</p>
             </div>
             <div style="display: flex;align-items: center;margin-top: 0px;">
-              <ion-button *ngIf="!grantData?.canFund || !grantData?.grantCancelled" class="" (click)="payoutModel()">
+              <ion-button *ngIf="!grantData?.canFund && !grantData?.grantCancelled" class="" (click)="payoutModel()">
                 Release Payout</ion-button>
               <ion-button *ngIf="!grantData?.grantCancelled" class="" (click)="cancelGrant()">Cancel Grant
               </ion-button>
@@ -181,8 +183,13 @@
               <p>days to go expired funding</p>
             </div>
             <div class="padding-20">
-              <h3> <b> Ξ {{currencyCovert(grantData?.currency,userRemainingAlloc)}} ETH</b> Remaining</h3>
+              <h3> <b> Ξ {{currencyCovert(grantData?.currency,userRemainingAlloc)}} ETH</b>&nbsp;
+                <span style="font-size: 16px;">Remaining</span></h3>
               <p>Total Allocation Ξ {{currencyCovert(grantData?.currency,userAlloc)}} ETH</p>
+            </div>
+            <div style="display: flex;align-items: center;margin-top: 0px;">
+              <ion-button *ngIf="canCancelByGranteeAndDonor" class="" (click)="cancelGrant()">Cancel Grant
+              </ion-button>
             </div>
           </ion-col>
         </ion-row>
