@@ -78,7 +78,7 @@ export class CreateNewGrantComponent implements OnInit {
 
 
   getData() {
-    this.orbitService.getData();
+    this.orbitService.getGrants();
   }
 
   ngOnInit() {
