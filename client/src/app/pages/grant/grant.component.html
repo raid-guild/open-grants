@@ -78,6 +78,10 @@
               </p>
             </div>
             <div class="padding-20">
+              <h1>Ξ {{currencyCovert(grantData?.currency,userDonation)}} ETH</h1>
+              <p>Your Donation</p>
+            </div>
+            <div class="padding-20">
               <h1>{{grantFunds.length}}</h1>
               <p>donors</p>
             </div>
@@ -100,7 +104,8 @@
             <div *ngIf="!grantData?.canFund" class="padding-20">
               <h2>Grant not open to funding</h2>
             </div>
-            <ion-button *ngIf="canCancelByGranteeAndDonor" class="" (click)="cancelGrant()">Cancel Grant
+            <ion-button *ngIf="canCancelByGranteeAndDonor && !grantData?.grantCancelled" class=""
+              (click)="cancelGrant()">Cancel Grant
             </ion-button>
           </ion-col>
         </ion-row>
@@ -188,7 +193,8 @@
               <p>Total Allocation Ξ {{currencyCovert(grantData?.currency,userAlloc)}} ETH</p>
             </div>
             <div style="display: flex;align-items: center;margin-top: 0px;">
-              <ion-button *ngIf="canCancelByGranteeAndDonor" class="" (click)="cancelGrant()">Cancel Grant
+              <ion-button *ngIf="canCancelByGranteeAndDonor && !grantData?.grantCancelled" class=""
+                (click)="cancelGrant()">Cancel Grant
               </ion-button>
             </div>
           </ion-col>

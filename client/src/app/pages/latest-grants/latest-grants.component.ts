@@ -59,7 +59,8 @@ export class LatestGrantsComponent implements OnInit {
   getAllGrants() {
     this.subgraphService.getGrantList().subscribe((res: any) => {
       console.log("res", res.data.contracts);
-      this.searchResult = res.data.contracts;
+      this.allGrant = res.data.contracts
+      this.searchResult = this.allGrant;
     })
   }
 

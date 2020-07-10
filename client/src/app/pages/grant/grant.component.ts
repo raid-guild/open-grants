@@ -68,8 +68,6 @@ export class GrantComponent implements OnInit, OnDestroy {
       this.grantData['grantees'] = this.grantData.input.grantees;
       this.grantData['amounts'] = this.grantData.input.amounts;
 
-      console.log("grantData", this.grantData);
-
       this.checkRoll();
 
       this.noOfDayToExpiredFunding = moment(+this.grantData.fundingExpiration).diff(moment(new Date), 'days')
@@ -77,7 +75,21 @@ export class GrantComponent implements OnInit, OnDestroy {
 
       this.subgraphService.getFundByContract(this.grantAddress).subscribe((res: any) => {
         this.grantFunds = res.data.funds;
+        this.grantFunds = this.grantFunds.reduce((m, o) => {
+          var found = m.find(p => p.donor === o.donor);
+          if (found) {
+            found.amount = +found.amount
+            found.amount += +o.amount;
+          } else {
+            m.push(o);
+          }
+          return m;
+        }, []);
+        console.log("grantFunds", this.grantFunds);
       })
+
+      this.grantData.canFund = await this.ethcontractService.canFund(this.grantAddress);
+      console.log("this.grantData", this.grantData)
 
     })();
 
@@ -142,15 +154,13 @@ export class GrantComponent implements OnInit, OnDestroy {
   getDonorData() {
     this.subgraphService.getFundByContractAndDonor(this.grantAddress, this.userEthAddress).subscribe((res: any) => {
       this.userFunds = res.data.funds;
+      this.userDonation = 0;
       this.userFunds = this.userFunds.map((task) => {
-        if (this.grantData.currency == AddressZero) {
-          task.amount = ethers.utils.formatEther(task.amount);
-          this.userDonation += +task.amount;
-        } else {
-          this.userDonation += +task.amount;
-        }
+        this.userDonation += +task.amount;
         return task;
       });
+
+      this.userDonation = this.userDonation.toString();
     })
   }
 
