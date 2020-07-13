@@ -72,11 +72,6 @@ export class CreateNewGrantComponent implements OnInit {
     this.minYear = moment(curruntDate).add(1, 'days').format('YYYY-MM-DD')
   }
 
-  setData() {
-    this.orbitService.setData();
-  }
-
-
   getData() {
     this.orbitService.getGrants();
   }
@@ -433,6 +428,8 @@ export class CreateNewGrantComponent implements OnInit {
   arrangeData() {
     let data, fundingExpiration, contractExpiration;
 
+    // let res = this.orbitService.addGrant({ _id: Math.floor(Math.random() * 1000000), content: this.grantForm.content, description : this.grantForm.});
+
     if (this.grantForm.type == "singleDeliveryDate") {
       fundingExpiration = new Date(this.grantForm.singleDeliveryDate.fundingExpiryDate).getTime();
       contractExpiration = new Date(this.grantForm.singleDeliveryDate.completionDate).getTime();
@@ -500,7 +497,7 @@ export class CreateNewGrantComponent implements OnInit {
     this.grantForm.content = this.grantForm.content.replace(/"/g, "&quot;");
     let contractData = this.arrangeData();
 
-    console.log("contractData", contractData);
+    // console.log("contractData", contractData);
 
     const modal = await this.modalController.create({
       component: PopupComponent,

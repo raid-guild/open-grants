@@ -29,6 +29,7 @@
                             alt="" style="height: 150px;">
                         <div class="" style="padding-left: 40px;">
                             <!-- <h3>{{grant?.name}}</h3> -->
+                            <p>Name : {{getGrantOrbitData(grant.uri, 'name')}}</p>
                             <p>Manager : {{grant?.manager}}</p>
                             <p>Target Funding : {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH</p>
                             <p>Total Funding : {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</p>

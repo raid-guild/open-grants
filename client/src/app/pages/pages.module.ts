@@ -30,6 +30,7 @@ import { AuthenticationService } from '../services/authentication.service';
 import { PayoutComponent } from './payout/payout.component';
 import { GrantComponent } from './grant/grant.component';
 import { PopupComponent } from './popup/popup.component';
+import { OrbitService } from '../services/orbit.service';
 
 const PAGES_COMPONENTS = [
     PagesComponent,
@@ -76,5 +77,11 @@ const PAGES_COMPONENTS = [
     ]
 })
 export class PagesModule {
+    constructor(
 
+        private orbitService: OrbitService
+
+    ) {
+
+    }
 }

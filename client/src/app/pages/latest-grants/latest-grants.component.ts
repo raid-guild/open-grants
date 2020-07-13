@@ -7,6 +7,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { SubgraphService } from 'src/app/services/subgraph.service';
 import { ethers, providers, utils } from 'ethers';
 import { AddressZero, Zero } from "ethers/constants";
+import { OrbitService } from 'src/app/services/orbit.service';
 
 @Component({
   selector: 'app-latest-grants',
@@ -15,15 +16,16 @@ import { AddressZero, Zero } from "ethers/constants";
 })
 export class LatestGrantsComponent implements OnInit {
   allGrant: any;
+  grantOrbitData: any;
   searchBox: FormControl;
   searchResult: any = [];
   data = [];
   constructor(public popoverCtrl: PopoverController,
+    private router: Router,
     public modalController: ModalController,
     private subgraphService: SubgraphService,
-    private router: Router,
+    private orbitService: OrbitService
   ) {
-
     this.getAllGrants();
   }
 
@@ -51,6 +53,13 @@ export class LatestGrantsComponent implements OnInit {
   }
 
   onCancel(event) { }
+
+  getGrantOrbitData(id: string, key: string) {
+    // let grant = this.orbitService.getGrantsById(id);
+    // console.log("grant[key]", grant[key]);
+
+    return key
+  }
 
   grantDetails(id: string) {
     this.router.navigate(['/pages/grant/' + id])

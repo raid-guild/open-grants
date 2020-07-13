@@ -6,6 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { NgxSpinnerService } from "ngx-spinner";
 import { UtilsService, ILoader } from './services/utils.service';
 import { AuthService, AuthState } from './services/auth.service';
+import { OrbitService } from './services/orbit.service';
 
 @Component({
   selector: 'app-root',
@@ -78,6 +79,7 @@ export class AppComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private authService: AuthService,
     public events: Events,
+    // private orbitService: OrbitService
   ) {
 
     var Buffer: any = window['Buffer']

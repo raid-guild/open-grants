@@ -2,9 +2,19 @@ import { Injectable } from '@angular/core';
 import * as IPFS from 'ipfs';
 import * as OrbitDB from 'orbit-db';
 import * as Identities from 'orbit-db-identity-provider';
+import { async } from '@angular/core/testing';
 
 declare let require: any;
 declare let window: any;
+
+
+export interface IGrant {
+  _id: number;
+  name: string;
+  description: string;
+  image: string;
+  content: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +33,7 @@ export class OrbitService {
     }
   }
 
-  dbAddress = "/orbitdb/zdpuAtEjthqQry5YzXcQYNVPF659reiacB6xXPwLHkJ6STKZB/grant";
+  grantDbAddress = "orbitdb/zdpuAwDkuDG1Yekf35M4EFBGzg6VPjq6UQNyMWD5n5Whr4KKW/grant";
   ipfs: any;
   orbitdb: any;
   db: any;
@@ -36,7 +46,7 @@ export class OrbitService {
     // Create IPFS instance
     this.ipfs = new IPFS({
       //repo: '/orbitdb/examples/browser/new/ipfs/0.27.3',
-      repo: 'ipfs-' + Math.random(),
+      repo: 'ipfs-1',
       start: true,
       EXPERIMENTAL: {
         pubsub: true
@@ -74,14 +84,11 @@ export class OrbitService {
       // this.ipfs.swarm.disconnect('/dns4/node0.preload.ipfs.io/tcp/443/wss/ipfs/QmZMxNdpMkewiVZLMRxaNxUeZpDUb34pWjZ1kZvsd16Zic');
       // this.ipfs.swarm.disconnect('/dns4/node1.preload.ipfs.io/tcp/443/wss/ipfs/Qmbut9Ywz9YEDrz8ySBSgWyJk41Uvm2QJPhwDJzJyGFsD6');
 
-      // Create the database.
-      // const identity = await Identities.createIdentity({ id: 'local-id' })
-
-      console.log(`Connecting to DB ${this.dbAddress} waiting...`);
+      console.log(`Connecting to DB ${this.grantDbAddress} waiting...`);
       this.orbitdb = await OrbitDB.createInstance(this.ipfs);
       console.log("orbitdb createInstance", this.orbitdb)
 
-      // this.db = await this.orbitdb.open("orbitdb/zdpuAwDkuDG1Yekf35M4EFBGzg6VPjq6UQNyMWD5n5Whr4KKW/database", {
+      // this.db = await this.orbitdb.open(this.grantDbAddress, {
       //   // If database doesn't exist, create it
       //   create: true,
       //   overwrite: false,
@@ -93,15 +100,7 @@ export class OrbitService {
       // });
 
 
-      this.db = await this.orbitdb.docs('orbitdb/zdpuAwDkuDG1Yekf35M4EFBGzg6VPjq6UQNyMWD5n5Whr4KKW/database', {
-        // If database doesn't exist, create it
-        // create: true,
-        // overwrite: true,
-        // Load only the local version of the database,
-        // don't load the latest from the network yet
-        // localOnly: false,
-        // type: 'keyvalue',
-
+      this.db = await this.orbitdb.docs(this.grantDbAddress, {
         accessController: {
           write: ['*']
         }
@@ -120,7 +119,6 @@ export class OrbitService {
       this.dbReady = true;
 
       this.getGrants();
-      this.getGrantsById();
 
       this.db.events.on('replicated', (address) => {
         console.log(`DB just replicated with peer ${address}.`);
@@ -128,33 +126,34 @@ export class OrbitService {
       })
       //  Get grants
     });
-
   }
 
   handleError(e) {
     console.error(`Error with IPFS: `, e.stack)
   }
 
-  async setData() {
-    let id = Math.floor(Math.random() * 1000000);
-    let value = {
-      _id: id,
-      name: "grant name",
-      discription: "grant discription"
-    };
-    let hash = await this.db.put(value);
-    console.log(`Grant added to DB!`, hash);
-    this.getGrants();
+  async addGrant(data: IGrant) {
+    // let value = {
+    //   _id: id,
+    //   name: "grant name",
+    //   discription: "grant discription"
+    // };
+
+    await this.db.put(data);
+    console.log(`Grant added to DB!`);
+    return data;
   }
 
   async getGrants() {
-    this.grants = this.db.get('');
-    console.log("grants", this.grants);
+    let grants = this.db.get('');
+    console.log("grants", grants);
+    return grants;
   }
 
-  async getGrantsById() {
-    let grants = this.db.get('558596');
-    console.log("getGrantsById", grants);
+  async getGrantsById(id: string) {
+    console.log("id", id)
+    let grants = this.db.get(id);
+    return grants
   }
 
 }

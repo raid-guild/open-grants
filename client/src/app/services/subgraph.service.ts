@@ -20,6 +20,7 @@ export class SubgraphService {
       query: gql`query getContracts{
         contracts(orderBy:grantId) {
           id
+          uri
           contractAddress
           grantId
           grantAddress
@@ -44,6 +45,7 @@ export class SubgraphService {
         contract(id: $grantAddress) {
           id
           input
+          uri
           contractAddress
           grantId
           grantAddress
