@@ -82,7 +82,7 @@ export class AppComponent implements OnInit {
 
     var Buffer: any = window['Buffer']
     window['Buffer'] = Buffer["Buffer"]
-    window['IPFS'] = window['IPFS'] || window['Ipfs'];
+    // window['IPFS'] = window['IPFS'] || window['Ipfs'];
     console.log("window", window);
 
     this.initializeApp();
