@@ -177,13 +177,15 @@ export class EthcontractService {
                 data.targetFunding = (ethers.utils.parseEther(data.targetFunding.toString())).toString();
             }
 
+            console.log("data", data);
+
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
             let contract = new ethers.Contract(AppSettings.ethersConfig.factoryContract, GrantFactory.abi, provider);
             let contractWithSigner = contract.connect(signer);
 
             contractWithSigner.create(data.grantees, data.amounts, data.manager, currency, data.targetFunding,
-                data.fundingExpiration, data.contractExpiration, AddressZero, { gasLimit: AppSettings.ethersConfig.gasLimit })
+                data.fundingExpiration, data.contractExpiration, data.uri, { gasLimit: AppSettings.ethersConfig.gasLimit })
                 .then(async (response) => {
                     console.log("Create", response)
                     try {

@@ -19,6 +19,7 @@ import { addressValidator } from '../../common/validators/custom.validators';
 import { ImageUploadComponent, FileHolder } from 'angular2-image-upload';
 import { OrbitService } from 'src/app/services/orbit.service';
 import { PopupComponent } from '../popup/popup.component';
+import { resolve } from 'url';
 
 declare let window: any;
 
@@ -426,36 +427,54 @@ export class CreateNewGrantComponent implements OnInit {
   }
 
   arrangeData() {
-    let data, fundingExpiration, contractExpiration;
+    return new Promise(async (resolve) => {
+      try {
+        let orbitrRes: any = await this.orbitService.addGrant({
+          _id: this.utils.generateUUID(),
+          name: this.grantForm.name,
+          description: this.grantForm.description,
+          images: this.grantForm.images,
+          content: this.grantForm.content
+        });
 
-    // let res = this.orbitService.addGrant({ _id: Math.floor(Math.random() * 1000000), content: this.grantForm.content, description : this.grantForm.});
+        console.log("orbitrRes", orbitrRes);
 
-    if (this.grantForm.type == "singleDeliveryDate") {
-      fundingExpiration = new Date(this.grantForm.singleDeliveryDate.fundingExpiryDate).getTime();
-      contractExpiration = new Date(this.grantForm.singleDeliveryDate.completionDate).getTime();
+        if (orbitrRes) {
+          let fundingExpiration, contractExpiration;
 
-      console.log('fundingExpiration', fundingExpiration, moment(fundingExpiration).format());
-      console.log('contractExpiration', contractExpiration, moment(contractExpiration).format());
+          if (this.grantForm.type == "singleDeliveryDate") {
+            fundingExpiration = new Date(this.grantForm.singleDeliveryDate.fundingExpiryDate).getTime();
+            contractExpiration = new Date(this.grantForm.singleDeliveryDate.completionDate).getTime();
 
-    } else {
-      // console.log("this.grantForm.multipleMilestones", this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate);
-      fundingExpiration = new Date(this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate).getTime();
-      let temp = moment(this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate).add(1, 'days').format();
-      contractExpiration = new Date(temp).getTime();
+            // console.log('fundingExpiration', fundingExpiration, moment(fundingExpiration).format());
+            // console.log('contractExpiration', contractExpiration, moment(contractExpiration).format());
 
-    }
+          } else {
+            // console.log("this.grantForm.multipleMilestones", this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate);
+            fundingExpiration = new Date(this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate).getTime();
+            let temp = moment(this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate).add(1, 'days').format();
+            contractExpiration = new Date(temp).getTime();
 
-    data = {
-      grantees: this.grantForm.grantees.map((data) => { return data.grantee }),
-      amounts: this.grantForm.grantees.map((data) => { return data.allocationAmount }),
-      manager: this.grantForm.manager,
-      currency: this.grantForm.currency,
-      targetFunding: this.grantForm.targetFunding,
-      fundingExpiration: fundingExpiration,
-      contractExpiration: contractExpiration
-    }
+          }
 
-    return data;
+          let data = {
+            uri: utils.formatBytes32String(orbitrRes._id),
+            grantees: this.grantForm.grantees.map((data) => { return data.grantee }),
+            amounts: this.grantForm.grantees.map((data) => { return data.allocationAmount }),
+            manager: this.grantForm.manager,
+            currency: this.grantForm.currency,
+            targetFunding: this.grantForm.targetFunding,
+            fundingExpiration: fundingExpiration,
+            contractExpiration: contractExpiration
+          }
+
+          resolve(data);
+        }
+        resolve();
+      } catch (e) {
+        resolve();
+      }
+    })
   }
 
   async onSubmit() {
@@ -482,9 +501,9 @@ export class CreateNewGrantComponent implements OnInit {
 
     for (let i = 0; i < this.imageUpload.files.length; i++) {
       try {
-        let imageURL = await this.utils.fileUpload(this.imageUpload.files[i].file, "grant-content")
-        if (imageURL) {
-          this.grantForm.images.push(imageURL)
+        let imageURL = await this.utils.fileToBase64(this.imageUpload.files[i].file)
+        if (imageURL.status) {
+          this.grantForm.images.push(imageURL.data)
         }
       } catch (e) { }
     }
@@ -495,27 +514,28 @@ export class CreateNewGrantComponent implements OnInit {
     })
 
     this.grantForm.content = this.grantForm.content.replace(/"/g, "&quot;");
-    let contractData = this.arrangeData();
+    let contractData = await this.arrangeData();
+    console.log("contractData", contractData);
 
-    // console.log("contractData", contractData);
-
-    const modal = await this.modalController.create({
-      component: PopupComponent,
-      cssClass: 'custom-modal-style',
-      mode: "ios",
-      componentProps: {
-        modelType: "deployContract",
-        data: contractData
-      }
-    });
-
-    modal.onDidDismiss()
-      .then((data: any) => {
-        if (data && data.hasOwnProperty('redirect') && data.redirect) {
-          this.router.navigate(['/pages/latest']);
+    if (contractData) {
+      const modal = await this.modalController.create({
+        component: PopupComponent,
+        cssClass: 'custom-modal-style',
+        mode: "ios",
+        componentProps: {
+          modelType: "deployContract",
+          data: contractData
         }
       });
 
-    return await modal.present();
+      modal.onDidDismiss()
+        .then((data: any) => {
+          if (data && data.hasOwnProperty('redirect') && data.redirect) {
+            this.router.navigate(['/pages/latest']);
+          }
+        });
+
+      return await modal.present();
+    }
   }
 }

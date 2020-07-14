@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
 import { PayoutComponent } from '../payout/payout.component';
 import { PopupComponent } from '../popup/popup.component';
 import { UtilsService } from 'src/app/services/utils.service';
+import { OrbitService } from 'src/app/services/orbit.service';
 
 @Component({
   selector: 'app-grant',
@@ -23,6 +24,14 @@ import { UtilsService } from 'src/app/services/utils.service';
 export class GrantComponent implements OnInit, OnDestroy {
   grantAddress: string;
   grantData: any;
+  grantDetails = {
+    _id: '',
+    name: '',
+    description: '',
+    images: 'https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media',
+    content: ''
+  };
+
   userEthAddress: string;
   noOfDayToExpiredFunding: number = 0;
   canCancelByGranteeAndDonor: boolean = false;
@@ -52,6 +61,7 @@ export class GrantComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private authService: AuthService,
     private utils: UtilsService,
+    private orbitService: OrbitService,
     public modalController: ModalController,
     private subgraphService: SubgraphService,
     private ethcontractService: EthcontractService,
@@ -67,6 +77,15 @@ export class GrantComponent implements OnInit, OnDestroy {
       this.grantData.input = this.utils.parseTransaction(this.grantData.input);
       this.grantData['grantees'] = this.grantData.input.grantees;
       this.grantData['amounts'] = this.grantData.input.amounts;
+      this.grantData['uri'] = this.grantData.input.uri;
+
+      let orbitRes = this.orbitService.getGrantsById(this.grantData.uri);
+      if (orbitRes) {
+        this.grantDetails = orbitRes;
+      }
+      this.grantDetails.content = this.htmlDecode(this.grantDetails.content);
+
+      console.log("grantDetails", this.grantDetails);
 
       this.checkRoll();
 
@@ -103,6 +122,13 @@ export class GrantComponent implements OnInit, OnDestroy {
       }, 100);
     });
   }
+
+  htmlDecode(input: any) {
+    var e = document.createElement("textarea");
+    e.innerHTML = input;
+    return e.value;
+  };
+
 
   getUserEthAddress() {
     this.userEthAddress = this.authService.getAuthUserId();

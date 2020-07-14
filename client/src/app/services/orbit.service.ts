@@ -3,6 +3,8 @@ import * as IPFS from 'ipfs';
 import * as OrbitDB from 'orbit-db';
 import * as Identities from 'orbit-db-identity-provider';
 import { async } from '@angular/core/testing';
+import { resolve } from 'url';
+import { type } from 'os';
 
 declare let require: any;
 declare let window: any;
@@ -12,7 +14,7 @@ export interface IGrant {
   _id: number;
   name: string;
   description: string;
-  image: string;
+  images: Array<string>;
   content: string;
 }
 
@@ -118,8 +120,6 @@ export class OrbitService {
       // Signal that the DB is ready for use.
       this.dbReady = true;
 
-      this.getGrants();
-
       this.db.events.on('replicated', (address) => {
         console.log(`DB just replicated with peer ${address}.`);
         this.getGrants();
@@ -132,16 +132,16 @@ export class OrbitService {
     console.error(`Error with IPFS: `, e.stack)
   }
 
-  async addGrant(data: IGrant) {
-    // let value = {
-    //   _id: id,
-    //   name: "grant name",
-    //   discription: "grant discription"
-    // };
-
-    await this.db.put(data);
-    console.log(`Grant added to DB!`);
-    return data;
+  async addGrant(data) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await this.db.put(data);
+        console.log(`Grant added to DB!`);
+        resolve(data);
+      } catch (e) {
+        reject();
+      }
+    })
   }
 
   async getGrants() {
@@ -150,10 +150,14 @@ export class OrbitService {
     return grants;
   }
 
-  async getGrantsById(id: string) {
-    console.log("id", id)
+  getGrantsById(id: string) {
     let grants = this.db.get(id);
-    return grants
+
+    if (grants) {
+      return grants[0]
+    }
+
+    return {}
   }
 
 }

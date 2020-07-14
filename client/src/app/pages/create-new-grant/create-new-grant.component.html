@@ -61,7 +61,7 @@
 
                         <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
                             <image-upload buttonCaption="Upload Image" dropBoxMessage="OR Drop image here" #Image
-                                [max]="4" name="imageUpload" id="imageUpload" #images>
+                                [max]="1" name="imageUpload" id="imageUpload" #images>
                             </image-upload>
                             <div *ngIf="submitted && !images.files.length">
                                 <span class="error">

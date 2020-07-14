@@ -25,8 +25,7 @@
             <ion-row *ngFor="let grant of searchResult" style="cursor: pointer;">
                 <ion-col size="12" (click)="grantDetails(grant.id)">
                     <div class="d-flex">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media"
-                            alt="" style="height: 150px;">
+                        <img src="{{getGrantOrbitData(grant.uri, 'images')}}" alt="" style="height: 150px;">
                         <div class="" style="padding-left: 40px;">
                             <!-- <h3>{{grant?.name}}</h3> -->
                             <p>Name : {{getGrantOrbitData(grant.uri, 'name')}}</p>

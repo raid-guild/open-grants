@@ -5,6 +5,7 @@ import { AngularFireStorage } from 'angularfire2/storage';
 import { AppSettings } from '../config/app.config';
 import { ethers, providers, utils } from 'ethers';
 import * as moment from 'moment';
+import { AddressZero } from 'ethers/constants';
 
 export interface ILoader {
     loading: boolean;
@@ -41,6 +42,26 @@ export class UtilsService {
         if (!this.loadersCount) {
             this.loaderSubscription.next({ loading: false, message: '' });
         }
+    }
+
+    fileToBase64(file: File): Promise<{ status: boolean, data?: any, error?: any }> {
+        return new Promise((resolve => {
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                resolve({
+                    status: true,
+                    data: reader.result
+                });
+            };
+            reader.onerror = function (error) {
+                resolve({
+                    status: false,
+                    data: null,
+                    error: error
+                });
+            };
+        }));
     }
 
     dataURLtoFile(dataurl, filename) {
@@ -131,7 +152,11 @@ export class UtilsService {
             targetFunding: ethers.utils.formatEther(parseData.args[4]),
             fundingDeadline: moment(+parseData.args[5].toString(16).toUpperCase()).format(),
             contractExpiration: moment(+parseData.args[6].toString(16).toUpperCase()).format(),
-            uri: parseData.args[7]
+            uri: parseData.args[7],
+        }
+
+        if (data.uri != AddressZero) {
+            data.uri = utils.parseBytes32String(data.uri);
         }
 
         return data;
@@ -145,6 +170,7 @@ export class UtilsService {
         for (let i = 0; i < length; i++) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
+
         return text;
     }
 }  

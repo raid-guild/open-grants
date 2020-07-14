@@ -9,14 +9,12 @@
     <ion-col size="12" class="container">
       <div class="row">
         <div class="text-center">
-          <h1>grant name</h1>
-          <p>grant description</p>
+          <h1>{{grantDetails.name}}</h1>
+          <p>{{grantDetails.description}}</p>
         </div>
         <ion-row>
           <ion-col size-md="7" size-sm="12">
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media"
-              alt="">
+            <img src="{{grantDetails.images}}" alt="">
           </ion-col>
           <ion-col size-md="5" size-sm="12" class="padding-left-50">
             <div class="line"></div>
@@ -51,6 +49,16 @@
             </div>
           </ion-col>
         </ion-row>
+
+        <ion-row *ngIf="grantDetails?.content">
+          <ion-col size="12" size-md="12">
+            <div class="grant">
+              <div class="innerHTML">
+                <span [innerHTML]="grantDetails.content"></span>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
       </div>
 
     </ion-col>
@@ -60,14 +68,12 @@
     <ion-col size="12" class="container">
       <div class="row">
         <div class="text-center">
-          <h1>grant name</h1>
-          <p>grant description</p>
+          <h1>{{grantDetails.name}}</h1>
+          <p>{{grantDetails.description}}</p>
         </div>
         <ion-row>
           <ion-col size-md="7" size-sm="12">
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media"
-              alt="">
+            <img src="{{grantDetails.images}}" alt="">
           </ion-col>
           <ion-col size-md="5" size-sm="12" class="padding-left-50">
             <div class="line"></div>
@@ -109,6 +115,16 @@
             </ion-button>
           </ion-col>
         </ion-row>
+
+        <ion-row *ngIf="grantDetails?.content">
+          <ion-col size="12" size-md="12">
+            <div class="grant">
+              <div class="innerHTML">
+                <span [innerHTML]="grantDetails.content"></span>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
       </div>
 
     </ion-col>
@@ -119,14 +135,12 @@
     <ion-col size="12" class="container">
       <div class="row">
         <div class="text-center">
-          <h1>grant name</h1>
-          <p>grant description</p>
+          <h1>{{grantDetails.name}}</h1>
+          <p>{{grantDetails.description}}</p>
         </div>
         <ion-row>
           <ion-col size-md="7" size-sm="12">
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media"
-              alt="">
+            <img src="{{grantDetails.images}}" alt="">
           </ion-col>
           <ion-col size-md="5" size-sm="12" class="padding-left-50">
             <div class="line"></div>
@@ -152,6 +166,16 @@
             </div>
           </ion-col>
         </ion-row>
+
+        <ion-row *ngIf="grantDetails?.content">
+          <ion-col size="12" size-md="12">
+            <div class="grant">
+              <div class="innerHTML">
+                <span [innerHTML]="grantDetails.content"></span>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
       </div>
 
     </ion-col>
@@ -159,17 +183,16 @@
 
 
   <ion-row class="row" *ngIf="userRoll == 'grantee'">
+
     <ion-col size="12" class="container">
       <div class="row">
         <div class="text-center">
-          <h1>grant name</h1>
-          <p>grant description</p>
+          <h1>{{grantDetails.name}}</h1>
+          <p>{{grantDetails.description}}</p>
         </div>
         <ion-row>
           <ion-col size-md="7" size-sm="12">
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media"
-              alt="">
+            <img src="{{grantDetails.images}}" alt="">
           </ion-col>
           <ion-col size-md="5" size-sm="12" class="padding-left-50">
             <div class="line"></div>
@@ -199,8 +222,17 @@
             </div>
           </ion-col>
         </ion-row>
-      </div>
 
+        <ion-row *ngIf="grantDetails?.content">
+          <ion-col size="12" size-md="12">
+            <div class="grant">
+              <div class="innerHTML">
+                <span [innerHTML]="grantDetails.content"></span>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
     </ion-col>
   </ion-row>
 </ion-content>

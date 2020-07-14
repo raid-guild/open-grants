@@ -20,6 +20,8 @@ export class LatestGrantsComponent implements OnInit {
   searchBox: FormControl;
   searchResult: any = [];
   data = [];
+  image = "https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media";
+
   constructor(public popoverCtrl: PopoverController,
     private router: Router,
     public modalController: ModalController,
@@ -28,6 +30,7 @@ export class LatestGrantsComponent implements OnInit {
   ) {
     this.getAllGrants();
   }
+
 
   ngOnInit() {
     this.searchBox = new FormControl('');
@@ -55,9 +58,11 @@ export class LatestGrantsComponent implements OnInit {
   onCancel(event) { }
 
   getGrantOrbitData(id: string, key: string) {
-    // let grant = this.orbitService.getGrantsById(id);
+    let grant = this.orbitService.getGrantsById("mBxkEf0vCJdiSsMD");
     // console.log("grant[key]", grant[key]);
-
+    if (grant) {
+      return grant[key]
+    }
     return key
   }
 
@@ -67,10 +72,17 @@ export class LatestGrantsComponent implements OnInit {
 
   getAllGrants() {
     this.subgraphService.getGrantList().subscribe((res: any) => {
-      console.log("res", res.data.contracts);
-      this.allGrant = res.data.contracts
+      this.allGrant = res.data.contracts.map((grant) => {
+        if (grant.uri !== null) {
+          // utils.parseBytes32String(grant.uri)
+        }
+        return grant;
+      });
+
       this.searchResult = this.allGrant;
-    })
+      console.log("allGrant", this.allGrant)
+    });
+
   }
 
   currencyCovert(currencyType, amount) {

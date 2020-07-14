@@ -78,10 +78,6 @@ const PAGES_COMPONENTS = [
 })
 export class PagesModule {
     constructor(
-
         private orbitService: OrbitService
-
-    ) {
-
-    }
+    ) { }
 }
