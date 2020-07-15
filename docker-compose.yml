@@ -1,22 +1,10 @@
-version: '3'
+version: "3"
 
 # Define the services/containers to be run
 services:
-    client: # name of the first service
-      build: client # specify the directory of the Dockerfile
-      ports:
-        - "4200:4200" # specify port forewarding
-      volumes:
-        - ./client:/app # this will enable changes made to the angular app reflect in the container
-  
-    server: #name of the second service
-      build: server # specify the directory of the Dockerfile
-      ports:
-        - "7001:7001" #specify ports forewarding
-      links:
-        - database
-  
-    database: # name of the third service
-      image: mongo # specify image to build container from
-      ports:
-        - "27017:27017" # specify port forewarding
+  client: # name of the first service
+    build: ./ # specify the directory of the Dockerfile
+    ports:
+      - "4200:4200" # specify port forewarding
+    volumes:
+      - ./app # this will enable changes made to the angular app reflect in the container
