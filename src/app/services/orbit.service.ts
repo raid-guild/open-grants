@@ -2,16 +2,12 @@ import { Injectable } from '@angular/core';
 import * as IPFS from 'ipfs';
 import * as OrbitDB from 'orbit-db';
 import * as Identities from 'orbit-db-identity-provider';
-import { async } from '@angular/core/testing';
-import { resolve } from 'url';
-import { type } from 'os';
 
 declare let require: any;
 declare let window: any;
 
-
 export interface IGrant {
-  _id: number;
+  _id: string;
   name: string;
   description: string;
   images: Array<string>;
@@ -145,19 +141,58 @@ export class OrbitService {
   }
 
   async getGrants() {
-    let grants = this.db.get('');
-    console.log("grants", grants);
-    return grants;
+    return new Promise((resolve) => {
+      let cheker = null;
+
+      cheker = setInterval(() => {
+        console.log("this.dbReady", this.dbReady);
+
+        if (this.dbReady) {
+          getData();
+          clearInterval(cheker);
+        }
+      }, 500);
+
+      const getData = () => {
+        let grants = this.db.get('');
+
+        if (grants) {
+          resolve(grants)
+        } else {
+          resolve([])
+        }
+      };
+    })
   }
 
   getGrantsById(id: string) {
-    let grants = this.db.get(id);
+    return new Promise((resolve) => {
+      let cheker = null;
 
-    if (grants) {
-      return grants[0]
-    }
+      cheker = setInterval(() => {
+        console.log("this.dbReady", this.dbReady);
 
-    return {}
+        if (this.dbReady) {
+          getData();
+          clearInterval(cheker);
+        }
+      }, 500);
+
+      const getData = () => {
+        let grants = this.db.get(id);
+        if (grants) {
+          resolve(grants[0])
+        } else {
+          resolve({
+            _id: '',
+            name: '',
+            description: '',
+            images: 'https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media',
+            content: ''
+          })
+        }
+      };
+    })
   }
 
 }

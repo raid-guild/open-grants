@@ -31,7 +31,6 @@ export class LatestGrantsComponent implements OnInit {
     this.getAllGrants();
   }
 
-
   ngOnInit() {
     this.searchBox = new FormControl('');
 
@@ -57,9 +56,9 @@ export class LatestGrantsComponent implements OnInit {
 
   onCancel(event) { }
 
-  getGrantOrbitData(id: string, key: string) {
-    let grant = this.orbitService.getGrantsById("mBxkEf0vCJdiSsMD");
-    // console.log("grant[key]", grant[key]);
+  async getGrantOrbitData(id: string, key: string) {
+    let grant = await this.orbitService.getGrantsById(id);
+    // console.log("grant", grant);
     if (grant) {
       return grant[key]
     }
@@ -72,17 +71,44 @@ export class LatestGrantsComponent implements OnInit {
 
   getAllGrants() {
     this.subgraphService.getGrantList().subscribe((res: any) => {
-      this.allGrant = res.data.contracts.map((grant) => {
-        if (grant.uri !== null) {
-          // utils.parseBytes32String(grant.uri)
+      console.log("res.data.contracts", res.data.contracts);
+
+      this.allGrant = JSON.parse(JSON.stringify(res.data.contracts));
+      this.allGrant = this.allGrant.map((grant) => {
+        if (grant.uri) {
+          grant.uri = utils.parseBytes32String(grant.uri)
         }
         return grant;
       });
 
-      this.searchResult = this.allGrant;
-      console.log("allGrant", this.allGrant)
+      this.getOrbitData();
     });
+  }
 
+  async getOrbitData() {
+    let orbitData: any = await this.orbitService.getGrants();
+
+    this.allGrant = this.allGrant.map((grant) => {
+      grant['_id'] = '';
+      grant['name'] = '';
+      grant['description'] = '';
+      grant['images'] = [''];
+      grant['content'] = '';
+
+      let findData = orbitData.find(data => data._id == grant.uri);
+      if (findData) {
+        grant._id = findData._id;
+        grant.name = findData.name;
+        grant.description = findData.description;
+        grant.images = findData.images;
+        grant.content = findData.content;
+      }
+
+      return grant;
+    })
+
+    console.log("this.allGrant", this.allGrant);
+    this.searchResult = this.allGrant;
   }
 
   currencyCovert(currencyType, amount) {

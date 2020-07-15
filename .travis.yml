@@ -13,6 +13,10 @@ cache:
 
 before_script:
   # - echo -e "machine bitbucket.com\n  login $BITBUCKET_TOKEN" > ~/.netrc
+  - apt-get update -qy
+  - apt-get install -y python-dev python-pip
+  - pip install awscli
+
   - echo -e "machine bitbucket.org\n  login $BITBUCKET_USER_NAME\n  password $BITBUCKET_USER_PASSWORD" >~/.netrc
   - git lfs pull
   - npm install -g --silent @ionic/angular-toolkit
@@ -24,6 +28,7 @@ install:
 script:
   - ng lint
   - ng build --prod --aot
+  - aws s3 cp --recursive ./build s3://opengrants.com
 # after_success:
 # -
 

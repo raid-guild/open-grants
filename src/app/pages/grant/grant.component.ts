@@ -74,12 +74,12 @@ export class GrantComponent implements OnInit, OnDestroy {
       this.grantData = response.data.contract;
       this.grantData = JSON.parse(JSON.stringify(this.grantData));
 
-      this.grantData.input = this.utils.parseTransaction(this.grantData.input);
+      this.grantData.input = this.ethcontractService.parseTransaction(this.grantData.input);
       this.grantData['grantees'] = this.grantData.input.grantees;
       this.grantData['amounts'] = this.grantData.input.amounts;
       this.grantData['uri'] = this.grantData.input.uri;
 
-      let orbitRes = this.orbitService.getGrantsById(this.grantData.uri);
+      let orbitRes: any = await this.orbitService.getGrantsById(this.grantData.uri);
       if (orbitRes) {
         this.grantDetails = orbitRes;
       }
@@ -104,7 +104,7 @@ export class GrantComponent implements OnInit, OnDestroy {
           }
           return m;
         }, []);
-        console.log("grantFunds", this.grantFunds);
+        // console.log("grantFunds", this.grantFunds);
       })
 
       this.grantData.canFund = await this.ethcontractService.canFund(this.grantAddress);

@@ -77,6 +77,7 @@ export class PopupComponent implements OnInit {
   async login() {
     try {
       this.loging = true;
+      await window.web3.currentProvider.enable();
       let nouce = Math.floor(Math.random() * 1000000);
       let userEthAddress = window.web3.eth.coinbase
       console.log("userEthAddress", userEthAddress);
@@ -114,17 +115,22 @@ export class PopupComponent implements OnInit {
   }
 
   async deployContract() {
-    this.deploying = true;
-    let contract: any = await this.ethcontractService.createGrant(this.data);
+    try {
+      this.deploying = true;
+      let contract: any = await this.ethcontractService.createGrant(this.data);
 
-    if (contract.status == "success") {
-      this.deploying = false;
-      this.deploySuccess = true;
+      if (contract.status == "success") {
+        this.deploying = false;
+        this.deploySuccess = true;
 
-      setTimeout(() => {
-        this.modalCtrl.dismiss({ redirect: true })
-      }, 2000)
-    } else {
+        setTimeout(() => {
+          this.modalCtrl.dismiss({ redirect: true })
+        }, 2000)
+      } else {
+        this.deploying = false;
+        this.deployError = true;
+      }
+    } catch (e) {
       this.deploying = false;
       this.deployError = true;
     }

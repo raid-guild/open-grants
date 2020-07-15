@@ -6,14 +6,13 @@ import { ToastrService } from 'ngx-toastr';
 import { AddressZero, Zero } from "ethers/constants";
 import { UtilsService } from './utils.service';
 import { AppSettings } from '../config/app.config';
-import { resolve } from 'url';
-import { async } from '@angular/core/testing';
+import * as moment from 'moment';
 
 declare let require: any;
 declare let window: any;
 
 let GrantFactory = require('../../assets/abi/GrantFactory.json');
-let MangedCappedGrantAbi = require('../../assets/abi/MangedCappedGrant.json');
+let ManagedCappedGrantAbi = require('../../assets/abi/ManagedCappedGrant.json');
 
 export interface AcctInfo {
     account: String,
@@ -124,33 +123,32 @@ export class EthcontractService {
         });
     }
 
-    async deployContract(data) {
+    async deployContract() {
         return new Promise(async (resolve, reject) => {
             this.utilsService.startLoader();
 
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
-            let factory = new ethers.ContractFactory(MangedCappedGrantAbi.abi, MangedCappedGrantAbi.bytecode, signer);
+            let factory = new ethers.ContractFactory(GrantFactory.abi, GrantFactory.bytecode, signer);
 
-            factory.deploy(data.grantees, data.amounts, data.manager, data.currency, data.targetFunding,
-                data.fundingExpiration, data.contractExpiration, { gasLimit: AppSettings.ethersConfig.gasLimit }).then((response) => {
-                    this.utilsService.stopLoader();
-                    resolve({
-                        status: "success",
-                        message: "Request sent successfully",
-                        address: response.address,
-                        hash: response.deployTransaction.hash
-                    });
-                }, (error) => {
-                    console.log(error)
-                    this.utilsService.stopLoader();
-                    resolve({
-                        hash: '',
-                        address: '',
-                        status: "failed",
-                        message: error.message
-                    });
+            factory.deploy({ gasLimit: AppSettings.ethersConfig.gasLimit }).then((response) => {
+                this.utilsService.stopLoader();
+                resolve({
+                    status: "success",
+                    message: "Request sent successfully",
+                    address: response.address,
+                    hash: response.deployTransaction.hash
                 });
+            }, (error) => {
+                console.log(error)
+                this.utilsService.stopLoader();
+                resolve({
+                    hash: '',
+                    address: '',
+                    status: "failed",
+                    message: error.message
+                });
+            });
             // let deployed_contract = await response.deployed();
         })
     }
@@ -185,7 +183,7 @@ export class EthcontractService {
             let contractWithSigner = contract.connect(signer);
 
             contractWithSigner.create(data.grantees, data.amounts, data.manager, currency, data.targetFunding,
-                data.fundingExpiration, data.contractExpiration, data.uri, { gasLimit: AppSettings.ethersConfig.gasLimit })
+                data.fundingExpiration, data.contractExpiration, data.uri, AddressZero, { gasLimit: AppSettings.ethersConfig.gasLimit })
                 .then(async (response) => {
                     console.log("Create", response)
                     try {
@@ -220,7 +218,7 @@ export class EthcontractService {
         return new Promise(async (resolve) => {
             try {
                 let provider = ethers.getDefaultProvider(AppSettings.ethersConfig.networks);
-                let contract = new ethers.Contract(contractAddress, MangedCappedGrantAbi.abi, provider);
+                let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
                 let response = await contract.availableBalance();
                 // response = ethers.utils.formatEther(response);
                 resolve(response);
@@ -234,7 +232,7 @@ export class EthcontractService {
         return new Promise(async (resolve, reject) => {
             try {
                 let provider = ethers.getDefaultProvider(AppSettings.ethersConfig.networks);
-                let contract = new ethers.Contract(contractAddress, MangedCappedGrantAbi.abi, provider);
+                let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
                 let response = await contract.isManager(publicKey);
                 resolve(response);
             } catch (e) {
@@ -247,7 +245,7 @@ export class EthcontractService {
         return new Promise(async (resolve, reject) => {
             try {
                 const provider = new ethers.providers.Web3Provider(this.web3Provider);
-                let contract = new ethers.Contract(contractAddress, MangedCappedGrantAbi.abi, provider);
+                let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
                 let response = await contract.canFund();
                 // console.log("response", response);
                 resolve(response);
@@ -291,7 +289,7 @@ export class EthcontractService {
         return new Promise(async (resolve, reject) => {
             try {
                 const provider = new ethers.providers.Web3Provider(this.web3Provider);
-                let contract = new ethers.Contract(contractAddress, MangedCappedGrantAbi.abi, provider);
+                let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
                 let response = await contract.remainingAllocation(userPublicKey);
                 // response = ethers.utils.formatEther(response);
                 resolve(response);
@@ -306,7 +304,7 @@ export class EthcontractService {
             this.utilsService.startLoader();
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
-            let contract = new ethers.Contract(contractAddress, MangedCappedGrantAbi.abi, provider);
+            let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
             let contractWithSigner = contract.connect(signer);
             let valuetkn = new ethers.utils.BigNumber(amount);
             contractWithSigner.approvePayout(valuetkn, granteePublicKey, { gasLimit: AppSettings.ethersConfig.gasLimit }).then((response) => {
@@ -341,7 +339,7 @@ export class EthcontractService {
             this.utilsService.startLoader();
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
-            let contract = new ethers.Contract(contractAddress, MangedCappedGrantAbi.abi, provider);
+            let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
             let contractWithSigner = contract.connect(signer);
             let valuetkn = new ethers.utils.BigNumber(amount);
             let response = await contractWithSigner.approveRefund(valuetkn, userPublicKey, { gasLimit: AppSettings.ethersConfig.gasLimit });
@@ -373,7 +371,7 @@ export class EthcontractService {
                 this.utilsService.startLoader();
                 const provider = new ethers.providers.Web3Provider(this.web3Provider);
                 const signer = provider.getSigner();
-                let contract = new ethers.Contract(contractAddress, MangedCappedGrantAbi.abi, provider);
+                let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
                 let contractWithSigner = contract.connect(signer);
                 let response = await contractWithSigner.withdrawRefund(donorAddress)
                 console.log("response", response);
@@ -402,7 +400,7 @@ export class EthcontractService {
             this.utilsService.startLoader();
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
-            let contract = new ethers.Contract(contractAddress, MangedCappedGrantAbi.abi, provider);
+            let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
             let contractWithSigner = contract.connect(signer);
             let valuetkn = new ethers.utils.BigNumber(amount);
             let response = await contractWithSigner.signal(support, valuetkn, { gasLimit: AppSettings.ethersConfig.gasLimit });
@@ -422,7 +420,7 @@ export class EthcontractService {
         return new Promise(async (resolve, reject) => {
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
-            let contract = new ethers.Contract(contractAddress, MangedCappedGrantAbi.abi, provider);
+            let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
             let contractWithSigner = contract.connect(signer);
             contractWithSigner.cancelGrant({ gasLimit: AppSettings.ethersConfig.gasLimit }).then(async (response) => {
                 // console.log("response", response);
@@ -477,4 +475,27 @@ export class EthcontractService {
         })
 
     }
+
+    parseTransaction(input) {
+        const iface = new ethers.utils.Interface(GrantFactory.abi);
+        let parseData = iface.parseTransaction({ data: input })
+
+        let data = {
+            grantees: parseData.args[0],
+            amounts: parseData.args[1],
+            manager: parseData.args[2],
+            currency: parseData.args[3],
+            targetFunding: ethers.utils.formatEther(parseData.args[4]),
+            fundingDeadline: moment(+parseData.args[5].toString(16).toUpperCase()).format(),
+            contractExpiration: moment(+parseData.args[6].toString(16).toUpperCase()).format(),
+            uri: parseData.args[7],
+        }
+
+        if (data.uri != AddressZero) {
+            data.uri = utils.parseBytes32String(data.uri);
+        }
+
+        return data;
+    }
+
 }
