@@ -1,0 +1,21 @@
+# This is a sample build configuration for JavaScript.
+# Check our guides at https://confluence.atlassian.com/x/14UWN for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: node:10.15.3
+
+pipelines:
+  default:
+        - step:
+             script:
+              - apt-get update -qy
+              - apt-get install -y python-dev python-pip
+              - pip install awscli
+
+              - npm install -g --silent @ionic/angular-toolkit
+              - npm install -g --silent @angular/cli
+              - npm install
+              - ng lint
+              - ng build --prod --aot
+              - aws s3 cp --recursive ./build s3://opengrants.com
