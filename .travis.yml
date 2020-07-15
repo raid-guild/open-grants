@@ -27,8 +27,7 @@ install:
 
 script:
   - ng lint
-  - ng build --prod --aot
-  - aws s3 cp --recursive ./build s3://opengrants.com
+  - npm run build_deploy
 # after_success:
 # -
 

@@ -3,3 +3,4 @@
 *.env
 *.zip
 node_modules
+www

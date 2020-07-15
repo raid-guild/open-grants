@@ -16,6 +16,4 @@ pipelines:
                   - npm install -g --silent @ionic/angular-toolkit
                   - npm install -g --silent @angular/cli
                   - npm install
-                  - ng lint
-                  - ng build --prod --aot
-                  - aws s3 cp --recursive ./build s3://opengrants.com
+                  - npm run build_deploy
