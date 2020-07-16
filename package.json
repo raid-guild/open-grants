@@ -7,9 +7,9 @@
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0",
     "build": "ng build --prod --aot",
-    "deploy": "aws s3 cp --recursive ./build s3://opengrants.com",
+    "deploy": "aws s3 cp --recursive ./www s3://opengrants.com",
     "build_deploy": "npm run build && npm run deploy",
-    "deploy_local": "aws s3 cp --recursive ./build s3://opengrants.com --profile tag",
+    "deploy_local": "aws s3 cp --recursive ./www s3://opengrants.com --profile tag",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
