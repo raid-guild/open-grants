@@ -42,7 +42,6 @@
     "@ng-bootstrap/ng-bootstrap": "^5.2.2",
     "@swimlane/ngx-charts": "^10.0.0",
     "@tinymce/tinymce-angular": "^3.3.1",
-    "@types/orbit-db": "git+https://github.com/orbitdb/orbit-db-types.git",
     "@types/web3": "^1.2.2",
     "@unilogin/provider": "^0.5.21",
     "angular2-image-upload": "^1.0.0-rc.2",
