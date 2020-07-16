@@ -56,7 +56,7 @@ export class TrendingGrantsComponent implements OnInit {
   onCancel(event) { }
 
   getTrendingGrants() {
-    this.subgraphService.getGrantList().subscribe((res: any) => {
+    this.subgraphService.getGrantList(0, 10).subscribe((res: any) => {
       this.trendingGrants = res.data.contracts
       // this.trendingGrants = this.trendingGrants.sort(function (obj1, obj2) {
       //   if ((obj1.totalFunding + obj1.totalPayed) == 0) {

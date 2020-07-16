@@ -19,7 +19,7 @@
         </div>
         <div class="border-left">
             <ion-col size="6">
-                <div *ngFor="let grant of allGrant | slice:0:3">
+                <div *ngFor="let grant of grants | slice:0:3">
                     <div class="d-flex" (click)="grantDetails(grant.id)">
                         <img src="https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media"
                             alt="" style="height: 150px;">

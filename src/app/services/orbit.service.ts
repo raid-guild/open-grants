@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as IPFS from 'ipfs';
 import * as OrbitDB from 'orbit-db';
-import * as Identities from 'orbit-db-identity-provider';
+// import * as Identities from 'orbit-db-identity-provider';
 
 declare let require: any;
 declare let window: any;
@@ -40,6 +40,8 @@ export class OrbitService {
   grants = [];
 
   constructor() {
+    console.log("IPFS", IPFS);
+    console.log("orbitDB", OrbitDB);
 
     // Create IPFS instance
     this.ipfs = new IPFS({
@@ -82,44 +84,42 @@ export class OrbitService {
       // this.ipfs.swarm.disconnect('/dns4/node0.preload.ipfs.io/tcp/443/wss/ipfs/QmZMxNdpMkewiVZLMRxaNxUeZpDUb34pWjZ1kZvsd16Zic');
       // this.ipfs.swarm.disconnect('/dns4/node1.preload.ipfs.io/tcp/443/wss/ipfs/Qmbut9Ywz9YEDrz8ySBSgWyJk41Uvm2QJPhwDJzJyGFsD6');
 
-      console.log(`Connecting to DB ${this.grantDbAddress} waiting...`);
-      this.orbitdb = await OrbitDB.createInstance(this.ipfs);
-      console.log("orbitdb createInstance", this.orbitdb)
+      // console.log(`Connecting to DB ${this.grantDbAddress} waiting...`);
+      // this.orbitdb = await OrbitDB.createInstance(this.ipfs);
 
-      // this.db = await this.orbitdb.open(this.grantDbAddress, {
-      //   // If database doesn't exist, create it
-      //   create: true,
-      //   overwrite: false,
-      //   // Load only the local version of the database,
-      //   // don't load the latest from the network yet
-      //   localOnly: false,
-      //   type: 'docstore',
-      //   write: ['*'],
-      // });
+      // // this.db = await this.orbitdb.open(this.grantDbAddress, {
+      // //   // If database doesn't exist, create it
+      // //   create: true,
+      // //   overwrite: false,
+      // //   // Load only the local version of the database,
+      // //   // don't load the latest from the network yet
+      // //   localOnly: false,
+      // //   type: 'docstore',
+      // //   write: ['*'],
+      // // });
 
 
-      this.db = await this.orbitdb.docs(this.grantDbAddress, {
-        accessController: {
-          write: ['*']
-        }
-      })
+      // this.db = await this.orbitdb.docs(this.grantDbAddress, {
+      //   accessController: {
+      //     write: ['*']
+      //   }
+      // })
 
-      console.log("db", this.db);
 
-      this.db.events.on('ready', () => {
-        console.log(`Database is ready!`)
-      })
+      // this.db.events.on('ready', () => {
+      //   console.log(`Database is ready!`)
+      // })
 
-      // Load the latest local copy of the DB.
-      await this.db.load();
+      // // Load the latest local copy of the DB.
+      // await this.db.load();
 
-      // Signal that the DB is ready for use.
-      this.dbReady = true;
+      // // Signal that the DB is ready for use.
+      // this.dbReady = true;
 
-      this.db.events.on('replicated', (address) => {
-        console.log(`DB just replicated with peer ${address}.`);
-        this.getGrants();
-      })
+      // this.db.events.on('replicated', (address) => {
+      //   console.log(`DB just replicated with peer ${address}.`);
+      //   this.getGrants();
+      // })
       //  Get grants
     });
   }
@@ -130,68 +130,73 @@ export class OrbitService {
 
   async addGrant(data) {
     return new Promise(async (resolve, reject) => {
-      try {
-        await this.db.put(data);
-        console.log(`Grant added to DB!`);
-        resolve(data);
-      } catch (e) {
-        reject();
-      }
+      // try {
+      //   await this.db.put(data);
+      //   console.log(`Grant added to DB!`);
+      //   resolve(data);
+      // } catch (e) {
+      //   reject();
+      // }
+
+      resolve()
     })
   }
 
   async getGrants() {
     return new Promise((resolve) => {
-      let cheker = null;
+      // let cheker = null;
 
-      cheker = setInterval(() => {
-        console.log("this.dbReady", this.dbReady);
+      // cheker = setInterval(() => {
+      //   if (this.dbReady) {
+      //     getData();
+      //     clearInterval(cheker);
+      //   }
+      // }, 500);
 
-        if (this.dbReady) {
-          getData();
-          clearInterval(cheker);
-        }
-      }, 500);
+      // const getData = () => {
+      //   let grants = this.db.get('');
 
-      const getData = () => {
-        let grants = this.db.get('');
+      //   if (grants) {
+      //     resolve(grants)
+      //   } else {
+      //     resolve([])
+      //   }
+      // };
 
-        if (grants) {
-          resolve(grants)
-        } else {
-          resolve([])
-        }
-      };
+      resolve([])
     })
   }
 
   getGrantsById(id: string) {
     return new Promise((resolve) => {
-      let cheker = null;
+      // let cheker = null;
 
-      cheker = setInterval(() => {
-        console.log("this.dbReady", this.dbReady);
+      // cheker = setInterval(() => {
+      //   console.log("this.dbReady", this.dbReady);
 
-        if (this.dbReady) {
-          getData();
-          clearInterval(cheker);
-        }
-      }, 500);
+      //   if (this.dbReady) {
+      //     getData();
+      //     clearInterval(cheker);
+      //   }
+      // }, 500);
 
-      const getData = () => {
-        let grants = this.db.get(id);
-        if (grants) {
-          resolve(grants[0])
-        } else {
-          resolve({
-            _id: '',
-            name: '',
-            description: '',
-            images: 'https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media',
-            content: ''
-          })
-        }
-      };
+      // const getData = () => {
+      //   let grants = this.db.get(id);
+      //   if (grants) {
+      //     resolve(grants[0])
+      //   } else {
+      //     resolve({
+      //       _id: '',
+      //       name: '',
+      //       description: '',
+      //       images: 'https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media',
+      //       content: ''
+      //     })
+      //   }
+      // };
+
+      resolve({})
+
     })
   }
 

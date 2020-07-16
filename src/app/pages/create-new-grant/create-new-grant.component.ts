@@ -530,6 +530,7 @@ export class CreateNewGrantComponent implements OnInit {
 
       modal.onDidDismiss()
         .then((data: any) => {
+          console.log("onDidDismiss", data);
           if (data && data.hasOwnProperty('redirect') && data.redirect) {
             this.router.navigate(['/pages/latest']);
           }

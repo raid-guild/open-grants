@@ -15,10 +15,10 @@ export class SubgraphService {
     })
   }
 
-  getGrantList() {
+  getGrantList(skip: number, first: number) {
     return this.apollo.query({
       query: gql`query getContracts{
-        contracts(orderBy:grantId) {
+        contracts(skip: $skip, first: $first,orderDirection:asc) {
           id
           uri
           contractAddress
@@ -36,6 +36,7 @@ export class SubgraphService {
           contractExpiration
         }
       }`,
+      variables: { skip: skip, first: first }
     })
   }
 

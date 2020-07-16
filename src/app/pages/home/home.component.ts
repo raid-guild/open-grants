@@ -11,17 +11,17 @@ import { AddressZero, Zero } from "ethers/constants";
   styleUrls: ['home.component.scss'],
 })
 export class HomeComponent {
-  allGrant: any;
+  grants: any;
   latestGrant: any;
 
   constructor(
     private router: Router,
     private subgraphService: SubgraphService,
   ) {
-    this.subgraphService.getGrantList().subscribe((res: any) => {
-      this.allGrant = res.data.contracts;
-      this.latestGrant = this.allGrant[0];
-      this.allGrant.splice(0, 1);
+    this.subgraphService.getGrantList(0, 10).subscribe((res: any) => {
+      this.grants = res.data.contracts;
+      this.latestGrant = this.grants[0];
+      this.grants.splice(0, 1);
     })
   }
 

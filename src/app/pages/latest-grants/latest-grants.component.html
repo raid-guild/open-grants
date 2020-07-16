@@ -8,87 +8,50 @@
         <ion-col size="12">
             <ion-item mode="md" lines="none" class="heading">
                 <ion-label slot="start">Latest Grants</ion-label>
-
-                <!-- <ion-searchbar slot="end" [formControl]="searchBox" (ionCancel)="onCancel($event)" [animated]="true"
-                    placeholder="Search Grant...">
-                </ion-searchbar> -->
-                <!-- <ion-input placeholder="grant ..." mode="md" type="search"></ion-input>
-                <ion-button slot="end" color="primary" mode="md" (click)="onSearch()">
-                    <ion-icon class="gp-search"></ion-icon>
-                </ion-button> -->
-
-                <!-- <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button> -->
             </ion-item>
 
             <hr class="dassed-line">
 
-            <ion-row *ngFor="let grant of allGrant" style="cursor: pointer;">
-                <ion-col size="12" (click)="grantDetails(grant.id)">
-                    <div class="d-flex">
-                        <img src="{{grant?.images}}" alt="" style="height: 150px;">
-                        <div class="" style="padding-left: 40px;">
-                            <h3>{{grant?.name}}</h3>
+            <!-- <ion-row class="container-new">
+                <ion-col size="4" class="padding" *ngFor="let grant of allGrant" (click)="grantDetails(grant.id)">
+                    <div class="main-box">
+                        <div class="box">
+                            <img src="{{grant?.images}}" alt="" />
+                        </div>
+                        <div class="box-text">
+                            <h1>{{grant?.name}}</h1>
                             <p>{{grant?.description}}</p>
-                            <p>Manager : {{grant?.manager}}</p>
-                            <p>Target Funding : {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH</p>
-                            <p>Total Funding : {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</p>
-                            <p>Available Balance : {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH</p>
+                            <div class="pth-flex">
+                                <p>Target Funding : {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH</p>
+                                <p>Total Funding : {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH
+                                </p>
+                            </div>
                         </div>
                     </div>
-                    <div class="line"></div>
                 </ion-col>
-            </ion-row>
+            </ion-row> -->
 
-
-            <!-- <ion-card class="grant" mode="md" *ngFor="let lg of searchResult">
-                <ion-card-content>
-                    <ul class="multi-section">
-                        <li class="grants-details">
-                            <ion-item mode="md" lines="none">
-                                <ion-label>
-                                    <h2>{{lg.grantName}}</h2>
-                                    <p>{{lg.grantLink}}</p>
-                                    <div class="users-container">
-                                        <div class="users">
-                                            <img *ngFor="let user of lg.grantees | slice:0:4" [src]="user?.grantee.picture || ''" alt="">
-                                        </div>
-                                    </div>
-                                </ion-label>
-                            </ion-item>
-                        </li>
-                        <li>
-                            <div class="manager-details">
-                                <h2>Grant Manager</h2>
-                                <img [src]="lg.grantManager?.picture || ''" alt="">
-                                <a href="">{{lg.grantManager.userName}}</a>
+            <section>
+                <div class="container-new">
+                    <div class="box-flex">
+                        <div class="main-box" *ngFor="let grant of allGrant" (click)="grantDetails(grant.id)">
+                            <div class="box">
+                                <img src="{{grant?.images}}" alt="" />
                             </div>
-                        </li>
-                        <li>
-                            <div class="recepients-details">
-                                <h2>Grant Recepients</h2>
-                                <div class="users">
-                                    <img *ngFor="let user of lg.donors | slice:0:4; let i=index" [src]="user?.picture || ''" alt="">
+                            <div class="box-text">
+                                <h1>{{grant?.name}}</h1>
+                                <p>{{grant?.description}}</p>
+                                <div class="pth-flex">
+                                    <p>Target Funding : {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH</p>
+                                    <p>Total Funding : {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH
+                                    </p>
                                 </div>
-                                <a *ngIf="lg.donors.length > 4" href="">SEE ALL</a>
                             </div>
-                        </li>
-                        <li class="cost-details">
-                            <ion-item mode="md" lines="none">
-                                <ion-label text-right>
-                                    <h3>Ξ {{lg.totalFunding - lg.totalPayed}} ETH</h3>
-                                    <p>OUT OF Ξ {{lg.targetFunding}} ETH</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                  <ion-button class="details" mode="md" slot="end" (click)="viewGrant(lg)">Quick View</ion-button>&nbsp;
-                  <ion-button class="details" mode="md" slot="end" (click)="grantDetails(lg.contractId)">Details View
-                  </ion-button>
-
-                                </ion-label>
-
-                            </ion-item>
-                        </li>
-                    </ul>
-                </ion-card-content>
-            </ion-card> -->
         </ion-col>
 
     </ion-row>
