@@ -3,9 +3,6 @@ import * as IPFS from 'ipfs';
 import * as OrbitDB from 'orbit-db';
 // import * as Identities from 'orbit-db-identity-provider';
 
-declare let require: any;
-declare let window: any;
-
 export interface IGrant {
   _id: string;
   name: string;
@@ -40,8 +37,8 @@ export class OrbitService {
   grants = [];
 
   constructor() {
-    console.log("IPFS", IPFS);
-    console.log("orbitDB", OrbitDB);
+    // console.log("IPFS", IPFS);
+    // console.log("orbitDB", OrbitDB);
 
     // Create IPFS instance
     this.ipfs = new IPFS({
@@ -56,15 +53,15 @@ export class OrbitService {
           Swarm: [
             // Use IPFS dev signal server
             // '/dns4/star-signal.cloud.ipfs.team/wss/p2p-webrtc-star',
-            '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star',
+            // '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star',
             // Use local signal server
             // '/ip4/0.0.0.0/tcp/9090/wss/p2p-webrtc-star',
-            "/ip4/107.170.133.32/tcp/4001/ipfs/QmUZRGLhcKXF1JyuaHgKm23LvqcoMYwtb9jmh8CkP4og3K",
-            "/ip4/139.59.174.197/tcp/4001/ipfs/QmZfTbnpvPwxCjpCG3CXJ7pfexgkBZ2kgChAiRJrTK1HsM",
-            "/ip4/139.59.6.222/tcp/4001/ipfs/QmRDcEDK9gSViAevCHiE6ghkaBCU7rTuQj4BDpmCzRvRYg",
-            "/ip4/46.101.198.170/tcp/4001/ipfs/QmePWxsFT9wY3QuukgVDB7XZpqdKhrqJTHTXU7ECLDWJqX",
-            "/ip4/198.46.197.197/tcp/4001/ipfs/QmdXiwDtfKsfnZ6RwEcovoWsdpyEybmmRpVDXmpm5cpk2s",
-            "/ip4/198.46.197.197/tcp/4002/ipfs/QmWAm7ZPLGTgofLXZgoAzEaNkYFPsaVKKGjWscE4Fbec9P"
+            // "/ip4/107.170.133.32/tcp/4001/ipfs/QmUZRGLhcKXF1JyuaHgKm23LvqcoMYwtb9jmh8CkP4og3K",
+            // "/ip4/139.59.174.197/tcp/4001/ipfs/QmZfTbnpvPwxCjpCG3CXJ7pfexgkBZ2kgChAiRJrTK1HsM",
+            // "/ip4/139.59.6.222/tcp/4001/ipfs/QmRDcEDK9gSViAevCHiE6ghkaBCU7rTuQj4BDpmCzRvRYg",
+            // "/ip4/46.101.198.170/tcp/4001/ipfs/QmePWxsFT9wY3QuukgVDB7XZpqdKhrqJTHTXU7ECLDWJqX",
+            // "/ip4/198.46.197.197/tcp/4001/ipfs/QmdXiwDtfKsfnZ6RwEcovoWsdpyEybmmRpVDXmpm5cpk2s",
+            // "/ip4/198.46.197.197/tcp/4002/ipfs/QmWAm7ZPLGTgofLXZgoAzEaNkYFPsaVKKGjWscE4Fbec9P"
           ]
         },
 
@@ -80,46 +77,44 @@ export class OrbitService {
     this.ipfs.on('ready', async () => {
       console.log('IPFS is ready');
 
-      // Disconnect from noisy peers
-      // this.ipfs.swarm.disconnect('/dns4/node0.preload.ipfs.io/tcp/443/wss/ipfs/QmZMxNdpMkewiVZLMRxaNxUeZpDUb34pWjZ1kZvsd16Zic');
-      // this.ipfs.swarm.disconnect('/dns4/node1.preload.ipfs.io/tcp/443/wss/ipfs/Qmbut9Ywz9YEDrz8ySBSgWyJk41Uvm2QJPhwDJzJyGFsD6');
+      console.log(`Connecting to DB ${this.grantDbAddress} waiting...`);
+      this.orbitdb = await OrbitDB.createInstance(this.ipfs);
 
-      // console.log(`Connecting to DB ${this.grantDbAddress} waiting...`);
-      // this.orbitdb = await OrbitDB.createInstance(this.ipfs);
-
-      // // this.db = await this.orbitdb.open(this.grantDbAddress, {
-      // //   // If database doesn't exist, create it
-      // //   create: true,
-      // //   overwrite: false,
-      // //   // Load only the local version of the database,
-      // //   // don't load the latest from the network yet
-      // //   localOnly: false,
-      // //   type: 'docstore',
-      // //   write: ['*'],
-      // // });
+      // this.db = await this.orbitdb.open(this.grantDbAddress, {
+      //   // If database doesn't exist, create it
+      //   create: true,
+      //   overwrite: false,
+      //   // Load only the local version of the database,
+      //   // don't load the latest from the network yet
+      //   localOnly: false,
+      //   type: 'docstore',
+      //   write: ['*'],
+      // });
 
 
-      // this.db = await this.orbitdb.docs(this.grantDbAddress, {
-      //   accessController: {
-      //     write: ['*']
-      //   }
-      // })
+      this.db = await this.orbitdb.docs(this.grantDbAddress, {
+        accessController: {
+          write: ['*']
+        }
+      })
 
 
-      // this.db.events.on('ready', () => {
-      //   console.log(`Database is ready!`)
-      // })
+      this.db.events.on('ready', () => {
+        console.log(`Database is ready!`)
+      })
 
-      // // Load the latest local copy of the DB.
-      // await this.db.load();
+      // Load the latest local copy of the DB.
+      await this.db.load();
 
-      // // Signal that the DB is ready for use.
-      // this.dbReady = true;
+      // Signal that the DB is ready for use.
+      this.dbReady = true;
 
-      // this.db.events.on('replicated', (address) => {
-      //   console.log(`DB just replicated with peer ${address}.`);
-      //   this.getGrants();
-      // })
+      this.db.events.on('replicated', (address) => {
+        console.log(`DB just replicated with peer ${address}.`);
+
+        let temp = this.db.get('');
+        console.log("temp", temp);
+      })
       //  Get grants
     });
   }
@@ -130,72 +125,62 @@ export class OrbitService {
 
   async addGrant(data) {
     return new Promise(async (resolve, reject) => {
-      // try {
-      //   await this.db.put(data);
-      //   console.log(`Grant added to DB!`);
-      //   resolve(data);
-      // } catch (e) {
-      //   reject();
-      // }
-
-      resolve()
+      try {
+        await this.db.put(data);
+        console.log(`Grant added to DB!`);
+        resolve(data);
+      } catch (e) {
+        reject();
+      }
     })
   }
 
   async getGrants() {
     return new Promise((resolve) => {
-      // let cheker = null;
+      let cheker = null;
 
-      // cheker = setInterval(() => {
-      //   if (this.dbReady) {
-      //     getData();
-      //     clearInterval(cheker);
-      //   }
-      // }, 500);
+      cheker = setInterval(() => {
+        if (this.dbReady) {
+          getData();
+          clearInterval(cheker);
+        }
+      }, 500);
 
-      // const getData = () => {
-      //   let grants = this.db.get('');
-
-      //   if (grants) {
-      //     resolve(grants)
-      //   } else {
-      //     resolve([])
-      //   }
-      // };
-
-      resolve([])
+      const getData = () => {
+        let grants = this.db.get('');
+        console.log("OrbitData", grants)
+        resolve(grants || [])
+      };
     })
   }
 
   getGrantsById(id: string) {
     return new Promise((resolve) => {
-      // let cheker = null;
+      let cheker = null;
 
-      // cheker = setInterval(() => {
-      //   console.log("this.dbReady", this.dbReady);
+      cheker = setInterval(() => {
+        console.log("this.dbReady", this.dbReady);
 
-      //   if (this.dbReady) {
-      //     getData();
-      //     clearInterval(cheker);
-      //   }
-      // }, 500);
+        if (this.dbReady) {
+          getData();
+          clearInterval(cheker);
+        }
+      }, 500);
 
-      // const getData = () => {
-      //   let grants = this.db.get(id);
-      //   if (grants) {
-      //     resolve(grants[0])
-      //   } else {
-      //     resolve({
-      //       _id: '',
-      //       name: '',
-      //       description: '',
-      //       images: 'https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media',
-      //       content: ''
-      //     })
-      //   }
-      // };
-
-      resolve({})
+      const getData = () => {
+        let grants = this.db.get(id);
+        if (grants) {
+          resolve(grants[0])
+        } else {
+          resolve({
+            _id: '',
+            name: '',
+            description: '',
+            images: 'https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media',
+            content: ''
+          })
+        }
+      };
 
     })
   }

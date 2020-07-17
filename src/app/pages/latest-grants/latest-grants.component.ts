@@ -7,7 +7,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { SubgraphService } from 'src/app/services/subgraph.service';
 import { ethers, providers, utils } from 'ethers';
 import { AddressZero, Zero } from "ethers/constants";
-// import { OrbitService } from 'src/app/services/orbit.service';
+import { OrbitService } from 'src/app/services/orbit.service';
 
 @Component({
   selector: 'app-latest-grants',
@@ -26,7 +26,7 @@ export class LatestGrantsComponent implements OnInit {
     private router: Router,
     public modalController: ModalController,
     private subgraphService: SubgraphService,
-    // private orbitService: OrbitService
+    private orbitService: OrbitService
   ) {
     this.getAllGrants();
   }
@@ -57,11 +57,11 @@ export class LatestGrantsComponent implements OnInit {
   onCancel(event) { }
 
   async getGrantOrbitData(id: string, key: string) {
-    // let grant = await this.orbitService.getGrantsById(id);
-    // // console.log("grant", grant);
-    // if (grant) {
-    //   return grant[key]
-    // }
+    let grant = await this.orbitService.getGrantsById(id);
+    // console.log("grant", grant);
+    if (grant) {
+      return grant[key]
+    }
     return key
   }
 
@@ -86,7 +86,7 @@ export class LatestGrantsComponent implements OnInit {
   }
 
   async getOrbitData() {
-    // let orbitData: any = await this.orbitService.getGrants();
+    let orbitData: any = await this.orbitService.getGrants();
 
     this.allGrant = this.allGrant.map((grant) => {
       grant['_id'] = '';
@@ -95,14 +95,14 @@ export class LatestGrantsComponent implements OnInit {
       grant['images'] = [''];
       grant['content'] = '';
 
-      // let findData = orbitData.find(data => data._id == grant.uri);
-      // if (findData) {
-      //   grant._id = findData._id;
-      //   grant.name = findData.name;
-      //   grant.description = findData.description;
-      //   grant.images = findData.images;
-      //   grant.content = findData.content;
-      // }
+      let findData = orbitData.find(data => data._id == grant.uri);
+      if (findData) {
+        grant._id = findData._id;
+        grant.name = findData.name;
+        grant.description = findData.description;
+        grant.images = findData.images;
+        grant.content = findData.content;
+      }
 
       return grant;
     })
