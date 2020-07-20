@@ -41,7 +41,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   async getAccountInfo() {
     if (this.userEthAddress) {
-      this.user3BoxProfile = await this.threeBoxService.getProfile(this.userEthAddress);
+      this.user3BoxProfile = await this.threeBoxService.getUserProfile(this.userEthAddress);
       if (this.user3BoxProfile && this.user3BoxProfile.hasOwnProperty('image') && this.user3BoxProfile.image) {
         this.isPicture = true;
       }
