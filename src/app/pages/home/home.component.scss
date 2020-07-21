@@ -18,16 +18,9 @@ img {
 }
 
 .border-right {
-  flex-basis: 50%;
-  height: 600px;
-  border: px solid #e8e8e8;
-  padding-right: -15px !important;
-}
-
-.border-right {
   flex-basis: 45%;
   height: 600px;
-  border: 1px solid 0;
+  // border: 1px solid 0;
   padding-right: -15px !important;
   border-right: 1px solid #e8e8e8;
   padding-right: 70px;
@@ -36,7 +29,6 @@ img {
 .border-left {
   flex-basis: 50%;
   height: 600px;
-  border: 1px solid red($color: #000000);
   padding-right: -15px !important;
 }
 
@@ -71,6 +63,12 @@ h2 {
   display: flex;
   justify-content: space-around;
 }
+
+.content {
+  padding-left: 15px;
+  margin-top: -15px;
+}
+
 @media (min-width: 992px) and (max-width: 1199px) {
   .container {
     display: block;

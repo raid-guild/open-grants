@@ -79,12 +79,10 @@ export class AppComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private authService: AuthService,
     public events: Events,
-    // private orbitService: OrbitService
   ) {
 
     var Buffer: any = window['Buffer']
     window['Buffer'] = Buffer["Buffer"]
-    // window['IPFS'] = window['IPFS'] || window['Ipfs'];
     console.log("window", window);
 
     this.initializeApp();
