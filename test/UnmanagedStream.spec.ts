@@ -97,71 +97,96 @@ async function fixture(bre: BuidlerRuntimeEnvironment) {
       granteeWallet3
     ],
     provider,
-    unmanagedStream
+    contract: unmanagedStream
   };
 }
 
-describe("Unmanaged-Stream", () => {
-
-  describe("With Ether", () => {
+async function constructorTests(amounts: number[]) {
+  describe("Constructor Tests", async () => {
+    const SUM_OF_AMOUNTS = AMOUNTS.reduce((x, y) => x + y);    
     let _grantees: Signer[];
     let _donors: Signer[];
     let _provider: any;
-    let _unmanagedStream: Contract;
-
+    let _contract: Contract;
+  
     before(async () => {
-
+  
       
       const {
         donors,
         grantees,
         provider,
-        unmanagedStream
+        contract
       } = await fixture(bre);
-
-
+  
+  
       _grantees = grantees;
       _donors = donors;
       _provider = provider;
-      _unmanagedStream = unmanagedStream;
-
+      _contract = contract;
+  
     });
 
     it("should record correct grantee amounts", async () => {
 
-      const [
-        grantee0Amount,
-        grantee1Amount,
-        grantee2Amount,
-        grantee3Amount
-      ] = await getGranteesTargetFunding(_unmanagedStream, _grantees);
-
-      expect(grantee0Amount).to.eq(AMOUNTS[0]);
-      expect(grantee1Amount).to.eq(AMOUNTS[1]);
-      expect(grantee2Amount).to.eq(AMOUNTS[2]);
-      expect(grantee3Amount).to.eq(AMOUNTS[3]);
-
+      const granteeTargetFunding = await getGranteesTargetFunding(_contract, _grantees);
+  
+      for (let i = 0; i < granteeTargetFunding.length; i += 1) {
+        expect(granteeTargetFunding[i]).to.eq(amounts[i]);
+      }
+  
     });
-
+  
     it("should record correct CumulativeTargetFunding", async () => {
-      const cumulativeTargetFunding = await _unmanagedStream.getCumulativeTargetFunding();
+      const cumulativeTargetFunding = await _contract.getCumulativeTargetFunding();
       expect(cumulativeTargetFunding).to.eq(SUM_OF_AMOUNTS);
     });
-
+  
     it("should record percentageBased as true", async () => {
-      const percentageBased = await _unmanagedStream.getPercentageBased();
+      const percentageBased = await _contract.getPercentageBased();
       expect(percentageBased).to.be.true;
     });
-
+  
     it("should record correct currency", async () => {
-      const currency = await _unmanagedStream.getCurrency();
+      const currency = await _contract.getCurrency();
       expect(currency).to.eq(AddressZero);
     });
-
+  
     it("should record correct URI", async () => {
-      const uri = await _unmanagedStream.getUri();
+      const uri = await _contract.getUri();
       expect(utils.toUtf8String(uri)).to.eq(URI);
     });
+  });
+}
+
+describe("Unmanaged-Stream", () => {
+
+  let _grantees: Signer[];
+  let _donors: Signer[];
+  let _provider: any;
+  let _contract: Contract;
+
+  before(async () => {
+
+    
+    const {
+      donors,
+      grantees,
+      provider,
+      contract
+    } = await fixture(bre);
+
+
+    _grantees = grantees;
+    _donors = donors;
+    _provider = provider;
+    _contract = contract;
+
+  });
+
+  describe("With Ether", () => {
+
+    constructorTests(AMOUNTS);
 
     describe("sending funds", () => {
       let _granteeBalance0: BigNumber;
@@ -183,7 +208,7 @@ describe("Unmanaged-Stream", () => {
         _granteeBalance2 = granteeBalance2;
         _granteeBalance3 = granteeBalance3;
 
-        await _donors[0].sendTransaction({ to: _unmanagedStream.address, value: FUND_AMOUNT });
+        await _donors[0].sendTransaction({ to: _contract.address, value: FUND_AMOUNT });
       });
 
       it("should split funds correctly", async () => {
@@ -210,7 +235,7 @@ describe("Unmanaged-Stream", () => {
         const granteeExpectedBalance3 = pctTimesTotal(AMOUNTS[3]);
 
         // Contract Balance should be 0
-        expect((await _provider.getBalance(await _unmanagedStream.address)).toNumber()).to.be.equal(0);
+        expect((await _provider.getBalance(await _contract.address)).toNumber()).to.be.equal(0);
 
         // CAUTION: Testing to 16 decimal places only (using almost.equal).
         expect(parseFloat(utils.formatEther(granteeBalanceDelta0))).to.almost.equal(granteeExpectedBalance0);
@@ -221,13 +246,13 @@ describe("Unmanaged-Stream", () => {
       });
 
       it("should update totalFunding global", async () => {
-        const totalFunding = await _unmanagedStream.getTotalFunding();
+        const totalFunding = await _contract.getTotalFunding();
         expect(totalFunding).to.eq(FUND_AMOUNT);
       });
 
       it("should emit LogFunding event", async () => {
-        await expect(_donors[1].sendTransaction({ to: _unmanagedStream.address, value: FUND_AMOUNT }))
-        .to.emit(_unmanagedStream, 'LogFunding')
+        await expect(_donors[1].sendTransaction({ to: _contract.address, value: FUND_AMOUNT }))
+        .to.emit(_contract, 'LogFunding')
         .withArgs(await _donors[1].getAddress(), FUND_AMOUNT );
       });
 
@@ -240,7 +265,7 @@ describe("Unmanaged-Stream", () => {
           preGranteeBalance3
         ] = await getEtherBalances(_provider, _grantees);
 
-        await _donors[1].sendTransaction({ to: _unmanagedStream.address, value: 1 });
+        await _donors[1].sendTransaction({ to: _contract.address, value: 1 });
 
         // Post balances.
         const [
@@ -272,7 +297,7 @@ describe("Unmanaged-Stream", () => {
           preGranteeBalance3
         ] = await getEtherBalances(_provider, _grantees);
 
-        await _donors[1].sendTransaction({ to: _unmanagedStream.address, value: 4 });
+        await _donors[1].sendTransaction({ to: _contract.address, value: 4 });
 
         // Post balances.
         const [
@@ -313,7 +338,7 @@ describe("Unmanaged-Stream", () => {
           preGranteeBalance3
         ] = await getEtherBalances(_provider, _grantees);
 
-        await _donors[1].sendTransaction({ to: _unmanagedStream.address, value: utils.parseEther(SUM_OF_AMOUNTS.toString()) });
+        await _donors[1].sendTransaction({ to: _contract.address, value: utils.parseEther(SUM_OF_AMOUNTS.toString()) });
 
         // Post balances.
         const [
