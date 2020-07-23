@@ -10,5 +10,10 @@ module.exports = {
   providerOptions: {
     // gasLimit: 0xfffffffffff,
     // testrpcOptions: '-p 8555 -l 0xfffffffffff'
+  },
+  mocha: {
+    grep: "@skip-on-coverage", // Find everything with this tag
+    invert: true               // Run the grep's inverse set.
   }
+
 }

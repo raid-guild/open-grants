@@ -304,6 +304,48 @@ describe("Unmanaged-Stream", () => {
         expect(granteeBalanceDelta3).to.be.equal(2);
       });
 
+      it("should handle donation of SUM_OF_AMOUNTS [ @skip-on-coverage ]", async () => {
+        // Pre balances.
+        const [
+          preGranteeBalance0,
+          preGranteeBalance1,
+          preGranteeBalance2,
+          preGranteeBalance3
+        ] = await getEtherBalances(_provider, _grantees);
+
+        await _donors[1].sendTransaction({ to: _unmanagedStream.address, value: utils.parseEther(SUM_OF_AMOUNTS.toString()) });
+
+        // Post balances.
+        const [
+          postGranteeBalance0,
+          postGranteeBalance1,
+          postGranteeBalance2,
+          postGranteeBalance3
+        ] = await getEtherBalances(_provider, _grantees);
+
+        // Delta original balances to new balances.
+        const granteeBalanceDelta0 = postGranteeBalance0.sub(preGranteeBalance0);
+        const granteeBalanceDelta1 = postGranteeBalance1.sub(preGranteeBalance1);
+        const granteeBalanceDelta2 = postGranteeBalance2.sub(preGranteeBalance2);
+        const granteeBalanceDelta3 = postGranteeBalance3.sub(preGranteeBalance3);
+
+        // CAUTION: only approximately true. Small amount of WEI is being rounded.
+        // See
+        // console.log(granteeBalanceDelta0.toString());
+        // console.log(granteeBalanceDelta1.toString());
+        // console.log(granteeBalanceDelta2.toString());
+        // console.log(granteeBalanceDelta3.toString());
+        // VS
+        // console.log(parseFloat(utils.formatEther(granteeBalanceDelta0).toString()));
+        // console.log(parseFloat(utils.formatEther(granteeBalanceDelta1).toString()));
+        // console.log(parseFloat(utils.formatEther(granteeBalanceDelta2).toString()));
+        // console.log(parseFloat(utils.formatEther(granteeBalanceDelta3).toString()));
+        expect(parseFloat(utils.formatEther(granteeBalanceDelta0).toString())).to.equal(AMOUNTS[0]);
+        expect(parseFloat(utils.formatEther(granteeBalanceDelta1).toString())).to.equal(AMOUNTS[1]);
+        expect(parseFloat(utils.formatEther(granteeBalanceDelta2).toString())).to.equal(AMOUNTS[2]);
+        expect(parseFloat(utils.formatEther(granteeBalanceDelta3).toString())).to.equal(AMOUNTS[3]);
+      });
+
     });
 
   });
