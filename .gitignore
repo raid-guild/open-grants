@@ -1,7 +1,4 @@
-.history
-.DS_Store
-*.env
-*.zip
 node_modules
 www
-build
+*.Zip
+.history
