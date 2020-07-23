@@ -15,6 +15,7 @@ import { PayoutComponent } from '../payout/payout.component';
 import { PopupComponent } from '../popup/popup.component';
 import { UtilsService } from 'src/app/services/utils.service';
 import { OrbitService } from 'src/app/services/orbit.service';
+import { ThreeBoxService } from 'src/app/services/threeBox.service';
 
 @Component({
   selector: 'app-grant',
@@ -65,6 +66,7 @@ export class GrantComponent implements OnInit, OnDestroy {
     public modalController: ModalController,
     private subgraphService: SubgraphService,
     private ethcontractService: EthcontractService,
+    private threeBoxService: ThreeBoxService,
     private userManagementService: UserManagementService,
   ) {
     this.grantAddress = this.route.snapshot.params.id || '';
@@ -79,10 +81,13 @@ export class GrantComponent implements OnInit, OnDestroy {
       this.grantData['amounts'] = this.grantData.input.amounts;
       this.grantData['uri'] = this.grantData.input.uri;
 
-      let orbitRes: any = await this.orbitService.getGrantsById(this.grantData.uri);
-      if (orbitRes) {
-        this.grantDetails = orbitRes;
-      }
+      // let orbitRes: any = await this.orbitService.getGrantsById(this.grantData.uri);
+      // if (orbitRes) {
+      //   this.grantDetails = orbitRes;
+      // }
+
+      let data: any = await this.threeBoxService.getById(this.grantData.uri);
+      this.grantDetails = data;
       this.grantDetails.content = this.htmlDecode(this.grantDetails.content);
 
       console.log("grantDetails", this.grantDetails);

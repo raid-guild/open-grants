@@ -20,6 +20,7 @@ import { ImageUploadComponent, FileHolder } from 'angular2-image-upload';
 import { OrbitService } from 'src/app/services/orbit.service';
 import { PopupComponent } from '../popup/popup.component';
 import { resolve } from 'url';
+import { ThreeBoxService } from 'src/app/services/threeBox.service';
 
 declare let window: any;
 
@@ -64,7 +65,8 @@ export class CreateNewGrantComponent implements OnInit {
     private fb: FormBuilder,
     private ethcontractService: EthcontractService,
     private utils: UtilsService,
-    private orbitService: OrbitService
+    private orbitService: OrbitService,
+    private threeBoxService: ThreeBoxService
   ) {
 
     this.bindModel();
@@ -429,8 +431,7 @@ export class CreateNewGrantComponent implements OnInit {
   arrangeData() {
     return new Promise(async (resolve) => {
       try {
-        let orbitrRes: any = await this.orbitService.addGrant({
-          _id: this.utils.generateUUID(),
+        let orbitrRes: any = await this.threeBoxService.setData({
           name: this.grantForm.name,
           description: this.grantForm.description,
           images: this.grantForm.images,
@@ -458,7 +459,7 @@ export class CreateNewGrantComponent implements OnInit {
           }
 
           let data = {
-            uri: utils.formatBytes32String(orbitrRes._id),
+            uri: utils.formatBytes32String(orbitrRes),
             grantees: this.grantForm.grantees.map((data) => { return data.grantee }),
             amounts: this.grantForm.grantees.map((data) => { return data.allocationAmount }),
             manager: this.grantForm.manager,
