@@ -31,7 +31,7 @@
   "homepage": "https://github.com/NoahMarconi/grant-contracts#readme",
   "dependencies": {
     "diff": ">=3.5.0",
-    "openzeppelin-solidity": "^3.0.1"
+    "openzeppelin-solidity": "^3.0.2"
   },
   "devDependencies": {
     "@nomiclabs/buidler": "^1.3.6",
@@ -40,8 +40,10 @@
     "@nomiclabs/buidler-solhint": "^1.3.3",
     "@nomiclabs/buidler-waffle": "^1.3.4",
     "@types/chai": "^4.1.7",
+    "@types/chai-almost": "^1.0.1",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
+    "chai-almost": "^1.0.1",
     "dotenv": "^8.2.0",
     "ethereum-waffle": "^2.5.1",
     "ethers": "^4.0.27",

@@ -3,6 +3,8 @@
 [![NoahMarconi](https://circleci.com/gh/NoahMarconi/grant-contracts.svg?style=shield)](https://circleci.com/gh/NoahMarconi/grant-contracts)
 [![codecov](https://codecov.io/gh/NoahMarconi/grant-contracts/branch/master/graph/badge.svg)](https://codecov.io/gh/NoahMarconi/grant-contracts)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![Dependency Check](https://img.shields.io/david/noahmarconi/grant-contracts)](https://david-dm.org/NoahMarconi/grant-contracts)
+[![Dependency Check](https://img.shields.io/david/dev/noahmarconi/grant-contracts)](https://david-dm.org/NoahMarconi/grant-contracts?type=dev)
 
 
 Reference Implementation for OpenGrant proposed EIP.
@@ -14,6 +16,23 @@ EIP Draft: https://github.com/JFickel/EIPs/blob/draft_grant_standard/EIPS/eip-dr
 Front end project: https://github.com/NoahMarconi/grants-platform-mono
 
 Project Sponsors: https://github.com/JFickel & https://molochdao.com/
+
+
+# Variations
+
+Grants come with many variations. 
+
+  - Managed or Unmanaged
+  - Token or Ether
+  - With Funding Deadline or Without
+  - With Funding Target or Without
+  - Fixed Grantee Allocations or Proportion Based Grantee Allocations
+  - With Contract Expiration or Without
+  - Capped or Uncapped
+
+Reference permutations include:
+
+  - Managed / No Funding Deadline / Uncapped / With Contract Expiration / With Token
 
 
 # Set up guide

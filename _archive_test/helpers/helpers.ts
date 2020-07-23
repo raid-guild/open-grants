@@ -20,7 +20,7 @@ async function fixture(bre: BuidlerRuntimeEnvironment) {
       address: await x.getAddress()
     }
   });
-  let sortedAddresses = (await Promise.all(addresses)).sort((x, y) => x.address > y.address ? 1 : -1)
+  let sortedAddresses = (await Promise.all(addresses)).sort((x, y) => x.address > y.address ? 1 : -1);
   wallets = sortedAddresses.map(x => x.signer);
   const [granteeWallet, donorWallet, managerWallet, secondDonorWallet, unknownWallet] = wallets;
 
