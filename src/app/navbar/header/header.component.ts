@@ -86,13 +86,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   async getUserData() {
-    this.userEthAddress = localStorage.getItem(AppSettings.localStorage_keys.userEthAddress);
-    if (this.userEthAddress) {
-      this.user3BoxProfile = await this.threeBoxService.getUserProfile(this.userEthAddress);
-      if (this.user3BoxProfile && this.user3BoxProfile.hasOwnProperty('image') && this.user3BoxProfile.image) {
-        this.isImage = true;
-      }
-    }
+    // this.userEthAddress = localStorage.getItem(AppSettings.localStorage_keys.userEthAddress);
+    // if (this.userEthAddress) {
+    //   this.user3BoxProfile = await this.threeBoxService.getUserProfile(this.userEthAddress);
+    //   if (this.user3BoxProfile && this.user3BoxProfile.hasOwnProperty('image') && this.user3BoxProfile.image) {
+    //     this.isImage = true;
+    //   }
+    // }
   }
 
   async login() {

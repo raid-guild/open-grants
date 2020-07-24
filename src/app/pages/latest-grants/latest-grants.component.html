@@ -12,47 +12,56 @@
 
             <hr class="dassed-line">
 
-            <!-- <ion-row class="container-new">
-                <ion-col size="4" class="padding" *ngFor="let grant of allGrant" (click)="grantDetails(grant.id)">
-                    <div class="main-box">
-                        <div class="box">
-                            <img src="{{grant?.images}}" alt="" />
+            <ion-row class="container-new">
+                <ion-col size-md="6" size-sm="12" class="padding" *ngFor="let grant of allGrant"
+                    (click)="grantDetails(grant.id)">
+                    <div class="box">
+                        <div class="box-flex">
+                            <p class="manager-text">Manager </p>
+                            <p> : 0x5ae51765a2e3d92a17a1400b5fc9</p>
                         </div>
-                        <div class="box-text">
-                            <h1>{{grant?.name}}</h1>
-                            <p>{{grant?.description}}</p>
-                            <div class="pth-flex">
-                                <p>Target Funding : {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH</p>
-                                <p>Total Funding : {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH
-                                </p>
-                            </div>
+                        <div class="box-flex">
+                            <p class="manager-text">Create By </p>
+                            <p> : 0x5ae51765a2e3d92a17a1400b5fc9</p>
+                        </div>
+                        <!-- <div class="box-flex">
+                            <p class="manager-text">Funding Expiration</p>
+                            <p> : {{grant?.fundingExpiration}}</p>
+                        </div>
+                        <div class="box-flex">
+                            <p class="manager-text">Contract Expiration</p>
+                            <p> : {{grant?.contractExpiration}}</p>
+                        </div> -->
+                        <div class="box-flex">
+                            <p class="manager-text">Target Funding</p>
+                            <p> : {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH</p>
+                        </div>
+                        <div class="box-flex">
+                            <p class="manager-text">Total Funding</p>
+                            <p> : {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</p>
+                        </div>
+                        <div class="box-flex">
+                            <p class="manager-text">Balance</p>
+                            <p> : {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH</p>
+                        </div>
+                        <div class="box-flex">
+                            <p class="manager-text">Grant open for funding </p>
                         </div>
                     </div>
+
                 </ion-col>
-            </ion-row> -->
-
-            <section>
-                <div class="container-new">
-                    <div class="box-flex">
-                        <div class="main-box" *ngFor="let grant of allGrant" (click)="grantDetails(grant.id)">
-                            <div class="box">
-                                <img src="{{grant?.images}}" alt="" />
-                            </div>
-                            <div class="box-text">
-                                <h1>{{grant?.name}}</h1>
-                                <p>{{grant?.description}}</p>
-                                <div class="pth-flex">
-                                    <p>Target Funding : {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH</p>
-                                    <p>Total Funding : {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
+            </ion-row>
         </ion-col>
 
     </ion-row>
 </ion-content>
+
+<!-- <p>CreateBy : {{grant?.createBy}} </p>
+<p>fundingExpiration : {{grant?.fundingExpiration}} </p>
+<p>contractExpiration: {{grant?.contractExpiration}}</p>
+<p>canFund : {{grant?.canFund}}</p>
+<p>Target Funding : {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH</p>
+<p>Total Funding : {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</p>
+<p>Available Balance : {{currencyCovert(grant?.currency,grant?.availableBalance)}}
+    ETH
+</p> -->

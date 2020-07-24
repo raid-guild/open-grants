@@ -27,6 +27,7 @@ export class SubgraphService {
           canFund
           grantAddress
           manager
+          createBy
           currency
           targetFunding
           totalFunding
@@ -53,6 +54,7 @@ export class SubgraphService {
           canFund
           grantAddress
           manager
+          createBy
           currency
           targetFunding
           totalFunding

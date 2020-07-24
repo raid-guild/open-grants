@@ -14,40 +14,8 @@
         <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
             <div class="form-details">
                 <ion-list lines="none" class="forms" mode="md">
-                    <ion-row class="name">
-                        <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
-                            <ion-item>
-                                <ion-label position="floating" for="name">Grant Name</ion-label>
-                                <ion-input class="form-control" type="text" formControlName="name">
-                                </ion-input>
-                            </ion-item>
 
-                            <div *ngIf="submitted && form.name.invalid">
-                                <span class="error">
-                                    Please Enter Name
-                                </span>
-                            </div>
-                        </ion-col>
-                        <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
-                            <ion-item>
-                                <ion-label position="floating" for="name">Target Funding Amount</ion-label>
-                                <ion-input class="form-control" (ionChange)="targetFundingChange()" [OnlyNumber]="true"
-                                    type="text" formControlName="targetFunding">
-                                </ion-input>
-                            </ion-item>
-
-                            <div class="error">
-                                <span *ngIf="submitted && form.targetFunding.invalid">
-                                    Please Enter Target Funding Amount
-                                </span>
-                                <span *ngIf="form.targetFunding.touched && form.targetFunding.errors?.min">
-                                    Please Enter Valid Target Funding Amount
-                                </span>
-                            </div>
-                        </ion-col>
-                    </ion-row>
-
-                    <ion-row class="name">
+                    <!-- <ion-row class="name">
                         <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
                             <ion-item>
                                 <ion-label position="floating" for="description">Enter here short description...
@@ -68,7 +36,7 @@
                                 </span>
                             </div>
                         </ion-col>
-                    </ion-row>
+                    </ion-row> -->
 
                     <ion-radio-group>
                         <ion-row class="radio name">
@@ -179,50 +147,6 @@
 
                     </div>
 
-                    <div>
-                        <ion-row class="name">
-                            <!-- <ion-col size-lg="6" size-sm="12" class="padding-0">
-                    <ion-item>
-                      <tag-input [formControlName]="'grantManager'" [theme]="'bootstrap'" [onTextChangeDebounce]="500"
-                        [secondaryPlaceholder]="'Grant Manager'" [onlyFromAutocomplete]="true" [maxItems]="1">
-                        <tag-input-dropdown [autocompleteObservable]="requestAutocompleteItems" [minimumTextLength]="0">
-                          <ng-template let-item="item" let-index="index">
-                            {{ item.display }}
-                          </ng-template>
-                        </tag-input-dropdown>
-                      </tag-input>
-                    </ion-item>
-    
-                    <div *ngIf="submitted && !form.grantManager.value.length">
-                      <label class="error">
-                        Please Add Grant Manager
-                      </label>
-                    </div>
-                  </ion-col> -->
-
-                            <!-- <ion-col size-lg="6" size-sm="12" class="padding-0">
-                    <ion-item>
-                      <tag-input formControlName="grantees" [theme]="'bootstrap'" [placeholder]="'Add more grantee'"
-                        [onTextChangeDebounce]="500" [secondaryPlaceholder]="'Enter grantees'" [onlyFromAutocomplete]="true"
-                        required>
-                        <tag-input-dropdown [autocompleteObservable]="requestAutocompleteItems" [minimumTextLength]="0">
-                          <ng-template let-item="item" let-index="index">
-                            {{ item.display }}
-                          </ng-template>
-                        </tag-input-dropdown>
-                      </tag-input>
-                    </ion-item>
-    
-                    <div *ngIf="submitted && !form.grantees.value.length">
-                      <label class="error">
-                        Please Add Grantees
-                      </label>
-                    </div>
-                  </ion-col> -->
-
-                        </ion-row>
-                    </div>
-
                     <ion-row class="inputs name">
                         <ion-col class="padding-0" size-lg="6" size-xs="12" size-sm="12">
                             <ion-item>
@@ -272,6 +196,39 @@
                             </ion-item>
                         </ion-col>
                     </ion-row> -->
+
+                    <ion-row class="name">
+                        <!-- <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
+                            <ion-item>
+                                <ion-label position="floating" for="name">Grant Name</ion-label>
+                                <ion-input class="form-control" type="text" formControlName="name">
+                                </ion-input>
+                            </ion-item>
+
+                            <div *ngIf="submitted && form.name.invalid">
+                                <span class="error">
+                                    Please Enter Name
+                                </span>
+                            </div>
+                        </ion-col> -->
+                        <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
+                            <ion-item>
+                                <ion-label position="floating" for="name">Target Funding Amount</ion-label>
+                                <ion-input class="form-control" (ionChange)="targetFundingChange()" [OnlyNumber]="true"
+                                    type="text" formControlName="targetFunding">
+                                </ion-input>
+                            </ion-item>
+
+                            <div class="error">
+                                <span *ngIf="submitted && form.targetFunding.invalid">
+                                    Please Enter Target Funding Amount
+                                </span>
+                                <span *ngIf="form.targetFunding.touched && form.targetFunding.errors?.min">
+                                    Please Enter Valid Target Funding Amount
+                                </span>
+                            </div>
+                        </ion-col>
+                    </ion-row>
 
                     <div formArrayName="grantees">
                         <ion-row class="items name" [formGroupName]="i"
@@ -370,13 +327,13 @@
                         </ion-row>
                     </div>
 
-                    <ion-row class="name">
+                    <!-- <ion-row class="name">
                         <ion-col class="padding-0">
 
                             <editor formControlName="content" [init]="tinymceInit"></editor>
 
                         </ion-col>
-                    </ion-row>
+                    </ion-row> -->
 
                     <!-- <ion-row class="name">
                         <ion-col class="padding-0">

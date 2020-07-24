@@ -66,7 +66,6 @@ export class GrantComponent implements OnInit, OnDestroy {
     public modalController: ModalController,
     private subgraphService: SubgraphService,
     private ethcontractService: EthcontractService,
-    private threeBoxService: ThreeBoxService,
     private userManagementService: UserManagementService,
   ) {
     this.grantAddress = this.route.snapshot.params.id || '';
@@ -80,17 +79,6 @@ export class GrantComponent implements OnInit, OnDestroy {
       this.grantData['grantees'] = this.grantData.input.grantees;
       this.grantData['amounts'] = this.grantData.input.amounts;
       this.grantData['uri'] = this.grantData.input.uri;
-
-      // let orbitRes: any = await this.orbitService.getGrantsById(this.grantData.uri);
-      // if (orbitRes) {
-      //   this.grantDetails = orbitRes;
-      // }
-
-      let data: any = await this.threeBoxService.getById(this.grantData.uri);
-      this.grantDetails = data;
-      this.grantDetails.content = this.htmlDecode(this.grantDetails.content);
-
-      console.log("grantDetails", this.grantDetails);
 
       this.checkRoll();
 

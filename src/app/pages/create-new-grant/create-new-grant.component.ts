@@ -431,47 +431,47 @@ export class CreateNewGrantComponent implements OnInit {
   arrangeData() {
     return new Promise(async (resolve) => {
       try {
-        let orbitrRes: any = await this.threeBoxService.setData({
-          name: this.grantForm.name,
-          description: this.grantForm.description,
-          images: this.grantForm.images,
-          content: this.grantForm.content
-        });
+        // let orbitrRes: any = await this.threeBoxService.setData({
+        //   name: this.grantForm.name,
+        //   description: this.grantForm.description,
+        //   images: this.grantForm.images,
+        //   content: this.grantForm.content
+        // });
 
-        console.log("orbitrRes", orbitrRes);
+        // console.log("orbitrRes", orbitrRes);
 
-        if (orbitrRes) {
-          let fundingExpiration, contractExpiration;
+        // if (orbitrRes) {
+        let fundingExpiration, contractExpiration;
 
-          if (this.grantForm.type == "singleDeliveryDate") {
-            fundingExpiration = new Date(this.grantForm.singleDeliveryDate.fundingExpiryDate).getTime();
-            contractExpiration = new Date(this.grantForm.singleDeliveryDate.completionDate).getTime();
+        if (this.grantForm.type == "singleDeliveryDate") {
+          fundingExpiration = new Date(this.grantForm.singleDeliveryDate.fundingExpiryDate).getTime();
+          contractExpiration = new Date(this.grantForm.singleDeliveryDate.completionDate).getTime();
 
-            // console.log('fundingExpiration', fundingExpiration, moment(fundingExpiration).format());
-            // console.log('contractExpiration', contractExpiration, moment(contractExpiration).format());
+          // console.log('fundingExpiration', fundingExpiration, moment(fundingExpiration).format());
+          // console.log('contractExpiration', contractExpiration, moment(contractExpiration).format());
 
-          } else {
-            // console.log("this.grantForm.multipleMilestones", this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate);
-            fundingExpiration = new Date(this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate).getTime();
-            let temp = moment(this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate).add(1, 'days').format();
-            contractExpiration = new Date(temp).getTime();
+        } else {
+          // console.log("this.grantForm.multipleMilestones", this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate);
+          fundingExpiration = new Date(this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate).getTime();
+          let temp = moment(this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate).add(1, 'days').format();
+          contractExpiration = new Date(temp).getTime();
 
-          }
-
-          let data = {
-            uri: utils.formatBytes32String(orbitrRes),
-            grantees: this.grantForm.grantees.map((data) => { return data.grantee }),
-            amounts: this.grantForm.grantees.map((data) => { return data.allocationAmount }),
-            manager: this.grantForm.manager,
-            currency: this.grantForm.currency,
-            targetFunding: this.grantForm.targetFunding,
-            fundingExpiration: fundingExpiration,
-            contractExpiration: contractExpiration
-          }
-
-          resolve(data);
         }
-        resolve();
+
+        let data = {
+          uri: utils.formatBytes32String(this.utils.generateUUID()),
+          grantees: this.grantForm.grantees.map((data) => { return data.grantee }),
+          amounts: this.grantForm.grantees.map((data) => { return data.allocationAmount }),
+          manager: this.grantForm.manager,
+          currency: this.grantForm.currency,
+          targetFunding: this.grantForm.targetFunding,
+          fundingExpiration: fundingExpiration,
+          contractExpiration: contractExpiration
+        }
+
+        resolve(data);
+        // }
+        // resolve();
       } catch (e) {
         resolve();
       }
@@ -481,13 +481,25 @@ export class CreateNewGrantComponent implements OnInit {
   async onSubmit() {
     this.submitted = true;
     // console.log("content", this.myForm.value)
+    // if (this.myForm.controls.type.value == "singleDeliveryDate") {
+    //   if (this.myForm.controls.name.invalid || this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.singleDeliveryDate.invalid
+    //     || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid || !this.imageUpload.files.length) {
+    //     return
+    //   }
+    // } else {
+    //   if (this.myForm.controls.name.invalid || this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.multipleMilestones.invalid
+    //     || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid || !this.imageUpload.files.length) {
+    //     return
+    //   }
+    // }
+
     if (this.myForm.controls.type.value == "singleDeliveryDate") {
-      if (this.myForm.controls.name.invalid || this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.singleDeliveryDate.invalid
-        || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid || !this.imageUpload.files.length) {
+      if (this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.singleDeliveryDate.invalid
+        || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid) {
         return
       }
     } else {
-      if (this.myForm.controls.name.invalid || this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.multipleMilestones.invalid
+      if (this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.multipleMilestones.invalid
         || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid || !this.imageUpload.files.length) {
         return
       }
@@ -500,21 +512,21 @@ export class CreateNewGrantComponent implements OnInit {
     this.grantForm = JSON.parse(JSON.stringify(this.myForm.value));
     // console.log("this.grantForm", this.grantForm);
 
-    for (let i = 0; i < this.imageUpload.files.length; i++) {
-      try {
-        let imageURL = await this.utils.fileToBase64(this.imageUpload.files[i].file)
-        if (imageURL.status) {
-          this.grantForm.images.push(imageURL.data)
-        }
-      } catch (e) { }
-    }
+    // for (let i = 0; i < this.imageUpload.files.length; i++) {
+    //   try {
+    //     let imageURL = await this.utils.fileToBase64(this.imageUpload.files[i].file)
+    //     if (imageURL.status) {
+    //       this.grantForm.images.push(imageURL.data)
+    //     }
+    //   } catch (e) { }
+    // }
 
     this.grantForm.grantees = this.grantForm.grantees.map((data) => {
       delete data.allocationPercentage
       return JSON.parse(JSON.stringify(data));
     })
 
-    this.grantForm.content = this.grantForm.content.replace(/"/g, "&quot;");
+    // this.grantForm.content = this.grantForm.content.replace(/"/g, "&quot;");
     let contractData = await this.arrangeData();
     console.log("contractData", contractData);
 

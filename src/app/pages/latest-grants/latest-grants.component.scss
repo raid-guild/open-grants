@@ -17,60 +17,19 @@ img {
   padding-left: 15px;
   padding-right: 15px;
 }
+
+.manager-text {
+  color: #05ce78;
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 0;
+  margin-top: 0;
+}
 .box {
-  flex-basis: 32%;
-  margin-bottom: -8px;
-  overflow: hidden !important;
-  margin-top: 20px;
+  border-bottom: 1px solid #b9b9b9;
+  padding: 10px;
 }
 .box-flex {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-.box img {
-  width: 364px;
-  height: 250px;
-  transition-duration: 0.8s;
-}
-.box:hover img {
-  transform: scale(1.2);
-}
-.box-text {
-  width: 364px;
-  box-shadow: 0 1px 2px 0 #d7d9e2;
-  border: 0.0625rem solid rgba(215, 217, 226, 1);
-  background-color: #fff;
-  padding: 10px;
-}
-.box-text h1 {
-  color: #000000;
-  font-size: 20px;
-  margin-bottom: 0;
-  margin-top: 10px;
-  font-weight: 400;
-  transition-duration: 0.5s;
-}
-.box-text p {
-  font-size: 14 px;
-  color: #000000;
-  margin-bottom: 0;
-  margin-top: 15px;
-  font-weight: 400;
-}
-.pth-flex p {
-  color: black;
-  font-size: 17px;
-  font-weight: 400;
-  margin-bottom: 0;
-}
-.box-text:hover h1 {
-  color: #05ce78;
-  font-weight: 800;
-}
-@media (min-width: 992px) and (max-width: 1199px) {
-}
-.padding {
-  padding: 0;
-  overflow: hidden;
+  align-items: center;
 }
