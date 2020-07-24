@@ -5,11 +5,11 @@ import "../interfaces/IBaseGrant.sol";
 
 
 /**
- * @title Grants Spec Abstract Contract.
- * @dev Grant request, funding, and management.
+ * @title Base Grant State Management Contract.
+ * @dev State, getters, and setters for BaseGrant.
  * @author @NoahMarconi @ameensol @JFickel @ArnaudBrousseau
  */
-abstract contract AbstractBaseGrant is IBaseGrant {
+abstract contract BaseGrant is IBaseGrant {
 
     /*----------  Globals  ----------*/
 

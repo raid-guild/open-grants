@@ -11,35 +11,22 @@ import { AddressZero } from "ethers/constants";
 
 chai.use(waffle.solidity);
 chai.use(chaiAlmost(1/10**16));
-const { expect, assert } = chai;
+const { expect } = chai;
+
+import { granteeConstructorTests } from "./shared/GranteeConstructor";
+import { funding } from "./shared/Funding";
+import { baseGrantConstructorTests } from "./shared/BaseGrantConstructor";
+import { getEtherBalances } from "./shared/helpers";
 
 // Constants.
 const URI = '/orbitdb/Qmd8TmZrWASypEp4Er9tgWP4kCNQnW4ncSnvjvyHQ3EVSU/';
 const AMOUNTS = [150, 456, 111, 23];
 const SUM_OF_AMOUNTS = AMOUNTS.reduce((x, y) => x + y);
 const FUND_AMOUNT = utils.parseEther('5');
+const CONTRACT_NAME = "UnmanagedStream";
 
 
-async function callOnEach(fn: (x: any) => Promise<any>, wallets: Signer[]) {
-  let res = [];
-
-  for (let wallet of wallets) {
-    const el = await fn(await wallet.getAddress());
-    res.push(el);
-  }
-
-  return res;
-}
-
-async function getEtherBalances(provider: Provider, wallets: Signer[]) {
-  return await callOnEach((x) => provider.getBalance(x), wallets);
-}
-
-async function getGranteesTargetFunding(contract: Contract, wallets: Signer[]) {
-  return await callOnEach((x) => contract.getGranteeTargetFunding(x), wallets);
-}
-
-async function fixture(bre: BuidlerRuntimeEnvironment) {
+async function fixture(bre: BuidlerRuntimeEnvironment, contractName: string) {
   const provider = bre.waffle.provider;
   const ethers = bre.ethers;
   const { AddressZero } = ethers.constants;
@@ -65,7 +52,7 @@ async function fixture(bre: BuidlerRuntimeEnvironment) {
   ] = wallets;
 
   // Prepare contract.
-  const UnmanagedStream = await ethers.getContractFactory("UnmanagedStream");
+  const ContractFactory = await ethers.getContractFactory(contractName);
   const constructorGrantees = [
     await granteeWallet0.getAddress(),
     await granteeWallet1.getAddress(),
@@ -74,7 +61,7 @@ async function fixture(bre: BuidlerRuntimeEnvironment) {
   ]
 
   // Deploy.
-  const unmanagedStream = await UnmanagedStream.deploy(
+  const contract = await ContractFactory.deploy(
     constructorGrantees,                // Grantees 
     AMOUNTS,                            // Allocations
     AddressZero,                        // Currency
@@ -83,7 +70,7 @@ async function fixture(bre: BuidlerRuntimeEnvironment) {
     );
     
   // Await Deploy.
-  await unmanagedStream.deployed();
+  await contract.deployed();
 
   return {
     donors: [
@@ -97,72 +84,11 @@ async function fixture(bre: BuidlerRuntimeEnvironment) {
       granteeWallet3
     ],
     provider,
-    contract: unmanagedStream
+    contract
   };
 }
 
-async function constructorTests(
-  amounts: number[],
-  uri: string,
-  percentageBased: boolean,
-  currency: string
-) {
-  describe("Constructor Tests", async () => {
-    const SUM_OF_AMOUNTS = AMOUNTS.reduce((x, y) => x + y);    
-    let _grantees: Signer[];
-    let _donors: Signer[];
-    let _provider: any;
-    let _contract: Contract;
-  
-    before(async () => {
-  
-      
-      const {
-        donors,
-        grantees,
-        provider,
-        contract
-      } = await fixture(bre);
-  
-  
-      _grantees = grantees;
-      _donors = donors;
-      _provider = provider;
-      _contract = contract;
-  
-    });
 
-    it("should record correct grantee amounts", async () => {
-
-      const granteeTargetFunding = await getGranteesTargetFunding(_contract, _grantees);
-  
-      for (let i = 0; i < granteeTargetFunding.length; i += 1) {
-        expect(granteeTargetFunding[i]).to.eq(amounts[i]);
-      }
-  
-    });
-  
-    it("should record correct CumulativeTargetFunding", async () => {
-      const cumulativeTargetFunding = await _contract.getCumulativeTargetFunding();
-      expect(cumulativeTargetFunding).to.eq(SUM_OF_AMOUNTS);
-    });
-  
-    it("should record percentageBased as true", async () => {
-      const _percentageBased = await _contract.getPercentageBased();
-      expect(_percentageBased).to.be.equal(percentageBased);
-    });
-  
-    it("should record correct currency", async () => {
-      const _currency = await _contract.getCurrency();
-      expect(_currency).to.eq(currency);
-    });
-  
-    it("should record correct URI", async () => {
-      const _uri = await _contract.getUri();
-      expect(utils.toUtf8String(_uri)).to.eq(uri);
-    });
-  });
-}
 
 describe("Unmanaged-Stream", () => {
 
@@ -179,7 +105,7 @@ describe("Unmanaged-Stream", () => {
       grantees,
       provider,
       contract
-    } = await fixture(bre);
+    } = await fixture(bre, CONTRACT_NAME);
 
 
     _grantees = grantees;
@@ -191,12 +117,24 @@ describe("Unmanaged-Stream", () => {
 
   describe("With Ether", () => {
 
-    constructorTests(
+    granteeConstructorTests(
+      fixture,     // Fixture for our grant.
       AMOUNTS,     // Grantee amount from global above.
-      URI,         // URI from global above.
       true,        // This fixture (unmanagedStream) uses percentage based grants.
-      AddressZero  // This fixture (unmanagedStream) uses ether.
+      CONTRACT_NAME
     );
+
+    baseGrantConstructorTests(
+      fixture,      // Fixture for our grant.
+      URI,          // URI from global above.
+      AddressZero,  // This fixture (unmanagedStream) uses ether.
+      0,            // null targetFunding.
+      0,            // null fundingDeadline.
+      0,            // null contractExpiration.
+      CONTRACT_NAME
+    );
+
+    funding(fixture, AddressZero, CONTRACT_NAME);
 
     describe("sending funds", () => {
       let _granteeBalance0: BigNumber;
@@ -381,8 +319,9 @@ describe("Unmanaged-Stream", () => {
         expect(parseFloat(utils.formatEther(granteeBalanceDelta3).toString())).to.equal(AMOUNTS[3]);
       });
 
+      
     });
-
+    
   });
 
 

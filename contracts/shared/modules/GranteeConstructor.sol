@@ -2,10 +2,9 @@
 pragma solidity >=0.6.8 <0.7.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./storage/AbstractGrantee.sol";
-import "./libraries/Percentages.sol";
+import "../storage/Grantee.sol";
 
-abstract contract GranteeConstructor is AbstractGrantee {
+contract GranteeConstructor is Grantee {
     using SafeMath for uint256;
 
     /*----------  Constructor  ----------*/

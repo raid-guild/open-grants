@@ -7,10 +7,10 @@ import "../interfaces/IFunding.sol";
 
 /**
  * @title Total Funding.
- * @dev Handles state for .
+ * @dev Handles state for tracking contract total amount funded.
  * @author @NoahMarconi @ameensol @JFickel @ArnaudBrousseau
  */
-abstract contract AbstractFunding is IFunding {
+abstract contract Funding is IFunding {
     using SafeMath for uint256;
 
 

@@ -5,11 +5,11 @@ import "../interfaces/IGrantee.sol";
 
 
 /**
- * @title Grants Spec Abstract Contract.
- * @dev Grant request, funding, and management.
+ * @title Grantee State Management Contract.
+ * @dev State, getters, and setters for Grantees.
  * @author @NoahMarconi @ameensol @JFickel @ArnaudBrousseau
  */
-abstract contract AbstractGrantee is IGrantee {
+abstract contract Grantee is IGrantee {
 
     /*----------  Globals  ----------*/
 
@@ -17,10 +17,10 @@ abstract contract AbstractGrantee is IGrantee {
     mapping(address => uint256) private granteeTotalPaid;      // Cumulative funding received by Grantee.
     mapping(address => uint256) private granteePayoutApproved; // Pending payout approved by Manager.
 
-    address[] private granteeReference;           // Reference to grantee addresses to allow for iterating over grantees.
+    address[] private granteeReference;                        // Reference to grantee addresses to allow for iterating over grantees.
 
-    uint256 private cumulativeTargetFunding;      // Denominator for calculating grantee's percentage.
-    bool private percentageBased = false;         // Grantee amounts are percentage based (if true) or fixed (if false).
+    uint256 private cumulativeTargetFunding;                   // Denominator for calculating grantee's percentage.
+    bool private percentageBased = false;                      // Grantee amounts are percentage based (if true) or fixed (if false).
 
 
 

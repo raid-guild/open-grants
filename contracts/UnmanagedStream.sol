@@ -3,9 +3,9 @@ pragma solidity >=0.6.8 <0.7.0;
 
 import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 import "./shared/libraries/Percentages.sol";
-import "./shared/GranteeConstructor.sol";
-import "./shared/storage/AbstractFunding.sol";
-import "./shared/storage/AbstractBaseGrant.sol";
+import "./shared/modules/GranteeConstructor.sol";
+import "./shared/storage/Funding.sol";
+import "./shared/storage/BaseGrant.sol";
 
 /**
  * @title Grant for Eth2.
@@ -20,7 +20,7 @@ import "./shared/storage/AbstractBaseGrant.sol";
  *      WARNING: vulnerable to sending to Gas Token generating addresses. Trust in grantees not doing so is required.
  * @author @NoahMarconi
  */
-contract UnmanagedStream is ReentrancyGuard, AbstractBaseGrant, GranteeConstructor, AbstractFunding {
+contract UnmanagedStream is ReentrancyGuard, BaseGrant, GranteeConstructor, Funding {
 
 
     /*----------  Constructor  ----------*/
