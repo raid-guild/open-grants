@@ -101,7 +101,12 @@ async function fixture(bre: BuidlerRuntimeEnvironment) {
   };
 }
 
-async function constructorTests(amounts: number[]) {
+async function constructorTests(
+  amounts: number[],
+  uri: string,
+  percentageBased: boolean,
+  currency: string
+) {
   describe("Constructor Tests", async () => {
     const SUM_OF_AMOUNTS = AMOUNTS.reduce((x, y) => x + y);    
     let _grantees: Signer[];
@@ -143,18 +148,18 @@ async function constructorTests(amounts: number[]) {
     });
   
     it("should record percentageBased as true", async () => {
-      const percentageBased = await _contract.getPercentageBased();
-      expect(percentageBased).to.be.true;
+      const _percentageBased = await _contract.getPercentageBased();
+      expect(_percentageBased).to.be.equal(percentageBased);
     });
   
     it("should record correct currency", async () => {
-      const currency = await _contract.getCurrency();
-      expect(currency).to.eq(AddressZero);
+      const _currency = await _contract.getCurrency();
+      expect(_currency).to.eq(currency);
     });
   
     it("should record correct URI", async () => {
-      const uri = await _contract.getUri();
-      expect(utils.toUtf8String(uri)).to.eq(URI);
+      const _uri = await _contract.getUri();
+      expect(utils.toUtf8String(_uri)).to.eq(uri);
     });
   });
 }
@@ -186,7 +191,12 @@ describe("Unmanaged-Stream", () => {
 
   describe("With Ether", () => {
 
-    constructorTests(AMOUNTS);
+    constructorTests(
+      AMOUNTS,     // Grantee amount from global above.
+      URI,         // URI from global above.
+      true,        // This fixture (unmanagedStream) uses percentage based grants.
+      AddressZero  // This fixture (unmanagedStream) uses ether.
+    );
 
     describe("sending funds", () => {
       let _granteeBalance0: BigNumber;
