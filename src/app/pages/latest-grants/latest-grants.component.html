@@ -12,56 +12,49 @@
 
             <hr class="dassed-line">
 
-            <ion-row class="container-new">
-                <ion-col size-md="6" size-sm="12" class="padding" *ngFor="let grant of allGrant"
-                    (click)="grantDetails(grant.id)">
-                    <div class="box">
+            <div class="container">
+                <ion-row class="">
+                    <ion-col size-md="6" size-sm="12" *ngFor="let grant of allGrant" (click)="grantDetails(grant.id)">
                         <div class="box-flex">
-                            <p class="manager-text">Manager </p>
-                            <p> : 0x5ae51765a2e3d92a17a1400b5fc9</p>
+                            <div class="small-box">
+                                <div class="box">
+                                    <div class="all-text-flex">
+                                        <p class="all-text"> Manager : </p>
+                                        <p class="new-all-text padding1">
+                                            {{grant.manager | slice:0:30}}{{grant.manager.length < 30 ? '' : '...'}}
+                                        </p>
+                                    </div>
+                                    <div class="all-text-flex new-space">
+                                        <p class="all-text"> Create By : </p>
+                                        <p class="new-all-text padding2">
+                                            {{grant.createBy | slice:0:30}}{{grant.createBy.length < 30 ? '' : '...'}}
+                                        </p>
+                                    </div>
+                                    <div class="all-text-flex new-space">
+                                        <p class="all-text"> Target Fund: </p>
+                                        <p class="new-all-text padding3">
+                                            {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH
+                                        </p>
+                                    </div>
+                                    <div class="all-text-flex new-space">
+                                        <p class="all-text"> Total Fund: </p>
+                                        <p class="new-all-text padding2">
+                                            {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</p>
+                                    </div>
+                                    <div class="all-text-flex new-space">
+                                        <p class="all-text"> Balance: </p>
+                                        <p class="new-all-text padding4">
+                                            {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH</p>
+                                    </div>
+                                    <div class="all-text-flex new-space" *ngIf="grant.canFund">
+                                        <p class="all-text">Grant open for funding </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="box-flex">
-                            <p class="manager-text">Create By </p>
-                            <p> : 0x5ae51765a2e3d92a17a1400b5fc9</p>
-                        </div>
-                        <!-- <div class="box-flex">
-                            <p class="manager-text">Funding Expiration</p>
-                            <p> : {{grant?.fundingExpiration}}</p>
-                        </div>
-                        <div class="box-flex">
-                            <p class="manager-text">Contract Expiration</p>
-                            <p> : {{grant?.contractExpiration}}</p>
-                        </div> -->
-                        <div class="box-flex">
-                            <p class="manager-text">Target Funding</p>
-                            <p> : {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH</p>
-                        </div>
-                        <div class="box-flex">
-                            <p class="manager-text">Total Funding</p>
-                            <p> : {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</p>
-                        </div>
-                        <div class="box-flex">
-                            <p class="manager-text">Balance</p>
-                            <p> : {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH</p>
-                        </div>
-                        <div class="box-flex">
-                            <p class="manager-text">Grant open for funding </p>
-                        </div>
-                    </div>
-
-                </ion-col>
-            </ion-row>
+                    </ion-col>
+                </ion-row>
+            </div>
         </ion-col>
-
     </ion-row>
 </ion-content>
-
-<!-- <p>CreateBy : {{grant?.createBy}} </p>
-<p>fundingExpiration : {{grant?.fundingExpiration}} </p>
-<p>contractExpiration: {{grant?.contractExpiration}}</p>
-<p>canFund : {{grant?.canFund}}</p>
-<p>Target Funding : {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH</p>
-<p>Total Funding : {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</p>
-<p>Available Balance : {{currencyCovert(grant?.currency,grant?.availableBalance)}}
-    ETH
-</p> -->

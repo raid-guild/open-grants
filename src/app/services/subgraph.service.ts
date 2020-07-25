@@ -52,7 +52,6 @@ export class SubgraphService {
           grantId
           grantAddress
           canFund
-          grantAddress
           manager
           createBy
           currency
@@ -67,6 +66,35 @@ export class SubgraphService {
       variables: { grantAddress: grantAddress }
     })
   }
+
+  getGrantByCreateby(createBy: string) {
+    return this.apollo.query({
+      query: gql`query getContract($createBy: String){
+        contracts(where: {
+          createBy: $createBy
+        }) {
+          id
+          input
+          uri
+          contractAddress
+          grantId
+          canFund
+          grantAddress
+          manager
+          createBy
+          currency
+          targetFunding
+          totalFunding
+          availableBalance
+          grantCancelled
+          fundingExpiration
+          contractExpiration
+        }
+      }`,
+      variables: { createBy: createBy }
+    })
+  }
+
 
   getFundByContractAndDonor(grantAddress: string, donor: string) {
     return this.apollo.query({

@@ -16,11 +16,11 @@ export class PagesComponent implements OnInit {
         //   url: '/pages/create',
         //   icon: 'gp-grant'
         // },
-        {
-            title: 'Dashboard',
-            url: '/pages/dashboard',
-            icon: 'gp-grant'
-        },
+        // {
+        //     title: 'Dashboard',
+        //     url: '/pages/dashboard',
+        //     icon: 'gp-grant'
+        // },
         {
             title: 'Latest Grants',
             url: '/pages/latest',
@@ -38,11 +38,11 @@ export class PagesComponent implements OnInit {
     ];
 
     public allPage = [
-        {
-            title: 'Dashboard',
-            url: '/pages/dashboard',
-            icon: 'gp-grant'
-        },
+        // {
+        //     title: 'Dashboard',
+        //     url: '/pages/dashboard',
+        //     icon: 'gp-grant'
+        // },
         {
             title: 'Latest Grants',
             url: '/pages/latest',

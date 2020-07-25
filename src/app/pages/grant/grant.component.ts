@@ -25,13 +25,6 @@ import { ThreeBoxService } from 'src/app/services/threeBox.service';
 export class GrantComponent implements OnInit, OnDestroy {
   grantAddress: string;
   grantData: any;
-  grantDetails = {
-    _id: '',
-    name: '',
-    description: '',
-    images: 'https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media',
-    content: ''
-  };
 
   userEthAddress: string;
   noOfDayToExpiredFunding: number = 0;

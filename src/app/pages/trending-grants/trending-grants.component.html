@@ -8,10 +8,66 @@
     <ion-col size="12">
       <ion-item mode="md" lines="none" class="heading">
         <ion-label slot="start">Trending Grants</ion-label>
+      </ion-item>
 
-        <!-- <ion-searchbar slot="end" [formControl]="searchBox" (ionCancel)="onCancel($event)" [animated]="true"
+      <hr class="dassed-line">
+
+      <div class="container">
+        <ion-row class="">
+          <ion-col size-md="6" size-sm="12" *ngFor="let grant of trendingGrants" (click)="grantDetails(grant.id)">
+            <div class="box-flex">
+              <div class="small-box">
+                <div class="box">
+                  <div class="all-text-flex">
+                    <p class="all-text"> Manager : </p>
+                    <p class="new-all-text padding1">
+                      {{grant.manager | slice:0:30}}{{grant.manager.length < 30 ? '' : '...'}}
+                    </p>
+                  </div>
+                  <div class="all-text-flex new-space">
+                    <p class="all-text"> Create By : </p>
+                    <p class="new-all-text padding2">
+                      {{grant.createBy | slice:0:30}}{{grant.createBy.length < 30 ? '' : '...'}}
+                    </p>
+                  </div>
+                  <div class="all-text-flex new-space">
+                    <p class="all-text"> Target Fund: </p>
+                    <p class="new-all-text padding3">
+                      {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH
+                    </p>
+                  </div>
+                  <div class="all-text-flex new-space">
+                    <p class="all-text"> Total Fund: </p>
+                    <p class="new-all-text padding2">
+                      {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</p>
+                  </div>
+                  <div class="all-text-flex new-space">
+                    <p class="all-text"> Balance: </p>
+                    <p class="new-all-text padding4">
+                      {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH</p>
+                  </div>
+                  <div class="all-text-flex new-space" *ngIf="grant.canFund">
+                    <p class="all-text">Grant open for funding </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-content>
+
+<!-- <ion-content color="light">
+  <ion-row class="page-row">
+    <ion-col size="12">
+      <ion-item mode="md" lines="none" class="heading">
+        <ion-label slot="start">Trending Grants</ion-label>
+
+        <ion-searchbar slot="end" [formControl]="searchBox" (ionCancel)="onCancel($event)" [animated]="true"
           placeholder="Search Grant...">
-        </ion-searchbar> -->
+        </ion-searchbar>
       </ion-item>
 
       <hr class="dassed-line">
@@ -19,16 +75,16 @@
       <ion-row *ngFor="let grant of searchResult" style="cursor: pointer;">
         <ion-col size="12" (click)="grantDetails(grant.id)">
           <div class="d-flex">
-            <!-- <img
+            <img
               src="https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media"
-              alt="" style="height: 150px;"> -->
+              alt="" style="height: 150px;">
             <div class="" style="padding-left: 40px;">
-              <!-- <h3>{{grant?.name}}</h3> -->
+              <h3>{{grant?.name}}</h3>
               <p>Manager : {{grant?.manager}}</p>
               <p>Target Funding : {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH</p>
               <p>Total Funding : {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</p>
               <p>Available Balance : {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH</p>
-              <!-- <p>{{grant?.description}}</p> -->
+              <p>{{grant?.description}}</p>
             </div>
           </div>
           <div class="line"></div>
@@ -38,4 +94,4 @@
     </ion-col>
 
   </ion-row>
-</ion-content>
+</ion-content> -->

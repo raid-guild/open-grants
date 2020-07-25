@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Events } from '@ionic/angular';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { SubgraphService } from 'src/app/services/subgraph.service';
+import { AppSettings } from 'src/app/config/app.config';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-my-grants',
@@ -9,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./my-grants.component.scss'],
 })
 export class MyGrantsComponent implements OnInit {
-
+  userEthAddress = '';
   createdByMeGrant: any;
   fundedByMeGrant: any;
   mangedByMeGrant: any;
@@ -20,21 +23,34 @@ export class MyGrantsComponent implements OnInit {
 
   constructor(public popoverCtrl: PopoverController,
     public modalController: ModalController,
+    private subgraphService: SubgraphService,
+    private authService: AuthService,
     private router: Router,
     public events: Events
   ) {
     this.getAllGrants();
-    this.events.subscribe('my-grants', (data) => {
-      if (data) {
-        this.getAllGrants();
-      }
-    });
   }
 
   ngOnInit() {
+    this.events.subscribe('is_logged_in', (data) => {
+      setTimeout(() => {
+        this.getAllGrants();
+      }, 100);
+    });
+  }
+
+  getUserEthAddress() {
+    this.userEthAddress = this.authService.getAuthUserId();
   }
 
   getAllGrants() {
+    this.getUserEthAddress();
+
+    this.subgraphService.getGrantByCreateby(this.userEthAddress).subscribe((res: any) => {
+      this.createdByMeGrant = JSON.parse(JSON.stringify(res.data.contracts));
+      console.log("createdByMeGrant", this.createdByMeGrant)
+    });
+
 
   }
 

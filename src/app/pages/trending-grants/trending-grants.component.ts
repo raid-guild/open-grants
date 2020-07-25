@@ -58,17 +58,17 @@ export class TrendingGrantsComponent implements OnInit {
   getTrendingGrants() {
     this.subgraphService.getGrantList(0, 10).subscribe((res: any) => {
       this.trendingGrants = res.data.contracts
-      // this.trendingGrants = this.trendingGrants.sort(function (obj1, obj2) {
-      //   if ((obj1.totalFunding + obj1.totalPayed) == 0) {
-      //     return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - 0;
-      //   }
+      this.trendingGrants = this.trendingGrants.sort(function (obj1, obj2) {
+        if ((+obj1.totalFunding) == 0) {
+          return (+obj2.totalFunding / +obj2.targetFunding * 100) - 0;
+        }
 
-      //   if ((obj2.totalFunding + obj2.totalPayed) == 0) {
-      //     return 0 - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
-      //   }
+        if ((obj2.totalFunding) == 0) {
+          return 0 - (+obj1.totalFunding / +obj1.targetFunding * 100);
+        }
 
-      //   return ((obj2.totalFunding + obj2.totalPayed) / obj2.targetFunding * 100) - ((obj1.totalFunding + obj1.totalPayed) / obj1.targetFunding * 100);
-      // });
+        return (+obj2.totalFunding / +obj2.targetFunding * 100) - (+obj1.totalFunding / +obj1.targetFunding * 100);
+      });
 
       this.searchResult = this.trendingGrants;
     })
