@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { SubgraphService } from 'src/app/services/subgraph.service';
 import { AppSettings } from 'src/app/config/app.config';
 import { AuthService } from 'src/app/services/auth.service';
+import { AddressZero, Zero } from "ethers/constants";
+import { ethers, providers, utils } from 'ethers';
 
 @Component({
   selector: 'app-my-grants',
@@ -44,15 +46,35 @@ export class MyGrantsComponent implements OnInit {
   }
 
   getAllGrants() {
+    this.getCreateByGrant();
+    this.getFundedByGrant();
+    this.getManageByGrant();
+  }
+
+  getCreateByGrant() {
     this.getUserEthAddress();
 
     this.subgraphService.getGrantByCreateby(this.userEthAddress).subscribe((res: any) => {
       this.createdByMeGrant = JSON.parse(JSON.stringify(res.data.contracts));
-      console.log("createdByMeGrant", this.createdByMeGrant)
-    });
-
-
+    })
   }
+
+  getFundedByGrant() {
+    this.getUserEthAddress();
+
+    this.subgraphService.getGrantByCreateby(this.userEthAddress).subscribe((res: any) => {
+      this.fundedByMeGrant = JSON.parse(JSON.stringify(res.data.contracts));
+    })
+  }
+
+  getManageByGrant() {
+    this.getUserEthAddress();
+
+    this.subgraphService.getManageByCreateby(this.userEthAddress).subscribe((res: any) => {
+      this.mangedByMeGrant = JSON.parse(JSON.stringify(res.data.contracts));
+    })
+  }
+
 
   handleChange(e) {
     if (e == '') {
@@ -76,5 +98,12 @@ export class MyGrantsComponent implements OnInit {
 
   grantDetails(id: string) {
     this.router.navigate(['/pages/grant/' + id])
+  }
+
+  currencyCovert(currencyType, amount) {
+    if (currencyType == AddressZero) {
+      return ethers.utils.formatEther(amount);
+    }
+    return amount;
   }
 }

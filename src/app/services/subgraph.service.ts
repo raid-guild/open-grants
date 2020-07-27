@@ -4,21 +4,32 @@ import { HttpLink } from 'apollo-angular-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ENVIRONMENT } from 'src/environments/environment';
 import gql from 'graphql-tag';
+import { DefaultOptions } from 'apollo-client';
 
 @Injectable()
 export class SubgraphService {
-
+  defaultOptions: DefaultOptions = {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'ignore',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  }
   constructor(private apollo: Apollo, httpLink: HttpLink) {
     apollo.create({
       link: httpLink.create({ uri: ENVIRONMENT.SUBGRAPH_QUERIE }),
-      cache: new InMemoryCache()
+      cache: new InMemoryCache(),
+      defaultOptions: this.defaultOptions,
     })
   }
 
-  getGrantList(skip: number, first: number) {
+  getGrantList() {
     return this.apollo.query({
       query: gql`query getContracts{
-        contracts(skip: $skip, first: $first,orderDirection:asc) {
+        contracts {
           id
           uri
           contractAddress
@@ -36,10 +47,35 @@ export class SubgraphService {
           fundingExpiration
           contractExpiration
         }
-      }`,
-      variables: { skip: skip, first: first }
+      }`
     })
   }
+
+  // getGrantList(skip: number, first: number) {
+  //   return this.apollo.query({
+  //     query: gql`query getContracts($skip: Int, $first: Int){
+  //       contracts(skip: $skip,first:$first) {
+  //         id
+  //         uri
+  //         contractAddress
+  //         grantId
+  //         grantAddress
+  //         canFund
+  //         grantAddress
+  //         manager
+  //         createBy
+  //         currency
+  //         targetFunding
+  //         totalFunding
+  //         availableBalance
+  //         grantCancelled
+  //         fundingExpiration
+  //         contractExpiration
+  //       }
+  //     }`,
+  //     variables: { skip: skip, first: first }
+  //   })
+  // }
 
   getGrantByAddress(grantAddress: string) {
     return this.apollo.query({
@@ -95,6 +131,33 @@ export class SubgraphService {
     })
   }
 
+  getManageByCreateby(manager: string) {
+    return this.apollo.query({
+      query: gql`query getContract($manager: String){
+        contracts(where: {
+          manager: $manager
+        }) {
+          id
+          input
+          uri
+          contractAddress
+          grantId
+          canFund
+          grantAddress
+          manager
+          createBy
+          currency
+          targetFunding
+          totalFunding
+          availableBalance
+          grantCancelled
+          fundingExpiration
+          contractExpiration
+        }
+      }`,
+      variables: { manager: manager }
+    })
+  }
 
   getFundByContractAndDonor(grantAddress: string, donor: string) {
     return this.apollo.query({

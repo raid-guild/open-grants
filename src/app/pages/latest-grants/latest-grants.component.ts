@@ -20,7 +20,6 @@ export class LatestGrantsComponent implements OnInit {
   searchBox: FormControl;
   searchResult: any = [];
   data = [];
-  image = "https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media";
 
   constructor(public popoverCtrl: PopoverController,
     private router: Router,
@@ -60,7 +59,8 @@ export class LatestGrantsComponent implements OnInit {
   }
 
   getAllGrants() {
-    this.subgraphService.getGrantList(0, 10).subscribe((res: any) => {
+    this.subgraphService.getGrantList().subscribe((res: any) => {
+      // console.log("contracts", res.data.contracts.length)
       this.allGrant = JSON.parse(JSON.stringify(res.data.contracts));
     });
   }

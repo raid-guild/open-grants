@@ -12,7 +12,16 @@
 
             <hr class="dassed-line">
 
-            <div class="container">
+            <!-- <div class="filter">
+                <select name="" id="" class="drop-down">
+                    <option value="latest">Latest</option>
+                    <option value="trending">Trending</option>
+                    <option value="createBy">Create By Me</option>
+                    <option value="managedBy">Managed By Me</option>
+                </select>
+            </div> -->
+
+            <div class="container" style="padding-top: 40px;">
                 <ion-row class="">
                     <ion-col size-md="6" size-sm="12" *ngFor="let grant of allGrant" (click)="grantDetails(grant.id)">
                         <div class="box-flex">
@@ -55,6 +64,16 @@
                     </ion-col>
                 </ion-row>
             </div>
+
+            <div style="margin-bottom: 70px"></div>
+
+            <!-- <div class="container">
+                <div style="margin-bottom: 50px;float: right;">
+                    <span>
+                        < </span>&nbsp;
+                            <span>></span>
+                </div>
+            </div> -->
         </ion-col>
     </ion-row>
 </ion-content>

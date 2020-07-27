@@ -5,25 +5,40 @@
 
 <ion-content color="light">
   <ion-row class="page-row">
-    <ion-col size="12" size-md="4">
+    <ion-col size="12" size-md="6">
       <ion-item mode="md" lines="none" class="heading">
         <ion-label>Created by me</ion-label>
-        <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button>
+        <!-- <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button> -->
       </ion-item>
 
       <hr class="dassed-line">
 
-      <ion-card class="grant" mode="md" *ngFor="let create of searchCreatedBy">
+      <ion-card class="grant" mode="md" *ngFor="let grant of createdByMeGrant">
         <ion-card-content>
           <ion-item mode="md" lines="none">
             <ion-label>
-              <h2>{{create.name}}</h2>
-              <h3>Target Ξ {{create.targetFunding}} ETH</h3>
+              <div class="item">
+                <span class="title">Manager By :</span>
+                <span> {{grant?.manager | slice:0:40}}{{grant.manager.length < 40 ? '' : '...'}}</span>
+              </div>
+              <div class="item">
+                <span class="title">Target Funding :</span>
+                <span> Ξ {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH </span>
+              </div>
+              <div class="item">
+                <span class="title">Total Funding : </span>
+                <span>Ξ {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</span>
+              </div>
+              <div class="item">
+                <span class="title">Balance : </span>
+                <span>Ξ {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH </span>
+              </div>
             </ion-label>
-            <ion-label slot="end" text-right>
-              <!-- <h3>Ξ {{create.totalFunding - create.totalPayed}} ETH</h3>
-              <p>OUT OF Ξ {{create.targetFunding}} ETH</p> -->
-            </ion-label>
+            <!-- <ion-label slot="end" text-right>
+              <h3>Balance : Ξ {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH </h3>
+              <h3>Ξ {{create.totalFunding - create.totalPayed}} ETH</h3>
+              <p>OUT OF Ξ {{create.targetFunding}} ETH</p>
+            </ion-label> -->
           </ion-item>
 
           <!-- <ion-item mode="md" lines="none">
@@ -34,69 +49,74 @@
             </div>
           </ion-item> -->
           <ion-item mode="md" lines="none">
-            <!-- <ion-button class="details" mode="md" slot="start" (click)="viewGrant(create)">Quick View</ion-button><br> -->
-            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(create.contractAddress)">Details View
+            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(grant.id)"> View
             </ion-button>
           </ion-item>
         </ion-card-content>
       </ion-card>
     </ion-col>
-    <ion-col size="12" size-md="4">
+
+    <!-- <ion-col size="12" size-md="4">
       <ion-item mode="md" lines="none" class="heading">
         <ion-label>Funded by me</ion-label>
         <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button>
       </ion-item>
 
       <hr class="dassed-line">
-      <ion-card class="grant" mode="md" *ngFor="let fund of searchFundedBy">
+      <ion-card class="grant" mode="md" *ngFor="let grant of fundedByMeGrant">
         <ion-card-content>
           <ion-item mode="md" lines="none">
             <ion-label>
-              <h2>{{fund.name}}</h2>
-              <h3>Target Ξ {{fund.targetFunding}} ETH</h3>
-            </ion-label>
-            <ion-label slot="end" text-right>
-              <!-- <h3>Ξ {{fund.totalFunding- fund.totalPayed}} ETH</h3>
-              <p>OUT OF Ξ {{fund.targetFunding}} ETH</p> -->
+              <h3>Manager By : {{grant?.manager | slice:0:40}}{{grant.manager.length < 40 ? '' : '...'}}</h3>
+              <h3>Target Funding : Ξ {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH </h3>
+              <h3>Total Funding : Ξ {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH </h3>
+              <h3>Balance : Ξ {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH </h3>
             </ion-label>
           </ion-item>
 
           <ion-item mode="md" lines="none">
-            <!-- <ion-button class="details" mode="md" slot="start" (click)="viewGrant(fund)">Quick View</ion-button> -->
-            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(fund.contractAddress)">Details View
+            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(grant.id)">View
             </ion-button>
           </ion-item>
         </ion-card-content>
       </ion-card>
+    </ion-col> -->
 
-
-    </ion-col>
-    <ion-col size="12" size-md="4">
+    <ion-col size="12" size-md="6">
       <ion-item mode="md" lines="none" class="heading">
         <ion-label>Managed by me</ion-label>
-        <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button>
+        <!-- <ion-button mode="md" size="large" fill="clear" slot="end" color="dark"><i class="gp-filter"></i></ion-button> -->
       </ion-item>
 
       <hr class="dassed-line">
-      <ion-card class="grant" mode="md" *ngFor="let manage of searchManagedBy">
+      <ion-card class="grant" mode="md" *ngFor="let grant of mangedByMeGrant">
         <ion-card-content>
           <ion-item mode="md" lines="none">
             <ion-label>
-              <h2>{{manage.name}}</h2>
-              <h3>Target Ξ {{manage.targetFunding}} ETH</h3>
-              <!-- <p>{{manage.description}}</p> -->
+              <div class="item">
+                <span class="title">Create By : </span>
+                <span> {{grant?.createBy | slice:0:40}}{{grant.createBy.length < 40 ? '' : '...'}}</span>
+              </div>
+              <div class="item">
+                <span class="title"> Target Funding : </span>
+                <span> Ξ {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH </span>
+              </div>
+              <div class="item">
+                <span class="title">Total Funding : </span>
+                <span>Ξ {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</span>
+              </div>
+              <div class="item">
+                <span class="title">Balance : </span>
+                <span> Ξ {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH </span>
+              </div>
             </ion-label>
-            <ion-label slot="end" text-right>
-              <!-- <p>OUT OF Ξ {{manage.targetFunding}} ETH</p> -->
-            </ion-label>
+
           </ion-item>
 
           <ion-item mode="md" lines="none">
-            <!-- <ion-button class="details" mode="md" slot="start" (click)="viewGrant(manage)">Quick View</ion-button> -->
-            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(manage.contractAddress)">Details View
+            <ion-button class="details" mode="md" slot="end" (click)="grantDetails(grant.id)"> View
             </ion-button>
           </ion-item>
-
         </ion-card-content>
       </ion-card>
     </ion-col>
