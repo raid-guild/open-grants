@@ -2,30 +2,33 @@
 pragma solidity >=0.6.8 <0.7.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./ManagedCappedGrant.sol";
-import "./UnmanagedStream.sol";
+import "./IFactory.sol";
 
 
 /**
- * @title Grants Spec Abstract Contract.
- * @dev Grant request, funding, and management.
- * @author @NoahMarconi @ameensol @JFickel @ArnaudBrousseau
+ * @title Master Factory.
+ * @dev Dispatches `create` grant calls to external IFactory by address.
+ * @author @NoahMarconi
  */
-contract GrantFactory {
+contract MasterFactory {
     using SafeMath for uint256;
 
 
     /*----------  Globals  ----------*/
-    uint256 public id;
+    uint256 public id = 0;
     mapping(uint256 => address) internal grants;  // Grants mapped by GUID.
 
+
+    /*----------  Events  ----------*/
 
     /**
      * @dev Grant creation.
      * @param id Sequential identifier.
      * @param grant Address of newly created grant.
+     * @param factory Address of factory which created grant.
      */
-    event LogNewGrant(uint256 indexed id, address grant);
+    event LogNewGrantFromFactory(uint256 indexed id, address grant, address factory);
+
 
     /*----------  Methods  ----------*/
 
@@ -38,7 +41,7 @@ contract GrantFactory {
      * @param _uri URI for additional (off-chain) grant details such as description, milestones, etc.
      * @param _extraData Support for extensions to the Standard.
      * @param _type Type of grant contract to create.
-     * @return GUID for this grant.
+     * @return Address for this grant.
      */
     /* solhint-enable max-line-length */
     function create(
@@ -46,46 +49,20 @@ contract GrantFactory {
         uint256[] memory _amounts,
         address _currency,
         bytes memory _uri,
-        bytes memory _extraData, // solhint-disable-line no-unused-vars
-        uint256 _type
+        bytes memory _extraData,
+        address _type
     )
         public
-        returns (uint256)
+        returns (address)
     {
 
-        address grantAddress;
-
-        if (_type == 1) {
-            ManagedCappedGrant grant = new ManagedCappedGrant(
+        address grantAddress = IFactory(_type).create(
                 _grantees,
                 _amounts,
                 _currency,
                 _uri,
                 _extraData
-            );
-
-            grantAddress = address(grant);
-        } else if (_type == 2) {
-            ManagedCappedGrant grant = new ManagedCappedGrant(
-                _grantees,
-                _amounts,
-                _currency,
-                _uri,
-                _extraData
-            );
-
-            grantAddress = address(grant);
-        } else if (_type == 3) {
-            UnmanagedStream grant = new UnmanagedStream(
-                _grantees,
-                _amounts,
-                _currency,
-                _uri,
-                _extraData
-            );
-
-            grantAddress = address(grant);
-        }
+        );
 
         // Store grant info.
         uint256 grantId = id;
@@ -94,9 +71,23 @@ contract GrantFactory {
         // Increment id counter.
         id = id.add(1);
 
-        emit LogNewGrant(grantId, grantAddress);
+        emit LogNewGrantFromFactory(grantId, grantAddress, _type);
 
-        return grantId;
+        return grantAddress;
     }
+
+    /**
+     * @dev Grant address getter.
+     * @param _id Sequential identifier for grant.
+     * @return grant address.
+     */
+    function getGrantAddress(uint256 _id)
+        public
+        view
+        returns(address)
+    {
+        return grants[_id];
+    }
+
 
 }
