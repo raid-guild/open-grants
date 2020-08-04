@@ -12,15 +12,13 @@
 
             <hr class="dashed-line">
 
-            <div class="container" style="padding-top: 40px;">
-                <ion-row class="">
+                <ion-row class="container-new">
                     <ion-col size-md="6" size-sm="12" *ngFor="let grant of allGrant" (click)="grantDetails(grant.id)">
-                        <div class="box-flex">
-                            <div class="small-box">
-                                <div class="box">
+                        <ion-card class="grant">
+                            <ion-card-content >
                                     <div class="all-text-flex">
                                         <p class="all-text"> Manager : </p>
-                                        <p class="new-all-text padding1">
+                                        <p arrow class="new-all-text padding1">
                                             {{grant.manager | slice:0:30}}{{grant.manager.length < 30 ? '' : '...'}}
                                         </p>
                                     </div>
@@ -49,14 +47,11 @@
                                     <div class="all-text-flex new-space" *ngIf="grant.canFund">
                                         <p class="all-text">Grant open for funding </p>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
+                            </ion-card-content>
+
+                        </ion-card>    
                     </ion-col>
                 </ion-row>
-            </div>
-
-            <div style="margin-bottom: 70px"></div>
         </ion-col>
     </ion-row>
 </ion-content>
