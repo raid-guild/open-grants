@@ -13,7 +13,6 @@ pipelines:
                 - npm install -g --silent @angular/cli
                 - npm install
                 - npm run build
-
         - step:
             name: Deploy to S3
             deployment: production
