@@ -7,6 +7,7 @@ import { AddressZero, Zero } from "ethers/constants";
 import { UtilsService } from './utils.service';
 import { AppSettings } from '../config/app.config';
 import * as moment from 'moment';
+import UniLogin from '@unilogin/provider';
 
 declare let require: any;
 declare let window: any;
@@ -27,11 +28,20 @@ export class EthcontractService {
     private web3Provider: any = window.web3.currentProvider;
     // private acctInfoSubject = new Subject<AcctInfo>();
     // acctInfo = this.acctInfoSubject.asObservable();
+    private provider: providers.Web3Provider;
 
     constructor(
         private toastr: ToastrService,
         private utilsService: UtilsService
     ) { }
+
+    async setProvider() {
+        await window.ethereum.enable();
+        this.provider = window.ethereum;
+    }
+    getProvider() {
+        return this.provider;
+    }
 
     getAccountInfo(account) {
         return new Promise((resolve) => {
@@ -49,50 +59,6 @@ export class EthcontractService {
                 }
             });
 
-            // window.web3.eth.getCoinbase((err, account) => {
-            //     console.log("account", account);
-            //     if (err === null) {
-            //         window.web3.eth.getBalance(account, (err, balance) => {
-            //             if (err === null) {
-            //                 resolve({
-            //                     account: account,
-            //                     balance: (window.web3.fromWei(balance, "ether")).toNumber()
-            //                 });
-            //             } else {
-            //                 resolve({
-            //                     account: 'error',
-            //                     balance: 0
-            //                 });
-            //             }
-            //         });
-            //     }
-            //     resolve({
-            //         account: 'error',
-            //         balance: 0
-            //     });
-            // });
-
-            // window.web3.listAccounts().then(account => {
-            //     console.log("account", account)
-            //     if (account.length) {
-            //         window.web3.getBalance(account[0]).then((balance) => {
-            //             resolve({
-            //                 account: account,
-            //                 balance: (window.web3.fromWei(balance, "ether")).toNumber()
-            //             });
-            //         });
-            //     } else {
-            //         resolve({
-            //             account: 'error',
-            //             balance: 0
-            //         })
-            //     }
-            // }).catch(err => {
-            //     resolve({
-            //         account: 'error',
-            //         balance: 0
-            //     })
-            // });
         });
     }
 
@@ -121,36 +87,6 @@ export class EthcontractService {
                 }
             });
         });
-    }
-
-    async deployContract() {
-        return new Promise(async (resolve, reject) => {
-            this.utilsService.startLoader();
-
-            const provider = new ethers.providers.Web3Provider(this.web3Provider);
-            const signer = provider.getSigner();
-            let factory = new ethers.ContractFactory(GrantFactory.abi, GrantFactory.bytecode, signer);
-
-            factory.deploy({ gasLimit: AppSettings.ethersConfig.gasLimit }).then((response) => {
-                this.utilsService.stopLoader();
-                resolve({
-                    status: "success",
-                    message: "Request sent successfully",
-                    address: response.address,
-                    hash: response.deployTransaction.hash
-                });
-            }, (error) => {
-                console.log(error)
-                this.utilsService.stopLoader();
-                resolve({
-                    hash: '',
-                    address: '',
-                    status: "failed",
-                    message: error.message
-                });
-            });
-            // let deployed_contract = await response.deployed();
-        })
     }
 
     createGrant(data) {

@@ -10,7 +10,7 @@
         <ion-label slot="start">Trending Grants</ion-label>
       </ion-item>
 
-      <hr class="dassed-line">
+      <hr class="dashed-line">
 
       <div class="container">
         <ion-row class="">
@@ -61,40 +61,3 @@
     </ion-col>
   </ion-row>
 </ion-content>
-
-<!-- <ion-content color="light">
-  <ion-row class="page-row">
-    <ion-col size="12">
-      <ion-item mode="md" lines="none" class="heading">
-        <ion-label slot="start">Trending Grants</ion-label>
-
-        <ion-searchbar slot="end" [formControl]="searchBox" (ionCancel)="onCancel($event)" [animated]="true"
-          placeholder="Search Grant...">
-        </ion-searchbar>
-      </ion-item>
-
-      <hr class="dassed-line">
-
-      <ion-row *ngFor="let grant of searchResult" style="cursor: pointer;">
-        <ion-col size="12" (click)="grantDetails(grant.id)">
-          <div class="d-flex">
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media"
-              alt="" style="height: 150px;">
-            <div class="" style="padding-left: 40px;">
-              <h3>{{grant?.name}}</h3>
-              <p>Manager : {{grant?.manager}}</p>
-              <p>Target Funding : {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH</p>
-              <p>Total Funding : {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</p>
-              <p>Available Balance : {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH</p>
-              <p>{{grant?.description}}</p>
-            </div>
-          </div>
-          <div class="line"></div>
-        </ion-col>
-      </ion-row>
-
-    </ion-col>
-
-  </ion-row>
-</ion-content> -->

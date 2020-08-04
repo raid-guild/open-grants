@@ -6,6 +6,9 @@ import { AuthService } from 'src/app/services/auth.service';
 import { AppSettings } from 'src/app/config/app.config';
 import { EthcontractService } from 'src/app/services/ethcontract.service';
 
+import UniLogin from '@unilogin/provider';
+import {providers, utils, ethers} from 'ethers';
+
 declare let window: any;
 
 @Component({
@@ -16,7 +19,7 @@ declare let window: any;
 export class PopupComponent implements OnInit {
   modelType: string;
   data: any;
-  loging = false;
+  logingIn = false;
   loginSuccess = false;
   loginError = false;
 
@@ -45,27 +48,26 @@ export class PopupComponent implements OnInit {
   ) {
     this.modelType = this.navParams.get('modelType');
     this.data = this.navParams.get('data');
-    console.log("modelType", this.modelType, this.data);
   }
 
   ngOnInit() {
-    if (this.modelType == 'login') {
+    if (this.modelType === 'login') {
       this.login();
     }
 
-    if (this.modelType == 'deployContract') {
+    if (this.modelType === 'deployContract') {
       this.deployContract();
     }
 
-    if (this.modelType == 'cancelContract') {
+    if (this.modelType === 'cancelContract') {
       this.cancelContract();
     }
 
-    if (this.modelType == 'fundingContract') {
+    if (this.modelType === 'fundingContract') {
       this.fundingContract();
     }
 
-    if (this.modelType == 'payout') {
+    if (this.modelType === 'payout') {
       this.contractPayout();
     }
   }
@@ -76,56 +78,43 @@ export class PopupComponent implements OnInit {
 
   async login() {
     try {
-      this.loging = true;
-      await window.web3.currentProvider.enable();
-      let nouce = Math.floor(Math.random() * 1000000);
-      let userEthAddress = window.web3.eth.coinbase
-      console.log("userEthAddress", userEthAddress);
+      this.logingIn = true;
 
-      let signMessage: any = await this.handleSignMessage(userEthAddress, nouce)
-      this.userManagementService.setUserEthAddress(userEthAddress);
-      localStorage.setItem(AppSettings.localStorage_keys.currentNetwork, "Ropsten");
-      localStorage.setItem(AppSettings.localStorage_keys.nouce, nouce.toString());
-      localStorage.setItem(AppSettings.localStorage_keys.userSign, JSON.stringify(signMessage));
-      this.authService.setAuthState({ is_logged_in: true });
+      this.ethcontractService.setProvider();
+      const windowProvider = this.ethcontractService.getProvider();
+      const provider = new ethers.providers.Web3Provider(windowProvider);
 
-      this.loging = false;
+      const address = await (provider.getSigner()).getAddress();
+
+      if (!address) {
+        throw new Error('failed to connect to metamask');
+      }
+
       this.loginSuccess = true;
+      this.logingIn = false;
 
       setTimeout(() => {
-        this.dismiss()
-      }, 2000)
+        this.dismiss();
+      }, 2000);
+
     } catch (e) {
-      this.loging = false;
+      this.logingIn = false;
       this.loginError = true;
     }
-  }
-
-  handleSignMessage(publicAddress, nonce) {
-    return new Promise((resolve, reject) => {
-      window.web3.personal.sign(
-        window.web3.fromUtf8(`I am signing my one-time nonce: ${nonce}`),
-        publicAddress,
-        (err, signature) => {
-          if (err) reject(err);
-          resolve({ publicAddress, signature });
-        }
-      )
-    })
   }
 
   async deployContract() {
     try {
       this.deploying = true;
-      let contract: any = await this.ethcontractService.createGrant(this.data);
+      const contract: any = await this.ethcontractService.createGrant(this.data);
 
-      if (contract.status == "success") {
+      if (contract.status === 'success') {
         this.deploying = false;
         this.deploySuccess = true;
 
         setTimeout(() => {
-          this.modalCtrl.dismiss({ redirect: true })
-        }, 2000)
+          this.modalCtrl.dismiss({ redirect: true });
+        }, 2000);
       } else {
         this.deploying = false;
         this.deployError = true;
@@ -140,7 +129,7 @@ export class PopupComponent implements OnInit {
     this.canceling = true;
     let contract: any = await this.ethcontractService.cancelGrant(this.data);
 
-    if (contract.status == "success") {
+    if (contract.status == 'success') {
       this.canceling = false;
       this.canceledSuccess = true;
 
@@ -157,7 +146,7 @@ export class PopupComponent implements OnInit {
     this.funding = true;
     let funding: any = await this.ethcontractService.fund(this.data.grantAddress, this.data.amount);
 
-    if (funding.status == "success") {
+    if (funding.status == 'success') {
       this.funding = false;
       this.fundingSuccess = true;
 
@@ -174,7 +163,7 @@ export class PopupComponent implements OnInit {
     this.payouting = true;
     let payoutRes: any = await this.ethcontractService.approvePayout(this.data.grantAddress, this.data.grantee, this.data.amount)
 
-    if (payoutRes.status == "success") {
+    if (payoutRes.status == 'success') {
       this.payouting = false;
       this.payoutSuccess = true;
 

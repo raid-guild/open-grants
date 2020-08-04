@@ -13,8 +13,10 @@ export class UserManagementService extends HttpHelper {
   private userDataSubject = new Subject<string>();
   onUserDataChange = this.userDataSubject.asObservable();
 
-  constructor(private auth: AuthService,
-    private http: HttpClient) {
+  constructor(
+    private auth: AuthService,
+    private http: HttpClient
+  ) {
     super();
     if (localStorage.getItem(AppSettings.localStorage_keys.userEthAddress)) {
       this.userEthAddress = localStorage.getItem(AppSettings.localStorage_keys.userEthAddress);

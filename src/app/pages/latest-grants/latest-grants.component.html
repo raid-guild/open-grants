@@ -10,16 +10,7 @@
                 <ion-label slot="start">Latest Grants</ion-label>
             </ion-item>
 
-            <hr class="dassed-line">
-
-            <!-- <div class="filter">
-                <select name="" id="" class="drop-down">
-                    <option value="latest">Latest</option>
-                    <option value="trending">Trending</option>
-                    <option value="createBy">Create By Me</option>
-                    <option value="managedBy">Managed By Me</option>
-                </select>
-            </div> -->
+            <hr class="dashed-line">
 
             <div class="container" style="padding-top: 40px;">
                 <ion-row class="">
@@ -34,7 +25,7 @@
                                         </p>
                                     </div>
                                     <div class="all-text-flex new-space">
-                                        <p class="all-text"> Create By : </p>
+                                        <p class="all-text"> Created By : </p>
                                         <p class="new-all-text padding2">
                                             {{grant.createBy | slice:0:30}}{{grant.createBy.length < 30 ? '' : '...'}}
                                         </p>
@@ -66,14 +57,6 @@
             </div>
 
             <div style="margin-bottom: 70px"></div>
-
-            <!-- <div class="container">
-                <div style="margin-bottom: 50px;float: right;">
-                    <span>
-                        < </span>&nbsp;
-                            <span>></span>
-                </div>
-            </div> -->
         </ion-col>
     </ion-row>
 </ion-content>

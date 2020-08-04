@@ -162,7 +162,7 @@ ion-split-pane {
 }
 
 hr {
-  &.dassed-line {
+  &.dashed-line {
     background: url(assets/imgs/dash-line.svg) repeat-x left bottom;
   }
 }
@@ -184,7 +184,7 @@ ion-menu {
         --box-shadow: none;
       }
       hr {
-        &.dassed-line {
+        &.dashed-line {
           height: 33px;
           width: 100%;
           margin: 0;
@@ -469,7 +469,7 @@ ion-row {
       }
     }
     hr {
-      &.dassed-line {
+      &.dashed-line {
         margin-bottom: 32px;
       }
     }

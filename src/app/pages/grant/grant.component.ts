@@ -14,8 +14,6 @@ import Swal from 'sweetalert2';
 import { PayoutComponent } from '../payout/payout.component';
 import { PopupComponent } from '../popup/popup.component';
 import { UtilsService } from 'src/app/services/utils.service';
-import { OrbitService } from 'src/app/services/orbit.service';
-import { ThreeBoxService } from 'src/app/services/threeBox.service';
 
 @Component({
   selector: 'app-grant',
@@ -36,7 +34,7 @@ export class GrantComponent implements OnInit, OnDestroy {
     MANAGER: "manager",
     GRANTEE: "grantee",
   }
-  userRoll = this.userEnum.VISITOR;
+  userRole = this.userEnum.VISITOR;
 
   grantFunds = [];
   userFunds = [];
@@ -55,7 +53,6 @@ export class GrantComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private authService: AuthService,
     private utils: UtilsService,
-    private orbitService: OrbitService,
     public modalController: ModalController,
     private subgraphService: SubgraphService,
     private ethcontractService: EthcontractService,
@@ -73,7 +70,7 @@ export class GrantComponent implements OnInit, OnDestroy {
       this.grantData['amounts'] = this.grantData.input.amounts;
       this.grantData['uri'] = this.grantData.input.uri;
 
-      this.checkRoll();
+      this.checkRole();
 
       this.noOfDayToExpiredFunding = moment(+this.grantData.fundingExpiration).diff(moment(new Date), 'days')
       this.canCancelByGranteeAndDonor = moment(+this.grantData.fundingExpiration).isBefore(new Date());
@@ -90,11 +87,9 @@ export class GrantComponent implements OnInit, OnDestroy {
           }
           return m;
         }, []);
-        // console.log("grantFunds", this.grantFunds);
-      })
+      });
 
       this.grantData.canFund = await this.ethcontractService.canFund(this.grantAddress);
-      console.log("this.grantData", this.grantData)
 
     })();
 
@@ -104,7 +99,7 @@ export class GrantComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.events.subscribe('is_logged_in', (data) => {
       setTimeout(() => {
-        this.checkRoll();
+        this.checkRole();
       }, 100);
     });
   }
@@ -128,39 +123,38 @@ export class GrantComponent implements OnInit, OnDestroy {
     return amount;
   }
 
-  checkRoll() {
+  checkRole() {
     this.getUserEthAddress()
 
     if (this.userEthAddress) {
-      this.userRoll = this.userEnum.DONOR;
+      this.userRole = this.userEnum.DONOR;
 
       if (this.userEthAddress && this.grantData.manager.toLowerCase() == this.userEthAddress.toLowerCase()) {
-        this.userRoll = this.userEnum.MANAGER;
+        this.userRole = this.userEnum.MANAGER;
       }
 
       this.grantData.grantees.map((data, index) => {
         if (this.userEthAddress && data.toLowerCase() == this.userEthAddress.toLowerCase()) {
           this.userAlloc = this.grantData.amounts[index];
-          this.userRoll = this.userEnum.GRANTEE;
+          this.userRole = this.userEnum.GRANTEE;
         }
       });
 
-      if (this.userRoll == this.userEnum.DONOR) {
+      if (this.userRole == this.userEnum.DONOR) {
         this.getDonorData();
       }
 
-      if (this.userRoll == this.userEnum.MANAGER) {
+      if (this.userRole == this.userEnum.MANAGER) {
         this.getManagerData();
       }
 
-      if (this.userRoll == this.userEnum.GRANTEE) {
+      if (this.userRole == this.userEnum.GRANTEE) {
         this.getGranteeData();
       }
     } else {
-      this.userRoll = this.userEnum.VISITOR;
+      this.userRole = this.userEnum.VISITOR;
     }
 
-    console.log("userRoll", this.userRoll);
   }
 
   getDonorData() {
@@ -230,9 +224,7 @@ export class GrantComponent implements OnInit, OnDestroy {
         modal.onDidDismiss()
           .then((data: any) => {
             data = data.data;
-            console.log("data", data);
             if (data && data.hasOwnProperty('reload') && data.reload) {
-              console.log("data", data);
               this.subgraphService.getGrantByAddress(this.grantAddress).subscribe((res: any) => {
                 this.grantData = res.data.contract;
               });

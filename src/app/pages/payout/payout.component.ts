@@ -46,9 +46,8 @@ export class PayoutComponent implements OnInit {
     this.grantees = navParams.get('grantees');
 
     (async () => {
-      let response: any = await this.subgraphService.getGrantByAddress(this.grantAddress).toPromise();
+      const response: any = await this.subgraphService.getGrantByAddress(this.grantAddress).toPromise();
       this.grantData = response.data.contract;
-      console.log("grantData", this.grantData);
     })();
 
   }

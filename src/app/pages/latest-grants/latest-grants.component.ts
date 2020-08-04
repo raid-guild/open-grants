@@ -7,7 +7,6 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { SubgraphService } from 'src/app/services/subgraph.service';
 import { ethers, providers, utils } from 'ethers';
 import { AddressZero, Zero } from "ethers/constants";
-import { OrbitService } from 'src/app/services/orbit.service';
 
 @Component({
   selector: 'app-latest-grants',
@@ -16,7 +15,6 @@ import { OrbitService } from 'src/app/services/orbit.service';
 })
 export class LatestGrantsComponent implements OnInit {
   allGrant: any;
-  grantOrbitData: any;
   searchBox: FormControl;
   searchResult: any = [];
   data = [];

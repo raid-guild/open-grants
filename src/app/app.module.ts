@@ -20,7 +20,6 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireStorageModule } from 'angularfire2/storage';
 import { HttpCommonInterceptor } from './common/interceptors/http-common.interceptor';
 import { AppSettings } from './config/app.config';
-import { OrbitService } from './services/orbit.service';
 
 @NgModule({
   declarations: [AppComponent],

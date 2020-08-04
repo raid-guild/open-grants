@@ -17,10 +17,8 @@ import { ethers, providers, utils } from 'ethers';
 import * as Web3 from 'web3';
 import { addressValidator } from '../../common/validators/custom.validators';
 import { ImageUploadComponent, FileHolder } from 'angular2-image-upload';
-import { OrbitService } from 'src/app/services/orbit.service';
 import { PopupComponent } from '../popup/popup.component';
 import { resolve } from 'url';
-import { ThreeBoxService } from 'src/app/services/threeBox.service';
 
 declare let window: any;
 
@@ -64,19 +62,13 @@ export class CreateNewGrantComponent implements OnInit {
     public router: Router,
     private fb: FormBuilder,
     private ethcontractService: EthcontractService,
-    private utils: UtilsService,
-    private orbitService: OrbitService,
-    private threeBoxService: ThreeBoxService
+    private utilsService: UtilsService
   ) {
 
     this.bindModel();
     let curruntDate = new Date();
     this.maxYear = curruntDate.getFullYear() + 100;
     this.minYear = moment(curruntDate).add(1, 'days').format('YYYY-MM-DD')
-  }
-
-  getData() {
-    this.orbitService.getGrants();
   }
 
   ngOnInit() {
@@ -161,7 +153,6 @@ export class CreateNewGrantComponent implements OnInit {
               if (snapshot.state = "success") {
                 downloadURL = 'https://firebasestorage.googleapis.com/v0/b/' + AppSettings.firebaseConfig.storageBucket + '/o/' + folder + '%2F' + fileName + '?alt=media';
 
-                console.log("downloadURL", downloadURL);
                 cb(downloadURL, { title: file.name });
               }
             }, (error) => {
@@ -182,7 +173,6 @@ export class CreateNewGrantComponent implements OnInit {
             if (snapshot.state = "success") {
               downloadURL = 'https://firebasestorage.googleapis.com/v0/b/' + AppSettings.firebaseConfig.storageBucket + '/o/' + folder + '%2F' + fileName + '?alt=media';
 
-              console.log("downloadURL", downloadURL);
               success(downloadURL);
             }
           }, (error) => {
@@ -431,16 +421,7 @@ export class CreateNewGrantComponent implements OnInit {
   arrangeData() {
     return new Promise(async (resolve) => {
       try {
-        // let orbitrRes: any = await this.threeBoxService.setData({
-        //   name: this.grantForm.name,
-        //   description: this.grantForm.description,
-        //   images: this.grantForm.images,
-        //   content: this.grantForm.content
-        // });
 
-        // console.log("orbitrRes", orbitrRes);
-
-        // if (orbitrRes) {
         let fundingExpiration, contractExpiration;
 
         if (this.grantForm.type == "singleDeliveryDate") {
@@ -459,7 +440,7 @@ export class CreateNewGrantComponent implements OnInit {
         }
 
         let data = {
-          uri: utils.formatBytes32String(this.utils.generateUUID()),
+          uri: utils.formatBytes32String(this.utilsService.generateUUID()),
           grantees: this.grantForm.grantees.map((data) => { return data.grantee }),
           amounts: this.grantForm.grantees.map((data) => { return data.allocationAmount }),
           manager: this.grantForm.manager,
@@ -480,19 +461,6 @@ export class CreateNewGrantComponent implements OnInit {
 
   async onSubmit() {
     this.submitted = true;
-    // console.log("content", this.myForm.value)
-    // if (this.myForm.controls.type.value == "singleDeliveryDate") {
-    //   if (this.myForm.controls.name.invalid || this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.singleDeliveryDate.invalid
-    //     || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid || !this.imageUpload.files.length) {
-    //     return
-    //   }
-    // } else {
-    //   if (this.myForm.controls.name.invalid || this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.multipleMilestones.invalid
-    //     || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid || !this.imageUpload.files.length) {
-    //     return
-    //   }
-    // }
-
     if (this.myForm.controls.type.value == "singleDeliveryDate") {
       if (this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.singleDeliveryDate.invalid
         || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid) {
@@ -528,7 +496,6 @@ export class CreateNewGrantComponent implements OnInit {
 
     // this.grantForm.content = this.grantForm.content.replace(/"/g, "&quot;");
     let contractData = await this.arrangeData();
-    console.log("contractData", contractData);
 
     if (contractData) {
       const modal = await this.modalController.create({
@@ -543,7 +510,6 @@ export class CreateNewGrantComponent implements OnInit {
 
       modal.onDidDismiss()
         .then((data: any) => {
-          console.log("onDidDismiss", data);
           if (data && data.hasOwnProperty('redirect') && data.redirect) {
             this.router.navigate(['/pages/latest']);
           }

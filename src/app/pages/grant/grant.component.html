@@ -11,10 +11,10 @@
         <ion-label slot="start">Grants Details</ion-label>
       </ion-item>
 
-      <hr class="dassed-line">
+      <hr class="dashed-line">
 
       <div class="container-space">
-        <ion-row class="row" *ngIf="userRoll == 'visitor'">
+        <ion-row class="row" *ngIf="userRole == 'visitor'">
           <ion-col size="12" class="container">
             <div class="row">
               <ion-row>
@@ -58,7 +58,7 @@
           </ion-col>
         </ion-row>
 
-        <ion-row class="row" *ngIf="userRoll == 'donor'">
+        <ion-row class="row" *ngIf="userRole == 'donor'">
           <ion-col size="12" class="container">
             <div class="row">
               <!-- <div class="text-center">
@@ -114,7 +114,7 @@
         </ion-row>
 
 
-        <ion-row class="row" *ngIf="userRoll == 'manager'">
+        <ion-row class="row" *ngIf="userRole == 'manager'">
           <ion-col size="12" class="container">
             <div class="row">
               <ion-row>
@@ -151,7 +151,7 @@
         </ion-row>
 
 
-        <ion-row class="row" *ngIf="userRoll == 'grantee'">
+        <ion-row class="row" *ngIf="userRole == 'grantee'">
 
           <ion-col size="12" class="container">
             <div class="row">
