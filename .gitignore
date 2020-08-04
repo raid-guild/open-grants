@@ -1,3 +1,5 @@
+node_modules
+www
+*.Zip
 .history
 .DS_Store
-*.env

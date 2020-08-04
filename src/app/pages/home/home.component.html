@@ -1,0 +1,38 @@
+<ion-header mode="md" no-border>
+    <ion-toolbar mode="md">
+    </ion-toolbar>
+</ion-header>
+
+<ion-row class="margin-50">
+    <div class="container">
+        <div class="border-right">
+            <ion-col size="6">
+                <div class="imgage" (click)="grantDetails(latestGrant.id)">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media"
+                        alt="" style="height: 150px;">
+                    <p>Manager : {{latestGrant?.manager}}</p>
+                    <p>Target Funding : {{currencyCovert(latestGrant?.currency,latestGrant?.targetFunding)}} ETH</p>
+                    <!-- <p>Total Funding : {{currencyCovert(latestGrant?.currency,latestGrant?.totalFunding)}} ETH</p>
+            <p>Available Balance : {{currencyCovert(latestGrant?.currency,latestGrant?.availableBalance)}} ETH</p> -->
+                </div>
+            </ion-col>
+        </div>
+        <div class="border-left">
+            <ion-col size="6">
+                <div *ngFor="let grant of grants | slice:0:3">
+                    <div class="d-flex" (click)="grantDetails(grant.id)">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/grants-platform.appspot.com/o/grant-content%2F1590246149579_roadie_3_tuner-ccbc4c5.jpg?alt=media"
+                            alt="" style="height: 150px;">
+                        <div class="content">
+                            <p>Manager : {{grant?.manager}}</p>
+                            <p>Target Funding : {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH</p>
+                            <p>Total Funding : {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</p>
+                            <p>Available Balance : {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH</p>
+                        </div>
+                    </div>
+                    <div class="line "></div>
+                </div>
+            </ion-col>
+        </div>
+    </div>
+</ion-row>

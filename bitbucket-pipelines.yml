@@ -6,16 +6,27 @@
 image: node:10.15.3
 
 pipelines:
-  default:
+    default:
         - step:
-             script:
-              - apt-get update -qy
-              - apt-get install -y python-dev python-pip
-              - pip install awscli
-
-              - npm install -g --silent @ionic/angular-toolkit
-              - npm install -g --silent @angular/cli
-              - npm install
-              - ng lint
-              - ng build --prod --aot
-              - aws s3 cp --recursive ./build s3://opengrants.com
+            name: 1. Install and Build
+            script:
+                - npm install -g --silent @ionic/angular-toolkit
+                - npm install -g --silent @angular/cli
+                - npm install
+                - npm run build
+            artifacts:
+                - www/**
+    branches:
+      master:
+        - step:
+            name: 2. Deploy to S3
+            deployment: production
+            script:
+            - pipe: atlassian/aws-s3-deploy:0.4.4
+              variables:
+                    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                    AWS_DEFAULT_REGION: 'us-east-1'
+                    S3_BUCKET: 'opengrants.com'
+                    LOCAL_PATH: 'www'
+                    ACL: 'public-read'

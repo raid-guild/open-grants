@@ -1,9 +1,0 @@
-apps:
-  -
-    name: grants-platforms-backend
-    restart_delay: 100
-    script: npm run start
-    autorestart: true
-    env:
-      NODE_ENV: development
-
