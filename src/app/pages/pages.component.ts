@@ -11,46 +11,24 @@ export class PagesComponent implements OnInit {
     isLogin = false;
     public appPages = [];
     public pages = [
-        // {
-        //   title: 'Create New Grants',
-        //   url: '/pages/create',
-        //   icon: 'gp-grant'
-        // },
-        // {
-        //     title: 'Dashboard',
-        //     url: '/pages/dashboard',
-        //     icon: 'gp-grant'
-        // },
+
         {
             title: 'Latest Grants',
             url: '/pages/latest',
             icon: 'gp-latest-grant'
-        }, {
-            title: 'Trending Grants',
-            url: '/pages/trending',
-            icon: 'gp-trending-grants'
         },
-        // {
-        //     title: 'Transaction History',
-        //     url: '/pages/transaction-history',
-        //     icon: 'gp-transaction-history'
-        // }
     ];
 
     public allPage = [
-        // {
-        //     title: 'Dashboard',
-        //     url: '/pages/dashboard',
-        //     icon: 'gp-grant'
-        // },
+        {
+            title: 'Create New Grants',
+            url: '/pages/create',
+            icon: 'gp-grant'
+        },
         {
             title: 'Latest Grants',
             url: '/pages/latest',
             icon: 'gp-latest-grant'
-        }, {
-            title: 'Trending Grants',
-            url: '/pages/trending',
-            icon: 'gp-trending-grants'
         },
         {
             title: 'My Grants',
@@ -62,7 +40,7 @@ export class PagesComponent implements OnInit {
             url: '/pages/profile',
             icon: 'gp-user'
         },
-    ]
+    ];
 
     constructor(
         private authService: AuthService,
