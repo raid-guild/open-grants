@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private authService: AuthService
   ) {
 
-    let res = this.authService.getAuthState();
+    const res = this.authService.getAuthState();
     this.isLogin = res.is_logged_in;
 
     this.events.subscribe('is_logged_in', (data) => {
@@ -70,10 +70,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   async userMenuPopover($event) {
     const popover = await this.popoverCtrl.create({
       component: MenuPopoverComponent,
-      event: event,
+      event,
       translucent: true,
       cssClass: 'poopover-user-option'
-    })
+    });
 
     return await popover.present();
   }
@@ -93,10 +93,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         modelType: 'login'
       }
     });
-
-    modal.onDidDismiss()
-      .then((data) => {
-      });
 
     return await modal.present();
 

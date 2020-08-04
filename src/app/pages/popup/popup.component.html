@@ -3,9 +3,9 @@
   <div *ngIf="modelType == 'login'">
     <div *ngIf="logingIn" style="padding: 99px;">
       <img src="../../../assets/imgs/wallate.png" alt="">
-      <p>Approve the message in your <br> Web3 wallet to continue</p>
+      <p>Sign-in to Metamask to continue</p>
       <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
-      <h1>Logging...</h1>
+      <h1>Logging in...</h1>
       <ion-button (click)="dismiss()" color="medium">Close</ion-button>
     </div>
     <div *ngIf="loginSuccess" style="padding: 99px;">

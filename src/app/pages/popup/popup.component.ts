@@ -79,7 +79,7 @@ export class PopupComponent implements OnInit {
     try {
       this.logingIn = true;
 
-      this.ethcontractService.setProvider();
+      await this.ethcontractService.setProvider();
       const windowProvider = this.ethcontractService.getProvider();
       const provider = new ethers.providers.Web3Provider(windowProvider);
 

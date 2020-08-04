@@ -36,6 +36,7 @@ export class EthcontractService {
     async setProvider() {
         await window.ethereum.enable();
         this.provider = window.ethereum;
+        return true;
     }
     getProvider() {
         return this.provider;
