@@ -7,7 +7,6 @@ import { AddressZero, Zero } from "ethers/constants";
 import { UtilsService } from './utils.service';
 import { AppSettings } from '../config/app.config';
 import * as moment from 'moment';
-import UniLogin from '@unilogin/provider';
 
 declare let require: any;
 declare let window: any;
@@ -23,7 +22,6 @@ export interface AcctInfo {
 @Injectable({
     providedIn: 'root'
 })
-
 export class EthcontractService {
     private web3Provider: any = window.web3.currentProvider;
     // private acctInfoSubject = new Subject<AcctInfo>();

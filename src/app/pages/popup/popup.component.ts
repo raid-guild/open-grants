@@ -6,7 +6,6 @@ import { AuthService } from 'src/app/services/auth.service';
 import { AppSettings } from 'src/app/config/app.config';
 import { EthcontractService } from 'src/app/services/ethcontract.service';
 
-import UniLogin from '@unilogin/provider';
 import {providers, utils, ethers} from 'ethers';
 
 declare let window: any;
