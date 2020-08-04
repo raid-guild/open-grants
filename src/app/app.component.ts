@@ -16,11 +16,11 @@ export class AppComponent implements OnInit {
   isLogin = false;
   public appPages = [];
   public pages = [
-    // {
-    //   title: 'Create New Grants',
-    //   url: '/pages/create',
-    //   icon: 'gp-grant'
-    // },
+    {
+      title: 'Create New Grants',
+      url: '/pages/create',
+      icon: 'gp-grant'
+    },
     {
       title: 'Dashboard',
       url: '/pages/dashboard',
@@ -67,7 +67,7 @@ export class AppComponent implements OnInit {
       url: '/pages/profile',
       icon: 'gp-user'
     },
-  ]
+  ];
 
   constructor(
     private platform: Platform,

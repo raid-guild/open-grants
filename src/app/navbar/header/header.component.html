@@ -26,13 +26,11 @@
 
     <ion-buttons slot="end">
       <div class="user-icon">
-        <img class="image" *ngIf="isImage" src="{{'https://ipfs.infura.io/ipfs/' + user3BoxProfile?.image}}" alt="">
         <ion-icon *ngIf="!isImage" size="large" name="person"></ion-icon>
       </div>
       <ion-button mode="md" class="user-profile-menu">
 
-        <span>{{user3BoxProfile?.name ? user3BoxProfile?.name : '' }}<i class=" gp-arrow-down"
-            (click)="userMenuPopover($event)"></i></span>
+        <span><i class="gp-arrow-down" (click)="userMenuPopover($event)"></i></span>
       </ion-button>
     </ion-buttons>
 
