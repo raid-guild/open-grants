@@ -6,6 +6,7 @@
 image: node:10.15.3
 
 pipelines:
+<<<<<<< HEAD
     default:
         - step:
             name: 1. Install and Build
@@ -30,3 +31,18 @@ pipelines:
                     S3_BUCKET: 'opengrants.com'
                     LOCAL_PATH: 'www'
                     ACL: 'public-read'
+=======
+  default:
+        - step:
+             script:
+              - apt-get update -qy
+              - apt-get install -y python-dev python-pip
+              - pip install awscli
+
+              - npm install -g --silent @ionic/angular-toolkit
+              - npm install -g --silent @angular/cli
+              - npm install
+              - ng lint
+              - ng build --prod --aot
+              - aws s3 cp --recursive ./build s3://opengrants.com
+>>>>>>> f87181df030a6620f00e64bc192347c753bd6bc2
