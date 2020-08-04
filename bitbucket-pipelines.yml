@@ -8,21 +8,14 @@ image: node:10.15.3
 pipelines:
     default:
         - step:
-            name: 1. Install
+            name: Build and Deploy
             script:
                 - npm install -g --silent @ionic/angular-toolkit
                 - npm install -g --silent @angular/cli
                 - npm install
-        - step:
-            name: 2. Build
-            script:
                 - npm run build
-        - step:
-            name: 3. Deploy to S3
-            deployment: production
-            script:
-            - pipe: atlassian/aws-s3-deploy:0.4.4
-              variables:
+                - pipe: atlassian/aws-s3-deploy:0.4.4
+                  variables:
                     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
                     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
                     AWS_DEFAULT_REGION: 'us-east-1'
