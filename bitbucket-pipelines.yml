@@ -20,5 +20,5 @@ pipelines:
                     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
                     AWS_DEFAULT_REGION: 'us-east-1'
                     S3_BUCKET: 'opengrants.com'
-                    LOCAL_PATH: './www'
+                    LOCAL_PATH: 'www'
                     ACL: 'public-read'
