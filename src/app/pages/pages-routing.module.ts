@@ -4,7 +4,6 @@ import { PagesComponent } from './pages.component';
 import { AuthGuard } from '../guard/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { LatestGrantsComponent } from './latest-grants/latest-grants.component';
-import { TrendingGrantsComponent } from './trending-grants/trending-grants.component';
 import { ProfileComponent } from './profile/profile.component';
 import { MyGrantsComponent } from './my-grants/my-grants.component';
 import { GrantDetailsComponent } from './grant-details/grant-details.component';
@@ -28,9 +27,6 @@ const routes: Routes = [{
         }, {
             path: 'latest',
             component: LatestGrantsComponent
-        }, {
-            path: 'trending',
-            component: TrendingGrantsComponent
         }, {
             path: 'grant/:id',
             component: GrantComponent,

@@ -12,7 +12,6 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { HomeComponent } from './home/home.component';
 import { LatestGrantsComponent } from './latest-grants/latest-grants.component';
-import { TrendingGrantsComponent } from './trending-grants/trending-grants.component';
 import { MyGrantsComponent } from './my-grants/my-grants.component';
 import { NumberonlyDirectiveModule } from '../common/directives/numberOnlyDirective/numberonlyDirective.module';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -46,7 +45,6 @@ const PAGES_COMPONENTS = [
         MyGrantsComponent,
         GrantDetailsComponent,
         LatestGrantsComponent,
-        TrendingGrantsComponent,
         CreateNewGrantComponent,
     ],
     imports: [

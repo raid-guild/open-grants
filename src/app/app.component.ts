@@ -30,16 +30,7 @@ export class AppComponent implements OnInit {
       title: 'Latest Grants',
       url: '/pages/latest',
       icon: 'gp-latest-grant'
-    }, {
-      title: 'Trending Grants',
-      url: '/pages/trending',
-      icon: 'gp-trending-grants'
     },
-    // {
-    //     title: 'Transaction History',
-    //     url: '/pages/transaction-history',
-    //     icon: 'gp-transaction-history'
-    // }
   ];
 
   public allPage = [
@@ -52,10 +43,6 @@ export class AppComponent implements OnInit {
       title: 'Latest Grants',
       url: '/pages/latest',
       icon: 'gp-latest-grant'
-    }, {
-      title: 'Trending Grants',
-      url: '/pages/trending',
-      icon: 'gp-trending-grants'
     },
     {
       title: 'My Grants',

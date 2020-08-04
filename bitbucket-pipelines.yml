@@ -15,7 +15,9 @@ pipelines:
                 - npm install
                 - npm run build
             artifacts:
-                - www/*
+                - www/**
+    branches:
+      master:
         - step:
             name: 2. Deploy to S3
             deployment: production
