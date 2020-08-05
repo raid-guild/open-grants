@@ -29,10 +29,17 @@ definitions:
             S3_BUCKET: 'opengrants.com'
             LOCAL_PATH: 'www'
             ACL: 'public-read'
+    - step: &CacheInvalidate
+        name: 3. Clear CloudFront Cache
+        script:
+        - pipe: atlassian/aws-cloudfront-invalidate:0.3.3
+          variables:
+            AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+            AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+            AWS_DEFAULT_REGION: 'us-east-1'
+            DISTRIBUTION_ID: 'E38WZFSLLNN7I8'
 
 pipelines:
-    default:
-        - step: *Install-Build
     branches:
       master:
         - step: *Install-Build
@@ -40,4 +47,8 @@ pipelines:
             <<: *Deploy
             name: Deploy to Production
             deployment: production
+            trigger: manual
+        - step:
+            <<: *CacheInvalidate
+            name: Delete CDN Cache
             trigger: manual
