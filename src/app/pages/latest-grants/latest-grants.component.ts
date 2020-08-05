@@ -1,12 +1,11 @@
-import { Component, OnInit, OnChanges, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
-import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 import { Router } from '@angular/router';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { SubgraphService } from 'src/app/services/subgraph.service';
-import { ethers, providers, utils } from 'ethers';
-import { AddressZero, Zero } from "ethers/constants";
+import { ethers } from 'ethers';
+import { AddressZero } from 'ethers/constants';
 
 @Component({
   selector: 'app-latest-grants',
@@ -19,7 +18,8 @@ export class LatestGrantsComponent implements OnInit {
   searchResult: any = [];
   data = [];
 
-  constructor(public popoverCtrl: PopoverController,
+  constructor(
+    public popoverCtrl: PopoverController,
     private router: Router,
     public modalController: ModalController,
     private subgraphService: SubgraphService,
@@ -36,24 +36,24 @@ export class LatestGrantsComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe((val: string) => {
-        // console.log("val", val)
-        if (val == '') {
+
+        if (val === '') {
           this.searchResult = [];
           this.searchResult = this.allGrant;
         } else {
-          this.searchResult = []
+          this.searchResult = [];
           this.searchResult = this.allGrant.filter((data) => {
             // console.log("data.name.toLowerCase()", data.name.toLowerCase());
-            return data.grantName.toLowerCase().includes(val.toLowerCase())
+            return data.grantName.toLowerCase().includes(val.toLowerCase());
           });
         }
-      })
+      });
   }
 
   onCancel(event) { }
 
   grantDetails(id: string) {
-    this.router.navigate(['/pages/grant/' + id])
+    this.router.navigate(['/pages/grant/' + id]);
   }
 
   getAllGrants() {
@@ -64,7 +64,7 @@ export class LatestGrantsComponent implements OnInit {
   }
 
   currencyCovert(currencyType, amount) {
-    if (currencyType == AddressZero) {
+    if (currencyType === AddressZero) {
       return ethers.utils.formatEther(amount);
     }
     return amount;
