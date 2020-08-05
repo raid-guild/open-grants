@@ -13,15 +13,14 @@
 
       <hr class="dashed-line">
 
-      <div class="container-space">
         <ion-row class="row" *ngIf="userRole == 'visitor'">
           <ion-col size="12" class="container">
-            <div class="row">
+
               <ion-row>
-                <ion-col size-md="7" size-sm="12">
+                <ion-col size-lg="7" size-md="12" size-xs="12" size-sm="12">
                   <img src="../../../assets/imgs/ethermist.jpg" alt="">
                 </ion-col>
-                <ion-col size-md="4" size-sm="12" class="padding-left-50">
+                <ion-col size-lg="5" size-md="12" size-xs="12" size-sm="12" class="padding-left-50">
                   <div class="line"></div>
                   <div class="padding-20 top-20">
                     <h1 class="green">Ξ {{currencyCovert(grantData?.currency,grantData?.availableBalance)}} ETH
@@ -54,22 +53,22 @@
                   </div>
                 </ion-col>
               </ion-row>
-            </div>
+
           </ion-col>
         </ion-row>
 
         <ion-row class="row" *ngIf="userRole == 'donor'">
           <ion-col size="12" class="container">
-            <div class="row">
+
               <!-- <div class="text-center">
             <h1>{{grantDetails.name}}</h1>
             <p>{{grantDetails.description}}</p>
           </div> -->
               <ion-row>
-                <ion-col size-md="7" size-sm="12">
+                <ion-col size-lg="7" size-md="12" size-xs="12" size-sm="12">
                   <img src="../../../assets/imgs/ethermist.jpg" alt="">
                 </ion-col>
-                <ion-col size-md="5" size-sm="12" class="padding-left-50">
+                <ion-col size-lg="5" size-md="12" size-xs="12" size-sm="12" class="padding-left-50">
                   <div class="line"></div>
                   <div class="padding-20 top-20">
                     <h1 class="green">Ξ {{currencyCovert(grantData?.currency,grantData?.availableBalance)}} ETH
@@ -109,19 +108,19 @@
                   </ion-button>
                 </ion-col>
               </ion-row>
-            </div>
+
           </ion-col>
         </ion-row>
 
 
         <ion-row class="row" *ngIf="userRole == 'manager'">
           <ion-col size="12" class="container">
-            <div class="row">
+
               <ion-row>
-                <ion-col size-md="7" size-sm="12">
+                <ion-col size-lg="7" size-md="12" size-xs="12" size-sm="12">
                   <img src="../../../assets/imgs/ethermist.jpg" alt="">
                 </ion-col>
-                <ion-col size-md="5" size-sm="12" class="padding-left-50">
+                <ion-col size-lg="5" size-md="12" size-xs="12" size-sm="12" class="padding-left-50">
                   <div class="line"></div>
                   <div class="padding-20 top-20">
                     <h1 class="green">Ξ {{currencyCovert(grantData?.currency,grantData?.availableBalance)}} ETH
@@ -146,7 +145,7 @@
                   </div>
                 </ion-col>
               </ion-row>
-            </div>
+
           </ion-col>
         </ion-row>
 
@@ -154,12 +153,12 @@
         <ion-row class="row" *ngIf="userRole == 'grantee'">
 
           <ion-col size="12" class="container">
-            <div class="row">
+
               <ion-row>
-                <ion-col size-md="7" size-sm="12">
+                <ion-col size-lg="7" size-md="12" size-xs="12" size-sm="12">
                   <img src="../../../assets/imgs/ethermist.jpg" alt="">
                 </ion-col>
-                <ion-col size-md="5" size-sm="12" class="padding-left-50">
+                <ion-col size-lg="5" size-md="12" size-xs="12" size-sm="12" class="padding-left-50">
                   <div class="line"></div>
                   <div class="padding-20 top-20">
                     <h1 class="green">Ξ {{currencyCovert(grantData?.currency,grantData?.availableBalance)}} ETH
@@ -187,7 +186,7 @@
                   </div>
                 </ion-col>
               </ion-row>
-            </div>
+
           </ion-col>
         </ion-row>
 
@@ -200,7 +199,7 @@
             </div>
           </ion-col>
         </ion-row> -->
-      </div>
+
     </ion-col>
   </ion-row>
 </ion-content>
