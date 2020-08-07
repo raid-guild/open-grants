@@ -27,8 +27,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private ethcontractService: EthcontractService,
     private _zone: NgZone
   ) {
-    this.userEthAddress = localStorage.getItem(AppSettings.localStorage_keys.userEthAddress);
-    this.getAccountInfo();
+    // this.userEthAddress = localStorage.getItem(AppSettings.localStorage_keys.userEthAddress);
+    // this.getAccountInfo();
   }
 
   ngOnInit() {
@@ -37,9 +37,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
   async getAccountInfo() {
     if (this.userEthAddress) {
 
-      let data: any = await this.ethcontractService.getAccountInfo(this.userEthAddress);
-      this.account = data.account;
-      this.balance = data.balance;
+      // let data: any = await this.ethcontractService.getAccountInfo(this.userEthAddress);
+      // this.account = data.account;
+      // this.balance = data.balance;
     }
 
   }

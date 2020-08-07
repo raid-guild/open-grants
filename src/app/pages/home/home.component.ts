@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 import { Router } from '@angular/router';
 import { SubgraphService } from 'src/app/services/subgraph.service';
-import { ethers, providers, utils, constants } from 'ethers';
+import { ethers, constants } from 'ethers';
 
 const { AddressZero, Zero } = constants;
 

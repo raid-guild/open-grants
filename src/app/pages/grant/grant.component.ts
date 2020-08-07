@@ -108,8 +108,8 @@ export class GrantComponent implements OnInit, OnDestroy {
   };
 
 
-  getUserEthAddress() {
-    this.userEthAddress = this.authService.getAuthUserId();
+  async getUserEthAddress() {
+    this.userEthAddress = await this.authService.getAuthUserId();
     // console.log("userEthAddress", this.userEthAddress)
   }
 
