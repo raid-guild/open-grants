@@ -1,6 +1,5 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { Events } from '@ionic/angular';
-import { AuthService, AuthState } from '../services/auth.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
     selector: 'app-pages',
@@ -10,7 +9,7 @@ import { AuthService, AuthState } from '../services/auth.service';
 export class PagesComponent implements OnInit {
     isLogin = false;
     public appPages = [];
-    public pages = [
+    public unauthenticatedPages = [
 
         {
             title: 'Latest Grants',
@@ -19,7 +18,7 @@ export class PagesComponent implements OnInit {
         },
     ];
 
-    public allPage = [
+    public allPages = [
         {
             title: 'Create New Grants',
             url: '/pages/create',
@@ -35,39 +34,20 @@ export class PagesComponent implements OnInit {
             url: '/pages/my-grants',
             icon: 'gp-grant'
         },
-        {
-            title: 'User Profile',
-            url: '/pages/profile',
-            icon: 'gp-user'
-        },
+        // {
+        //     title: 'User Profile',
+        //     url: '/pages/profile',
+        //     icon: 'gp-user'
+        // },
     ];
 
-    constructor(
-        private authService: AuthService,
-        public events: Events
-    ) {
-        let res = this.authService.getAuthState();
-        this.isLogin = res.is_logged_in;
-
-        this.events.subscribe('is_logged_in', (data) => {
-            this.isLogin = data;
-            if (this.isLogin) {
-                this.appPages = this.allPage;
-            } else {
-                this.appPages = this.pages;
-            }
-        });
-
-        if (this.isLogin) {
-            this.appPages = this.allPage;
-        } else {
-            this.appPages = this.pages;
-        }
+    constructor(private authService: AuthService) {
+        this.appPages = this.unauthenticatedPages;
     }
 
     ngOnInit() {
-        this.authService.authState.subscribe((res: AuthState) => {
-            // console.log("res.is_logged_in", res)
+        this.authService.getLoggedIn().subscribe((res: boolean) => {
+            this.appPages = res ? this.allPages : this.unauthenticatedPages;
         });
     }
 }

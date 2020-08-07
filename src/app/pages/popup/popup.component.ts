@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { NavParams } from '@ionic/angular';
-import { UserManagementService } from 'src/app/services/user-management.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { AppSettings } from 'src/app/config/app.config';
 import { EthcontractService } from 'src/app/services/ethcontract.service';
-
-import {providers, utils, ethers} from 'ethers';
+import { Web3Service } from 'src/app/services/web3.service';
 
 declare let window: any;
 
@@ -43,7 +41,7 @@ export class PopupComponent implements OnInit {
     private navParams: NavParams,
     private authService: AuthService,
     private ethcontractService: EthcontractService,
-    private userManagementService: UserManagementService
+    private web3service: Web3Service,
   ) {
     this.modelType = this.navParams.get('modelType');
     this.data = this.navParams.get('data');
@@ -78,16 +76,7 @@ export class PopupComponent implements OnInit {
   async login() {
     try {
       this.logingIn = true;
-
-      await this.ethcontractService.setProvider();
-      const windowProvider = this.ethcontractService.getProvider();
-      const provider = new ethers.providers.Web3Provider(windowProvider);
-
-      const address = await (provider.getSigner()).getAddress();
-
-      if (!address) {
-        throw new Error('failed to connect to metamask');
-      }
+      await this.authService.login();
 
       this.loginSuccess = true;
       this.logingIn = false;

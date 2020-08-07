@@ -2,16 +2,14 @@ import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { NavParams } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
-import { ethers, providers, utils } from 'ethers';
+import { ethers, constants } from 'ethers';
 import { EthcontractService } from 'src/app/services/ethcontract.service';
 import Swal from 'sweetalert2';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { addressValidator } from 'src/app/common/validators/custom.validators';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { async } from '@angular/core/testing';
 import { SubgraphService } from 'src/app/services/subgraph.service';
-import { AddressZero, Zero } from "ethers/constants";
 import { PopupComponent } from '../popup/popup.component';
+
+const { AddressZero, Zero } = constants;
 
 @Component({
   selector: 'app-payout',

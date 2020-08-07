@@ -1,20 +1,19 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ModalController, Events } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 import { SubgraphService } from 'src/app/services/subgraph.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EthcontractService } from 'src/app/services/ethcontract.service';
 import { async } from '@angular/core/testing';
-import { UserManagementService } from 'src/app/services/user-management.service';
-import { AddressZero, Zero } from "ethers/constants";
-import { ethers, providers, utils } from 'ethers';
+import { ethers, constants } from 'ethers';
 import * as moment from 'moment';
 import Swal from 'sweetalert2';
 import { PayoutComponent } from '../payout/payout.component';
 import { PopupComponent } from '../popup/popup.component';
 import { UtilsService } from 'src/app/services/utils.service';
 
+const { AddressZero, Zero } = constants;
 @Component({
   selector: 'app-grant',
   templateUrl: './grant.component.html',
@@ -47,7 +46,6 @@ export class GrantComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    public events: Events,
     public router: Router,
     private toastr: ToastrService,
     private route: ActivatedRoute,
@@ -56,7 +54,6 @@ export class GrantComponent implements OnInit, OnDestroy {
     public modalController: ModalController,
     private subgraphService: SubgraphService,
     private ethcontractService: EthcontractService,
-    private userManagementService: UserManagementService,
   ) {
     this.grantAddress = this.route.snapshot.params.id || '';
 
@@ -97,11 +94,11 @@ export class GrantComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.events.subscribe('is_logged_in', (data) => {
-      setTimeout(() => {
-        this.checkRole();
-      }, 100);
-    });
+    // this.events.subscribe('is_logged_in', (data) => {
+    //   setTimeout(() => {
+    //     this.checkRole();
+    //   }, 100);
+    // });
   }
 
   htmlDecode(input: any) {

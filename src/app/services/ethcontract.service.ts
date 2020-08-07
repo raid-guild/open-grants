@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import * as Web3 from 'web3';
-import { ethers, providers, utils } from 'ethers';
+import { ethers, providers, utils, constants } from 'ethers';
 import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { AddressZero, Zero } from "ethers/constants";
 import { UtilsService } from './utils.service';
 import { AppSettings } from '../config/app.config';
 import * as moment from 'moment';
@@ -11,13 +9,14 @@ import * as moment from 'moment';
 declare let require: any;
 declare let window: any;
 
-let GrantFactory = require('../../assets/abi/GrantFactory.json');
-let ManagedCappedGrantAbi = require('../../assets/abi/ManagedCappedGrant.json');
+const { AddressZero, Zero } = constants;
+const GrantFactory = require('../../assets/abi/GrantFactory.json');
+const ManagedCappedGrantAbi = require('../../assets/abi/ManagedCappedGrant.json');
 
 export interface AcctInfo {
-    account: String,
-    balance: number
-};
+    account: string;
+    balance: number;
+}
 
 @Injectable({
     providedIn: 'root'
@@ -38,6 +37,7 @@ export class EthcontractService {
         this.provider = window.ethereum;
         return true;
     }
+
     getProvider() {
         return this.provider;
     }
@@ -47,8 +47,8 @@ export class EthcontractService {
             window.web3.eth.getBalance(account, (err, balance) => {
                 if (err === null) {
                     resolve({
-                        account: account,
-                        balance: (window.web3.fromWei(balance, "ether")).toNumber()
+                        account,
+                        balance: (window.web3.fromWei(balance, 'ether')).toNumber()
                     });
                 } else {
                     resolve({
@@ -68,8 +68,8 @@ export class EthcontractService {
                     window.web3.eth.getBalance(account, (err, balance) => {
                         if (err === null) {
                             resolve({
-                                account: account,
-                                balance: (window.web3.fromWei(balance, "ether")).toNumber()
+                                account,
+                                balance: (window.web3.fromWei(balance, 'ether')).toNumber()
                             });
                         } else {
                             resolve({
@@ -100,32 +100,32 @@ export class EthcontractService {
             //     contractExpiration: "1589706701"
             // }
 
-            let currency = AddressZero;
-            if (data.currency == "ETH") {
+            const currency = AddressZero;
+            if (data.currency == 'ETH') {
                 data.amounts = data.amounts.map((amount) => {
                     amount = (ethers.utils.parseEther(amount.toString())).toString();
                     return amount;
-                })
+                });
 
                 data.targetFunding = (ethers.utils.parseEther(data.targetFunding.toString())).toString();
             }
 
-            console.log("data", data);
+            console.log('data', data);
 
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
-            let contract = new ethers.Contract(AppSettings.ethersConfig.factoryContract, GrantFactory.abi, provider);
-            let contractWithSigner = contract.connect(signer);
+            const contract = new ethers.Contract(AppSettings.ethersConfig.factoryContract, GrantFactory.abi, provider);
+            const contractWithSigner = contract.connect(signer);
 
             contractWithSigner.create(data.grantees, data.amounts, data.manager, currency, data.targetFunding,
                 data.fundingExpiration, data.contractExpiration, data.uri, AddressZero, { gasLimit: AppSettings.ethersConfig.gasLimit })
                 .then(async (response) => {
-                    console.log("Create", response)
+                    console.log('Create', response);
                     try {
                         // let temp = await response.wait();
                         resolve({
-                            status: "success",
-                            message: "Grant Created successfully",
+                            status: 'success',
+                            message: 'Grant Created successfully',
                             address: '',
                             hash: response.hash
                         });
@@ -133,45 +133,45 @@ export class EthcontractService {
                         resolve({
                             hash: '',
                             address: '',
-                            status: "failed",
-                            message: "Error creating grant",
+                            status: 'failed',
+                            message: 'Error creating grant',
                         });
                     }
                 }, (error) => {
-                    console.log(error)
+                    console.log(error);
                     resolve({
                         hash: '',
                         address: '',
-                        status: "failed",
+                        status: 'failed',
                         message: error.message
                     });
-                })
-        })
+                });
+        });
     }
 
     checkAvailableBalance(contractAddress) {
         return new Promise(async (resolve) => {
             try {
-                let provider = ethers.getDefaultProvider(AppSettings.ethersConfig.networks);
-                let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
-                let response = await contract.availableBalance();
+                const provider = ethers.getDefaultProvider(AppSettings.ethersConfig.networks);
+                const contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
+                const response = await contract.availableBalance();
                 // response = ethers.utils.formatEther(response);
                 resolve(response);
             } catch (e) {
                 resolve(0);
             }
-        })
+        });
     }
 
     async isManager(contractAddress, publicKey) {
         return new Promise(async (resolve, reject) => {
             try {
-                let provider = ethers.getDefaultProvider(AppSettings.ethersConfig.networks);
-                let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
-                let response = await contract.isManager(publicKey);
+                const provider = ethers.getDefaultProvider(AppSettings.ethersConfig.networks);
+                const contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
+                const response = await contract.isManager(publicKey);
                 resolve(response);
             } catch (e) {
-                reject(false)
+                reject(false);
             }
         });
     }
@@ -180,14 +180,14 @@ export class EthcontractService {
         return new Promise(async (resolve, reject) => {
             try {
                 const provider = new ethers.providers.Web3Provider(this.web3Provider);
-                let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
-                let response = await contract.canFund();
+                const contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
+                const response = await contract.canFund();
                 // console.log("response", response);
                 resolve(response);
             } catch (e) {
                 reject(false);
             }
-        })
+        });
     }
 
     fund(contractAddress, amount) {
@@ -195,7 +195,7 @@ export class EthcontractService {
 
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
-            let valuetkn = new ethers.utils.BigNumber(amount);
+            const valuetkn = ethers.BigNumber.from(amount);
 
             signer.sendTransaction({
                 to: contractAddress,
@@ -203,17 +203,17 @@ export class EthcontractService {
                 gasLimit: AppSettings.ethersConfig.gasLimit
             })
                 .then((response) => {
-                    console.log("response", response);
+                    console.log('response', response);
                     resolve({
-                        status: "success",
-                        message: "Reqest sent successfully",
+                        status: 'success',
+                        message: 'Reqest sent successfully',
                         hash: response.hash
                     });
                 }, (error) => {
-                    console.log(error)
+                    console.log(error);
                     resolve({
                         hash: '',
-                        status: "failed",
+                        status: 'failed',
                         message: error.message
                     });
                 });
@@ -224,8 +224,8 @@ export class EthcontractService {
         return new Promise(async (resolve, reject) => {
             try {
                 const provider = new ethers.providers.Web3Provider(this.web3Provider);
-                let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
-                let response = await contract.remainingAllocation(userPublicKey);
+                const contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
+                const response = await contract.remainingAllocation(userPublicKey);
                 // response = ethers.utils.formatEther(response);
                 resolve(response);
             } catch (e) {
@@ -239,30 +239,30 @@ export class EthcontractService {
             this.utilsService.startLoader();
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
-            let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
-            let contractWithSigner = contract.connect(signer);
-            let valuetkn = new ethers.utils.BigNumber(amount);
+            const contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
+            const contractWithSigner = contract.connect(signer);
+            const valuetkn = ethers.BigNumber.from(amount);
             contractWithSigner.approvePayout(valuetkn, granteePublicKey, { gasLimit: AppSettings.ethersConfig.gasLimit }).then((response) => {
-                console.log("response", response);
+                console.log('response', response);
                 this.utilsService.stopLoader();
                 resolve({
-                    status: "success",
-                    message: "Reqest sent successfully",
+                    status: 'success',
+                    message: 'Reqest sent successfully',
                     contract: contractAddress,
                     grantee: granteePublicKey,
-                    amount: amount,
+                    amount,
                     hash: response.hash
                 });
             }, (error) => {
-                console.log(error)
+                console.log(error);
                 this.utilsService.stopLoader();
                 resolve({
                     hash: '',
-                    status: "failed",
+                    status: 'failed',
                     message: error.message,
                     contract: contractAddress,
                     grantee: granteePublicKey,
-                    amount: amount,
+                    amount,
                 });
             });
         });
@@ -274,18 +274,18 @@ export class EthcontractService {
             this.utilsService.startLoader();
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
-            let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
-            let contractWithSigner = contract.connect(signer);
-            let valuetkn = new ethers.utils.BigNumber(amount);
-            let response = await contractWithSigner.approveRefund(valuetkn, userPublicKey, { gasLimit: AppSettings.ethersConfig.gasLimit });
-            console.log("response", response)
-            let tx = await response.wait();
+            const contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
+            const contractWithSigner = contract.connect(signer);
+            const valuetkn = ethers.BigNumber.from(amount);
+            const response = await contractWithSigner.approveRefund(valuetkn, userPublicKey, { gasLimit: AppSettings.ethersConfig.gasLimit });
+            console.log('response', response);
+            const tx = await response.wait();
             this.utilsService.stopLoader();
             resolve({
                 contract: contractAddress,
                 grantee: userPublicKey,
-                amount: amount,
-                status: "Success"
+                amount,
+                status: 'Success'
             });
             // } catch (e) {
             //     this.utilsService.stopLoader();
@@ -297,7 +297,7 @@ export class EthcontractService {
             //     });
             // }
 
-        })
+        });
     }
 
     withdrawRefund(contractAddress, donorAddress) {
@@ -306,27 +306,27 @@ export class EthcontractService {
                 this.utilsService.startLoader();
                 const provider = new ethers.providers.Web3Provider(this.web3Provider);
                 const signer = provider.getSigner();
-                let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
-                let contractWithSigner = contract.connect(signer);
-                let response = await contractWithSigner.withdrawRefund(donorAddress)
-                console.log("response", response);
-                let tx = await response.wait();
-                console.log("tx", tx);
+                const contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
+                const contractWithSigner = contract.connect(signer);
+                const response = await contractWithSigner.withdrawRefund(donorAddress);
+                console.log('response', response);
+                const tx = await response.wait();
+                console.log('tx', tx);
                 this.utilsService.stopLoader();
                 resolve({
                     contract: contractAddress,
                     donor: donorAddress,
-                    status: "Success"
+                    status: 'Success'
                 });
             } catch (e) {
                 this.utilsService.stopLoader();
                 reject({
                     contract: contractAddress,
                     donor: donorAddress,
-                    status: "Failed"
+                    status: 'Failed'
                 });
             }
-        })
+        });
     }
 
     signal(contractAddress, support, amount) {
@@ -335,39 +335,39 @@ export class EthcontractService {
             this.utilsService.startLoader();
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
-            let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
-            let contractWithSigner = contract.connect(signer);
-            let valuetkn = new ethers.utils.BigNumber(amount);
-            let response = await contractWithSigner.signal(support, valuetkn, { gasLimit: AppSettings.ethersConfig.gasLimit });
-            console.log("response", response);
-            let tx = await response.wait();
-            console.log("tx", tx);
+            const contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
+            const contractWithSigner = contract.connect(signer);
+            const valuetkn = ethers.BigNumber.from(amount);
+            const response = await contractWithSigner.signal(support, valuetkn, { gasLimit: AppSettings.ethersConfig.gasLimit });
+            console.log('response', response);
+            const tx = await response.wait();
+            console.log('tx', tx);
             this.utilsService.stopLoader();
             resolve();
             // } catch (e) {
             //     this.utilsService.stopLoader();
             //     reject();
             // }
-        })
+        });
     }
 
     cancelGrant(contractAddress) {
         return new Promise(async (resolve, reject) => {
             const provider = new ethers.providers.Web3Provider(this.web3Provider);
             const signer = provider.getSigner();
-            let contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
-            let contractWithSigner = contract.connect(signer);
+            const contract = new ethers.Contract(contractAddress, ManagedCappedGrantAbi.abi, provider);
+            const contractWithSigner = contract.connect(signer);
             contractWithSigner.cancelGrant({ gasLimit: AppSettings.ethersConfig.gasLimit }).then(async (response) => {
                 // console.log("response", response);
                 resolve({
-                    status: "success",
-                    message: "Reqest sent successfully",
+                    status: 'success',
+                    message: 'Reqest sent successfully',
                     hash: response.hash
                 });
 
             }, (error) => {
                 resolve({
-                    status: "failed",
+                    status: 'failed',
                     message: error.message,
                     hash: ''
                 });
@@ -379,43 +379,43 @@ export class EthcontractService {
 
     getTransactionStatus(hash) {
         return new Promise((resolve) => {
-            console.log("getTransactionStatus")
+            console.log('getTransactionStatus');
             setTimeout(async () => {
-                let status = await this.getTransactionReceipt(hash);
+                const status = await this.getTransactionReceipt(hash);
                 console.log(status);
                 return status;
-            }, 1000)
+            }, 1000);
         });
     }
 
     getTransactionReceipt(hash) {
         return new Promise((resolve) => {
-            console.log("getTransactionReceipt")
-            window.web3.eth.getTransactionReceipt(hash, function (error, result) {
+            console.log('getTransactionReceipt');
+            window.web3.eth.getTransactionReceipt(hash, function(error, result) {
                 if (error) {
-                    console.log("error", error);
+                    console.log('error', error);
                     resolve();
                 } else {
-                    console.log("result", result);
+                    console.log('result', result);
                     if (!result) {
                         this.getTransactionStatus(hash);
                         resolve();
                     } else {
-                        let valuetkn = new ethers.utils.BigNumber(result.status);
-                        console.log("valuetkn", valuetkn);
+                        const valuetkn = ethers.BigNumber.from(result.status);
+                        console.log('valuetkn', valuetkn);
                         resolve(result.status);
                     }
                 }
-            })
-        })
+            });
+        });
 
     }
 
     parseTransaction(input) {
         const iface = new ethers.utils.Interface(GrantFactory.abi);
-        let parseData = iface.parseTransaction({ data: input })
+        const parseData = iface.parseTransaction({ data: input });
 
-        let data = {
+        const data = {
             grantees: parseData.args[0],
             amounts: parseData.args[1],
             manager: parseData.args[2],
@@ -424,7 +424,7 @@ export class EthcontractService {
             fundingDeadline: moment(+parseData.args[5].toString(16).toUpperCase()).format(),
             contractExpiration: moment(+parseData.args[6].toString(16).toUpperCase()).format(),
             uri: parseData.args[7],
-        }
+        };
 
         if (data.uri != AddressZero) {
             data.uri = utils.parseBytes32String(data.uri);

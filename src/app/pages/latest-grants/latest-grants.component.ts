@@ -4,8 +4,9 @@ import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { SubgraphService } from 'src/app/services/subgraph.service';
-import { ethers } from 'ethers';
-import { AddressZero } from 'ethers/constants';
+import { ethers, constants } from 'ethers';
+
+const { AddressZero } = constants;
 
 @Component({
   selector: 'app-latest-grants',

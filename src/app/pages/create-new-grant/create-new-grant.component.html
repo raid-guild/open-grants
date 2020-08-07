@@ -15,50 +15,6 @@
             <div class="form-details">
                 <ion-list lines="none" class="forms" mode="md">
 
-                    <!-- <ion-row class="name">
-                        <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
-                            <ion-item>
-                                <ion-label position="floating" for="description">Enter here short description...
-                                </ion-label>
-                                <ion-textarea rows="3" cols="20" spellcheck="true" auto-grow="true" class="form-control"
-                                    type="text" formControlName="description" maxlength="110">
-                                </ion-textarea>
-                            </ion-item>
-                        </ion-col>
-
-                        <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
-                            <image-upload buttonCaption="Upload Image" dropBoxMessage="OR Drop image here" #Image
-                                [max]="1" name="imageUpload" id="imageUpload" #images>
-                            </image-upload>
-                            <div *ngIf="submitted && !images.files.length">
-                                <span class="error">
-                                    Please Upload an Image
-                                </span>
-                            </div>
-                        </ion-col>
-                    </ion-row> -->
-
-                    <ion-radio-group>
-                        <ion-row class="radio name">
-                            <ion-col size-lg="6" size-sm="12" class="padding-0">
-                                <ion-item class="item-radio">
-                                    <ion-label>Single Delivery Date</ion-label>
-                                    <ion-radio mode="md" [checked]="true" color="secondary" slot="start"
-                                        (click)="setradio('singleDeliveryDate')">
-                                    </ion-radio>
-                                </ion-item>
-                            </ion-col>
-                            <ion-col size-lg="6" size-sm="12" class="padding-0">
-                                <ion-item class="item-radio">
-                                    <ion-label>Multiple Milestones</ion-label>
-                                    <ion-radio mode="md" [checked]="false" color="secondary" slot="start"
-                                        (click)="setradio('multipleMilestones')">
-                                    </ion-radio>
-                                </ion-item>
-                            </ion-col>
-                        </ion-row>
-                    </ion-radio-group>
-
                     <div formGroupName="singleDeliveryDate" *ngIf="isSelected('singleDeliveryDate')"
                         class="hide-show-section">
                         <ion-row class="name">

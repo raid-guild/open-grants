@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-
-import { Platform, ModalController, Events } from '@ionic/angular';
+import { Platform, ModalController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { NgxSpinnerService } from "ngx-spinner";
 import { UtilsService, ILoader } from './services/utils.service';
-import { AuthService, AuthState } from './services/auth.service';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -64,7 +63,6 @@ export class AppComponent implements OnInit {
     private modalController: ModalController,
     private spinner: NgxSpinnerService,
     private authService: AuthService,
-    public events: Events,
   ) {
 
     var Buffer: any = window['Buffer']

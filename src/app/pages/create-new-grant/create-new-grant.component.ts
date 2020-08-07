@@ -1,36 +1,23 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
-import { Subscription, Observable, of } from 'rxjs';
-import { FormControl, FormGroup, Validators, FormBuilder, Form, FormArray, AbstractControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { FormControl, FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { AppSettings } from 'src/app/config/app.config';
-import { AngularFireStorage, AngularFireUploadTask } from 'angularfire2/storage';
 import { EthcontractService } from '../../services/ethcontract.service';
-import { UtilsService } from '../../services/utils.service';
 import * as moment from 'moment';
-import { filter } from 'rxjs/operators';
-import { async } from '@angular/core/testing';
-import { ethers, providers, utils } from 'ethers';
-import * as Web3 from 'web3';
+import { utils } from 'ethers';
 import { addressValidator } from '../../common/validators/custom.validators';
-import { ImageUploadComponent, FileHolder } from 'angular2-image-upload';
 import { PopupComponent } from '../popup/popup.component';
-import { resolve } from 'url';
 
-declare let window: any;
 
 @Component({
   selector: 'app-create-new-grant',
   templateUrl: './create-new-grant.component.html',
   styleUrls: ['./create-new-grant.component.scss'],
 })
-
 export class CreateNewGrantComponent implements OnInit {
-
-  @ViewChild(ImageUploadComponent, { static: false }) imageUpload: ImageUploadComponent;
 
   processing = false;
   submitted = false;
@@ -44,31 +31,29 @@ export class CreateNewGrantComponent implements OnInit {
   managerAddressError = false;
   granteeAddressError = [];
   currency = [];
-  totalPercentage = 0
-  isAllocationByPer = new FormControl(true)
+  totalPercentage = 0;
+  isAllocationByPer = new FormControl(true);
 
   tinymceInit: any;
-  task: AngularFireUploadTask;
   percentage: Observable<number>;
-  snapshot: Observable<any>;
   videoExtention = [".3gp", ".mp4", ".webm", ".flv", ".avi", ".HDV", ".mkv"]
 
   public myForm: FormGroup;
 
   constructor(
     public modalController: ModalController,
-    private angularFireStorage: AngularFireStorage,
     private toastr: ToastrService,
     public router: Router,
     private fb: FormBuilder,
-    private ethcontractService: EthcontractService,
-    private utilsService: UtilsService
+    private ethcontractService: EthcontractService
   ) {
 
     this.bindModel();
-    let curruntDate = new Date();
-    this.maxYear = curruntDate.getFullYear() + 100;
-    this.minYear = moment(curruntDate).add(1, 'days').format('YYYY-MM-DD')
+
+    // Min max data form.
+    const currentDate = new Date();
+    this.maxYear = moment(currentDate).add(100, 'years').format('YYYY-MM-DD');
+    this.minYear = moment(currentDate).add(1, 'days').format('YYYY-MM-DD');
   }
 
   ngOnInit() {
@@ -148,38 +133,38 @@ export class CreateNewGrantComponent implements OnInit {
           const fileName = `${new Date().getTime()}_${file.name}`;
           const path = folder + '/' + fileName;
           let downloadURL;
-          this.angularFireStorage.upload(path, file)
-            .then((snapshot) => {
-              if (snapshot.state = "success") {
-                downloadURL = 'https://firebasestorage.googleapis.com/v0/b/' + AppSettings.firebaseConfig.storageBucket + '/o/' + folder + '%2F' + fileName + '?alt=media';
+          // this.angularFireStorage.upload(path, file)
+          //   .then((snapshot) => {
+          //     if (snapshot.state = "success") {
+          //       downloadURL = 'https://firebasestorage.googleapis.com/v0/b/' + AppSettings.firebaseConfig.storageBucket + '/o/' + folder + '%2F' + fileName + '?alt=media';
 
-                cb(downloadURL, { title: file.name });
-              }
-            }, (error) => {
-              this.toastr.error("Some thing went wrong !!");
-            });
+          //       cb(downloadURL, { title: file.name });
+          //     }
+          //   }, (error) => {
+          //     this.toastr.error("Some thing went wrong !!");
+          //   });
         };
         input.click();
       },
 
-      images_upload_handler: (blobInfo, success, failure) => {
-        var file = blobInfo.blob();
-        const folder = "grant-content";
-        const fileName = `${new Date().getTime()}_${blobInfo.filename()}`;
-        const path = folder + '/' + fileName;
-        let downloadURL;
-        this.angularFireStorage.upload(path, file)
-          .then((snapshot) => {
-            if (snapshot.state = "success") {
-              downloadURL = 'https://firebasestorage.googleapis.com/v0/b/' + AppSettings.firebaseConfig.storageBucket + '/o/' + folder + '%2F' + fileName + '?alt=media';
+      // images_upload_handler: (blobInfo, success, failure) => {
+      //   var file = blobInfo.blob();
+      //   const folder = "grant-content";
+      //   const fileName = `${new Date().getTime()}_${blobInfo.filename()}`;
+      //   const path = folder + '/' + fileName;
+      //   let downloadURL;
+      //   this.angularFireStorage.upload(path, file)
+      //     .then((snapshot) => {
+      //       if (snapshot.state = "success") {
+      //         downloadURL = 'https://firebasestorage.googleapis.com/v0/b/' + AppSettings.firebaseConfig.storageBucket + '/o/' + folder + '%2F' + fileName + '?alt=media';
 
-              success(downloadURL);
-            }
-          }, (error) => {
-            this.toastr.error("Some thing went wrong !!");
-            failure();
-          });
-      },
+      //         success(downloadURL);
+      //       }
+      //     }, (error) => {
+      //       this.toastr.error("Some thing went wrong !!");
+      //       failure();
+      //     });
+      // },
 
       media_url_resolver: (data, resolve/*, reject*/) => {
         var embedHtml;
@@ -221,7 +206,7 @@ export class CreateNewGrantComponent implements OnInit {
       grantees: this.fb.array([
         this.initGranteesFields()
       ]),
-    })
+    });
 
   }
 
@@ -296,7 +281,7 @@ export class CreateNewGrantComponent implements OnInit {
   removeGrantee(index: number) {
     const control = <FormArray>this.myForm.controls.grantees;
     control.removeAt(index);
-    this.granteeAddressError.splice(index, 1)
+    this.granteeAddressError.splice(index, 1);
   }
 
   setradio(e: string): void {
@@ -440,7 +425,7 @@ export class CreateNewGrantComponent implements OnInit {
         }
 
         let data = {
-          uri: utils.formatBytes32String(this.utilsService.generateUUID()),
+          uri: utils.formatBytes32String("GET FROM FORM"),
           grantees: this.grantForm.grantees.map((data) => { return data.grantee }),
           amounts: this.grantForm.grantees.map((data) => { return data.allocationAmount }),
           manager: this.grantForm.manager,
@@ -468,7 +453,7 @@ export class CreateNewGrantComponent implements OnInit {
       }
     } else {
       if (this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.multipleMilestones.invalid
-        || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid || !this.imageUpload.files.length) {
+        || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid) { //|| !this.imageUpload.files.length) {
         return
       }
     }

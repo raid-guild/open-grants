@@ -11,15 +11,31 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { ToastrModule } from 'ngx-toastr';
-import { ApolloModule } from 'apollo-angular';
-import { HttpLinkModule } from 'apollo-angular-link-http';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import { AngularFirestoreModule } from 'angularfire2/firestore';
-import { AngularFireModule } from 'angularfire2';
-import { AngularFireStorageModule } from 'angularfire2/storage';
+// Apollo
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { DefaultOptions } from "apollo-client";
+import { APOLLO_OPTIONS } from "apollo-angular";
+
+import { HttpLinkModule, HttpLink } from "apollo-angular-link-http";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { ENVIRONMENT } from 'src/environments/environment';
+
+
+
 import { HttpCommonInterceptor } from './common/interceptors/http-common.interceptor';
 import { AppSettings } from './config/app.config';
+
+const defaultOptions: DefaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'ignore',
+  },
+  query: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all',
+  },
+}
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,7 +43,6 @@ import { AppSettings } from './config/app.config';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    ApolloModule,
     HttpLinkModule,
     HttpClientModule,
     ToastrModule.forRoot({
@@ -37,16 +52,26 @@ import { AppSettings } from './config/app.config';
     }),
     NgxSpinnerModule,
     IonicModule.forRoot(),
-    AngularFireModule.initializeApp(AppSettings.firebaseConfig),
-    AngularFirestoreModule,
-    AngularFireStorageModule,
     AppRoutingModule,
   ],
   providers: [
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpCommonInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: HttpCommonInterceptor, multi: true },
+    {
+      provide: APOLLO_OPTIONS,
+      useFactory: (httpLink: HttpLink) => {
+        return {
+          cache: new InMemoryCache(),
+          link: httpLink.create({
+            uri: ENVIRONMENT.SUBGRAPH_QUERIE
+          }),
+          defaultOptions 
+        }
+      },
+      deps: [HttpLink]
+    }
   ],
   bootstrap: [AppComponent]
 })

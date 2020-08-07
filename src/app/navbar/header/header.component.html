@@ -1,4 +1,4 @@
-<ion-header style="background-color: red" mode="md" no-border *ngIf="!isLogin">
+<ion-header style="background-color: red" mode="md" no-border *ngIf="!(isLogin | async)">
   <ion-toolbar mode="md">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
@@ -13,7 +13,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-header mode="md" no-border *ngIf="isLogin">
+<ion-header mode="md" no-border *ngIf="isLogin | async">
   <ion-toolbar mode="md">
 
     <ion-buttons slot="start">
@@ -25,9 +25,9 @@
     </ion-title>
 
     <ion-buttons slot="end">
-      <div class="user-icon">
+      <!-- <div class="user-icon">
         <ion-icon *ngIf="!isImage" size="large" name="person"></ion-icon>
-      </div>
+      </div> -->
       <ion-button mode="md" class="user-profile-menu">
 
         <span><i class="gp-arrow-down" (click)="userMenuPopover($event)"></i></span>

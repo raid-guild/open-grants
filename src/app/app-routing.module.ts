@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes, ExtraOptions } from '@angular/router';
-import { AuthGuard } from './guard/auth.guard';
-import { AuthPreventGuard } from './guard/auth-prevent.guard';
+import { RouterModule, Routes, ExtraOptions } from '@angular/router';
+
 
 const routes: Routes = [
   {
@@ -16,7 +15,6 @@ const config: ExtraOptions = {
   useHash: true,
   onSameUrlNavigation: 'reload',
   scrollPositionRestoration: 'enabled'
-  /*preloadingStrategy: AppPreloadingStrategy*/
 };
 
 @NgModule({

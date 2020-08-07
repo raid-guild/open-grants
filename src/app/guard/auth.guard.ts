@@ -7,17 +7,18 @@ import { AuthService } from '../services/auth.service';
 })
 export class AuthGuard implements CanActivate {
     constructor(
-        private router: Router
+        private router: Router,
+        private authService: AuthService
     ) {
     }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
 
-        if (AuthService.isAuthenticated()) {
+        if (await this.authService.isAuthenticated()) {
             return true;
         }
 
-        this.router.navigate(['pages/dashboard'], { queryParams: { redirect: state.url }, replaceUrl: true });
+        this.router.navigate(['pages/latest'], { queryParams: { redirect: state.url }, replaceUrl: true });
         return false;
     }
 }

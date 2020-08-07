@@ -31,10 +31,10 @@ const routes: Routes = [{
             path: 'grant/:id',
             component: GrantComponent,
         }, {
-            path: 'profile',
-            component: ProfileComponent,
-            canActivate: [AuthGuard]
-        }, {
+        //     path: 'profile',
+        //     component: ProfileComponent,
+        //     canActivate: [AuthGuard]
+        // }, {
             path: 'my-grants',
             component: MyGrantsComponent,
             canActivate: [AuthGuard]

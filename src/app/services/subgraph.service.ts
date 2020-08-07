@@ -1,30 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { ENVIRONMENT } from 'src/environments/environment';
 import gql from 'graphql-tag';
-import { DefaultOptions } from 'apollo-client';
 
 @Injectable()
 export class SubgraphService {
-  defaultOptions: DefaultOptions = {
-    watchQuery: {
-      fetchPolicy: 'no-cache',
-      errorPolicy: 'ignore',
-    },
-    query: {
-      fetchPolicy: 'no-cache',
-      errorPolicy: 'all',
-    },
-  }
-  constructor(private apollo: Apollo, httpLink: HttpLink) {
-    apollo.create({
-      link: httpLink.create({ uri: ENVIRONMENT.SUBGRAPH_QUERIE }),
-      cache: new InMemoryCache(),
-      defaultOptions: this.defaultOptions,
-    })
-  }
+
+  constructor(private apollo: Apollo) {}
 
   getGrantList() {
     return this.apollo.query({
@@ -48,7 +29,7 @@ export class SubgraphService {
           contractExpiration
         }
       }`
-    })
+    });
   }
 
   // getGrantList(skip: number, first: number) {
@@ -99,8 +80,8 @@ export class SubgraphService {
           contractExpiration
         }
       }`,
-      variables: { grantAddress: grantAddress }
-    })
+      variables: { grantAddress }
+    });
   }
 
   getGrantByCreateby(createBy: string) {
@@ -127,8 +108,8 @@ export class SubgraphService {
           contractExpiration
         }
       }`,
-      variables: { createBy: createBy }
-    })
+      variables: { createBy }
+    });
   }
 
   getManageByCreateby(manager: string) {
@@ -155,8 +136,8 @@ export class SubgraphService {
           contractExpiration
         }
       }`,
-      variables: { manager: manager }
-    })
+      variables: { manager }
+    });
   }
 
   getFundByContractAndDonor(grantAddress: string, donor: string) {
@@ -172,8 +153,8 @@ export class SubgraphService {
         amount
         }
       }`,
-      variables: { grantAddress: grantAddress, donor: donor }
-    })
+      variables: { grantAddress, donor }
+    });
   }
 
   getFundByContract(grantAddress: string) {
@@ -188,8 +169,8 @@ export class SubgraphService {
         amount
         }
       }`,
-      variables: { grantAddress: grantAddress }
-    })
+      variables: { grantAddress }
+    });
   }
 
   getPaymentByContractAndDonor(grantAddress: string, grantee: string) {
@@ -205,7 +186,7 @@ export class SubgraphService {
         amount
         }
       }`,
-      variables: { grantAddress: grantAddress, grantee: grantee }
-    })
+      variables: { grantAddress, grantee }
+    });
   }
 }

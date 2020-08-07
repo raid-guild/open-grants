@@ -14,16 +14,13 @@ import { HomeComponent } from './home/home.component';
 import { LatestGrantsComponent } from './latest-grants/latest-grants.component';
 import { MyGrantsComponent } from './my-grants/my-grants.component';
 import { NumberonlyDirectiveModule } from '../common/directives/numberOnlyDirective/numberonlyDirective.module';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { CreateNewGrantComponent } from './create-new-grant/create-new-grant.component';
 import { ProfileComponent } from './profile/profile.component';
 import { GrantDetailsComponent } from './grant-details/grant-details.component';
-import { ImageUploadModule } from 'angular2-image-upload';
 import { SubgraphService } from '../services/subgraph.service';
 import { HeaderComponent } from '../navbar/header/header.component';
 import { MenuPopoverComponent } from '../navbar/menu-popover/menu-popover.component';
-import { AuthenticationService } from '../services/authentication.service';
 import { PayoutComponent } from './payout/payout.component';
 import { GrantComponent } from './grant/grant.component';
 import { PopupComponent } from './popup/popup.component';
@@ -54,9 +51,7 @@ const PAGES_COMPONENTS = [
         ReactiveFormsModule,
         PagesRoutingModule,
         EditorModule,
-        NgxChartsModule,
         NumberonlyDirectiveModule,
-        ImageUploadModule.forRoot(),
         // MiscellaneousModule
     ],
     entryComponents: [
@@ -65,8 +60,7 @@ const PAGES_COMPONENTS = [
         MenuPopoverComponent,
     ],
     providers: [
-        SubgraphService,
-        AuthenticationService
+        SubgraphService
     ]
 })
 export class PagesModule { }

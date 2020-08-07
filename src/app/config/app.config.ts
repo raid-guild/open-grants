@@ -1,17 +1,4 @@
 export const AppSettings = Object.freeze({
-    localStorage_keys: {
-        userEthAddress: 'userEthAddress',
-        currentNetwork: 'currentNetwork',
-        userSign: 'userSign',
-        nouce: 'nouce'
-    },
-    firebaseConfig: {
-        apiKey: "AIzaSyBd8SxIrn4VBHIOOYI8yxPNlMhHczJkM0Q",
-        authDomain: "grants-platform.firebaseapp.com",
-        databaseURL: "https://grants-platform.firebaseio.com",
-        storageBucket: "grants-platform.appspot.com",
-        projectId: "grants-platform",
-    },
     ethersConfig: {
         networks: 'ropsten',
         gasLimit: 6e6,

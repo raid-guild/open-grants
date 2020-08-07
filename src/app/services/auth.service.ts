@@ -1,58 +1,52 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import * as jwt_decode from 'jwt-decode';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { AppSettings } from '../config/app.config';
-import { Events } from '@ionic/angular';
+import { Web3Service } from './web3.service';
+import { utils } from 'ethers';
 
-export interface AuthState {
-    is_logged_in: boolean;
-}
 
 @Injectable({
     providedIn: 'root'
 })
-
 export class AuthService {
-    private authSubject = new Subject<AuthState>();
-    authState = this.authSubject.asObservable();
-    private applicationAuthState: AuthState;
+    private isLoggedIn = new BehaviorSubject(false);
 
     constructor(
-        public events: Events,
-    ) {
-        this.applicationAuthState = {
-            is_logged_in: AuthService.isAuthenticated()
-        };
+        public web3service: Web3Service,
+    ) { }
+
+    async isAuthenticated(): Promise<boolean> {
+        return this.web3service.checkLogin();
     }
 
-    static isAuthenticated(): boolean {
-        // @todo ===> check token expire time here to determine if token is expired or not <===
-        return !!localStorage.getItem(AppSettings.localStorage_keys.userEthAddress);
+    setLoggedIn() {
+        this.isLoggedIn.next(true);
     }
 
-    setAuthState(data) {
-        this.applicationAuthState = data;
-        this.authSubject.next(data);
-        this.events.publish('is_logged_in', data.is_logged_in);
+    setLoggedOut() {
+        this.isLoggedIn.next(false);
     }
 
-    getAuthUserId() {
-        const userEthAddress = localStorage.getItem(AppSettings.localStorage_keys.userEthAddress);
-        if (userEthAddress) {
-            return userEthAddress;
-        } else {
-            return null;
+    getLoggedIn() {
+        return this.isLoggedIn;
+    }
+
+    async getAuthUserId() {
+        return await this.web3service.getAddress();
+    }
+
+    async login() {
+        await this.web3service.setProvider();
+        const provider = this.web3service.getProvider();
+        const address = await (provider.getSigner()).getAddress();
+        if (!address) {
+          throw new Error('failed to connect to metamask');
         }
-    }
-
-    getAuthState(): AuthState {
-        return this.applicationAuthState;
+        this.setLoggedIn();
     }
 
     logout() {
-        localStorage.removeItem(AppSettings.localStorage_keys.userEthAddress);
-        localStorage.clear();
-        this.setAuthState({ is_logged_in: false });
+        this.setLoggedOut();
     }
 
 }

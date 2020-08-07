@@ -18,30 +18,30 @@
                             <ion-card-content >
                                     <div class="grant-card-flex">
                                         <p class="grant-card"> Manager:</p>
-                                        <p arrow class="new-grant-card">
+                                        <p arrow class="grant-card-small-text">
                                             {{grant.manager | slice:0:44}}{{grant.manager.length < 44 ? '' : '...'}}
                                         </p>
                                     </div>
                                     <div class="grant-card-flex new-space">
                                         <p class="grant-card"> Created By:</p>
-                                        <p class="new-grant-card">
+                                        <p class="grant-card-small-text">
                                             {{grant.createBy | slice:0:44}}{{grant.createBy.length < 44 ? '' : '...'}}
                                         </p>
                                     </div>
                                     <div class="grant-card-flex new-space">
                                         <p class="grant-card"> Target Fund:</p>
-                                        <p class="new-grant-card">
+                                        <p class="grant-card-small-text">
                                             {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH
                                         </p>
                                     </div>
                                     <div class="grant-card-flex new-space">
                                         <p class="grant-card"> Total Fund:</p>
-                                        <p class="new-grant-card">
+                                        <p class="grant-card-small-text">
                                             {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</p>
                                     </div>
                                     <div class="grant-card-flex new-space">
                                         <p class="grant-card"> Balance:</p>
-                                        <p class="new-grant-card">
+                                        <p class="grant-card-small-text">
                                             {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH</p>
                                     </div>
                                     <div class="new-space">

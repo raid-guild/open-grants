@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { HTTPRESPONSE } from 'src/app/common/http-helper/http-helper.class';
 import { Router } from '@angular/router';
 import { SubgraphService } from 'src/app/services/subgraph.service';
-import { ethers, providers, utils } from 'ethers';
-import { AddressZero, Zero } from "ethers/constants";
+import { ethers, providers, utils, constants } from 'ethers';
+
+const { AddressZero, Zero } = constants;
 
 @Component({
   selector: 'app-home',

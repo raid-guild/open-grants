@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Events } from '@ionic/angular';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { SubgraphService } from 'src/app/services/subgraph.service';
 import { AppSettings } from 'src/app/config/app.config';
 import { AuthService } from 'src/app/services/auth.service';
-import { AddressZero, Zero } from "ethers/constants";
-import { ethers, providers, utils } from 'ethers';
+import { ethers, providers, utils, constants } from 'ethers';
+const { AddressZero, Zero } = constants;
 
 @Component({
   selector: 'app-my-grants',
@@ -23,26 +22,26 @@ export class MyGrantsComponent implements OnInit {
   searchFundedBy: any;
   searchManagedBy: any;
 
-  constructor(public popoverCtrl: PopoverController,
+  constructor(
+    public popoverCtrl: PopoverController,
     public modalController: ModalController,
     private subgraphService: SubgraphService,
     private authService: AuthService,
     private router: Router,
-    public events: Events
   ) {
     this.getAllGrants();
   }
 
   ngOnInit() {
-    this.events.subscribe('is_logged_in', (data) => {
-      setTimeout(() => {
-        this.getAllGrants();
-      }, 100);
-    });
+    // this.events.subscribe('is_logged_in', (data) => {
+    //   setTimeout(() => {
+    //     this.getAllGrants();
+    //   }, 100);
+    // });
   }
 
-  getUserEthAddress() {
-    this.userEthAddress = this.authService.getAuthUserId();
+  async getUserEthAddress() {
+    this.userEthAddress = await this.authService.getAuthUserId();
   }
 
   getAllGrants() {

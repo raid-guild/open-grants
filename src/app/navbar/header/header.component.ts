@@ -1,11 +1,11 @@
 import { Component, OnInit, Output, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { EventEmitter } from '@angular/core'
-import { PopoverController, ModalController, Events } from '@ionic/angular';
+import { Subscription, BehaviorSubject } from 'rxjs';
+import { EventEmitter } from '@angular/core';
+import { PopoverController, ModalController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuPopoverComponent } from '../menu-popover/menu-popover.component';
-import { AuthService, AuthState } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { PopupComponent } from 'src/app/pages/popup/popup.component';
 
@@ -21,8 +21,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   processing = false;
   toastTitle = 'Login';
 
-  authsubscription: Subscription;
-  isLogin = false;
+  isLogin: BehaviorSubject<boolean>;
   userEthAddress: any;
 
   path: any;
@@ -40,23 +39,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     public popoverCtrl: PopoverController,
     public modalController: ModalController,
-    public events: Events,
     private fb: FormBuilder,
     private authService: AuthService
   ) {
-
-    const res = this.authService.getAuthState();
-    this.isLogin = res.is_logged_in;
-
-    this.events.subscribe('is_logged_in', (data) => {
-      this.isLogin = data;
-
-      if (this.isLogin) {
-        this.getUserData();
-      } else {
-        this.isImage = false;
-      }
-    });
 
     this.myForm = this.fb.group({
       searchBox: new FormControl()
@@ -65,6 +50,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getUserData();
+    this.isLogin = this.authService.getLoggedIn();
   }
 
   async userMenuPopover($event) {
