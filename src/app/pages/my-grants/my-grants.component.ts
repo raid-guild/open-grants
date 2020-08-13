@@ -1,18 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { SubgraphService } from 'src/app/services/subgraph.service';
-import { AppSettings } from 'src/app/config/app.config';
 import { AuthService } from 'src/app/services/auth.service';
-import { ethers, providers, utils, constants } from 'ethers';
-const { AddressZero, Zero } = constants;
+import { ethers, constants } from 'ethers';
+const { AddressZero } = constants;
 
 @Component({
   selector: 'app-my-grants',
   templateUrl: './my-grants.component.html',
   styleUrls: ['./my-grants.component.scss'],
 })
-export class MyGrantsComponent implements OnInit {
+export class MyGrantsComponent {
   userEthAddress = '';
   createdByMeGrant: any;
   fundedByMeGrant: any;
@@ -32,13 +31,6 @@ export class MyGrantsComponent implements OnInit {
     this.getAllGrants();
   }
 
-  ngOnInit() {
-    // this.events.subscribe('is_logged_in', (data) => {
-    //   setTimeout(() => {
-    //     this.getAllGrants();
-    //   }, 100);
-    // });
-  }
 
   async getUserEthAddress() {
     this.userEthAddress = await this.authService.getAuthUserId();
@@ -55,7 +47,7 @@ export class MyGrantsComponent implements OnInit {
 
     this.subgraphService.getGrantByCreateby(this.userEthAddress).subscribe((res: any) => {
       this.createdByMeGrant = JSON.parse(JSON.stringify(res.data.contracts));
-    })
+    });
   }
 
   getFundedByGrant() {
@@ -63,7 +55,7 @@ export class MyGrantsComponent implements OnInit {
 
     this.subgraphService.getGrantByCreateby(this.userEthAddress).subscribe((res: any) => {
       this.fundedByMeGrant = JSON.parse(JSON.stringify(res.data.contracts));
-    })
+    });
   }
 
   getManageByGrant() {
@@ -71,36 +63,36 @@ export class MyGrantsComponent implements OnInit {
 
     this.subgraphService.getManageByCreateby(this.userEthAddress).subscribe((res: any) => {
       this.mangedByMeGrant = JSON.parse(JSON.stringify(res.data.contracts));
-    })
+    });
   }
 
 
   handleChange(e) {
-    if (e == '') {
+    if (e === '') {
       this.searchCreatedBy = this.createdByMeGrant;
       this.searchFundedBy = this.fundedByMeGrant;
       this.searchManagedBy = this.mangedByMeGrant;
     } else {
       this.searchCreatedBy = this.createdByMeGrant.filter((data) => {
-        return data.grantName.toLowerCase().includes(e.toLowerCase())
+        return data.grantName.toLowerCase().includes(e.toLowerCase());
       });
 
       this.searchFundedBy = this.fundedByMeGrant.filter((data) => {
-        return data.grantName.toLowerCase().includes(e.toLowerCase())
+        return data.grantName.toLowerCase().includes(e.toLowerCase());
       });
 
       this.searchManagedBy = this.mangedByMeGrant.filter((data) => {
-        return data.grantName.toLowerCase().includes(e.toLowerCase())
+        return data.grantName.toLowerCase().includes(e.toLowerCase());
       });
     }
   }
 
   grantDetails(id: string) {
-    this.router.navigate(['/pages/grant/' + id])
+    this.router.navigate(['/pages/grant/' + id]);
   }
 
   currencyCovert(currencyType, amount) {
-    if (currencyType == AddressZero) {
+    if (currencyType === AddressZero) {
       return ethers.utils.formatEther(amount);
     }
     return amount;

@@ -2,48 +2,23 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+const subgraphQuery = 'https://api.thegraph.com/subgraphs/name/dipaksavaliya/grant-platform';
+const subgraphSubscription = 'wss://api.thegraph.com/subgraphs/name/dipaksavaliya/grant-platform';
+
 export const environment = {
-  production: false
-};
-
-/* local env */
-const protocol = 'http';
-const host = 'localhost';
-const port = '7001';
-const trailUrl = 'api/v1';
-
-const webHost = 'http://localhost:4200/';
-
-const subgraphQuerie = "https://api.thegraph.com/subgraphs/name/dipaksavaliya/grant-platform";
-const subgraphSubscription = "wss://api.thegraph.com/subgraphs/name/dipaksavaliya/grant-platform";
-
-const hostUrl = `${protocol}://${host}${port ? ':' + port : ''}`;
-const endpoint = `${hostUrl}${trailUrl ? '/' + trailUrl : ''}`;
-
-export const ENVIRONMENT = {
   production: false,
-  API: {
-    protocol,
-    host,
-    port,
-    trailUrl,
-    hostUrl,
-    webHost
-  },
-  API_ENDPOINT: endpoint,
-  TEMP_URL: hostUrl,
-  SUBGRAPH_QUERIE: subgraphQuerie,
-  SUBGRAPH_SUBSCRIPTION: subgraphSubscription
+  SUBGRAPH_QUERY: subgraphQuery,
+  SUBGRAPH_SUBSCRIPTION: subgraphSubscription,
+  currencies: [{ name: 'Ether', value: 'ETH' }],
+  ethersConfig: {
+    network: 'ropsten',
+    gasLimit: 6e6,
+    apiToken: '6KK5NG3BDH1QEVDE2WIMQA7AD3J691QHBV',
+    factoryContract: '0x6cec1dc945ac2ddf852993403d0aab39f03b3bad',
+    rpcURL: 'https://ropsten.infura.io/v3/bbed5c0ec4d2452d915dc36d26ac67bf'
+  }
 };
 
-export interface APIOptions {
-  protocol: string;
-  host: string;
-  port: string;
-  trailUrl: string;
-  hostUrl: string;
-  webHost: string;
-}
 
 /*
  * For easier debugging in development mode, you can import the following file

@@ -5,11 +5,12 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { FormControl, FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { EthcontractService } from '../../services/ethcontract.service';
+import { EthContractService } from '../../services/ethcontract.service';
 import * as moment from 'moment';
 import { utils } from 'ethers';
 import { addressValidator } from '../../common/validators/custom.validators';
 import { PopupComponent } from '../popup/popup.component';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -34,9 +35,7 @@ export class CreateNewGrantComponent implements OnInit {
   totalPercentage = 0;
   isAllocationByPer = new FormControl(true);
 
-  tinymceInit: any;
   percentage: Observable<number>;
-  videoExtention = [".3gp", ".mp4", ".webm", ".flv", ".avi", ".HDV", ".mkv"]
 
   public myForm: FormGroup;
 
@@ -45,7 +44,7 @@ export class CreateNewGrantComponent implements OnInit {
     private toastr: ToastrService,
     public router: Router,
     private fb: FormBuilder,
-    private ethcontractService: EthcontractService
+    private ethcontractService: EthContractService
   ) {
 
     this.bindModel();
@@ -57,9 +56,7 @@ export class CreateNewGrantComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currency = [
-      { name: "ETH", value: "ETH" }
-    ]
+    this.currency = environment.currencies;
 
     this.granteeControls.valueChanges
       .pipe(
@@ -71,7 +68,7 @@ export class CreateNewGrantComponent implements OnInit {
         this.grantee.map((data) => {
           this.totalPercentage += +data.controls.allocationPercentage.value;
         });
-        this.checkAddress()
+        this.checkAddress();
       });
 
     this.form.manager.valueChanges
@@ -80,115 +77,26 @@ export class CreateNewGrantComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(async (val: string) => {
-        this.checkAddress()
+        this.checkAddress();
       });
 
-    this.singleDeliveryControles.controls.fundingExpiryDate.valueChanges
+    this.singleDeliveryControls.controls.fundingExpiryDate.valueChanges
       .pipe(
         debounceTime(400),
         distinctUntilChanged()
       )
       .subscribe(async (val: string) => {
-        this.singleDeliveryControles.controls.completionDate.reset();
-        this.singleDeliveryControles.controls.completionDate.setValue(moment(val).add(1, 'days').format(''));
+        this.singleDeliveryControls.controls.completionDate.reset();
+        this.singleDeliveryControls.controls.completionDate.setValue(moment(val).add(1, 'days').format(''));
         this.minCompletionData = moment(val).add(1, 'days').format('');
       });
-
-    this.tinymceInit = {
-      selector: 'textarea',
-      height: 470,
-      menubar: true,
-      plugins: [
-        'advlist autolink lists link image charmap print preview anchor',
-        'searchreplace visualblocks advcode fullscreen',
-        'insertdatetime media table contextmenu powerpaste',
-        'quickbars',
-        'codesample',
-        'code',
-        'help',
-      ],
-      toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image code',
-      powerpaste_allow_local_images: true,
-      powerpaste_word_import: 'prompt',
-      powerpaste_html_import: 'prompt',
-      // font_formats: 'Arial=arial;Helvetica=helvetica;Sans-serif=sans-serif;Courier=courier;Courier New=courier new;Courier Prime=courier prime;Monospace=monospace;AkrutiKndPadmini=Akpdmi-n',
-      quickbars_insert_toolbar: 'quicktable image media codesample',
-      quickbars_selection_toolbar: 'bold italic underline | formatselect | blockquote quicklink',
-      contextmenu: 'undo redo | inserttable | cell row column deletetable | help',
-      image_advtab: true,
-
-      file_picker_callback: (cb, value, meta) => {
-        var input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', '*/*');
-
-        input.onchange = () => {
-          var file = input.files[0];
-
-          // if (file && file.size > 10000000) {
-          //   this.toastr.error("media size !!");
-          // }
-
-          const folder = "grant-content";
-          const fileName = `${new Date().getTime()}_${file.name}`;
-          const path = folder + '/' + fileName;
-          let downloadURL;
-          // this.angularFireStorage.upload(path, file)
-          //   .then((snapshot) => {
-          //     if (snapshot.state = "success") {
-          //       downloadURL = 'https://firebasestorage.googleapis.com/v0/b/' + AppSettings.firebaseConfig.storageBucket + '/o/' + folder + '%2F' + fileName + '?alt=media';
-
-          //       cb(downloadURL, { title: file.name });
-          //     }
-          //   }, (error) => {
-          //     this.toastr.error("Some thing went wrong !!");
-          //   });
-        };
-        input.click();
-      },
-
-      // images_upload_handler: (blobInfo, success, failure) => {
-      //   var file = blobInfo.blob();
-      //   const folder = "grant-content";
-      //   const fileName = `${new Date().getTime()}_${blobInfo.filename()}`;
-      //   const path = folder + '/' + fileName;
-      //   let downloadURL;
-      //   this.angularFireStorage.upload(path, file)
-      //     .then((snapshot) => {
-      //       if (snapshot.state = "success") {
-      //         downloadURL = 'https://firebasestorage.googleapis.com/v0/b/' + AppSettings.firebaseConfig.storageBucket + '/o/' + folder + '%2F' + fileName + '?alt=media';
-
-      //         success(downloadURL);
-      //       }
-      //     }, (error) => {
-      //       this.toastr.error("Some thing went wrong !!");
-      //       failure();
-      //     });
-      // },
-
-      media_url_resolver: (data, resolve/*, reject*/) => {
-        var embedHtml;
-        this.videoExtention.map((extention) => {
-          if (data.url.indexOf(extention) !== -1) {
-
-            embedHtml = '<iframe src="' + data.url +
-              '" width="400" height="400" ></iframe>';
-          }
-        });
-
-        if (embedHtml) {
-          resolve({ html: embedHtml });
-        } else {
-          resolve({ html: '' });
-        }
-      }
-    };
 
   }
 
   bindModel() {
     this.myForm = this.fb.group({
       name: ['', Validators.required],
+      uri: ['', Validators.required],
       description: [''],
       images: this.fb.array([]),
       manager: ['', [Validators.required, addressValidator]],
@@ -217,15 +125,15 @@ export class CreateNewGrantComponent implements OnInit {
   // singleDelivery
   get singleDelivery() {
     const formGroup = this.myForm.get('singleDeliveryDate') as FormGroup;
-    return formGroup.controls
+    return formGroup.controls;
   }
 
-  get singleDeliveryControles() {
+  get singleDeliveryControls() {
     const formGroup = this.myForm.get('singleDeliveryDate') as FormGroup;
-    return formGroup
+    return formGroup;
   }
 
-  // multiple Milestone 
+  // multiple Milestone
   get multipleMilestones(): any {
     const formArray = this.myForm.get('multipleMilestones') as FormArray;
     return formArray.controls;
@@ -253,19 +161,8 @@ export class CreateNewGrantComponent implements OnInit {
     });
   }
 
-
-  addNewMilestone() {
-    const control = <FormArray>this.myForm.controls.multipleMilestones;
-    control.push(this.initMilestonesFields());
-  }
-
-  removeMilestone(index: number) {
-    const control = <FormArray>this.myForm.controls.multipleMilestones;
-    control.removeAt(index);
-  }
-
   initGranteesFields() {
-    this.granteeAddressError.push(false)
+    this.granteeAddressError.push(false);
     return this.fb.group({
       grantee: new FormControl('', [Validators.required, addressValidator]),
       allocationAmount: new FormControl(null, [Validators.required, Validators.min(1)]),
@@ -274,12 +171,12 @@ export class CreateNewGrantComponent implements OnInit {
   }
 
   addNewGrantee() {
-    const control = <FormArray>this.myForm.controls.grantees;
+    const control =  this.myForm.controls.grantees as FormArray;
     control.push(this.initGranteesFields());
   }
 
   removeGrantee(index: number) {
-    const control = <FormArray>this.myForm.controls.grantees;
+    const control =  this.myForm.controls.grantees as FormArray;
     control.removeAt(index);
     this.granteeAddressError.splice(index, 1);
   }
@@ -298,7 +195,7 @@ export class CreateNewGrantComponent implements OnInit {
   onPercentageChange(index: number) {
     if (this.isAllocationByPer.value) {
       if (this.isAllocationByPer.value) {
-        let temp = (this.grantee[index].controls.allocationPercentage.value * this.form.targetFunding.value) / 100;
+        const temp = (this.grantee[index].controls.allocationPercentage.value * this.form.targetFunding.value) / 100;
         this.grantee[index].controls.allocationAmount.setValue(temp);
       }
     }
@@ -311,14 +208,17 @@ export class CreateNewGrantComponent implements OnInit {
         if (index !== i) {
           totalPer += +data.controls.allocationPercentage.value;
         }
-      })
-      this.grantee[index].controls.allocationPercentage.setValidators([Validators.required, Validators.max(100 - totalPer), Validators.min(0.000001)]);
+      });
+      this.grantee[index]
+        .controls
+        .allocationPercentage
+        .setValidators([Validators.required, Validators.max(100 - totalPer), Validators.min(0.000001)]);
     }
   }
 
   onAmountChange(index: number) {
     if (!this.isAllocationByPer.value) {
-      let temp = (this.grantee[index].controls.allocationAmount.value * 100) / this.form.targetFunding.value;
+      const temp = (this.grantee[index].controls.allocationAmount.value * 100) / this.form.targetFunding.value;
       if (this.form.targetFunding.value <= 0 || this.form.targetFunding.value == null) {
         this.grantee[index].controls.allocationPercentage.setValue(0);
       } else {
@@ -330,10 +230,17 @@ export class CreateNewGrantComponent implements OnInit {
         if (index !== i) {
           remainingAmount += +data.controls.allocationAmount.value;
         }
-      })
+      });
 
-      this.grantee[index].controls.allocationAmount.setValidators([Validators.required, Validators.max(this.form.targetFunding.value - remainingAmount), Validators.min(1)]);
-      this.grantee[index].controls.allocationAmount.setValue(this.grantee[index].controls.allocationAmount.value);
+      this.grantee[index]
+        .controls
+        .allocationAmount
+        .setValidators([Validators.required, Validators.max(this.form.targetFunding.value - remainingAmount), Validators.min(1)]);
+
+      this.grantee[index]
+        .controls
+        .allocationAmount
+        .setValue(this.grantee[index].controls.allocationAmount.value);
 
     }
   }
@@ -341,14 +248,14 @@ export class CreateNewGrantComponent implements OnInit {
   targetFundingChange() {
     if (this.isAllocationByPer.value) {
       this.grantee.map((data) => {
-        let temp = (data.controls.allocationPercentage.value * this.form.targetFunding.value) / 100;
+        const temp = (data.controls.allocationPercentage.value * this.form.targetFunding.value) / 100;
         data.controls.allocationAmount.setValue(temp);
-      })
+      });
     } else {
       let totalAllocated = 0;
       this.grantee.map((data, index) => {
 
-        let temp = (data.controls.allocationAmount.value * 100) / this.form.targetFunding.value;
+        const temp = (data.controls.allocationAmount.value * 100) / this.form.targetFunding.value;
         if (this.form.targetFunding.value <= 0 || this.form.targetFunding.value == null) {
           data.controls.allocationPercentage.setValue(0);
         } else {
@@ -373,31 +280,38 @@ export class CreateNewGrantComponent implements OnInit {
         if (index !== i) {
           remainingAmount += +data.controls.allocationAmount.value;
         }
-      })
+      });
 
-      this.grantee[index].controls.allocationAmount.setValidators([Validators.required, Validators.max(this.form.targetFunding.value - remainingAmount), Validators.min(1)]);
-      this.grantee[index].controls.allocationAmount.setValue(this.grantee[index].controls.allocationAmount.value);
+      this.grantee[index]
+        .controls
+        .allocationAmount
+        .setValidators([Validators.required, Validators.max(this.form.targetFunding.value - remainingAmount), Validators.min(1)]);
+
+      this.grantee[index]
+        .controls
+        .allocationAmount
+        .setValue(this.grantee[index].controls.allocationAmount.value);
     }
   }
 
   checkAddress() {
-    let valid = true
+    let valid = true;
     this.managerAddressError = false;
     this.myForm.controls.grantees.value.map((map1, index) => {
       this.granteeAddressError[index] = false;
-      if (map1.grantee.toLowerCase() == this.myForm.controls.manager.value.toLowerCase()) {
+      if (map1.grantee.toLowerCase() === this.myForm.controls.manager.value.toLowerCase()) {
         this.managerAddressError = true;
-        this.granteeAddressError[index] = true
-        valid = false
+        this.granteeAddressError[index] = true;
+        valid = false;
       }
 
       this.myForm.controls.grantees.value.map((map2, i) => {
-        if (map1.grantee.toLowerCase() == map2.grantee.toLowerCase() && index != i) {
-          this.granteeAddressError[index] = true
-          this.granteeAddressError[i] = true
-          valid = false
+        if (map1.grantee.toLowerCase() === map2.grantee.toLowerCase() && index !== i) {
+          this.granteeAddressError[index] = true;
+          this.granteeAddressError[i] = true;
+          valid = false;
         }
-      })
+      });
     });
 
     return valid;
@@ -407,88 +321,62 @@ export class CreateNewGrantComponent implements OnInit {
     return new Promise(async (resolve) => {
       try {
 
-        let fundingExpiration, contractExpiration;
+        // Milliseconds to seconds.
+        const fundingExpiration = moment(this.grantForm.singleDeliveryDate.fundingExpiryDate).unix();
+        const contractExpiration = moment(this.grantForm.singleDeliveryDate.completionDate).unix();
 
-        if (this.grantForm.type == "singleDeliveryDate") {
-          fundingExpiration = new Date(this.grantForm.singleDeliveryDate.fundingExpiryDate).getTime();
-          contractExpiration = new Date(this.grantForm.singleDeliveryDate.completionDate).getTime();
-
-          // console.log('fundingExpiration', fundingExpiration, moment(fundingExpiration).format());
-          // console.log('contractExpiration', contractExpiration, moment(contractExpiration).format());
-
-        } else {
-          // console.log("this.grantForm.multipleMilestones", this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate);
-          fundingExpiration = new Date(this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate).getTime();
-          let temp = moment(this.grantForm.multipleMilestones[this.grantForm.multipleMilestones.length - 1].completionDate).add(1, 'days').format();
-          contractExpiration = new Date(temp).getTime();
-
-        }
-
-        let data = {
-          uri: utils.formatBytes32String("GET FROM FORM"),
-          grantees: this.grantForm.grantees.map((data) => { return data.grantee }),
-          amounts: this.grantForm.grantees.map((data) => { return data.allocationAmount }),
+        const data = {
+          uri: this.grantForm.uri,
+          grantees: this.grantForm.grantees.map((d) => d.grantee),
+          amounts: this.grantForm.grantees.map((d) => d.allocationAmount),
           manager: this.grantForm.manager,
           currency: this.grantForm.currency,
           targetFunding: this.grantForm.targetFunding,
-          fundingExpiration: fundingExpiration,
-          contractExpiration: contractExpiration
-        }
+          fundingExpiration,
+          contractExpiration
+        };
 
         resolve(data);
-        // }
-        // resolve();
+
       } catch (e) {
         resolve();
       }
-    })
+    });
   }
 
   async onSubmit() {
     this.submitted = true;
-    if (this.myForm.controls.type.value == "singleDeliveryDate") {
-      if (this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.singleDeliveryDate.invalid
-        || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid) {
-        return
-      }
-    } else {
-      if (this.myForm.controls.targetFunding.invalid || this.myForm.controls.currency.invalid || this.myForm.controls.multipleMilestones.invalid
-        || this.myForm.controls.manager.invalid || this.myForm.controls.grantees.invalid) { //|| !this.imageUpload.files.length) {
-        return
-      }
+    if (
+      this.myForm.controls.targetFunding.invalid ||
+      this.myForm.controls.currency.invalid ||
+      this.myForm.controls.singleDeliveryDate.invalid ||
+      this.myForm.controls.manager.invalid ||
+      this.myForm.controls.grantees.invalid
+    ) {
+      return;
     }
 
+
     if (!this.checkAddress()) {
-      return
-    };
+      return;
+    }
 
     this.grantForm = JSON.parse(JSON.stringify(this.myForm.value));
-    // console.log("this.grantForm", this.grantForm);
-
-    // for (let i = 0; i < this.imageUpload.files.length; i++) {
-    //   try {
-    //     let imageURL = await this.utils.fileToBase64(this.imageUpload.files[i].file)
-    //     if (imageURL.status) {
-    //       this.grantForm.images.push(imageURL.data)
-    //     }
-    //   } catch (e) { }
-    // }
 
     this.grantForm.grantees = this.grantForm.grantees.map((data) => {
-      delete data.allocationPercentage
+      delete data.allocationPercentage;
       return JSON.parse(JSON.stringify(data));
-    })
+    });
 
-    // this.grantForm.content = this.grantForm.content.replace(/"/g, "&quot;");
-    let contractData = await this.arrangeData();
+    const contractData = await this.arrangeData();
 
     if (contractData) {
       const modal = await this.modalController.create({
         component: PopupComponent,
         cssClass: 'custom-modal-style',
-        mode: "ios",
+        mode: 'ios',
         componentProps: {
-          modelType: "deployContract",
+          modelType: 'deployContract',
           data: contractData
         }
       });

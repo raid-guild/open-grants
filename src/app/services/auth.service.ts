@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Subject, BehaviorSubject } from 'rxjs';
-import { AppSettings } from '../config/app.config';
+import { BehaviorSubject } from 'rxjs';
 import { Web3Service } from './web3.service';
-import { utils } from 'ethers';
 
 
 @Injectable({

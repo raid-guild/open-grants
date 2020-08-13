@@ -4,7 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 import { SubgraphService } from 'src/app/services/subgraph.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { EthcontractService } from 'src/app/services/ethcontract.service';
+import { EthContractService } from 'src/app/services/ethcontract.service';
 import { async } from '@angular/core/testing';
 import { ethers, constants } from 'ethers';
 import * as moment from 'moment';
@@ -24,15 +24,15 @@ export class GrantComponent implements OnInit, OnDestroy {
   grantData: any;
 
   userEthAddress: string;
-  noOfDayToExpiredFunding: number = 0;
-  canCancelByGranteeAndDonor: boolean = false;
+  noOfDayToExpiredFunding = 0;
+  canCancelByGranteeAndDonor = false;
 
   userEnum = {
-    VISITOR: "visitor",
-    DONOR: "donor",
-    MANAGER: "manager",
-    GRANTEE: "grantee",
-  }
+    VISITOR: 'visitor',
+    DONOR: 'donor',
+    MANAGER: 'manager',
+    GRANTEE: 'grantee',
+  };
   userRole = this.userEnum.VISITOR;
 
   grantFunds = [];
@@ -43,7 +43,7 @@ export class GrantComponent implements OnInit, OnDestroy {
 
   fundingModel = {
     amount: null
-  }
+  };
 
   constructor(
     public router: Router,
@@ -53,31 +53,31 @@ export class GrantComponent implements OnInit, OnDestroy {
     private utils: UtilsService,
     public modalController: ModalController,
     private subgraphService: SubgraphService,
-    private ethcontractService: EthcontractService,
+    private ethcontractService: EthContractService,
   ) {
     this.grantAddress = this.route.snapshot.params.id || '';
 
     (async () => {
-      let response: any = await this.subgraphService.getGrantByAddress(this.grantAddress).toPromise();
+      const response: any = await this.subgraphService.getGrantByAddress(this.grantAddress).toPromise();
       this.grantData = response.data.contract;
       this.grantData = JSON.parse(JSON.stringify(this.grantData));
 
       this.grantData.input = this.ethcontractService.parseTransaction(this.grantData.input);
-      this.grantData['grantees'] = this.grantData.input.grantees;
-      this.grantData['amounts'] = this.grantData.input.amounts;
-      this.grantData['uri'] = this.grantData.input.uri;
+      this.grantData.grantees = this.grantData.input.grantees;
+      this.grantData.amounts = this.grantData.input.amounts;
+      this.grantData.uri = this.grantData.input.uri;
 
       this.checkRole();
 
-      this.noOfDayToExpiredFunding = moment(+this.grantData.fundingExpiration).diff(moment(new Date), 'days')
+      this.noOfDayToExpiredFunding = moment(+this.grantData.fundingExpiration).diff(moment(new Date), 'days');
       this.canCancelByGranteeAndDonor = moment(+this.grantData.fundingExpiration).isBefore(new Date());
 
       this.subgraphService.getFundByContract(this.grantAddress).subscribe((res: any) => {
         this.grantFunds = res.data.funds;
         this.grantFunds = this.grantFunds.reduce((m, o) => {
-          var found = m.find(p => p.donor === o.donor);
+          let found = m.find(p => p.donor === o.donor);
           if (found) {
-            found.amount = +found.amount
+            found.amount = +found.amount;
             found.amount += +o.amount;
           } else {
             m.push(o);
@@ -102,50 +102,49 @@ export class GrantComponent implements OnInit, OnDestroy {
   }
 
   htmlDecode(input: any) {
-    var e = document.createElement("textarea");
+    let e = document.createElement('textarea');
     e.innerHTML = input;
     return e.value;
-  };
+  }
 
 
   async getUserEthAddress() {
     this.userEthAddress = await this.authService.getAuthUserId();
-    // console.log("userEthAddress", this.userEthAddress)
   }
 
   currencyCovert(currencyType, amount) {
-    if (currencyType == AddressZero) {
+    if (currencyType === AddressZero) {
       return ethers.utils.formatEther(amount);
     }
     return amount;
   }
 
   checkRole() {
-    this.getUserEthAddress()
+    this.getUserEthAddress();
 
     if (this.userEthAddress) {
       this.userRole = this.userEnum.DONOR;
 
-      if (this.userEthAddress && this.grantData.manager.toLowerCase() == this.userEthAddress.toLowerCase()) {
+      if (this.userEthAddress && this.grantData.manager.toLowerCase() === this.userEthAddress.toLowerCase()) {
         this.userRole = this.userEnum.MANAGER;
       }
 
       this.grantData.grantees.map((data, index) => {
-        if (this.userEthAddress && data.toLowerCase() == this.userEthAddress.toLowerCase()) {
+        if (this.userEthAddress && data.toLowerCase() === this.userEthAddress.toLowerCase()) {
           this.userAlloc = this.grantData.amounts[index];
           this.userRole = this.userEnum.GRANTEE;
         }
       });
 
-      if (this.userRole == this.userEnum.DONOR) {
+      if (this.userRole === this.userEnum.DONOR) {
         this.getDonorData();
       }
 
-      if (this.userRole == this.userEnum.MANAGER) {
+      if (this.userRole === this.userEnum.MANAGER) {
         this.getManagerData();
       }
 
-      if (this.userRole == this.userEnum.GRANTEE) {
+      if (this.userRole === this.userEnum.GRANTEE) {
         this.getGranteeData();
       }
     } else {
@@ -164,7 +163,7 @@ export class GrantComponent implements OnInit, OnDestroy {
       });
 
       this.userDonation = this.userDonation.toString();
-    })
+    });
   }
 
   getManagerData() {
@@ -181,7 +180,7 @@ export class GrantComponent implements OnInit, OnDestroy {
     const modal = await this.modalController.create({
       component: PayoutComponent,
       cssClass: 'custom-modal-style',
-      mode: "ios",
+      mode: 'ios',
       componentProps: {
         grantAddress: this.grantAddress,
         grantees: this.grantData.grantees
@@ -198,7 +197,7 @@ export class GrantComponent implements OnInit, OnDestroy {
   cancelGrant() {
     Swal.fire({
       title: 'Are you sure cancle the grant?',
-      text: "You won't be able to revert this!",
+      text: 'You won\'t be able to revert this!',
       icon: 'warning',
       backdrop: false,
       allowOutsideClick: false,
@@ -211,9 +210,9 @@ export class GrantComponent implements OnInit, OnDestroy {
         const modal = await this.modalController.create({
           component: PopupComponent,
           cssClass: 'custom-modal-style',
-          mode: "ios",
+          mode: 'ios',
           componentProps: {
-            modelType: "cancelContract",
+            modelType: 'cancelContract',
             data: this.grantAddress
           }
         });
@@ -234,16 +233,16 @@ export class GrantComponent implements OnInit, OnDestroy {
       ) {
         // Swal.fire('Cancelled', 'Your request cancelled :)', 'error');
       }
-    })
+    });
   }
 
   grantFunding() {
-    this.getUserEthAddress()
+    this.getUserEthAddress();
 
     if (this.userEthAddress) {
       Swal.fire({
         title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        text: 'You won\'t be able to revert this!',
         icon: 'warning',
         backdrop: false,
         allowOutsideClick: false,
@@ -254,16 +253,16 @@ export class GrantComponent implements OnInit, OnDestroy {
       }).then(async (result) => {
         if (result.value) {
           let amount: any = this.fundingModel.amount;
-          if (this.grantData.currency == AddressZero) {
+          if (this.grantData.currency === AddressZero) {
             amount = (ethers.utils.parseEther(this.fundingModel.amount.toString())).toString();
           }
           const modal = await this.modalController.create({
             component: PopupComponent,
             cssClass: 'custom-modal-style',
-            mode: "ios",
+            mode: 'ios',
             componentProps: {
-              modelType: "fundingContract",
-              data: { grantAddress: this.grantAddress, amount: amount }
+              modelType: 'fundingContract',
+              data: { grantAddress: this.grantAddress, amount }
             }
           });
 
@@ -283,9 +282,9 @@ export class GrantComponent implements OnInit, OnDestroy {
           result.dismiss === Swal.DismissReason.cancel
         ) {
         }
-      })
+      });
     } else {
-      this.toastr.warning("Please login the App");
+      this.toastr.warning('Please login the App');
     }
   }
 

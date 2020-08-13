@@ -3,14 +3,12 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Subscription, BehaviorSubject } from 'rxjs';
 import { EventEmitter } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MenuPopoverComponent } from '../menu-popover/menu-popover.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { PopupComponent } from 'src/app/pages/popup/popup.component';
 
-
-declare let window: any;
 
 @Component({
   selector: 'app-header',

@@ -4,9 +4,7 @@ import { PagesComponent } from './pages.component';
 import { AuthGuard } from '../guard/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { LatestGrantsComponent } from './latest-grants/latest-grants.component';
-import { ProfileComponent } from './profile/profile.component';
 import { MyGrantsComponent } from './my-grants/my-grants.component';
-import { GrantDetailsComponent } from './grant-details/grant-details.component';
 import { CreateNewGrantComponent } from './create-new-grant/create-new-grant.component';
 import { GrantComponent } from './grant/grant.component';
 

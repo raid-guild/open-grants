@@ -17,7 +17,6 @@ import { NumberonlyDirectiveModule } from '../common/directives/numberOnlyDirect
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { CreateNewGrantComponent } from './create-new-grant/create-new-grant.component';
 import { ProfileComponent } from './profile/profile.component';
-import { GrantDetailsComponent } from './grant-details/grant-details.component';
 import { SubgraphService } from '../services/subgraph.service';
 import { HeaderComponent } from '../navbar/header/header.component';
 import { MenuPopoverComponent } from '../navbar/menu-popover/menu-popover.component';
@@ -40,7 +39,6 @@ const PAGES_COMPONENTS = [
         ProfileComponent,
         GrantComponent,
         MyGrantsComponent,
-        GrantDetailsComponent,
         LatestGrantsComponent,
         CreateNewGrantComponent,
     ],

@@ -2,11 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { NavParams } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
-import { AppSettings } from 'src/app/config/app.config';
-import { EthcontractService } from 'src/app/services/ethcontract.service';
+import { EthContractService } from 'src/app/services/ethcontract.service';
 import { Web3Service } from 'src/app/services/web3.service';
-
-declare let window: any;
 
 @Component({
   selector: 'app-popup',
@@ -40,7 +37,7 @@ export class PopupComponent implements OnInit {
     public modalCtrl: ModalController,
     private navParams: NavParams,
     private authService: AuthService,
-    private ethcontractService: EthcontractService,
+    private ethcontractService: EthContractService,
     private web3service: Web3Service,
   ) {
     this.modelType = this.navParams.get('modelType');
@@ -70,7 +67,7 @@ export class PopupComponent implements OnInit {
   }
 
   dismiss() {
-    this.modalCtrl.dismiss()
+    this.modalCtrl.dismiss();
   }
 
   async login() {
@@ -115,15 +112,15 @@ export class PopupComponent implements OnInit {
 
   async cancelContract() {
     this.canceling = true;
-    let contract: any = await this.ethcontractService.cancelGrant(this.data);
+    const contract: any = await this.ethcontractService.cancelGrant(this.data);
 
     if (contract.status == 'success') {
       this.canceling = false;
       this.canceledSuccess = true;
 
       setTimeout(() => {
-        this.modalCtrl.dismiss({ reload: true })
-      }, 2000)
+        this.modalCtrl.dismiss({ reload: true });
+      }, 2000);
     } else {
       this.canceling = false;
       this.canceledFail = true;
@@ -132,15 +129,15 @@ export class PopupComponent implements OnInit {
 
   async fundingContract() {
     this.funding = true;
-    let funding: any = await this.ethcontractService.fund(this.data.grantAddress, this.data.amount);
+    const funding: any = await this.ethcontractService.fund(this.data.grantAddress, this.data.amount);
 
     if (funding.status == 'success') {
       this.funding = false;
       this.fundingSuccess = true;
 
       setTimeout(() => {
-        this.modalCtrl.dismiss({ reload: true })
-      }, 2000)
+        this.modalCtrl.dismiss({ reload: true });
+      }, 2000);
     } else {
       this.funding = false;
       this.fundingError = true;
@@ -149,15 +146,15 @@ export class PopupComponent implements OnInit {
 
   async contractPayout() {
     this.payouting = true;
-    let payoutRes: any = await this.ethcontractService.approvePayout(this.data.grantAddress, this.data.grantee, this.data.amount)
+    const payoutRes: any = await this.ethcontractService.approvePayout(this.data.grantAddress, this.data.grantee, this.data.amount);
 
     if (payoutRes.status == 'success') {
       this.payouting = false;
       this.payoutSuccess = true;
 
       setTimeout(() => {
-        this.modalCtrl.dismiss({ reload: true })
-      }, 2000)
+        this.modalCtrl.dismiss({ reload: true });
+      }, 2000);
     } else {
       this.payouting = false;
       this.payoutError = true;

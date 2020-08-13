@@ -9,22 +9,20 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgxSpinnerModule } from "ngx-spinner";
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
 
 // Apollo
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { DefaultOptions } from "apollo-client";
-import { APOLLO_OPTIONS } from "apollo-angular";
+import { DefaultOptions } from 'apollo-client';
+import { APOLLO_OPTIONS } from 'apollo-angular';
 
-import { HttpLinkModule, HttpLink } from "apollo-angular-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { ENVIRONMENT } from 'src/environments/environment';
-
-
+import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { environment } from 'src/environments/environment';
 
 import { HttpCommonInterceptor } from './common/interceptors/http-common.interceptor';
-import { AppSettings } from './config/app.config';
+
 
 const defaultOptions: DefaultOptions = {
   watchQuery: {
@@ -35,7 +33,7 @@ const defaultOptions: DefaultOptions = {
     fetchPolicy: 'no-cache',
     errorPolicy: 'all',
   },
-}
+};
 
 @NgModule({
   declarations: [AppComponent],
@@ -65,10 +63,10 @@ const defaultOptions: DefaultOptions = {
         return {
           cache: new InMemoryCache(),
           link: httpLink.create({
-            uri: ENVIRONMENT.SUBGRAPH_QUERIE
+            uri: environment.SUBGRAPH_QUERY
           }),
-          defaultOptions 
-        }
+          defaultOptions
+        };
       },
       deps: [HttpLink]
     }

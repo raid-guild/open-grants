@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { NavParams } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 import { ethers, constants } from 'ethers';
-import { EthcontractService } from 'src/app/services/ethcontract.service';
+import { EthContractService } from 'src/app/services/ethcontract.service';
 import Swal from 'sweetalert2';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { SubgraphService } from 'src/app/services/subgraph.service';
@@ -37,7 +37,7 @@ export class PayoutComponent implements OnInit {
     private fb: FormBuilder,
     public modalController: ModalController,
     private subgraphService: SubgraphService,
-    private ethcontractService: EthcontractService,
+    private ethcontractService: EthContractService,
   ) {
 
     this.grantAddress = navParams.get('grantAddress');

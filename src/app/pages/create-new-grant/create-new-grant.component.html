@@ -51,58 +51,6 @@
 
                     </div>
 
-                    <div formArrayName="multipleMilestones" *ngIf="isSelected('multipleMilestones')"
-                        class="hide-show-section">
-                        <ion-row class="items name" [formGroupName]="i"
-                            *ngFor="let controls of multipleMilestonesControls.controls; let i=index">
-                            <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
-                                <ion-item>
-                                    <ion-label position="floating">Milestone</ion-label>
-                                    <ion-input class="form-control" type="text" [OnlyNumber]="true"
-                                        formControlName="milestoneNumber">
-                                    </ion-input>
-                                </ion-item>
-                                <div *ngIf="submitted && multipleMilestones[i].controls.milestoneNumber.invalid">
-                                    <label class="error">
-                                        Please Enter Milestone
-                                    </label>
-                                </div>
-                            </ion-col>
-
-                            <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
-                                <ion-row>
-                                    <ion-col [size]="multipleMilestones.length >1 ? '11' : '12'">
-                                        <ion-item>
-                                            <ion-label position="floating">Completion Date</ion-label>
-                                            <ion-datetime class="form-control" [min]="minYear" [max]="maxYear"
-                                                displayFormat="MMM DD YYYY" formControlName="completionDate">
-                                            </ion-datetime>
-                                        </ion-item>
-                                        <div *ngIf="submitted && multipleMilestones[i].controls.completionDate.invalid">
-                                            <label class="error">
-                                                Please Enter Completion Date
-                                            </label>
-                                        </div>
-                                    </ion-col>
-                                    <ion-col size="1" *ngIf="multipleMilestones.length >1">
-                                        <div class="close">
-                                            <ion-icon (click)="removeMilestone(i)" name="close-circle"></ion-icon>
-                                        </div>
-                                    </ion-col>
-                                </ion-row>
-                            </ion-col>
-                        </ion-row>
-                        <ion-row class="name">
-                            <ion-col size="12" class="padding-0">
-                                <ion-button mode="md" fill="clear" class="tt-none dashed-border" expand="block"
-                                    (click)="addNewMilestone()">
-                                    Add New Milestone
-                                </ion-button>
-                            </ion-col>
-                        </ion-row>
-
-                    </div>
-
                     <ion-row class="inputs name">
                         <ion-col class="padding-0" size-lg="6" size-xs="12" size-sm="12">
                             <ion-item>
@@ -115,11 +63,11 @@
                                 <label *ngIf="submitted && form.manager.errors?.required">
                                     Please Add Grant Manager
                                 </label>
-                                <label *ngIf="!form.manager.errors?.required && form.manager.errors?.addressValid">
+                                <label *ngIf="!form.manager.errors?.required && form.manager.errors?.addressInvalid">
                                     Grant Manager Address Not Valid
                                 </label>
                                 <label
-                                    *ngIf="!form.manager.errors?.required && !form.manager.errors?.addressValid && managerAddressError">
+                                    *ngIf="!form.manager.errors?.required && !form.manager.errors?.addressInvalid && managerAddressError">
                                     Grant Manager Address Must Be Unique
                                 </label>
                             </div>
@@ -142,31 +90,20 @@
                         </ion-col>
                     </ion-row>
 
-                    <!-- <ion-row class="name">
+                    <ion-row class="name">
                         <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
                             <ion-item>
-                                <ion-label>Allocate Amount to Grantee By Percentage</ion-label>
-                                <ion-toggle slot="end" [formControl]="isAllocationByPer"
-                                    [disabled]="grantee.length > 1">
-                                </ion-toggle>
-                            </ion-item>
-                        </ion-col>
-                    </ion-row> -->
-
-                    <ion-row class="name">
-                        <!-- <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
-                            <ion-item>
-                                <ion-label position="floating" for="name">Grant Name</ion-label>
-                                <ion-input class="form-control" type="text" formControlName="name">
+                                <ion-label position="floating" for="name">Grant URI</ion-label>
+                                <ion-input class="form-control" type="text" formControlName="uri">
                                 </ion-input>
                             </ion-item>
 
-                            <div *ngIf="submitted && form.name.invalid">
+                            <div *ngIf="submitted && form.uri.invalid">
                                 <span class="error">
-                                    Please Enter Name
+                                    Please Enter URI
                                 </span>
                             </div>
-                        </ion-col> -->
+                        </ion-col>
                         <ion-col size-lg="6" size-sm="12" size-xs="12" class="padding-0">
                             <ion-item>
                                 <ion-label position="floating" for="name">Target Funding Amount</ion-label>
@@ -201,11 +138,11 @@
                                         Please Add Grantee
                                     </label>
                                     <label
-                                        *ngIf="!grantee[i].controls.grantee.errors?.required && grantee[i].controls.grantee.errors?.addressValid">
+                                        *ngIf="!grantee[i].controls.grantee.errors?.required && grantee[i].controls.grantee.errors?.addressInvalid">
                                         Grantee Address Not Valid
                                     </label>
                                     <label
-                                        *ngIf="!grantee[i].controls.grantee.errors?.required && !grantee[i].controls.grantee.errors?.addressValid && granteeAddressError[i]">
+                                        *ngIf="!grantee[i].controls.grantee.errors?.required && !grantee[i].controls.grantee.errors?.addressInvalid && granteeAddressError[i]">
                                         Grantee Address Must Be Unique
                                     </label>
                                 </div>
@@ -282,22 +219,6 @@
                             </ion-col>
                         </ion-row>
                     </div>
-
-                    <!-- <ion-row class="name">
-                        <ion-col class="padding-0">
-
-                            <editor formControlName="content" [init]="tinymceInit"></editor>
-
-                        </ion-col>
-                    </ion-row> -->
-
-                    <!-- <ion-row class="name">
-                        <ion-col class="padding-0">
-                            <div class="total-amount">
-                                Target Funding : {{form.targetFunding.value ? form.targetFunding.value : "0"}} {{form.currency.value ? form.currency.value : ""}}
-                            </div>
-                        </ion-col>
-                    </ion-row> -->
 
                     <ion-row class="name" style="margin-bottom: 70px">
                         <ion-col class="padding-0">

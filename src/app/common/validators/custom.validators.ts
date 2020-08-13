@@ -1,10 +1,15 @@
 import { AbstractControl } from '@angular/forms';
+import { utils } from 'ethers';
 
-declare let window: any;
 
 export function addressValidator(control: AbstractControl) {
-    if (window.web3.isAddress(control.value.toLowerCase())) {
-        return null;
+    let addressInvalid;
+
+    try {
+        utils.getAddress(control.value.toLowerCase());
+    } catch (error) {
+        addressInvalid = true;
     }
-    return { addressValid: true };
+
+    return addressInvalid ? { addressInvalid: true } : null;
 }
