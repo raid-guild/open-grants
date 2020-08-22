@@ -66,3 +66,6 @@ typings/
 
 build/
 generated/
+
+# vim
+*.swp
