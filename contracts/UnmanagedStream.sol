@@ -91,6 +91,7 @@ contract UnmanagedStream is ReentrancyGuard, BaseGrant, GranteeConstructor, Fund
                     success,
                     "fallback::Transfer Error. Unable to send eligiblePortion to Grantee."
                 );
+                emit LogPayment(currentGrantee, eligiblePortion);
             }
 
         }
