@@ -9,7 +9,8 @@
     "clean": "npx rimraf ./cache",
     "lint": "npx solhint contracts/*.sol",
     "coverage": "npx buidler coverage --network coverage --solcoverjs .solcover.js",
-    "deploy-grant-factory:kovan": "npx buidler run scripts/deploy-grant-factory.ts --network kovan"
+    "deploy-grant-factory:kovan": "npx buidler run scripts/deploy-grant-factory.ts --network kovan",
+    "deploy-vesting-factory:kovan": "npx buidler run scripts/deploy-vesting-factory.ts --network kovan"
   },
   "repository": {
     "type": "git",

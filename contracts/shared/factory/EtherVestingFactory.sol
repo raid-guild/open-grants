@@ -1,6 +1,6 @@
 pragma solidity ^0.6.0;
 
-import "./EtherVesting.sol";
+import "../../EtherVesting.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 /**
@@ -23,15 +23,15 @@ contract EtherVestingFactory {
 
     /*----------  Public Methods  ----------*/
 
-    function create(address beneficiary, uint256 start, uint256 cliffDuration, uint256 duration, bool revocable)
+    function create(address beneficiary, uint256 start, uint256 duration, bool revocable)
         public
+        returns (address)
     {
         address vestingAddress;
 
         EtherVesting vesting = new EtherVesting(
             beneficiary,
             start,
-            cliffDuration,
             duration,
             revocable
         );
@@ -58,7 +58,6 @@ contract EtherVestingFactory {
      */
     function getVestingAddress(uint256 _id)
         public
-        override
         view
         returns(address)
     {
