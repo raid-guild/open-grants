@@ -14,7 +14,7 @@ async function main() {
     }
 
     // We get the contract to deploy
-    const GrantFactory = await bre.ethers.getContractFactory("GrantFactory");
+    const GrantFactory = await bre.ethers.getContractFactory("UnmanagedStreamFactory");
     const grantFactory = await GrantFactory.deploy();
   
     await grantFactory.deployed();

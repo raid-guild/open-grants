@@ -7,6 +7,7 @@ usePlugin("solidity-coverage");
 
 const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID;
 const ROPSTEN_PRIVATE_KEY = process.env.ROPSTEN_PRIVATE_KEY;
+const KOVAN_PRIVATE_KEY = process.env.KOVAN_PRIVATE_KEY;
 
 const config: any = {
     solc: {
@@ -26,6 +27,10 @@ const config: any = {
         ropsten: {
           url: `https://ropsten.infura.io/v3/${INFURA_PROJECT_ID}`,
           accounts: [`0x${ROPSTEN_PRIVATE_KEY}`]
+        },
+        kovan: {
+          url: `https://kovan.infura.io/v3/${INFURA_PROJECT_ID}`,
+          accounts: [`0x${KOVAN_PRIVATE_KEY}`]
         },
         ganache: {
           url: 'http://127.0.0.1:8555',
