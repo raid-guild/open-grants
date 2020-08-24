@@ -1,31 +1,16 @@
-type Contract @entity {
+type Grant @entity {
   id: ID!
-  input: Bytes
-  contractAddress: Bytes!
-  # count: BigInt!
+  factoryAddress: Bytes!
   grantId: BigInt! # uint256
   grantAddress: Bytes! # address
   uri: Bytes
   createBy: Bytes!
-  manager: Bytes!
   grantees: [Bytes!]
-  donors: [Bytes!]
+  funds: [Fund!]
+  payments: [Payment!]
   amounts: [BigInt!]
-  currency: Bytes!
-  targetFunding: BigInt!
-  totalFunding: BigInt
-  totalPayed: BigInt
-  availableBalance: BigInt
-  canFund: Boolean
-  grantCancelled: Boolean
-  fundingDeadline: BigInt!
-  contractExpiration: BigInt!
+  totalFunded: BigInt
 }
-
-# type grantee @entity {
-#   grantee: Bytes!
-#   targetFunding: String!
-# }
 
 type Fund @entity {
   id: ID!

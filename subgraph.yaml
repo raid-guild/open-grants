@@ -1,68 +1,52 @@
 specVersion: 0.0.2
-description: Managed Capped Grant for Ethereum
+description: Grants Platform for Ethereum
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: ManagedCappedGrant
-    network: ropsten
+    name: UnmanagedStreamFactory
+    network: kovan
     source:
-      abi: ManagedCappedGrant
-      startBlock: 7802695
+      address: '0x7A6f602667f22D2Ec33636148e441A7c2D124380'
+      abi: UnmanagedStreamFactory
+      startBlock: 20460529
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - LogFunding
-        - LogFundingComplete
-        - LogGrantCancellation
-        - LogPayment
-        - LogPaymentApproval
-        - LogRefund
-        - LogRefundApproval
+        - Grant
       abis:
-        - name: ManagedCappedGrant
-          file: ./abis/ManagedCappedGrant.json
-        - name: GrantFactory
-          file: ./abis/GrantFactory.json
+        - name: UnmanagedStreamFactory
+          file: ./abis/UnmanagedStreamFactory.json
+        - name: UnmanagedStream
+          file: ./abis/UnmanagedStream.json
       eventHandlers:
-        - event: LogFunding(indexed address,uint256)
-          handler: handleLogFunding
-        - event: LogFundingComplete()
-          handler: handleLogFundingComplete
-        - event: LogGrantCancellation()
-          handler: handleLogGrantCancellation
-        - event: LogPayment(indexed address,uint256)
-          handler: handleLogPayment
-        - event: LogPaymentApproval(indexed address,uint256)
-          handler: handleLogPaymentApproval
-        - event: LogRefund(indexed address,uint256)
-          handler: handleLogRefund
-        - event: LogRefundApproval(uint256,uint256)
-          handler: handleLogRefundApproval
-
-      file: ./src/mapping.ts
-
-  - kind: ethereum/contract
-    name: GrantFactory
-    network: ropsten
-    source:
-      abi: GrantFactory
-      startBlock: 7802695
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      entities:
-        - GrantFactory
-      abis:
-        - name: ManagedCappedGrant
-          file: ./abis/ManagedCappedGrant.json
-        - name: GrantFactory
-          file: ./abis/GrantFactory.json
-      eventHandlers:
-        - event: LogNewGrant(indexed uint256,address)
+        - event: LogNewGrant(indexed uint256,address[],uint256[],address)
           handler: handleLogNewGrant
 
       file: ./src/mapping.ts
+templates:
+  - kind: ethereum/contract
+    name: UnmanagedStream
+    network: kovan
+    source:
+      abi: UnmanagedStream
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Fund
+        - Payment
+      abis:
+        - name: UnmanagedStream
+          file: ./abis/UnmanagedStream.json
+      eventHandlers:
+        - event: LogFunding(indexed address,uint256)
+          handler: handleLogFunding
+        - event: LogPayment(indexed address,uint256)
+          handler: handleLogPayment
+
+      file: ./src/mapping.ts
+
