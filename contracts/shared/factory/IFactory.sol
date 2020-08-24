@@ -7,7 +7,7 @@ interface IFactory {
      * @param id Sequential identifier.
      * @param grant Address of newly created grant.
      */
-    event LogNewGrant(uint256 indexed id, address grant);
+    event LogNewGrant(uint256 indexed id, address[] grantees, uint256[] amounts, address grant);
 
 
     /**

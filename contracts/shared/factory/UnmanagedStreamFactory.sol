@@ -64,7 +64,7 @@ contract UnmanagedStreamFactory is IFactory {
         // Increment id counter.
         id = id.add(1);
 
-        emit LogNewGrant(grantId, grantAddress);
+        emit LogNewGrant(grantId, _grantees, _amounts, grantAddress);
 
         return grantAddress;
     }
