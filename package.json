@@ -1,20 +1,17 @@
 {
-  "name": "grant-platform",
+  "name": "grants-platform-subgraph",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "auth": "graph auth https://api.thegraph.com/deploy/ 246f0d4165594952989f8824239ba651",
-    "deploy": "graph deploy dipaksavaliya/grant-platform --ipfs https://api.thegraph.com/ipfs/  --node https://api.thegraph.com/deploy/",
-    "deploy-ropsten": "graph deploy noahmarconi/open-grant --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "auth": "graph auth https://api.thegraph.com/deploy/ a54e82463c9e404bb3ec766e95a50031",
+    "deploy-kovan": "graph deploy dan13ram/kovan-grants-platform --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug",
     "create-local": "graph create --node http://localhost:8020/ dipaksavaliya/grant-platform",
     "remove-local": "graph remove --node http://localhost:8020/ dipaksavaliya/grant-platform",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 dipaksavaliya/grant-platform"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.18.0",
-    "@graphprotocol/graph-ts": "0.18.0",
-    "ethers": "^5.0.5",
-    "keytar": "^5.4.0"
+    "@graphprotocol/graph-ts": "0.18.0"
   }
 }
