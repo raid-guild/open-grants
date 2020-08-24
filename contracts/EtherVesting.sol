@@ -170,4 +170,9 @@ contract EtherVesting is Ownable, ReentrancyGuard {
             return totalBalance.mul(block.timestamp.sub(_start)).div(_duration);
         }
     }
+
+    /**
+     * @dev Receive ether transfers
+     */
+    receive() external payable {}
 }
