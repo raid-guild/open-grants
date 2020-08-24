@@ -26,12 +26,12 @@ dataSources:
           handler: handleLogNewGrant
 
       file: ./src/mapping.ts
-templates:
   - kind: ethereum/contract
     name: UnmanagedStream
     network: kovan
     source:
       abi: UnmanagedStream
+      startBlock: 20460529
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4

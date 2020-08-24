@@ -1,17 +1,15 @@
-import { Bytes } from "@graphprotocol/graph-ts";
+import { Bytes, log } from "@graphprotocol/graph-ts";
 import {
     LogFunding,
     LogPayment
-} from "../generated/templates/UnmanagedStream/UnmanagedStream";
+} from "../generated/UnmanagedStream/UnmanagedStream";
 
 import { LogNewGrant } from "../generated/UnmanagedStreamFactory/UnmanagedStreamFactory";
 import { fetchGrantInfo } from "./helpers";
 import { Fund, Payment, Grant } from "../generated/schema";
 
 export function handleLogNewGrant(event: LogNewGrant): void {
-    let id = event.params.grant.toHexString();
-
-    let grant = new Grant(id);
+    let grant = new Grant(event.params.grant.toHexString());
     grant.factoryAddress = event.address;
     grant.createBy = event.transaction.from;
     grant.grantId = event.params.id;
@@ -27,34 +25,53 @@ export function handleLogNewGrant(event: LogNewGrant): void {
     grant.payments = new Array<string>();
 
     grant.save();
+    log.info("New Grant {}", [grant.id]);
 }
 
 export function handleLogFunding(event: LogFunding): void {
-    let fund = new Fund(event.transaction.hash.toHex());
+    let fund = new Fund(event.transaction.hash.toHexString());
     fund.grantAddress = event.address;
     fund.donor = event.params.donor;
     fund.amount = event.params.value;
     fund.save();
+    log.info("New Funding {}", [fund.id]);
 
     let grant = Grant.load(event.address.toHexString());
-    if (grant !== null) {
+    if (grant != null) {
+        log.debug("Updating Grant {} for funding {}", [grant.id, fund.id]);
         let fetchedGrant = fetchGrantInfo(event.address);
         grant.totalFunded = fetchedGrant.totalFunded;
-        grant.funds.push(fund.id);
+        let funds = grant.funds;
+        funds.push(fund.id);
+        grant.funds = funds;
         grant.save();
+    } else {
+        log.debug("Grant {} not found for funding {}", [
+            event.address.toHexString(),
+            fund.id
+        ]);
     }
 }
 
 export function handleLogPayment(event: LogPayment): void {
-    let payment = new Payment(event.transaction.hash.toHex());
+    let payment = new Payment(event.logIndex.toHexString());
     payment.grantee = event.params.grantee;
     payment.grantAddress = event.address;
     payment.amount = event.params.value;
     payment.save();
+    log.info("New Payment: {}", [payment.id]);
 
     let grant = Grant.load(event.address.toHexString());
-    if (grant !== null) {
-        grant.payments.push(payment.id);
+    if (grant != null) {
+        log.debug("Updating Grant for payment: {}", [grant.id]);
+        let payments = grant.payments;
+        payments.push(payment.id);
+        grant.payments = payments;
         grant.save();
+    } else {
+        log.debug("Grant {} not found for payment {}", [
+            event.address.toHexString(),
+            payment.id
+        ]);
     }
 }

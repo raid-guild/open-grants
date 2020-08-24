@@ -4,7 +4,7 @@ import {
     Address,
 } from "@graphprotocol/graph-ts";
 
-import { UnmanagedStream } from "../generated/templates/UnmanagedStream/UnmanagedStream";
+import { UnmanagedStream } from "../generated/UnmanagedStream/UnmanagedStream";
 
 class GrantObject {
     uri: Bytes;
