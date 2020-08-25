@@ -1,0 +1,57 @@
+<ion-header mode="md" no-border>
+    <ion-toolbar mode="md">
+    </ion-toolbar>
+</ion-header>
+
+<ion-content color="light">
+    <ion-row class="page-row">
+        <ion-col size="12">
+            <ion-item mode="md" lines="none" class="heading">
+                <ion-label slot="start">Latest Grants</ion-label>
+            </ion-item>
+
+            <hr class="dashed-line">
+
+                <ion-row class="container-new">
+                    <ion-col size-md="6" size-sm="12" *ngFor="let grant of allGrant" (click)="grantDetails(grant.id)">
+                        <ion-card class="grant">
+                            <ion-card-content >
+                                    <div class="grant-card-flex">
+                                        <p class="grant-card"> Manager:</p>
+                                        <p arrow class="grant-card-small-text">
+                                            {{grant.manager | slice:0:44}}{{grant.manager.length < 44 ? '' : '...'}}
+                                        </p>
+                                    </div>
+                                    <div class="grant-card-flex new-space">
+                                        <p class="grant-card"> Created By:</p>
+                                        <p class="grant-card-small-text">
+                                            {{grant.createBy | slice:0:44}}{{grant.createBy.length < 44 ? '' : '...'}}
+                                        </p>
+                                    </div>
+                                    <div class="grant-card-flex new-space">
+                                        <p class="grant-card"> Target Fund:</p>
+                                        <p class="grant-card-small-text">
+                                            {{currencyCovert(grant?.currency,grant?.targetFunding)}} ETH
+                                        </p>
+                                    </div>
+                                    <div class="grant-card-flex new-space">
+                                        <p class="grant-card"> Total Fund:</p>
+                                        <p class="grant-card-small-text">
+                                            {{currencyCovert(grant?.currency,grant?.totalFunding)}} ETH</p>
+                                    </div>
+                                    <div class="grant-card-flex new-space">
+                                        <p class="grant-card"> Balance:</p>
+                                        <p class="grant-card-small-text">
+                                            {{currencyCovert(grant?.currency,grant?.availableBalance)}} ETH</p>
+                                    </div>
+                                    <div class="new-space">
+                                        <ion-chip *ngIf="grant.canFund">Grant open for funding</ion-chip>
+                                    </div>
+                            </ion-card-content>
+
+                        </ion-card>    
+                    </ion-col>
+                </ion-row>
+        </ion-col>
+    </ion-row>
+</ion-content>
