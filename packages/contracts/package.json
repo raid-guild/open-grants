@@ -1,20 +1,13 @@
 {
-  "name": "grant-contracts",
-  "version": "1.0.0",
-  "description": "Reference Implementation for OpenGrant EIP",
-  "main": "index.js",
+  "name": "open-grants-contracts",
+  "version": "0.0.1",
   "scripts": {
-    "test": "npx buidler --network ganache test",
-    "build": "npx buidler compile",
-    "clean": "npx rimraf ./cache",
-    "lint": "npx solhint contracts/*.sol",
-    "coverage": "npx buidler coverage --network coverage --solcoverjs .solcover.js",
-    "deploy-grant-factory:kovan": "npx buidler run scripts/deploy-grant-factory.ts --network kovan",
-    "deploy-vesting-factory:kovan": "npx buidler run scripts/deploy-vesting-factory.ts --network kovan"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NoahMarconi/grant-contracts.git"
+    "test": "buidler --network ganache test",
+    "build": "buidler compile",
+    "clean": "rimraf ./cache",
+    "lint": "solhint contracts/*.sol",
+    "coverage": "buidler coverage --network coverage --solcoverjs .solcover.js",
+    "deploy-kovan": "buidler run scripts/deploy.ts --network kovan"
   },
   "keywords": [
     "ethereum",
@@ -24,16 +17,12 @@
     "smart",
     "contract"
   ],
-  "author": "Noah Marconi",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/NoahMarconi/grant-contracts/issues"
-  },
-  "homepage": "https://github.com/NoahMarconi/grant-contracts#readme",
   "dependencies": {
     "diff": ">=3.5.0",
     "openzeppelin-solidity": "^3.0.2"
   },
+  "private": true,
   "devDependencies": {
     "@nomiclabs/buidler": "^1.3.6",
     "@nomiclabs/buidler-ethers": "^1.3.3",
@@ -54,6 +43,7 @@
     "solhint": "^3.0.0-rc.8",
     "solidity-coverage": "^0.7.7",
     "ts-mocha": "^6.0.0",
+    "ts-node": "^9.0.0",
     "typescript": "^3.5.3"
   }
 }

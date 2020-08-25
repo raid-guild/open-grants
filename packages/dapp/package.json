@@ -1,8 +1,6 @@
 {
-  "name": "grant-platform",
+  "name": "open-grants-dapp",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0",
@@ -98,5 +96,5 @@
     "tslint": "~6.1.0",
     "typescript": "^3.9.7"
   },
-  "description": "An Ionic project"
+  "license": "MIT"
 }

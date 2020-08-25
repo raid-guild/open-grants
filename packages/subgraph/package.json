@@ -1,6 +1,8 @@
 {
-  "name": "grants-platform-subgraph",
-  "license": "UNLICENSED",
+  "name": "open-grants-subgraph",
+  "version": "0.0.1",
+  "license": "MIT",
+  "private": true,
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",

@@ -1,0 +1,33 @@
+{
+    "name": "open-grants",
+    "version": "1.0.0",
+    "keywords": ["ethereum", "angular", "workspaces", "yarn"],
+    "private": true,
+    "scripts": {
+        "subgraph:auth": "yarn workspace open-grants-subgraph auth",
+        "subgraph:codegen": "yarn workspace open-grants-subgraph codegen",
+        "subgraph:build": "yarn workspace open-grants-subgraph build",
+        "subgraph:deploy-kovan": "yarn workspace open-grants-subgraph deploy-kovan",
+        "dapp:start": "yarn workspace open-grants-dapp start",
+        "dapp:lint": "yarn workspace open-grants-dapp lint",
+        "dapp:test": "yarn workspace open-grants-dapp test",
+        "dapp:build": "yarn workspace open-grants-dapp build",
+        "dapp:deploy": "yarn workspace open-grants-dapp deploy",
+        "contracts:build": "yarn workspace open-grants-contracts build",
+        "contracts:lint": "yarn workspace open-grants-contracts lint",
+        "contracts:test": "yarn workspace open-grants-contracts test",
+        "contracts:deploy-kovan": "yarn workspace open-grants-contracts deploy-kovan"
+    },
+    "workspaces": {
+        "nohoist": [
+            "**/@graphprotocol/graph-ts",
+            "**/@graphprotocol/graph-ts/**",
+            "**/@nomiclabs/**",
+            "**/typescript",
+            "**/ts-node",
+            "**/solidity-coverage"
+        ],
+        "packages": ["packages/*"]
+    },
+    "license": "MIT"
+}
