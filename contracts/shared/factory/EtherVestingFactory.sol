@@ -18,7 +18,7 @@ contract EtherVestingFactory {
 
     /*----------  Events  ----------*/
 
-    event LogEtherVestingCreated(address beneficiary, address vestingContract);
+    event LogEtherVestingCreated(uint256 indexed id, address vestingContract);
 
 
     /*----------  Public Methods  ----------*/
@@ -45,7 +45,7 @@ contract EtherVestingFactory {
         // Increment id counter.
         id = id.add(1);
 
-        emit LogEtherVestingCreated(beneficiary, vestingAddress);
+        emit LogEtherVestingCreated(vestingId, vestingAddress);
 
         return vestingAddress;
     }

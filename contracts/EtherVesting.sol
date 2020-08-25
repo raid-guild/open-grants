@@ -20,8 +20,9 @@ contract EtherVesting is Ownable, ReentrancyGuard {
 
     using SafeMath for uint256;
 
-    event LogEtherReleased(uint256 amount);
-    event LogEtherVestingRevoked();
+    event LogDeposit(address indexed sender, uint256 amount);
+    event LogReleased(uint256 amount);
+    event LogRevoked();
 
     // beneficiary of Ether after they are released
     address private _beneficiary;
@@ -119,7 +120,7 @@ contract EtherVesting is Ownable, ReentrancyGuard {
             "EtherVesting::Transfer Error. Unable to send unreleased to _beneficiary."
         );
 
-        emit LogEtherReleased(unreleased);
+        emit LogReleased(unreleased);
     }
 
     /**
@@ -147,7 +148,7 @@ contract EtherVesting is Ownable, ReentrancyGuard {
             "EtherVesting::Transfer Error. Unable to send refund to owner."
         );
 
-        emit LogEtherVestingRevoked();
+        emit LogRevoked();
     }
 
     /**
@@ -174,5 +175,7 @@ contract EtherVesting is Ownable, ReentrancyGuard {
     /**
      * @dev Receive ether transfers
      */
-    receive() external payable {}
+    receive() external payable {
+        emit LogDeposit(msg.sender, msg.value);
+    }
 }
