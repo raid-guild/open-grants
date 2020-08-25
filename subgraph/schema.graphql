@@ -1,0 +1,27 @@
+type Grant @entity {
+  id: ID!
+  factoryAddress: Bytes!
+  grantId: BigInt! # uint256
+  grantAddress: Bytes! # address
+  uri: Bytes
+  createBy: Bytes!
+  grantees: [Bytes!]
+  funds: [Fund!]
+  payments: [Payment!]
+  amounts: [BigInt!]
+  totalFunded: BigInt
+}
+
+type Fund @entity {
+  id: ID!
+  grantAddress: Bytes!
+  donor: Bytes! # address
+  amount: BigInt!
+}
+
+type Payment @entity {
+  id: ID!
+  grantAddress: Bytes!
+  grantee: Bytes! # address
+  amount: BigInt!
+}

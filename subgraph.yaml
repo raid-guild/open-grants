@@ -1,0 +1,100 @@
+specVersion: 0.0.2
+description: Grants Platform for Ethereum
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: UnmanagedStreamFactory
+    network: kovan
+    source:
+      address: '0x7A6f602667f22D2Ec33636148e441A7c2D124380'
+      abi: UnmanagedStreamFactory
+      startBlock: 20460529
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Grant
+      abis:
+        - name: UnmanagedStreamFactory
+          file: ./abis/UnmanagedStreamFactory.json
+        - name: UnmanagedStream
+          file: ./abis/UnmanagedStream.json
+      eventHandlers:
+        - event: LogNewGrant(indexed uint256,address[],uint256[],address)
+          handler: handleLogNewGrant
+
+      file: ./src/grants.ts
+  - kind: ethereum/contract
+    name: UnmanagedStream
+    network: kovan
+    source:
+      abi: UnmanagedStream
+      startBlock: 20460529
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Fund
+        - Payment
+      abis:
+        - name: UnmanagedStream
+          file: ./abis/UnmanagedStream.json
+      eventHandlers:
+        - event: LogFunding(indexed address,uint256)
+          handler: handleLogFunding
+        - event: LogPayment(indexed address,uint256)
+          handler: handleLogPayment
+
+      file: ./src/grants.ts
+  - kind: ethereum/contract
+    name: EtherVestingFactory
+    network: kovan
+    source:
+      address: '0x9fd7294fb78ff0Cd23CA0787d4df0b14fa4382Ca'
+      abi: EtherVestingFactory
+      startBlock: 20472386
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Vesting
+      abis:
+        - name: EtherVestingFactory
+          file: ./abis/EtherVestingFactory.json
+        - name: EtherVesting
+          file: ./abis/EtherVesting.json
+      eventHandlers:
+        - event: LogEtherVestingCreated(indexed uint256,address)
+          handler: handleLogEtherVestingCreated
+
+      file: ./src/vesting.ts
+  - kind: ethereum/contract
+    name: EtherVesting
+    network: kovan
+    source:
+      abi: EtherVesting
+      startBlock: 20472386
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Vesting
+        - Deposit
+        - Release
+      abis:
+        - name: EtherVesting
+          file: ./abis/EtherVesting.json
+      eventHandlers:
+        - event: LogDeposit(indexed address,uint256)
+          handler: handleLogDeposit
+        - event: LogReleased(uint256)
+          handler: handleLogReleased
+        - event: LogRevoked()
+          handler: handleLogRevoked
+
+      file: ./src/vesting.ts
