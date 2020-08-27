@@ -25,3 +25,31 @@ type Payment @entity {
   grantee: Bytes! # address
   amount: BigInt!
 }
+
+type Vesting @entity {
+  id: ID!
+  factoryAddress: Bytes!
+  vestingId: BigInt! # uint256
+  vestingAddress: Bytes! # address
+  createBy: Bytes!
+  beneficiary: Bytes!
+  isRevocable: Boolean!
+  isRevoked: Boolean!
+  deposits: [Deposit!]
+  releases: [Release!]
+  released: BigInt
+}
+
+type Deposit @entity {
+  id: ID!
+  vestingAddress: Bytes!
+  depositer: Bytes! # address
+  amount: BigInt!
+}
+
+type Release @entity {
+  id: ID!
+  vestingAddress: Bytes!
+  releaser: Bytes! # address
+  amount: BigInt!
+}
