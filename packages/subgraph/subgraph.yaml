@@ -53,15 +53,15 @@ dataSources:
     name: EtherVestingFactory
     network: kovan
     source:
-      address: '0x9fd7294fb78ff0Cd23CA0787d4df0b14fa4382Ca'
+      address: '0x429da6130153e1dbe9166f0b656f566ccd1f2f25'
       abi: EtherVestingFactory
-      startBlock: 20472386
+      startBlock: 20673587
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - Vesting
+        - Stream
       abis:
         - name: EtherVestingFactory
           file: ./abis/EtherVestingFactory.json
@@ -71,19 +71,19 @@ dataSources:
         - event: LogEtherVestingCreated(indexed uint256,address)
           handler: handleLogEtherVestingCreated
 
-      file: ./src/vesting.ts
+      file: ./src/stream.ts
   - kind: ethereum/contract
     name: EtherVesting
     network: kovan
     source:
       abi: EtherVesting
-      startBlock: 20472386
+      startBlock: 20673587
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - Vesting
+        - Stream
         - Deposit
         - Release
       abis:
@@ -97,4 +97,4 @@ dataSources:
         - event: LogRevoked()
           handler: handleLogRevoked
 
-      file: ./src/vesting.ts
+      file: ./src/stream.ts
