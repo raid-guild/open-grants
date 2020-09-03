@@ -26,6 +26,7 @@ contract EtherVestingFactory {
 
     function create(address beneficiary, uint256 start, uint256 duration, bool revocable)
         public
+        payable
         returns (address)
     {
         address vestingAddress;
@@ -47,6 +48,9 @@ contract EtherVestingFactory {
         id = id.add(1);
 
         emit LogEtherVestingCreated(vestingId, vestingAddress);
+
+        vesting.transferOwnership(msg.sender);
+        payable(vestingAddress).transfer(msg.value);
 
         return vestingAddress;
     }
