@@ -3,13 +3,13 @@ type Grant @entity {
   factoryAddress: Bytes!
   grantId: BigInt! # uint256
   grantAddress: Bytes! # address
-  uri: Bytes
+  uri: Bytes!
   createBy: Bytes!
   grantees: [Bytes!]
   funds: [Fund!]
   payments: [Payment!]
   amounts: [BigInt!]
-  totalFunded: BigInt
+  totalFunded: BigInt!
 }
 
 type Fund @entity {
@@ -26,30 +26,31 @@ type Payment @entity {
   amount: BigInt!
 }
 
-type Vesting @entity {
+type Stream @entity {
   id: ID!
   factoryAddress: Bytes!
-  vestingId: BigInt! # uint256
-  vestingAddress: Bytes! # address
-  createBy: Bytes!
+  streamId: BigInt! # uint256
+  streamAddress: Bytes! # address
+  owner: Bytes!
   beneficiary: Bytes!
   isRevocable: Boolean!
   isRevoked: Boolean!
   deposits: [Deposit!]
   releases: [Release!]
-  released: BigInt
+  released: BigInt!
+  startTime: BigInt!
+  duration: BigInt!
 }
 
 type Deposit @entity {
   id: ID!
-  vestingAddress: Bytes!
+  streamAddress: Bytes!
   depositer: Bytes! # address
   amount: BigInt!
 }
 
 type Release @entity {
   id: ID!
-  vestingAddress: Bytes!
-  releaser: Bytes! # address
+  streamAddress: Bytes!
   amount: BigInt!
 }
