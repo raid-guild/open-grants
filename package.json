@@ -1,33 +1,71 @@
 {
-    "name": "open-grants",
-    "version": "1.0.0",
-    "keywords": ["ethereum", "angular", "workspaces", "yarn"],
-    "private": true,
-    "scripts": {
-        "subgraph:auth": "yarn workspace open-grants-subgraph auth",
-        "subgraph:codegen": "yarn workspace open-grants-subgraph codegen",
-        "subgraph:build": "yarn workspace open-grants-subgraph build",
-        "subgraph:deploy-kovan": "yarn workspace open-grants-subgraph deploy-kovan",
-        "dapp:start": "yarn workspace open-grants-dapp start",
-        "dapp:lint": "yarn workspace open-grants-dapp lint",
-        "dapp:test": "yarn workspace open-grants-dapp test",
-        "dapp:build": "yarn workspace open-grants-dapp build",
-        "dapp:deploy": "yarn workspace open-grants-dapp deploy",
-        "contracts:build": "yarn workspace open-grants-contracts build",
-        "contracts:lint": "yarn workspace open-grants-contracts lint",
-        "contracts:test": "yarn workspace open-grants-contracts test",
-        "contracts:deploy-kovan": "yarn workspace open-grants-contracts deploy-kovan"
-    },
-    "workspaces": {
-        "nohoist": [
-            "**/@graphprotocol/graph-ts",
-            "**/@graphprotocol/graph-ts/**",
-            "**/@nomiclabs/**",
-            "**/typescript",
-            "**/ts-node",
-            "**/solidity-coverage"
-        ],
-        "packages": ["packages/*"]
-    },
-    "license": "MIT"
+  "name": "open-grants",
+  "version": "1.0.0",
+  "keywords": [
+    "ethereum",
+    "angular",
+    "workspaces",
+    "yarn"
+  ],
+  "private": true,
+  "scripts": {
+    "subgraph:auth": "yarn workspace @open-grants/subgraph auth",
+    "subgraph:codegen": "yarn workspace @open-grants/subgraph codegen",
+    "subgraph:build": "yarn workspace @open-grants/subgraph build",
+    "subgraph:deploy-kovan": "yarn workspace @open-grants/subgraph deploy-kovan",
+    "dapp:start": "yarn workspace @open-grants/dapp start",
+    "dapp:lint": "yarn workspace @open-grants/dapp lint",
+    "dapp:test": "yarn workspace @open-grants/dapp test",
+    "dapp:build": "yarn workspace @open-grants/dapp build",
+    "dapp:deploy": "yarn workspace @open-grants/dapp deploy",
+    "contracts:build": "yarn workspace @open-grants/contracts build",
+    "contracts:lint": "yarn workspace @open-grants/contracts lint",
+    "contracts:test": "yarn workspace @open-grants/contracts test",
+    "contracts:deploy-kovan": "yarn workspace @open-grants/contracts deploy-kovan",
+    "format": "prettier --ignore-path .gitignore --write \"{*,**/*}.{ts,tsx,js,jsx,json,yml,yaml,md}\"",
+    "lint": "eslint --ignore-path .gitignore \"./packages/react-dapp/**/*.{ts,tsx,js,jsx}\"",
+    "typecheck": "yarn workspace @open-grants/react-dapp typecheck"
+  },
+  "workspaces": {
+    "nohoist": [
+      "**/@graphprotocol/graph-ts",
+      "**/@graphprotocol/graph-ts/**",
+      "**/@nomiclabs/**",
+      "**/solidity-coverage"
+    ],
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@graphql-codegen/add": "^2.0.1",
+    "@graphql-codegen/cli": "1.17.8",
+    "@graphql-codegen/typescript": "^1.17.9",
+    "@graphql-codegen/typescript-operations": "1.17.8",
+    "@graphql-codegen/typescript-urql": "2.0.0",
+    "@types/node": "^13.11.1",
+    "@types/react": "^16.9.43",
+    "@types/react-dom": "^16.9.8",
+    "@typescript-eslint/eslint-plugin": "3.9.1",
+    "@typescript-eslint/parser": "3.6.0",
+    "eslint": "6.8.0",
+    "eslint-config-airbnb-typescript": "8.0",
+    "eslint-config-prettier": "6.11.0",
+    "eslint-import-resolver-typescript": "2.2.1",
+    "eslint-plugin-import": "2.22.0",
+    "eslint-plugin-jest": "23.20.0",
+    "eslint-plugin-jsx-a11y": "6.3.1",
+    "eslint-plugin-react": "7.20.3",
+    "eslint-plugin-react-hooks": "4.0.6",
+    "eslint-plugin-simple-import-sort": "5.0.3",
+    "graphql": "^15.3.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.3.0",
+    "prettier": "^2.1.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "tsdx": "^0.13.3",
+    "typescript": "^3.9.6"
+  }
 }
