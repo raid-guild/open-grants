@@ -10,11 +10,11 @@ class GrantObject {
 }
 
 export function fetchGrantInfo(address: Address): GrantObject | null {
-  const grantInstance = UnmanagedStream.bind(address);
-  const grantObject = new GrantObject();
+  let grantInstance = UnmanagedStream.bind(address);
+  let grantObject = new GrantObject();
 
-  const uri = grantInstance.try_getUri();
-  const totalFunding = grantInstance.try_getTotalFunding();
+  let uri = grantInstance.try_getUri();
+  let totalFunding = grantInstance.try_getTotalFunding();
 
   if (!totalFunding.reverted) {
     grantObject.totalFunded = totalFunding.value;
@@ -42,15 +42,15 @@ class StreamObject {
 }
 
 export function fetchStreamInfo(address: Address): StreamObject | null {
-  const streamInstance = EtherVesting.bind(address);
-  const streamObject = new StreamObject();
+  let streamInstance = EtherVesting.bind(address);
+  let streamObject = new StreamObject();
 
-  const beneficiary = streamInstance.try_beneficiary();
-  const isRevocable = streamInstance.try_revocable();
-  const isRevoked = streamInstance.try_revoked();
-  const released = streamInstance.try_released();
-  const startTime = streamInstance.try_start();
-  const duration = streamInstance.try_duration();
+  let beneficiary = streamInstance.try_beneficiary();
+  let isRevocable = streamInstance.try_revocable();
+  let isRevoked = streamInstance.try_revoked();
+  let released = streamInstance.try_released();
+  let startTime = streamInstance.try_start();
+  let duration = streamInstance.try_duration();
 
   if (!beneficiary.reverted) {
     streamObject.beneficiary = beneficiary.value;

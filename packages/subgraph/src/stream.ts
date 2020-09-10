@@ -12,13 +12,13 @@ import { fetchStreamInfo } from './helpers';
 export function handleLogEtherVestingCreated(
   event: LogEtherVestingCreated,
 ): void {
-  const stream = new Stream(event.params.vestingContract.toHexString());
+  let stream = new Stream(event.params.vestingContract.toHexString());
   stream.factoryAddress = event.address;
   stream.owner = event.transaction.from;
   stream.streamId = event.params.id;
   stream.streamAddress = event.params.vestingContract;
 
-  const fetchedStream = fetchStreamInfo(event.params.vestingContract);
+  let fetchedStream = fetchStreamInfo(event.params.vestingContract);
   stream.beneficiary = fetchedStream.beneficiary;
   stream.isRevocable = fetchedStream.isRevocable;
   stream.isRevoked = fetchedStream.isRevoked;
@@ -34,17 +34,17 @@ export function handleLogEtherVestingCreated(
 }
 
 export function handleLogDeposit(event: LogDeposit): void {
-  const deposit = new Deposit(event.logIndex.toHexString());
+  let deposit = new Deposit(event.logIndex.toHexString());
   deposit.streamAddress = event.address;
   deposit.depositer = event.params.sender;
   deposit.amount = event.params.amount;
   deposit.save();
   log.info('New Payment: {}', [deposit.id]);
 
-  const stream = Stream.load(event.address.toHexString());
+  let stream = Stream.load(event.address.toHexString());
   if (stream != null) {
     log.debug('Updating Stream for deposit: {}', [stream.id]);
-    const { deposits } = stream;
+    let deposits = stream.deposits;
     deposits.push(deposit.id);
     stream.deposits = deposits;
     stream.save();
@@ -57,19 +57,19 @@ export function handleLogDeposit(event: LogDeposit): void {
 }
 
 export function handleLogReleased(event: LogReleased): void {
-  const release = new Release(event.logIndex.toHexString());
+  let release = new Release(event.logIndex.toHexString());
   release.streamAddress = event.address;
   release.amount = event.params.amount;
   release.save();
   log.info('New Payment: {}', [release.id]);
 
-  const stream = Stream.load(event.address.toHexString());
+  let stream = Stream.load(event.address.toHexString());
   if (stream != null) {
     log.debug('Updating Stream for release: {}', [stream.id]);
-    const { releases } = stream;
+    let releases = stream.releases;
     releases.push(release.id);
     stream.releases = releases;
-    const fetchedStream = fetchStreamInfo(event.address);
+    let fetchedStream = fetchStreamInfo(event.address);
     stream.released = fetchedStream.released;
     stream.save();
   } else {
@@ -81,7 +81,7 @@ export function handleLogReleased(event: LogReleased): void {
 }
 
 export function handleLogRevoked(event: LogRevoked): void {
-  const stream = Stream.load(event.address.toHexString());
+  let stream = Stream.load(event.address.toHexString());
   if (stream != null) {
     log.debug('Updating Stream for revoke: {}', [stream.id]);
     stream.isRevoked = true;

@@ -9,7 +9,7 @@ import { LogNewGrant } from '../generated/UnmanagedStreamFactory/UnmanagedStream
 import { fetchGrantInfo } from './helpers';
 
 export function handleLogNewGrant(event: LogNewGrant): void {
-  const grant = new Grant(event.params.grant.toHexString());
+  let grant = new Grant(event.params.grant.toHexString());
   grant.factoryAddress = event.address;
   grant.createBy = event.transaction.from;
   grant.grantId = event.params.id;
@@ -17,7 +17,7 @@ export function handleLogNewGrant(event: LogNewGrant): void {
   grant.grantees = event.params.grantees as Array<Bytes>;
   grant.amounts = event.params.amounts;
 
-  const fetchedGrant = fetchGrantInfo(event.params.grant);
+  let fetchedGrant = fetchGrantInfo(event.params.grant);
   grant.totalFunded = fetchedGrant.totalFunded;
   grant.uri = fetchedGrant.uri;
 
@@ -29,19 +29,19 @@ export function handleLogNewGrant(event: LogNewGrant): void {
 }
 
 export function handleLogFunding(event: LogFunding): void {
-  const fund = new Fund(event.transaction.hash.toHexString());
+  let fund = new Fund(event.transaction.hash.toHexString());
   fund.grantAddress = event.address;
   fund.donor = event.params.donor;
   fund.amount = event.params.value;
   fund.save();
   log.info('New Funding {}', [fund.id]);
 
-  const grant = Grant.load(event.address.toHexString());
+  let grant = Grant.load(event.address.toHexString());
   if (grant != null) {
     log.debug('Updating Grant {} for funding {}', [grant.id, fund.id]);
-    const fetchedGrant = fetchGrantInfo(event.address);
+    let fetchedGrant = fetchGrantInfo(event.address);
     grant.totalFunded = fetchedGrant.totalFunded;
-    const { funds } = grant;
+    let funds = grant.funds;
     funds.push(fund.id);
     grant.funds = funds;
     grant.save();
@@ -54,17 +54,17 @@ export function handleLogFunding(event: LogFunding): void {
 }
 
 export function handleLogPayment(event: LogPayment): void {
-  const payment = new Payment(event.logIndex.toHexString());
+  let payment = new Payment(event.logIndex.toHexString());
   payment.grantee = event.params.grantee;
   payment.grantAddress = event.address;
   payment.amount = event.params.value;
   payment.save();
   log.info('New Payment: {}', [payment.id]);
 
-  const grant = Grant.load(event.address.toHexString());
+  let grant = Grant.load(event.address.toHexString());
   if (grant != null) {
     log.debug('Updating Grant for payment: {}', [grant.id]);
-    const { payments } = grant;
+    let payments = grant.funds;
     payments.push(payment.id);
     grant.payments = payments;
     grant.save();
