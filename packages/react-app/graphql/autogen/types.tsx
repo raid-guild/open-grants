@@ -679,7 +679,7 @@ export type SubscriptionReleasesArgs = {
 
 export type GrantFragmentFragment = (
   { __typename?: 'Grant' }
-  & Pick<Grant, 'id' | 'grantAddress' | 'grantees' | 'amounts' | 'createBy' | 'uri' | 'totalFunded'>
+  & Pick<Grant, 'id' | 'factoryAddress' | 'grantId' | 'grantAddress' | 'uri' | 'createBy' | 'grantees' | 'amounts' | 'totalFunded'>
 );
 
 export type GetGrantQueryVariables = Exact<{
@@ -692,6 +692,19 @@ export type GetGrantQuery = (
   & { grant?: Maybe<(
     { __typename?: 'Grant' }
     & GrantFragmentFragment
+  )> }
+);
+
+export type GetGrantAddressesQueryVariables = Exact<{
+  first?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetGrantAddressesQuery = (
+  { __typename?: 'Query' }
+  & { grants: Array<(
+    { __typename?: 'Grant' }
+    & Pick<Grant, 'id'>
   )> }
 );
 
@@ -711,11 +724,13 @@ export type GetGrantsQuery = (
 export const GrantFragmentFragmentDoc = gql`
     fragment GrantFragment on Grant {
   id
+  factoryAddress
+  grantId
   grantAddress
+  uri
+  createBy
   grantees
   amounts
-  createBy
-  uri
   totalFunded
 }
     `;
@@ -729,6 +744,17 @@ export const GetGrantDocument = gql`
 
 export function useGetGrantQuery(options: Omit<Urql.UseQueryArgs<GetGrantQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetGrantQuery>({ query: GetGrantDocument, ...options });
+};
+export const GetGrantAddressesDocument = gql`
+    query GetGrantAddresses($first: Int) {
+  grants(first: $first) {
+    id
+  }
+}
+    `;
+
+export function useGetGrantAddressesQuery(options: Omit<Urql.UseQueryArgs<GetGrantAddressesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetGrantAddressesQuery>({ query: GetGrantAddressesDocument, ...options });
 };
 export const GetGrantsDocument = gql`
     query GetGrants($first: Int) {

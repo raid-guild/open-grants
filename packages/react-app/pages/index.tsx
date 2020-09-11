@@ -1,11 +1,10 @@
 import { SimpleGrid, VStack } from '@chakra-ui/core';
+import { GrantTile } from 'components/GrantTile';
+import { HomeHeader } from 'components/HomeHeader';
 import { getGrants } from 'graphql/getGrants';
 import { InferGetStaticPropsType } from 'next';
 import React from 'react';
-
-import { HomeHeader } from 'components/HomeHeader';
-import { GrantTile } from 'components/GrantTile';
-import { parseGrants } from 'utils/grants'; 
+import { parseGrants } from 'utils/grants';
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -15,7 +14,7 @@ export const getStaticProps = async () => {
     return {
         props: {
             grants: parsedGrants,
-            revalidate: true
+            revalidate: true,
         },
     };
 };

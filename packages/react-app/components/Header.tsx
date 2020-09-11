@@ -1,7 +1,7 @@
-import { Button, Flex, Text, HStack, useDisclosure } from '@chakra-ui/core';
-import React, { useContext } from 'react';
-import { Web3Context } from 'contexts/Web3Context';
+import { Button, Flex, HStack, Text, useDisclosure } from '@chakra-ui/core';
 import { NavBar } from 'components/NavBar';
+import { Web3Context } from 'contexts/Web3Context';
+import React, { useContext } from 'react';
 
 export const Header: React.FC = () => {
     const { account, connectWeb3 } = useContext(Web3Context);

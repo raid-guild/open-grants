@@ -1,5 +1,5 @@
+import { Button, Image, Text,  VStack } from '@chakra-ui/core';
 import React from 'react';
-import { Image, Text,  Button, VStack } from '@chakra-ui/core';
 
 import EthereumImage from '../assets/ethereum.svg';
 

@@ -1,30 +1,32 @@
-import { Container, Text } from '@chakra-ui/core';
+import { VStack } from '@chakra-ui/core';
+import { GrantHeader } from 'components/GrantHeader';
 import { getGrant } from 'graphql/getGrant';
-import { getGrants } from 'graphql/getGrants';
+import { getGrantAddresses } from 'graphql/getGrantAddresses';
 import {
     GetStaticPaths,
     GetStaticPropsContext,
     InferGetStaticPropsType,
 } from 'next';
 import Error from 'next/error';
+import { useRouter } from 'next/router';
 import React from 'react';
-import { parseGrant } from 'utils/grants'; 
+import { parseGrant } from 'utils/grants';
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
 const GrantPage: React.FC<Props> = ({ grant }) => {
+    const router = useRouter();
     if (!grant) {
         return <Error statusCode={404} />;
     }
-
-    const { grantAddress } = grant;
+    if (router.isFallback) {
+        return <div>Loading...</div>;
+    }
 
     return (
-        <>
-            <Container maxW="xl">
-                <Text fontFamily="body">{grantAddress}</Text>
-            </Container>
-        </>
+        <VStack w="100%">
+            <GrantHeader grant={grant} />
+        </VStack>
     );
 };
 
@@ -33,11 +35,11 @@ export default GrantPage;
 type QueryParams = { address: string };
 
 export const getStaticPaths: GetStaticPaths<QueryParams> = async () => {
-    const grants = await getGrants();
+    const grants = await getGrantAddresses();
 
     return {
-        paths: grants.map(({ grantAddress }) => ({
-            params: { address: grantAddress },
+        paths: grants.map(({ id }) => ({
+            params: { address: id },
         })),
         fallback: true,
     };
@@ -53,7 +55,7 @@ export const getStaticProps = async (
     return {
         props: {
             grant: parsedGrant,
-            revalidate: true
+            revalidate: true,
         },
     };
 };

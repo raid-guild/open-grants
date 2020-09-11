@@ -1,17 +1,18 @@
-import React, { useContext } from 'react';
 import {
-    Link,
     Button,
     Drawer,
     DrawerBody,
+    DrawerCloseButton,
+    DrawerContent,
     DrawerFooter,
     DrawerHeader,
     DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,
+    Link,
     VStack,
 } from '@chakra-ui/core';
 import { Web3Context } from 'contexts/Web3Context';
+import React, { useContext } from 'react';
+
 import { DrawerBG } from '../assets/drawer.jpg';
 
 type Props = {
@@ -32,10 +33,10 @@ export const NavBar: React.FC<Props> = ({ isOpen, onClose }) => {
 
                     <DrawerBody>
                         <VStack spacing={5} align="flex-start">
-                            <Link>Explore Grants</Link>
-                            <Link>My Grants</Link>
-                            <Link>Create a Grant</Link>
-                            <Link>FAQ</Link>
+                            <Link href="/">Explore Grants</Link>
+                            <Link href="/">My Grants</Link>
+                            <Link href="/">Create a Grant</Link>
+                            <Link href="/faq">FAQ</Link>
                         </VStack>
                     </DrawerBody>
 

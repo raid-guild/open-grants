@@ -1,8 +1,13 @@
-import React from 'react';
-import { Text, VStack, Button } from '@chakra-ui/core';
+import { Button, Text, VStack } from '@chakra-ui/core';
 import NextLink from 'next/link';
+import React from 'react';
+import { ParsedGrant } from 'utils/grants';
 
-export const GrantTile: React.FC = ({ grant }) => {
+type Props = {
+    grant: ParsedGrant;
+};
+export const GrantTile: React.FC<Props> = ({ grant }) => {
+    if (!grant) return null;
     return (
         <VStack
             style={{ backdropFilter: 'blur(7px)' }}
@@ -17,7 +22,11 @@ export const GrantTile: React.FC = ({ grant }) => {
                 as={`/grant/${grant.grantAddress}`}
                 href="grant/[username]"
             >
-                <Button bg="background" color="grey" textTransform="uppercase">
+                <Button
+                    bg="background"
+                    colorScheme="gray"
+                    textTransform="uppercase"
+                >
                     Details
                 </Button>
             </NextLink>

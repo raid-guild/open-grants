@@ -4,6 +4,7 @@ import { AsyncSendable } from 'ethers/providers';
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
+
 import { CONFIG } from '../config';
 
 type Web3ContextType = {

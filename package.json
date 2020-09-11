@@ -24,8 +24,8 @@
     "contracts:test": "yarn workspace @open-grants/contracts test",
     "contracts:deploy-kovan": "yarn workspace @open-grants/contracts deploy-kovan",
     "format": "prettier --ignore-path .gitignore --write \"{*,**/*}.{ts,tsx,js,jsx,json,yml,yaml,md}\"",
-    "lint": "eslint --ignore-path .gitignore \"./packages/react-dapp/**/*.{ts,tsx,js,jsx}\"",
-    "typecheck": "yarn workspace @open-grants/react-dapp typecheck"
+    "lint": "eslint --ignore-path .gitignore \"./packages/react-app/**/*.{ts,tsx,js,jsx}\"",
+    "typecheck": "yarn workspace @open-grants/react-app typecheck"
   },
   "workspaces": {
     "nohoist": [
