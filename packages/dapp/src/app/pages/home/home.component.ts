@@ -22,7 +22,7 @@ export class HomeComponent {
       this.grants = res.data.contracts;
       this.latestGrant = this.grants[0];
       this.grants.splice(0, 1);
-    })
+    });
   }
 
   currencyCovert(currencyType, amount) {
@@ -33,6 +33,6 @@ export class HomeComponent {
   }
 
   grantDetails(id: string) {
-    this.router.navigate(['/pages/grant/' + id])
+    this.router.navigate(['/pages/grant/' + id]);
   }
 }

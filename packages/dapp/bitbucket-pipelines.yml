@@ -5,50 +5,49 @@
 # You can specify a custom docker image from Docker Hub as your build environment.
 image: node:10.15.3
 
-
 definitions:
   steps:
     - step: &Install-Build
         name: 1. Install-Build
         script:
-            - npm install -g --silent @ionic/angular-toolkit
-            - npm install -g --silent @angular/cli
-            - npm install
-            - npm run build
+          - npm install -g --silent @ionic/angular-toolkit
+          - npm install -g --silent @angular/cli
+          - npm install
+          - npm run build
         artifacts:
-            - www/**
+          - www/**
     - step: &Deploy
         name: 2. Deploy to S3
         deployment: production
         script:
-        - pipe: atlassian/aws-s3-deploy:0.4.4
-          variables:
-            AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-            AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-            AWS_DEFAULT_REGION: 'us-east-1'
-            S3_BUCKET: 'opengrants.com'
-            LOCAL_PATH: 'www'
-            ACL: 'public-read'
+          - pipe: atlassian/aws-s3-deploy:0.4.4
+            variables:
+              AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+              AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+              AWS_DEFAULT_REGION: 'us-east-1'
+              S3_BUCKET: 'opengrants.com'
+              LOCAL_PATH: 'www'
+              ACL: 'public-read'
     - step: &CacheInvalidate
         name: 3. Clear CloudFront Cache
         script:
-        - pipe: atlassian/aws-cloudfront-invalidate:0.3.3
-          variables:
-            AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-            AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-            AWS_DEFAULT_REGION: 'us-east-1'
-            DISTRIBUTION_ID: 'E38WZFSLLNN7I8'
+          - pipe: atlassian/aws-cloudfront-invalidate:0.3.3
+            variables:
+              AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+              AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+              AWS_DEFAULT_REGION: 'us-east-1'
+              DISTRIBUTION_ID: 'E38WZFSLLNN7I8'
 
 pipelines:
-    branches:
-      master:
-        - step: *Install-Build
-        - step:
-            <<: *Deploy
-            name: Deploy to Production
-            deployment: production
-            trigger: manual
-        - step:
-            <<: *CacheInvalidate
-            name: Delete CDN Cache
-            trigger: manual
+  branches:
+    master:
+      - step: *Install-Build
+      - step:
+          <<: *Deploy
+          name: Deploy to Production
+          deployment: production
+          trigger: manual
+      - step:
+          <<: *CacheInvalidate
+          name: Delete CDN Cache
+          trigger: manual

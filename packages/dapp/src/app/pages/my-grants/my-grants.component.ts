@@ -31,7 +31,6 @@ export class MyGrantsComponent {
     this.getAllGrants();
   }
 
-
   async getUserEthAddress() {
     this.userEthAddress = await this.authService.getAuthUserId();
   }
@@ -45,27 +44,32 @@ export class MyGrantsComponent {
   getCreateByGrant() {
     this.getUserEthAddress();
 
-    this.subgraphService.getGrantByCreateby(this.userEthAddress).subscribe((res: any) => {
-      this.createdByMeGrant = JSON.parse(JSON.stringify(res.data.contracts));
-    });
+    this.subgraphService
+      .getGrantByCreateby(this.userEthAddress)
+      .subscribe((res: any) => {
+        this.createdByMeGrant = JSON.parse(JSON.stringify(res.data.contracts));
+      });
   }
 
   getFundedByGrant() {
     this.getUserEthAddress();
 
-    this.subgraphService.getGrantByCreateby(this.userEthAddress).subscribe((res: any) => {
-      this.fundedByMeGrant = JSON.parse(JSON.stringify(res.data.contracts));
-    });
+    this.subgraphService
+      .getGrantByCreateby(this.userEthAddress)
+      .subscribe((res: any) => {
+        this.fundedByMeGrant = JSON.parse(JSON.stringify(res.data.contracts));
+      });
   }
 
   getManageByGrant() {
     this.getUserEthAddress();
 
-    this.subgraphService.getManageByCreateby(this.userEthAddress).subscribe((res: any) => {
-      this.mangedByMeGrant = JSON.parse(JSON.stringify(res.data.contracts));
-    });
+    this.subgraphService
+      .getManageByCreateby(this.userEthAddress)
+      .subscribe((res: any) => {
+        this.mangedByMeGrant = JSON.parse(JSON.stringify(res.data.contracts));
+      });
   }
-
 
   handleChange(e) {
     if (e === '') {
@@ -73,15 +77,15 @@ export class MyGrantsComponent {
       this.searchFundedBy = this.fundedByMeGrant;
       this.searchManagedBy = this.mangedByMeGrant;
     } else {
-      this.searchCreatedBy = this.createdByMeGrant.filter((data) => {
+      this.searchCreatedBy = this.createdByMeGrant.filter(data => {
         return data.grantName.toLowerCase().includes(e.toLowerCase());
       });
 
-      this.searchFundedBy = this.fundedByMeGrant.filter((data) => {
+      this.searchFundedBy = this.fundedByMeGrant.filter(data => {
         return data.grantName.toLowerCase().includes(e.toLowerCase());
       });
 
-      this.searchManagedBy = this.mangedByMeGrant.filter((data) => {
+      this.searchManagedBy = this.mangedByMeGrant.filter(data => {
         return data.grantName.toLowerCase().includes(e.toLowerCase());
       });
     }

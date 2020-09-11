@@ -1,9 +1,7 @@
-
 module.exports = {
-    "legacyOutput": true,
-    "compilerOptions": {
-        "evmVersion": "byzantium"
-    },
-    "compilerType": "native"
+  legacyOutput: true,
+  compilerOptions: {
+    evmVersion: 'byzantium',
+  },
+  compilerType: 'native',
 };
-  

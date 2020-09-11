@@ -10,25 +10,24 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./menu-popover.component.scss'],
 })
 export class MenuPopoverComponent implements OnInit {
-
-  toastTitle = "User";
+  toastTitle = 'User';
 
   constructor(
     public router: Router,
     private toastr: ToastrService,
     public popoverCtrl: PopoverController,
-    private authService: AuthService
-  ) { }
+    private authService: AuthService,
+  ) {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   dismiss() {
-    this.popoverCtrl.dismiss()
+    this.popoverCtrl.dismiss();
   }
 
   signOut() {
     this.authService.logout();
-    this.toastr.success("Sign out successfully", this.toastTitle);
+    this.toastr.success('Sign out successfully', this.toastTitle);
     // this.router.navigate(['pages/home']);
     this.dismiss();
   }
@@ -37,7 +36,4 @@ export class MenuPopoverComponent implements OnInit {
     this.router.navigate(['pages/profile']);
     this.dismiss();
   }
-
-
 }
-

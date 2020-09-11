@@ -4,15 +4,13 @@ import { BehaviorSubject } from 'rxjs';
 
 declare let window: any;
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class Web3Service {
-
   private provider: providers.Web3Provider;
 
-  constructor() { }
+  constructor() {}
 
   async setProvider() {
     await window.ethereum.enable();
@@ -21,7 +19,7 @@ export class Web3Service {
   }
 
   getProvider() {
-      return this.provider;
+    return this.provider;
   }
 
   async getNetwork() {
@@ -31,7 +29,7 @@ export class Web3Service {
 
   async getAddress() {
     await this.setProvider();
-    return await (this.provider.getSigner()).getAddress();
+    return await this.provider.getSigner().getAddress();
   }
 
   async checkLogin() {
@@ -44,5 +42,4 @@ export class Web3Service {
     }
     return res;
   }
-
 }

@@ -1,13 +1,10 @@
-import {Directive, ElementRef, HostListener, Input} from '@angular/core';
+import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 
 @Directive({
-  selector: '[TextOnly]'
+  selector: '[TextOnly]',
 })
 export class TextOnlyDirective {
-
-  constructor(private el: ElementRef) {
-
-  }
+  constructor(private el: ElementRef) {}
 
   @Input() TextOnly: boolean;
 
@@ -32,7 +29,7 @@ export class TextOnlyDirective {
         return;
       }
 
-      if ((e.keyCode < 65 || e.keyCode > 90)) {
+      if (e.keyCode < 65 || e.keyCode > 90) {
         // Ensure that it is a number and stop the keypress
         e.preventDefault();
       }

@@ -3,7 +3,13 @@ import { ModalController } from '@ionic/angular';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { FormControl, FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormBuilder,
+  FormArray,
+} from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { EthContractService } from '../../services/ethcontract.service';
 import * as moment from 'moment';
@@ -12,14 +18,12 @@ import { addressValidator } from '../../common/validators/custom.validators';
 import { PopupComponent } from '../popup/popup.component';
 import { environment } from 'src/environments/environment';
 
-
 @Component({
   selector: 'app-create-new-grant',
   templateUrl: './create-new-grant.component.html',
   styleUrls: ['./create-new-grant.component.scss'],
 })
 export class CreateNewGrantComponent implements OnInit {
-
   processing = false;
   submitted = false;
   toastTitle = 'Grant';
@@ -44,9 +48,8 @@ export class CreateNewGrantComponent implements OnInit {
     private toastr: ToastrService,
     public router: Router,
     private fb: FormBuilder,
-    private ethcontractService: EthContractService
+    private ethcontractService: EthContractService,
   ) {
-
     this.bindModel();
 
     // Min max data form.
@@ -59,38 +62,30 @@ export class CreateNewGrantComponent implements OnInit {
     this.currency = environment.currencies;
 
     this.granteeControls.valueChanges
-      .pipe(
-        debounceTime(400),
-        distinctUntilChanged()
-      )
+      .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe(async (val: string) => {
         this.totalPercentage = 0;
-        this.grantee.map((data) => {
+        this.grantee.map(data => {
           this.totalPercentage += +data.controls.allocationPercentage.value;
         });
         this.checkAddress();
       });
 
     this.form.manager.valueChanges
-      .pipe(
-        debounceTime(400),
-        distinctUntilChanged()
-      )
+      .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe(async (val: string) => {
         this.checkAddress();
       });
 
     this.singleDeliveryControls.controls.fundingExpiryDate.valueChanges
-      .pipe(
-        debounceTime(400),
-        distinctUntilChanged()
-      )
+      .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe(async (val: string) => {
         this.singleDeliveryControls.controls.completionDate.reset();
-        this.singleDeliveryControls.controls.completionDate.setValue(moment(val).add(1, 'days').format(''));
+        this.singleDeliveryControls.controls.completionDate.setValue(
+          moment(val).add(1, 'days').format(''),
+        );
         this.minCompletionData = moment(val).add(1, 'days').format('');
       });
-
   }
 
   bindModel() {
@@ -108,14 +103,9 @@ export class CreateNewGrantComponent implements OnInit {
         fundingExpiryDate: ['', Validators.required],
         completionDate: ['', Validators.required],
       }),
-      multipleMilestones: this.fb.array([
-        this.initMilestonesFields()
-      ]),
-      grantees: this.fb.array([
-        this.initGranteesFields()
-      ]),
+      multipleMilestones: this.fb.array([this.initMilestonesFields()]),
+      grantees: this.fb.array([this.initGranteesFields()]),
     });
-
   }
 
   get form() {
@@ -157,7 +147,7 @@ export class CreateNewGrantComponent implements OnInit {
   initMilestonesFields(): FormGroup {
     return this.fb.group({
       milestoneNumber: new FormControl(null, Validators.required),
-      completionDate: new FormControl(null, Validators.required)
+      completionDate: new FormControl(null, Validators.required),
     });
   }
 
@@ -165,18 +155,21 @@ export class CreateNewGrantComponent implements OnInit {
     this.granteeAddressError.push(false);
     return this.fb.group({
       grantee: new FormControl('', [Validators.required, addressValidator]),
-      allocationAmount: new FormControl(null, [Validators.required, Validators.min(1)]),
+      allocationAmount: new FormControl(null, [
+        Validators.required,
+        Validators.min(1),
+      ]),
       allocationPercentage: new FormControl(null, [Validators.required]),
     });
   }
 
   addNewGrantee() {
-    const control =  this.myForm.controls.grantees as FormArray;
+    const control = this.myForm.controls.grantees as FormArray;
     control.push(this.initGranteesFields());
   }
 
   removeGrantee(index: number) {
-    const control =  this.myForm.controls.grantees as FormArray;
+    const control = this.myForm.controls.grantees as FormArray;
     control.removeAt(index);
     this.granteeAddressError.splice(index, 1);
   }
@@ -189,13 +182,16 @@ export class CreateNewGrantComponent implements OnInit {
     if (!this.form.type.value) {
       return false;
     }
-    return (this.form.type.value === name);
+    return this.form.type.value === name;
   }
 
   onPercentageChange(index: number) {
     if (this.isAllocationByPer.value) {
       if (this.isAllocationByPer.value) {
-        const temp = (this.grantee[index].controls.allocationPercentage.value * this.form.targetFunding.value) / 100;
+        const temp =
+          (this.grantee[index].controls.allocationPercentage.value *
+            this.form.targetFunding.value) /
+          100;
         this.grantee[index].controls.allocationAmount.setValue(temp);
       }
     }
@@ -209,17 +205,23 @@ export class CreateNewGrantComponent implements OnInit {
           totalPer += +data.controls.allocationPercentage.value;
         }
       });
-      this.grantee[index]
-        .controls
-        .allocationPercentage
-        .setValidators([Validators.required, Validators.max(100 - totalPer), Validators.min(0.000001)]);
+      this.grantee[index].controls.allocationPercentage.setValidators([
+        Validators.required,
+        Validators.max(100 - totalPer),
+        Validators.min(0.000001),
+      ]);
     }
   }
 
   onAmountChange(index: number) {
     if (!this.isAllocationByPer.value) {
-      const temp = (this.grantee[index].controls.allocationAmount.value * 100) / this.form.targetFunding.value;
-      if (this.form.targetFunding.value <= 0 || this.form.targetFunding.value == null) {
+      const temp =
+        (this.grantee[index].controls.allocationAmount.value * 100) /
+        this.form.targetFunding.value;
+      if (
+        this.form.targetFunding.value <= 0 ||
+        this.form.targetFunding.value == null
+      ) {
         this.grantee[index].controls.allocationPercentage.setValue(0);
       } else {
         this.grantee[index].controls.allocationPercentage.setValue(temp);
@@ -232,31 +234,37 @@ export class CreateNewGrantComponent implements OnInit {
         }
       });
 
-      this.grantee[index]
-        .controls
-        .allocationAmount
-        .setValidators([Validators.required, Validators.max(this.form.targetFunding.value - remainingAmount), Validators.min(1)]);
+      this.grantee[index].controls.allocationAmount.setValidators([
+        Validators.required,
+        Validators.max(this.form.targetFunding.value - remainingAmount),
+        Validators.min(1),
+      ]);
 
-      this.grantee[index]
-        .controls
-        .allocationAmount
-        .setValue(this.grantee[index].controls.allocationAmount.value);
-
+      this.grantee[index].controls.allocationAmount.setValue(
+        this.grantee[index].controls.allocationAmount.value,
+      );
     }
   }
 
   targetFundingChange() {
     if (this.isAllocationByPer.value) {
-      this.grantee.map((data) => {
-        const temp = (data.controls.allocationPercentage.value * this.form.targetFunding.value) / 100;
+      this.grantee.map(data => {
+        const temp =
+          (data.controls.allocationPercentage.value *
+            this.form.targetFunding.value) /
+          100;
         data.controls.allocationAmount.setValue(temp);
       });
     } else {
       let totalAllocated = 0;
       this.grantee.map((data, index) => {
-
-        const temp = (data.controls.allocationAmount.value * 100) / this.form.targetFunding.value;
-        if (this.form.targetFunding.value <= 0 || this.form.targetFunding.value == null) {
+        const temp =
+          (data.controls.allocationAmount.value * 100) /
+          this.form.targetFunding.value;
+        if (
+          this.form.targetFunding.value <= 0 ||
+          this.form.targetFunding.value == null
+        ) {
           data.controls.allocationPercentage.setValue(0);
         } else {
           data.controls.allocationPercentage.setValue(temp);
@@ -266,8 +274,13 @@ export class CreateNewGrantComponent implements OnInit {
         if (totalAllocated > this.form.targetFunding.value) {
           this.onAmountFocus(index);
         } else {
-          this.grantee[index].controls.allocationAmount.setValidators([Validators.required, Validators.min(1)]);
-          this.grantee[index].controls.allocationAmount.setValue(this.grantee[index].controls.allocationAmount.value);
+          this.grantee[index].controls.allocationAmount.setValidators([
+            Validators.required,
+            Validators.min(1),
+          ]);
+          this.grantee[index].controls.allocationAmount.setValue(
+            this.grantee[index].controls.allocationAmount.value,
+          );
         }
       });
     }
@@ -282,15 +295,15 @@ export class CreateNewGrantComponent implements OnInit {
         }
       });
 
-      this.grantee[index]
-        .controls
-        .allocationAmount
-        .setValidators([Validators.required, Validators.max(this.form.targetFunding.value - remainingAmount), Validators.min(1)]);
+      this.grantee[index].controls.allocationAmount.setValidators([
+        Validators.required,
+        Validators.max(this.form.targetFunding.value - remainingAmount),
+        Validators.min(1),
+      ]);
 
-      this.grantee[index]
-        .controls
-        .allocationAmount
-        .setValue(this.grantee[index].controls.allocationAmount.value);
+      this.grantee[index].controls.allocationAmount.setValue(
+        this.grantee[index].controls.allocationAmount.value,
+      );
     }
   }
 
@@ -299,14 +312,20 @@ export class CreateNewGrantComponent implements OnInit {
     this.managerAddressError = false;
     this.myForm.controls.grantees.value.map((map1, index) => {
       this.granteeAddressError[index] = false;
-      if (map1.grantee.toLowerCase() === this.myForm.controls.manager.value.toLowerCase()) {
+      if (
+        map1.grantee.toLowerCase() ===
+        this.myForm.controls.manager.value.toLowerCase()
+      ) {
         this.managerAddressError = true;
         this.granteeAddressError[index] = true;
         valid = false;
       }
 
       this.myForm.controls.grantees.value.map((map2, i) => {
-        if (map1.grantee.toLowerCase() === map2.grantee.toLowerCase() && index !== i) {
+        if (
+          map1.grantee.toLowerCase() === map2.grantee.toLowerCase() &&
+          index !== i
+        ) {
           this.granteeAddressError[index] = true;
           this.granteeAddressError[i] = true;
           valid = false;
@@ -318,26 +337,28 @@ export class CreateNewGrantComponent implements OnInit {
   }
 
   arrangeData() {
-    return new Promise(async (resolve) => {
+    return new Promise(async resolve => {
       try {
-
         // Milliseconds to seconds.
-        const fundingExpiration = moment(this.grantForm.singleDeliveryDate.fundingExpiryDate).unix();
-        const contractExpiration = moment(this.grantForm.singleDeliveryDate.completionDate).unix();
+        const fundingExpiration = moment(
+          this.grantForm.singleDeliveryDate.fundingExpiryDate,
+        ).unix();
+        const contractExpiration = moment(
+          this.grantForm.singleDeliveryDate.completionDate,
+        ).unix();
 
         const data = {
           uri: this.grantForm.uri,
-          grantees: this.grantForm.grantees.map((d) => d.grantee),
-          amounts: this.grantForm.grantees.map((d) => d.allocationAmount),
+          grantees: this.grantForm.grantees.map(d => d.grantee),
+          amounts: this.grantForm.grantees.map(d => d.allocationAmount),
           manager: this.grantForm.manager,
           currency: this.grantForm.currency,
           targetFunding: this.grantForm.targetFunding,
           fundingExpiration,
-          contractExpiration
+          contractExpiration,
         };
 
         resolve(data);
-
       } catch (e) {
         resolve();
       }
@@ -356,14 +377,13 @@ export class CreateNewGrantComponent implements OnInit {
       return;
     }
 
-
     if (!this.checkAddress()) {
       return;
     }
 
     this.grantForm = JSON.parse(JSON.stringify(this.myForm.value));
 
-    this.grantForm.grantees = this.grantForm.grantees.map((data) => {
+    this.grantForm.grantees = this.grantForm.grantees.map(data => {
       delete data.allocationPercentage;
       return JSON.parse(JSON.stringify(data));
     });
@@ -377,16 +397,15 @@ export class CreateNewGrantComponent implements OnInit {
         mode: 'ios',
         componentProps: {
           modelType: 'deployContract',
-          data: contractData
-        }
+          data: contractData,
+        },
       });
 
-      modal.onDidDismiss()
-        .then((data: any) => {
-          if (data && data.hasOwnProperty('redirect') && data.redirect) {
-            this.router.navigate(['/pages/latest']);
-          }
-        });
+      modal.onDidDismiss().then((data: any) => {
+        if (data && data.hasOwnProperty('redirect') && data.redirect) {
+          this.router.navigate(['/pages/latest']);
+        }
+      });
 
       return await modal.present();
     }

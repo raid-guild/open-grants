@@ -9,7 +9,6 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { PopupComponent } from 'src/app/pages/popup/popup.component';
 
-
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -38,11 +37,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public popoverCtrl: PopoverController,
     public modalController: ModalController,
     private fb: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
   ) {
-
     this.myForm = this.fb.group({
-      searchBox: new FormControl()
+      searchBox: new FormControl(),
     });
   }
 
@@ -56,33 +54,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
       component: MenuPopoverComponent,
       event,
       translucent: true,
-      cssClass: 'poopover-user-option'
+      cssClass: 'poopover-user-option',
     });
 
     return await popover.present();
   }
 
-  async getUserData() {
-
-  }
-
+  async getUserData() {}
 
   async login() {
-
     const modal = await this.modalController.create({
       component: PopupComponent,
       cssClass: 'custom-modal-style',
       mode: 'ios',
       componentProps: {
-        modelType: 'login'
-      }
+        modelType: 'login',
+      },
     });
 
     return await modal.present();
-
   }
 
-  ngOnDestroy() {
-  }
-
+  ngOnDestroy() {}
 }

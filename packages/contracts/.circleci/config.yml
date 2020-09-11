@@ -22,6 +22,6 @@ jobs:
       - run: bash <(curl -s https://codecov.io/bash)
 
 workflows:
-    build-and-test:
-      jobs:
-        - build-and-test
+  build-and-test:
+    jobs:
+      - build-and-test

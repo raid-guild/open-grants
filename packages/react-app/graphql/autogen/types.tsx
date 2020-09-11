@@ -2,7 +2,9 @@
 import gql from 'graphql-tag';
 import * as Urql from 'urql';
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -16,13 +18,10 @@ export type Scalars = {
   Bytes: any;
 };
 
-
-
 export type Block_Height = {
   hash?: Maybe<Scalars['Bytes']>;
   number?: Maybe<Scalars['Int']>;
 };
-
 
 export type Deposit = {
   __typename?: 'Deposit';
@@ -67,7 +66,7 @@ export enum Deposit_OrderBy {
   Id = 'id',
   StreamAddress = 'streamAddress',
   Depositer = 'depositer',
-  Amount = 'amount'
+  Amount = 'amount',
 }
 
 export type Fund = {
@@ -113,7 +112,7 @@ export enum Fund_OrderBy {
   Id = 'id',
   GrantAddress = 'grantAddress',
   Donor = 'donor',
-  Amount = 'amount'
+  Amount = 'amount',
 }
 
 export type Grant = {
@@ -131,7 +130,6 @@ export type Grant = {
   totalFunded: Scalars['BigInt'];
 };
 
-
 export type GrantFundsArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -139,7 +137,6 @@ export type GrantFundsArgs = {
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<Fund_Filter>;
 };
-
 
 export type GrantPaymentsArgs = {
   skip?: Maybe<Scalars['Int']>;
@@ -227,12 +224,12 @@ export enum Grant_OrderBy {
   Funds = 'funds',
   Payments = 'payments',
   Amounts = 'amounts',
-  TotalFunded = 'totalFunded'
+  TotalFunded = 'totalFunded',
 }
 
 export enum OrderDirection {
   Asc = 'asc',
-  Desc = 'desc'
+  Desc = 'desc',
 }
 
 export type Payment = {
@@ -278,7 +275,7 @@ export enum Payment_OrderBy {
   Id = 'id',
   GrantAddress = 'grantAddress',
   Grantee = 'grantee',
-  Amount = 'amount'
+  Amount = 'amount',
 }
 
 export type Query = {
@@ -297,12 +294,10 @@ export type Query = {
   releases: Array<Release>;
 };
 
-
 export type QueryGrantArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
-
 
 export type QueryGrantsArgs = {
   skip?: Maybe<Scalars['Int']>;
@@ -313,12 +308,10 @@ export type QueryGrantsArgs = {
   block?: Maybe<Block_Height>;
 };
 
-
 export type QueryFundArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
-
 
 export type QueryFundsArgs = {
   skip?: Maybe<Scalars['Int']>;
@@ -329,12 +322,10 @@ export type QueryFundsArgs = {
   block?: Maybe<Block_Height>;
 };
 
-
 export type QueryPaymentArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
-
 
 export type QueryPaymentsArgs = {
   skip?: Maybe<Scalars['Int']>;
@@ -345,12 +336,10 @@ export type QueryPaymentsArgs = {
   block?: Maybe<Block_Height>;
 };
 
-
 export type QueryStreamArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
-
 
 export type QueryStreamsArgs = {
   skip?: Maybe<Scalars['Int']>;
@@ -361,12 +350,10 @@ export type QueryStreamsArgs = {
   block?: Maybe<Block_Height>;
 };
 
-
 export type QueryDepositArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
-
 
 export type QueryDepositsArgs = {
   skip?: Maybe<Scalars['Int']>;
@@ -377,12 +364,10 @@ export type QueryDepositsArgs = {
   block?: Maybe<Block_Height>;
 };
 
-
 export type QueryReleaseArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
-
 
 export type QueryReleasesArgs = {
   skip?: Maybe<Scalars['Int']>;
@@ -428,7 +413,7 @@ export type Release_Filter = {
 export enum Release_OrderBy {
   Id = 'id',
   StreamAddress = 'streamAddress',
-  Amount = 'amount'
+  Amount = 'amount',
 }
 
 export type Stream = {
@@ -448,7 +433,6 @@ export type Stream = {
   duration: Scalars['BigInt'];
 };
 
-
 export type StreamDepositsArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -456,7 +440,6 @@ export type StreamDepositsArgs = {
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<Deposit_Filter>;
 };
-
 
 export type StreamReleasesArgs = {
   skip?: Maybe<Scalars['Int']>;
@@ -562,7 +545,7 @@ export enum Stream_OrderBy {
   Releases = 'releases',
   Released = 'released',
   StartTime = 'startTime',
-  Duration = 'duration'
+  Duration = 'duration',
 }
 
 export type Subscription = {
@@ -581,12 +564,10 @@ export type Subscription = {
   releases: Array<Release>;
 };
 
-
 export type SubscriptionGrantArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
-
 
 export type SubscriptionGrantsArgs = {
   skip?: Maybe<Scalars['Int']>;
@@ -597,12 +578,10 @@ export type SubscriptionGrantsArgs = {
   block?: Maybe<Block_Height>;
 };
 
-
 export type SubscriptionFundArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
-
 
 export type SubscriptionFundsArgs = {
   skip?: Maybe<Scalars['Int']>;
@@ -613,12 +592,10 @@ export type SubscriptionFundsArgs = {
   block?: Maybe<Block_Height>;
 };
 
-
 export type SubscriptionPaymentArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
-
 
 export type SubscriptionPaymentsArgs = {
   skip?: Maybe<Scalars['Int']>;
@@ -629,12 +606,10 @@ export type SubscriptionPaymentsArgs = {
   block?: Maybe<Block_Height>;
 };
 
-
 export type SubscriptionStreamArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
-
 
 export type SubscriptionStreamsArgs = {
   skip?: Maybe<Scalars['Int']>;
@@ -645,12 +620,10 @@ export type SubscriptionStreamsArgs = {
   block?: Maybe<Block_Height>;
 };
 
-
 export type SubscriptionDepositArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
-
 
 export type SubscriptionDepositsArgs = {
   skip?: Maybe<Scalars['Int']>;
@@ -661,12 +634,10 @@ export type SubscriptionDepositsArgs = {
   block?: Maybe<Block_Height>;
 };
 
-
 export type SubscriptionReleaseArgs = {
   id: Scalars['ID'];
   block?: Maybe<Block_Height>;
 };
-
 
 export type SubscriptionReleasesArgs = {
   skip?: Maybe<Scalars['Int']>;
@@ -677,93 +648,103 @@ export type SubscriptionReleasesArgs = {
   block?: Maybe<Block_Height>;
 };
 
-export type GrantFragmentFragment = (
-  { __typename?: 'Grant' }
-  & Pick<Grant, 'id' | 'factoryAddress' | 'grantId' | 'grantAddress' | 'uri' | 'createBy' | 'grantees' | 'amounts' | 'totalFunded'>
-);
+export type GrantFragmentFragment = { __typename?: 'Grant' } & Pick<
+  Grant,
+  | 'id'
+  | 'factoryAddress'
+  | 'grantId'
+  | 'grantAddress'
+  | 'uri'
+  | 'createBy'
+  | 'grantees'
+  | 'amounts'
+  | 'totalFunded'
+>;
 
 export type GetGrantQueryVariables = Exact<{
   address: Scalars['ID'];
 }>;
 
-
-export type GetGrantQuery = (
-  { __typename?: 'Query' }
-  & { grant?: Maybe<(
-    { __typename?: 'Grant' }
-    & GrantFragmentFragment
-  )> }
-);
+export type GetGrantQuery = { __typename?: 'Query' } & {
+  grant?: Maybe<{ __typename?: 'Grant' } & GrantFragmentFragment>;
+};
 
 export type GetGrantAddressesQueryVariables = Exact<{
   first?: Maybe<Scalars['Int']>;
 }>;
 
-
-export type GetGrantAddressesQuery = (
-  { __typename?: 'Query' }
-  & { grants: Array<(
-    { __typename?: 'Grant' }
-    & Pick<Grant, 'id'>
-  )> }
-);
+export type GetGrantAddressesQuery = { __typename?: 'Query' } & {
+  grants: Array<{ __typename?: 'Grant' } & Pick<Grant, 'id'>>;
+};
 
 export type GetGrantsQueryVariables = Exact<{
   first?: Maybe<Scalars['Int']>;
 }>;
 
-
-export type GetGrantsQuery = (
-  { __typename?: 'Query' }
-  & { grants: Array<(
-    { __typename?: 'Grant' }
-    & GrantFragmentFragment
-  )> }
-);
+export type GetGrantsQuery = { __typename?: 'Query' } & {
+  grants: Array<{ __typename?: 'Grant' } & GrantFragmentFragment>;
+};
 
 export const GrantFragmentFragmentDoc = gql`
-    fragment GrantFragment on Grant {
-  id
-  factoryAddress
-  grantId
-  grantAddress
-  uri
-  createBy
-  grantees
-  amounts
-  totalFunded
-}
-    `;
-export const GetGrantDocument = gql`
-    query GetGrant($address: ID!) {
-  grant(id: $address) {
-    ...GrantFragment
-  }
-}
-    ${GrantFragmentFragmentDoc}`;
-
-export function useGetGrantQuery(options: Omit<Urql.UseQueryArgs<GetGrantQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<GetGrantQuery>({ query: GetGrantDocument, ...options });
-};
-export const GetGrantAddressesDocument = gql`
-    query GetGrantAddresses($first: Int) {
-  grants(first: $first) {
+  fragment GrantFragment on Grant {
     id
+    factoryAddress
+    grantId
+    grantAddress
+    uri
+    createBy
+    grantees
+    amounts
+    totalFunded
   }
-}
-    `;
+`;
+export const GetGrantDocument = gql`
+  query GetGrant($address: ID!) {
+    grant(id: $address) {
+      ...GrantFragment
+    }
+  }
+  ${GrantFragmentFragmentDoc}
+`;
 
-export function useGetGrantAddressesQuery(options: Omit<Urql.UseQueryArgs<GetGrantAddressesQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<GetGrantAddressesQuery>({ query: GetGrantAddressesDocument, ...options });
-};
+export function useGetGrantQuery(
+  options: Omit<Urql.UseQueryArgs<GetGrantQueryVariables>, 'query'> = {},
+) {
+  return Urql.useQuery<GetGrantQuery>({ query: GetGrantDocument, ...options });
+}
+export const GetGrantAddressesDocument = gql`
+  query GetGrantAddresses($first: Int) {
+    grants(first: $first) {
+      id
+    }
+  }
+`;
+
+export function useGetGrantAddressesQuery(
+  options: Omit<
+    Urql.UseQueryArgs<GetGrantAddressesQueryVariables>,
+    'query'
+  > = {},
+) {
+  return Urql.useQuery<GetGrantAddressesQuery>({
+    query: GetGrantAddressesDocument,
+    ...options,
+  });
+}
 export const GetGrantsDocument = gql`
-    query GetGrants($first: Int) {
-  grants(first: $first) {
-    ...GrantFragment
+  query GetGrants($first: Int) {
+    grants(first: $first) {
+      ...GrantFragment
+    }
   }
-}
-    ${GrantFragmentFragmentDoc}`;
+  ${GrantFragmentFragmentDoc}
+`;
 
-export function useGetGrantsQuery(options: Omit<Urql.UseQueryArgs<GetGrantsQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<GetGrantsQuery>({ query: GetGrantsDocument, ...options });
-};
+export function useGetGrantsQuery(
+  options: Omit<Urql.UseQueryArgs<GetGrantsQueryVariables>, 'query'> = {},
+) {
+  return Urql.useQuery<GetGrantsQuery>({
+    query: GetGrantsDocument,
+    ...options,
+  });
+}

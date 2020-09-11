@@ -14,8 +14,8 @@ const app: React.FC<AppProps> = ({ pageProps, Component }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <Web3ContextProvider>
-        <Layout >
-            <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
         </Layout>
       </Web3ContextProvider>
     </ChakraProvider>

@@ -32,18 +32,14 @@ export class LatestGrantsComponent implements OnInit {
     this.searchBox = new FormControl('');
 
     this.searchBox.valueChanges
-      .pipe(
-        debounceTime(400),
-        distinctUntilChanged()
-      )
+      .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((val: string) => {
-
         if (val === '') {
           this.searchResult = [];
           this.searchResult = this.allGrant;
         } else {
           this.searchResult = [];
-          this.searchResult = this.allGrant.filter((data) => {
+          this.searchResult = this.allGrant.filter(data => {
             // console.log("data.name.toLowerCase()", data.name.toLowerCase());
             return data.grantName.toLowerCase().includes(val.toLowerCase());
           });
@@ -51,7 +47,7 @@ export class LatestGrantsComponent implements OnInit {
       });
   }
 
-  onCancel(event) { }
+  onCancel(event) {}
 
   grantDetails(id: string) {
     this.router.navigate(['/pages/grant/' + id]);

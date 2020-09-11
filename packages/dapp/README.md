@@ -105,7 +105,6 @@ Sign-in with metamask.
 - Auth services are currently handled by `src/app/services/auth.service.ts`.
 - The Graph queries are managed by `src/app/services/subgraph.ts`.
 
-
 #### Backlog
 
 - [ ] Enforce correct network from web3provider & environment (The Graph queries testnet only until prod launch)
@@ -115,7 +114,6 @@ Sign-in with metamask.
 - [ ] Revise EIP
 - [ ] Put 3box back in to support grant descriptions & user preferences
 - [ ] Hide grants (user preference)
-
 
 # Dev Setup
 

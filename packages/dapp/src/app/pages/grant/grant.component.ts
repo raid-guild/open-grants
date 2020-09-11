@@ -42,7 +42,7 @@ export class GrantComponent implements OnInit, OnDestroy {
   userRemainingAlloc: any = '0';
 
   fundingModel = {
-    amount: null
+    amount: null,
   };
 
   constructor(
@@ -58,36 +58,47 @@ export class GrantComponent implements OnInit, OnDestroy {
     this.grantAddress = this.route.snapshot.params.id || '';
 
     (async () => {
-      const response: any = await this.subgraphService.getGrantByAddress(this.grantAddress).toPromise();
+      const response: any = await this.subgraphService
+        .getGrantByAddress(this.grantAddress)
+        .toPromise();
       this.grantData = response.data.contract;
       this.grantData = JSON.parse(JSON.stringify(this.grantData));
 
-      this.grantData.input = this.ethcontractService.parseTransaction(this.grantData.input);
+      this.grantData.input = this.ethcontractService.parseTransaction(
+        this.grantData.input,
+      );
       this.grantData.grantees = this.grantData.input.grantees;
       this.grantData.amounts = this.grantData.input.amounts;
       this.grantData.uri = this.grantData.input.uri;
 
       this.checkRole();
 
-      this.noOfDayToExpiredFunding = moment(+this.grantData.fundingExpiration).diff(moment(new Date), 'days');
-      this.canCancelByGranteeAndDonor = moment(+this.grantData.fundingExpiration).isBefore(new Date());
+      this.noOfDayToExpiredFunding = moment(
+        +this.grantData.fundingExpiration,
+      ).diff(moment(new Date()), 'days');
+      this.canCancelByGranteeAndDonor = moment(
+        +this.grantData.fundingExpiration,
+      ).isBefore(new Date());
 
-      this.subgraphService.getFundByContract(this.grantAddress).subscribe((res: any) => {
-        this.grantFunds = res.data.funds;
-        this.grantFunds = this.grantFunds.reduce((m, o) => {
-          let found = m.find(p => p.donor === o.donor);
-          if (found) {
-            found.amount = +found.amount;
-            found.amount += +o.amount;
-          } else {
-            m.push(o);
-          }
-          return m;
-        }, []);
-      });
+      this.subgraphService
+        .getFundByContract(this.grantAddress)
+        .subscribe((res: any) => {
+          this.grantFunds = res.data.funds;
+          this.grantFunds = this.grantFunds.reduce((m, o) => {
+            let found = m.find(p => p.donor === o.donor);
+            if (found) {
+              found.amount = +found.amount;
+              found.amount += +o.amount;
+            } else {
+              m.push(o);
+            }
+            return m;
+          }, []);
+        });
 
-      this.grantData.canFund = await this.ethcontractService.canFund(this.grantAddress);
-
+      this.grantData.canFund = await this.ethcontractService.canFund(
+        this.grantAddress,
+      );
     })();
 
     this.getUserEthAddress();
@@ -107,7 +118,6 @@ export class GrantComponent implements OnInit, OnDestroy {
     return e.value;
   }
 
-
   async getUserEthAddress() {
     this.userEthAddress = await this.authService.getAuthUserId();
   }
@@ -125,12 +135,19 @@ export class GrantComponent implements OnInit, OnDestroy {
     if (this.userEthAddress) {
       this.userRole = this.userEnum.DONOR;
 
-      if (this.userEthAddress && this.grantData.manager.toLowerCase() === this.userEthAddress.toLowerCase()) {
+      if (
+        this.userEthAddress &&
+        this.grantData.manager.toLowerCase() ===
+          this.userEthAddress.toLowerCase()
+      ) {
         this.userRole = this.userEnum.MANAGER;
       }
 
       this.grantData.grantees.map((data, index) => {
-        if (this.userEthAddress && data.toLowerCase() === this.userEthAddress.toLowerCase()) {
+        if (
+          this.userEthAddress &&
+          data.toLowerCase() === this.userEthAddress.toLowerCase()
+        ) {
           this.userAlloc = this.grantData.amounts[index];
           this.userRole = this.userEnum.GRANTEE;
         }
@@ -150,30 +167,32 @@ export class GrantComponent implements OnInit, OnDestroy {
     } else {
       this.userRole = this.userEnum.VISITOR;
     }
-
   }
 
   getDonorData() {
-    this.subgraphService.getFundByContractAndDonor(this.grantAddress, this.userEthAddress).subscribe((res: any) => {
-      this.userFunds = res.data.funds;
-      this.userDonation = 0;
-      this.userFunds = this.userFunds.map((task) => {
-        this.userDonation += +task.amount;
-        return task;
+    this.subgraphService
+      .getFundByContractAndDonor(this.grantAddress, this.userEthAddress)
+      .subscribe((res: any) => {
+        this.userFunds = res.data.funds;
+        this.userDonation = 0;
+        this.userFunds = this.userFunds.map(task => {
+          this.userDonation += +task.amount;
+          return task;
+        });
+
+        this.userDonation = this.userDonation.toString();
       });
-
-      this.userDonation = this.userDonation.toString();
-    });
   }
 
-  getManagerData() {
-
-  }
+  getManagerData() {}
 
   async getGranteeData() {
     try {
-      this.userRemainingAlloc = await this.ethcontractService.remainingAllocation(this.grantAddress, this.userEthAddress);
-    } catch (e) { }
+      this.userRemainingAlloc = await this.ethcontractService.remainingAllocation(
+        this.grantAddress,
+        this.userEthAddress,
+      );
+    } catch (e) {}
   }
 
   async payoutModel() {
@@ -183,13 +202,11 @@ export class GrantComponent implements OnInit, OnDestroy {
       mode: 'ios',
       componentProps: {
         grantAddress: this.grantAddress,
-        grantees: this.grantData.grantees
-      }
+        grantees: this.grantData.grantees,
+      },
     });
 
-    modal.onDidDismiss()
-      .then((data) => {
-      });
+    modal.onDidDismiss().then(data => {});
 
     return await modal.present();
   }
@@ -197,15 +214,15 @@ export class GrantComponent implements OnInit, OnDestroy {
   cancelGrant() {
     Swal.fire({
       title: 'Are you sure cancle the grant?',
-      text: 'You won\'t be able to revert this!',
+      text: "You won't be able to revert this!",
       icon: 'warning',
       backdrop: false,
       allowOutsideClick: false,
       showCancelButton: true,
       confirmButtonText: 'Yes',
       cancelButtonText: 'No',
-      reverseButtons: true
-    }).then(async (result) => {
+      reverseButtons: true,
+    }).then(async result => {
       if (result.value) {
         const modal = await this.modalController.create({
           component: PopupComponent,
@@ -213,24 +230,23 @@ export class GrantComponent implements OnInit, OnDestroy {
           mode: 'ios',
           componentProps: {
             modelType: 'cancelContract',
-            data: this.grantAddress
+            data: this.grantAddress,
+          },
+        });
+
+        modal.onDidDismiss().then((data: any) => {
+          data = data.data;
+          if (data && data.hasOwnProperty('reload') && data.reload) {
+            this.subgraphService
+              .getGrantByAddress(this.grantAddress)
+              .subscribe((res: any) => {
+                this.grantData = res.data.contract;
+              });
           }
         });
 
-        modal.onDidDismiss()
-          .then((data: any) => {
-            data = data.data;
-            if (data && data.hasOwnProperty('reload') && data.reload) {
-              this.subgraphService.getGrantByAddress(this.grantAddress).subscribe((res: any) => {
-                this.grantData = res.data.contract;
-              });
-            }
-          });
-
         return await modal.present();
-      } else if (
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
         // Swal.fire('Cancelled', 'Your request cancelled :)', 'error');
       }
     });
@@ -242,19 +258,21 @@ export class GrantComponent implements OnInit, OnDestroy {
     if (this.userEthAddress) {
       Swal.fire({
         title: 'Are you sure?',
-        text: 'You won\'t be able to revert this!',
+        text: "You won't be able to revert this!",
         icon: 'warning',
         backdrop: false,
         allowOutsideClick: false,
         showCancelButton: true,
         confirmButtonText: 'Yes',
         cancelButtonText: 'No',
-        reverseButtons: true
-      }).then(async (result) => {
+        reverseButtons: true,
+      }).then(async result => {
         if (result.value) {
           let amount: any = this.fundingModel.amount;
           if (this.grantData.currency === AddressZero) {
-            amount = (ethers.utils.parseEther(this.fundingModel.amount.toString())).toString();
+            amount = ethers.utils
+              .parseEther(this.fundingModel.amount.toString())
+              .toString();
           }
           const modal = await this.modalController.create({
             component: PopupComponent,
@@ -262,25 +280,24 @@ export class GrantComponent implements OnInit, OnDestroy {
             mode: 'ios',
             componentProps: {
               modelType: 'fundingContract',
-              data: { grantAddress: this.grantAddress, amount }
+              data: { grantAddress: this.grantAddress, amount },
+            },
+          });
+
+          modal.onDidDismiss().then((data: any) => {
+            data = data.data;
+            this.fundingModel.amount = null;
+            if (data && data.hasOwnProperty('reload') && data.reload) {
+              this.subgraphService
+                .getGrantByAddress(this.grantAddress)
+                .subscribe((res: any) => {
+                  this.grantData = res.data.contract;
+                });
             }
           });
 
-          modal.onDidDismiss()
-            .then((data: any) => {
-              data = data.data;
-              this.fundingModel.amount = null;
-              if (data && data.hasOwnProperty('reload') && data.reload) {
-                this.subgraphService.getGrantByAddress(this.grantAddress).subscribe((res: any) => {
-                  this.grantData = res.data.contract;
-                });
-              }
-            });
-
           return await modal.present();
-        } else if (
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
         }
       });
     } else {

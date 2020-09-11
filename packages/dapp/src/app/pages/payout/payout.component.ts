@@ -5,7 +5,12 @@ import { ToastrService } from 'ngx-toastr';
 import { ethers, constants } from 'ethers';
 import { EthContractService } from 'src/app/services/ethcontract.service';
 import Swal from 'sweetalert2';
-import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import {
+  Validators,
+  FormBuilder,
+  FormGroup,
+  FormControl,
+} from '@angular/forms';
 import { SubgraphService } from 'src/app/services/subgraph.service';
 import { PopupComponent } from '../popup/popup.component';
 
@@ -17,10 +22,9 @@ const { AddressZero, Zero } = constants;
   styleUrls: ['./payout.component.scss'],
 })
 export class PayoutComponent implements OnInit {
-  toastTitle = "Payout"
+  toastTitle = 'Payout';
   grantAddress: string;
   grantees = [];
-
 
   public myForm: FormGroup;
 
@@ -39,39 +43,51 @@ export class PayoutComponent implements OnInit {
     private subgraphService: SubgraphService,
     private ethcontractService: EthContractService,
   ) {
-
     this.grantAddress = navParams.get('grantAddress');
     this.grantees = navParams.get('grantees');
 
     (async () => {
-      const response: any = await this.subgraphService.getGrantByAddress(this.grantAddress).toPromise();
+      const response: any = await this.subgraphService
+        .getGrantByAddress(this.grantAddress)
+        .toPromise();
       this.grantData = response.data.contract;
     })();
-
   }
 
   dismiss() {
-    this.modalCtrl.dismiss()
+    this.modalCtrl.dismiss();
   }
 
   ngOnInit() {
     this.myForm = this.fb.group({
       granteeAddress: new FormControl('', Validators.required),
-      amount: new FormControl({ value: null, disabled: true }, Validators.required),
+      amount: new FormControl(
+        { value: null, disabled: true },
+        Validators.required,
+      ),
     });
 
-    this.form.granteeAddress.valueChanges
-      .subscribe(async (val: string) => {
-        if (!this.form.granteeAddress.invalid) {
-          let temp = await this.ethcontractService.remainingAllocation(this.grantAddress, this.form.granteeAddress.value);
-          this.remainingAllocation = +this.currencyCovert(this.grantData.currency, temp);
-          this.form.amount.setValidators([Validators.required, Validators.max(this.remainingAllocation), Validators.min(1)]);
-          this.myForm.get('amount').enable();
-        } else {
-          this.myForm.get('amount').reset();
-          this.myForm.get('amount').disable();
-        }
-      });
+    this.form.granteeAddress.valueChanges.subscribe(async (val: string) => {
+      if (!this.form.granteeAddress.invalid) {
+        let temp = await this.ethcontractService.remainingAllocation(
+          this.grantAddress,
+          this.form.granteeAddress.value,
+        );
+        this.remainingAllocation = +this.currencyCovert(
+          this.grantData.currency,
+          temp,
+        );
+        this.form.amount.setValidators([
+          Validators.required,
+          Validators.max(this.remainingAllocation),
+          Validators.min(1),
+        ]);
+        this.myForm.get('amount').enable();
+      } else {
+        this.myForm.get('amount').reset();
+        this.myForm.get('amount').disable();
+      }
+    });
 
     // this.form.amount.valueChanges
     //   .pipe(
@@ -100,7 +116,7 @@ export class PayoutComponent implements OnInit {
 
   onSubmit() {
     if (this.form.amount.invalid || this.form.granteeAddress.invalid) {
-      return
+      return;
     }
 
     Swal.fire({
@@ -112,39 +128,41 @@ export class PayoutComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Yes',
       cancelButtonText: 'No',
-      reverseButtons: true
-    }).then(async (result) => {
+      reverseButtons: true,
+    }).then(async result => {
       if (result.value) {
-
         let amount: any = this.form.amount.value;
         if (this.grantData.currency == AddressZero) {
-          amount = (ethers.utils.parseEther(this.form.amount.value.toString())).toString();
+          amount = ethers.utils
+            .parseEther(this.form.amount.value.toString())
+            .toString();
         }
 
         const modal = await this.modalController.create({
           component: PopupComponent,
           cssClass: 'custom-modal-style',
-          mode: "ios",
+          mode: 'ios',
           componentProps: {
-            modelType: "payout",
-            data: { grantAddress: this.grantAddress, grantee: this.form.granteeAddress.value, amount: amount }
+            modelType: 'payout',
+            data: {
+              grantAddress: this.grantAddress,
+              grantee: this.form.granteeAddress.value,
+              amount: amount,
+            },
+          },
+        });
+
+        modal.onDidDismiss().then((data: any) => {
+          data = data.data;
+          console.log('data', data);
+          if (data && data.hasOwnProperty('reload') && data.reload) {
+            console.log('data', data);
           }
         });
 
-        modal.onDidDismiss()
-          .then((data: any) => {
-            data = data.data;
-            console.log("data", data);
-            if (data && data.hasOwnProperty('reload') && data.reload) {
-              console.log("data", data);
-            }
-          });
-
         return await modal.present();
-      } else if (
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
       }
-    })
+    });
   }
 }
