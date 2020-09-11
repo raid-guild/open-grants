@@ -7,5 +7,7 @@ export const GrantFragment = gql`
     grantees
     amounts
     createBy
+    uri
+    totalFunded
   }
 `;

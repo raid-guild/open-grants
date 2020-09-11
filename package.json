@@ -18,6 +18,7 @@
     "dapp:test": "yarn workspace @open-grants/dapp test",
     "dapp:build": "yarn workspace @open-grants/dapp build",
     "dapp:deploy": "yarn workspace @open-grants/dapp deploy",
+    "react-app:start": "yarn workspace @open-grants/react-app dev",
     "contracts:build": "yarn workspace @open-grants/contracts build",
     "contracts:lint": "yarn workspace @open-grants/contracts lint",
     "contracts:test": "yarn workspace @open-grants/contracts test",

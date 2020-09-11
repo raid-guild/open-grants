@@ -8,6 +8,7 @@ import {
 } from 'next';
 import Error from 'next/error';
 import React from 'react';
+import { parseGrant } from 'utils/grants'; 
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -38,7 +39,7 @@ export const getStaticPaths: GetStaticPaths<QueryParams> = async () => {
         paths: grants.map(({ grantAddress }) => ({
             params: { address: grantAddress },
         })),
-        fallback: false,
+        fallback: true,
     };
 };
 
@@ -47,10 +48,12 @@ export const getStaticProps = async (
 ) => {
     const address = context.params?.address;
     const grant = await getGrant(address);
+    const parsedGrant = await parseGrant(grant);
 
     return {
         props: {
-            grant,
+            grant: parsedGrant,
+            revalidate: true
         },
     };
 };

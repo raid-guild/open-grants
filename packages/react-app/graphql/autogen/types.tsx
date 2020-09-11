@@ -679,7 +679,7 @@ export type SubscriptionReleasesArgs = {
 
 export type GrantFragmentFragment = (
   { __typename?: 'Grant' }
-  & Pick<Grant, 'id' | 'grantAddress' | 'grantees' | 'amounts' | 'createBy'>
+  & Pick<Grant, 'id' | 'grantAddress' | 'grantees' | 'amounts' | 'createBy' | 'uri' | 'totalFunded'>
 );
 
 export type GetGrantQueryVariables = Exact<{
@@ -715,6 +715,8 @@ export const GrantFragmentFragmentDoc = gql`
   grantees
   amounts
   createBy
+  uri
+  totalFunded
 }
     `;
 export const GetGrantDocument = gql`
