@@ -20,6 +20,10 @@ export function handleLogNewGrant(event: LogNewGrant): void {
   let fetchedGrant = fetchGrantInfo(event.params.grant);
   grant.totalFunded = fetchedGrant.totalFunded;
   grant.uri = fetchedGrant.uri;
+  grant.name = fetchedGrant.name;
+  grant.description = fetchedGrant.description;
+  grant.link = fetchedGrant.link;
+  grant.contactLink = fetchedGrant.contactLink;
 
   grant.funds = new Array<string>();
   grant.payments = new Array<string>();

@@ -4,6 +4,10 @@ type Grant @entity {
   grantId: BigInt! # uint256
   grantAddress: Bytes! # address
   uri: Bytes!
+  name: String!
+  description: String!
+  link: String!
+  contactLink: String!
   createBy: Bytes!
   grantees: [Bytes!]
   funds: [Fund!]
