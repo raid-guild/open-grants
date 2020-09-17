@@ -1,6 +1,6 @@
-import { Button,Divider, Text, VStack } from '@chakra-ui/core';
+import { Button, Divider, Text, VStack } from '@chakra-ui/core';
 import { Web3Context } from 'contexts/Web3Context';
-import React, { useContext,useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { createGrant } from 'utils/grants';
 import { uploadMetadata } from 'utils/ipfs';
 

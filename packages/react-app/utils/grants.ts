@@ -1,4 +1,4 @@
-import { Contract, providers,Transaction } from 'ethers';
+import { Contract, providers, Transaction } from 'ethers';
 
 import { CONFIG } from '../config';
 

@@ -15,6 +15,7 @@ export function handleLogEtherVestingCreated(
   let stream = new Stream(event.params.vestingContract.toHexString());
   stream.factoryAddress = event.address;
   stream.owner = event.transaction.from;
+  stream.timestamp = event.block.timestamp;
   stream.streamId = event.params.id;
   stream.streamAddress = event.params.vestingContract;
 
@@ -37,6 +38,7 @@ export function handleLogDeposit(event: LogDeposit): void {
   let deposit = new Deposit(event.logIndex.toHexString());
   deposit.streamAddress = event.address;
   deposit.depositer = event.params.sender;
+  deposit.timestamp = event.block.timestamp;
   deposit.amount = event.params.amount;
   deposit.save();
   log.info('New Payment: {}', [deposit.id]);
@@ -59,6 +61,8 @@ export function handleLogDeposit(event: LogDeposit): void {
 export function handleLogReleased(event: LogReleased): void {
   let release = new Release(event.logIndex.toHexString());
   release.streamAddress = event.address;
+  release.releaser = event.transaction.from;
+  release.timestamp = event.block.timestamp;
   release.amount = event.params.amount;
   release.save();
   log.info('New Payment: {}', [release.id]);

@@ -7,7 +7,8 @@ export const GrantFragment = gql`
     grantId
     grantAddress
     uri
-    createBy
+    createdBy
+    timestamp
     grantees
     amounts
     totalFunded

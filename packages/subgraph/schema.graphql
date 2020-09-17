@@ -1,14 +1,15 @@
 type Grant @entity {
   id: ID!
   factoryAddress: Bytes!
-  grantId: BigInt! # uint256
-  grantAddress: Bytes! # address
+  grantId: BigInt!
+  grantAddress: Bytes!
   uri: Bytes!
   name: String!
   description: String!
   link: String!
   contactLink: String!
-  createBy: Bytes!
+  createdBy: Bytes!
+  timestamp: BigInt!
   grantees: [Bytes!]
   funds: [Fund!]
   payments: [Payment!]
@@ -19,22 +20,24 @@ type Grant @entity {
 type Fund @entity {
   id: ID!
   grantAddress: Bytes!
-  donor: Bytes! # address
+  donor: Bytes!
   amount: BigInt!
+  timestamp: BigInt!
 }
 
 type Payment @entity {
   id: ID!
   grantAddress: Bytes!
-  grantee: Bytes! # address
+  grantee: Bytes!
   amount: BigInt!
+  timestamp: BigInt!
 }
 
 type Stream @entity {
   id: ID!
   factoryAddress: Bytes!
-  streamId: BigInt! # uint256
-  streamAddress: Bytes! # address
+  streamId: BigInt!
+  streamAddress: Bytes!
   owner: Bytes!
   beneficiary: Bytes!
   isRevocable: Boolean!
@@ -44,17 +47,21 @@ type Stream @entity {
   released: BigInt!
   startTime: BigInt!
   duration: BigInt!
+  timestamp: BigInt!
 }
 
 type Deposit @entity {
   id: ID!
   streamAddress: Bytes!
-  depositer: Bytes! # address
+  depositer: Bytes!
   amount: BigInt!
+  timestamp: BigInt!
 }
 
 type Release @entity {
   id: ID!
   streamAddress: Bytes!
+  releaser: Bytes!
   amount: BigInt!
+  timestamp: BigInt!
 }

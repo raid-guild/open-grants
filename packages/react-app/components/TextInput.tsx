@@ -1,4 +1,4 @@
-import { Flex, Input,Text } from '@chakra-ui/core';
+import { Flex, Input, Text } from '@chakra-ui/core';
 import React from 'react';
 
 type Props = {
