@@ -1,10 +1,13 @@
-import { FormGroup } from "@angular/forms";
+import { FormGroup } from '@angular/forms';
 // custom validator to check that two fields match
-export function MatchValue(firstControlName: string, secondControlName: string) {
+export function MatchValue(
+  firstControlName: string,
+  secondControlName: string,
+) {
   return (formGroup: FormGroup) => {
     const firstControl = formGroup.controls[firstControlName];
     const secondControl = formGroup.controls[secondControlName];
-// return null if controls haven't initialised yet
+    // return null if controls haven't initialised yet
     if (!firstControl || !secondControl) {
       return null;
     }
@@ -12,7 +15,7 @@ export function MatchValue(firstControlName: string, secondControlName: string) 
       return null;
     }
 
-    if((firstControl && !secondControl) || (!firstControl && secondControl)) {
+    if ((firstControl && !secondControl) || (!firstControl && secondControl)) {
       secondControl.setErrors({ matchValueError: true });
     }
 
@@ -21,5 +24,5 @@ export function MatchValue(firstControlName: string, secondControlName: string) 
     } else {
       secondControl.setErrors(null);
     }
-  }
+  };
 }

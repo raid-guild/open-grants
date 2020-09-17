@@ -13,18 +13,21 @@ describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
 
-
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule,
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        RouterTestingModule,
         CommonModule,
         FormsModule,
         IonicModule,
         HttpClientModule,
-        RouterModule],
+        RouterModule,
+      ],
       declarations: [HomeComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: []
+      providers: [],
     }).compileComponents();
   });
 
@@ -42,6 +45,4 @@ describe('HomeComponent', () => {
     const service: GrantService = TestBed.get(GrantService);
     expect(service).toBeTruthy();
   });
-
-})
-
+});

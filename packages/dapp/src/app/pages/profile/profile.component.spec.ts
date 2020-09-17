@@ -30,8 +30,7 @@ describe('ProfileComponent', () => {
       ],
       providers: [UserService, ToastrService],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -49,5 +48,3 @@ describe('ProfileComponent', () => {
     expect(service).toBeTruthy();
   });
 });
-
-

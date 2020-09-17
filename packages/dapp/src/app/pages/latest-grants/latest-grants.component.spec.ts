@@ -13,18 +13,21 @@ describe('LatestGrantsComponent', () => {
   let component: LatestGrantsComponent;
   let fixture: ComponentFixture<LatestGrantsComponent>;
 
-
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule,
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        RouterTestingModule,
         CommonModule,
         FormsModule,
         IonicModule,
         HttpClientModule,
-        RouterModule],
+        RouterModule,
+      ],
       declarations: [LatestGrantsComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [GrantService]
+      providers: [GrantService],
     }).compileComponents();
   });
 
@@ -39,10 +42,8 @@ describe('LatestGrantsComponent', () => {
   });
 
   it('GrantService should be created', () => {
-    debugger
+    debugger;
     const service: GrantService = TestBed.get(GrantService);
     expect(service).toBeTruthy();
   });
-
-})
-
+});

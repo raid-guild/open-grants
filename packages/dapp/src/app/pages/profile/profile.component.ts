@@ -4,7 +4,6 @@ import { ToastrService } from 'ngx-toastr';
 import { EthContractService } from 'src/app/services/ethcontract.service';
 import { Subscription } from 'rxjs';
 
-
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -23,18 +22,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     public popoverCtrl: PopoverController,
     public modalController: ModalController,
     private toastr: ToastrService,
-    private ethcontractService: EthContractService
-  ) {
+    private ethcontractService: EthContractService,
+  ) {}
 
-  }
+  ngOnInit() {}
 
-  ngOnInit() {
-  }
+  async getAccountInfo() {}
 
-  async getAccountInfo() {
-
-  }
-
-  ngOnDestroy() {
-  }
+  ngOnDestroy() {}
 }

@@ -24,41 +24,33 @@ import { PayoutComponent } from './payout/payout.component';
 import { GrantComponent } from './grant/grant.component';
 import { PopupComponent } from './popup/popup.component';
 
-const PAGES_COMPONENTS = [
-    PagesComponent,
-];
+const PAGES_COMPONENTS = [PagesComponent];
 
 @NgModule({
-    declarations: [
-        HeaderComponent,
-        PopupComponent,
-        MenuPopoverComponent,
-        PagesComponent,
-        HomeComponent,
-        PayoutComponent,
-        ProfileComponent,
-        GrantComponent,
-        MyGrantsComponent,
-        LatestGrantsComponent,
-        CreateNewGrantComponent,
-    ],
-    imports: [
-        IonicModule,
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        PagesRoutingModule,
-        EditorModule,
-        NumberonlyDirectiveModule,
-        // MiscellaneousModule
-    ],
-    entryComponents: [
-        PopupComponent,
-        PayoutComponent,
-        MenuPopoverComponent,
-    ],
-    providers: [
-        SubgraphService
-    ]
+  declarations: [
+    HeaderComponent,
+    PopupComponent,
+    MenuPopoverComponent,
+    PagesComponent,
+    HomeComponent,
+    PayoutComponent,
+    ProfileComponent,
+    GrantComponent,
+    MyGrantsComponent,
+    LatestGrantsComponent,
+    CreateNewGrantComponent,
+  ],
+  imports: [
+    IonicModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    PagesRoutingModule,
+    EditorModule,
+    NumberonlyDirectiveModule,
+    // MiscellaneousModule
+  ],
+  entryComponents: [PopupComponent, PayoutComponent, MenuPopoverComponent],
+  providers: [SubgraphService],
 })
-export class PagesModule { }
+export class PagesModule {}

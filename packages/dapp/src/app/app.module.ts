@@ -23,7 +23,6 @@ import { environment } from 'src/environments/environment';
 
 import { HttpCommonInterceptor } from './common/interceptors/http-common.interceptor';
 
-
 const defaultOptions: DefaultOptions = {
   watchQuery: {
     fetchPolicy: 'no-cache',
@@ -56,21 +55,25 @@ const defaultOptions: DefaultOptions = {
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpCommonInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpCommonInterceptor,
+      multi: true,
+    },
     {
       provide: APOLLO_OPTIONS,
       useFactory: (httpLink: HttpLink) => {
         return {
           cache: new InMemoryCache(),
           link: httpLink.create({
-            uri: environment.SUBGRAPH_QUERY
+            uri: environment.SUBGRAPH_QUERY,
           }),
-          defaultOptions
+          defaultOptions,
         };
       },
-      deps: [HttpLink]
-    }
+      deps: [HttpLink],
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

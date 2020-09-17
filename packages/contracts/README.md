@@ -6,7 +6,6 @@
 [![Dependency Check](https://img.shields.io/david/noahmarconi/grant-contracts)](https://david-dm.org/NoahMarconi/grant-contracts)
 [![Dependency Check](https://img.shields.io/david/dev/noahmarconi/grant-contracts)](https://david-dm.org/NoahMarconi/grant-contracts?type=dev)
 
-
 Reference Implementation for OpenGrant proposed EIP.
 
 Write up and announcement here: https://medium.com/@jamesfickel/open-grants-standard-erc-6ed9e137d4fe
@@ -17,36 +16,33 @@ Front end project: https://github.com/NoahMarconi/grants-platform-mono
 
 Project Sponsors: https://github.com/JFickel & https://molochdao.com/
 
-
 # Table of Contents
 
 - [Variations](#Variations)
 - [Directory Structure](#Directory-Structure)
-  * [contracts](#contracts)
-    + [shared contract directory](#shared-contract-directory)
-  * [test](#test)
-  * [scripts](#scripts)
+  - [contracts](#contracts)
+    - [shared contract directory](#shared-contract-directory)
+  - [test](#test)
+  - [scripts](#scripts)
 - [Set-up Guide](#Set-up-Guide)
 - [TODO](#TODO)
 
-
 # Variations
 
-Grants come with many variations. 
+Grants come with many variations.
 
-  - Managed or Unmanaged
-  - Token or Ether
-  - With Funding Deadline or Without
-  - With Funding Target or Without
-  - Fixed Grantee Allocations or Proportion Based Grantee Allocations
-  - With Contract Expiration or Without
-  - Capped or Uncapped
-  - and likely more
+- Managed or Unmanaged
+- Token or Ether
+- With Funding Deadline or Without
+- With Funding Target or Without
+- Fixed Grantee Allocations or Proportion Based Grantee Allocations
+- With Contract Expiration or Without
+- Capped or Uncapped
+- and likely more
 
 Reference permutations include:
 
-  - [UnmanagedStream.sol](./contracts/UnmanagedStream.sol) an unmanaged grant with proportion based grantee allocations. Funds are immediately pushed to grantee and not dust is left in the grant. (rounding up or down always impacts final grantee)
-
+- [UnmanagedStream.sol](./contracts/UnmanagedStream.sol) an unmanaged grant with proportion based grantee allocations. Funds are immediately pushed to grantee and not dust is left in the grant. (rounding up or down always impacts final grantee)
 
 # Directory Structure
 
@@ -61,7 +57,7 @@ root
 
 ## contracts
 
-All `solidity` files are found in the [contracts](./contracts/) directory. 
+All `solidity` files are found in the [contracts](./contracts/) directory.
 
 ```
 contracts root
@@ -73,7 +69,6 @@ Contracts appearing in the [contracts](./contracts/) root directory are intended
 
 Contracts appearing in the [test](./contracts/test) directory are used for testing purposes only.
 
-
 ### shared contract directory
 
 ```
@@ -84,33 +79,28 @@ contract/shared root
   +-- WIP
 ```
 
-  * [interfaces](./contracts/shared/interfaces/) contains contract interfaces.
-  * [libraries](./contracts/shared/libraries/) contains shared libraries.
-  * [storage](./contracts/shared/storage/) is where contract state is managed. Each grant variant requires different state and variants requiring less state may simply avoid inheriting from storage contracts they do not need. All storage `getters` are `external` and all `setters` are `internal`.
-  * [modules](./contracts/shared/modules/) contains shared modules which tie one or more storage contracts together.
-  * [WIP](./contracts/shared/WIP/) contains work in progress contracts.
+- [interfaces](./contracts/shared/interfaces/) contains contract interfaces.
+- [libraries](./contracts/shared/libraries/) contains shared libraries.
+- [storage](./contracts/shared/storage/) is where contract state is managed. Each grant variant requires different state and variants requiring less state may simply avoid inheriting from storage contracts they do not need. All storage `getters` are `external` and all `setters` are `internal`.
+- [modules](./contracts/shared/modules/) contains shared modules which tie one or more storage contracts together.
+- [WIP](./contracts/shared/WIP/) contains work in progress contracts.
 
-
-The primary means of composing and creating new grant types is by combining `storage` contracts together to create `module` contracts. Due to inheritance linearization it may not be possible to inherit from multiple `module` contract; `storage` contracts are, however, isolated and more than one may be inherited from.  
-
+The primary means of composing and creating new grant types is by combining `storage` contracts together to create `module` contracts. Due to inheritance linearization it may not be possible to inherit from multiple `module` contract; `storage` contracts are, however, isolated and more than one may be inherited from.
 
 ## test
-
 
 ```
 test root
   +-- shared
 ```
 
-All test specs are found in the root [test](./test/)  directory.
+All test specs are found in the root [test](./test/) directory.
 
-The [shared](./test/shared/) directory contains general [helpers](./test/shared/helpers.ts) and tests intended to be reused multiple times. For example, testing that the constructor properly initialized the `BaseGrant` state should be take place for every grant variant; these tests are found in [BaseGrantConstructor.ts](./test/shared/BaseGrantConstructor.ts). 
-
+The [shared](./test/shared/) directory contains general [helpers](./test/shared/helpers.ts) and tests intended to be reused multiple times. For example, testing that the constructor properly initialized the `BaseGrant` state should be take place for every grant variant; these tests are found in [BaseGrantConstructor.ts](./test/shared/BaseGrantConstructor.ts).
 
 ## scripts
 
-Contains project level helper scripts such as the [deploy-factory](scripts/deploy-factory.ts) helper. 
-
+Contains project level helper scripts such as the [deploy-factory](scripts/deploy-factory.ts) helper.
 
 # Set-up Guide
 
@@ -144,15 +134,16 @@ npm run build
 ## Test Contracts
 
 Run all tests
+
 ```
 npm run test
 ```
 
 Check code coverage
+
 ```
 npm run coverage
 ```
-
 
 ## Deploy
 
@@ -162,14 +153,13 @@ First set up the `.env` file by renaming .example-env: `cp .example-env .env` an
 npm run factory:deploy:ropsten
 ```
 
-
-
 # TODO
 
-* BaseGrant tests
-  * totalPaid
-  * grantCancelled
-  * setters
+- BaseGrant tests
 
-* Grantee tests
-  * Pull payment
+  - totalPaid
+  - grantCancelled
+  - setters
+
+- Grantee tests
+  - Pull payment

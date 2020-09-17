@@ -81,7 +81,6 @@ export class PopupComponent implements OnInit {
       setTimeout(() => {
         this.dismiss();
       }, 2000);
-
     } catch (e) {
       this.logingIn = false;
       this.loginError = true;
@@ -91,7 +90,9 @@ export class PopupComponent implements OnInit {
   async deployContract() {
     try {
       this.deploying = true;
-      const contract: any = await this.ethcontractService.createGrant(this.data);
+      const contract: any = await this.ethcontractService.createGrant(
+        this.data,
+      );
 
       if (contract.status === 'success') {
         this.deploying = false;
@@ -129,7 +130,10 @@ export class PopupComponent implements OnInit {
 
   async fundingContract() {
     this.funding = true;
-    const funding: any = await this.ethcontractService.fund(this.data.grantAddress, this.data.amount);
+    const funding: any = await this.ethcontractService.fund(
+      this.data.grantAddress,
+      this.data.amount,
+    );
 
     if (funding.status == 'success') {
       this.funding = false;
@@ -146,7 +150,11 @@ export class PopupComponent implements OnInit {
 
   async contractPayout() {
     this.payouting = true;
-    const payoutRes: any = await this.ethcontractService.approvePayout(this.data.grantAddress, this.data.grantee, this.data.amount);
+    const payoutRes: any = await this.ethcontractService.approvePayout(
+      this.data.grantAddress,
+      this.data.grantee,
+      this.data.amount,
+    );
 
     if (payoutRes.status == 'success') {
       this.payouting = false;

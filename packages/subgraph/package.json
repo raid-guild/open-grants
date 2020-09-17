@@ -1,5 +1,5 @@
 {
-  "name": "open-grants-subgraph",
+  "name": "@open-grants/subgraph",
   "version": "0.0.1",
   "license": "MIT",
   "private": true,

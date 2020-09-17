@@ -19,11 +19,13 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 describe('MyGrantsComponent', () => {
   let component: MyGrantsComponent;
   let fixture: ComponentFixture<MyGrantsComponent>;
-  
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule,
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        RouterTestingModule,
         CommonModule,
         FormsModule,
         IonicModule,
@@ -34,10 +36,11 @@ describe('MyGrantsComponent', () => {
         ViewGrantUnmarkAsCompleteModule,
         ViewGrantNotificationsModule,
         AmountsReceiveModule,
-        RouterModule],
+        RouterModule,
+      ],
       declarations: [MyGrantsComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [GrantService]
+      providers: [GrantService],
     }).compileComponents();
   });
 
@@ -55,7 +58,4 @@ describe('MyGrantsComponent', () => {
   //   const service: GrantService = TestBed.get(GrantService);
   //   expect(service).toBeTruthy();
   // });
-
-  
-})
-
+});

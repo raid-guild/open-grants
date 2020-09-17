@@ -1,7 +1,10 @@
-import { Contract, Signer } from "ethers";
-import { Provider } from "ethers/providers";
+import { Contract, Signer } from 'ethers';
+import { Provider } from 'ethers/providers';
 
-export const callOnEach = async (fn: (x: any) => Promise<any>, wallets: Signer[]) => {
+export const callOnEach = async (
+  fn: (x: any) => Promise<any>,
+  wallets: Signer[],
+) => {
   let res = [];
 
   for (let wallet of wallets) {
@@ -10,12 +13,18 @@ export const callOnEach = async (fn: (x: any) => Promise<any>, wallets: Signer[]
   }
 
   return res;
-}
-  
-export const getEtherBalances = async (provider: Provider, wallets: Signer[]) => {
-  return await callOnEach((x) => provider.getBalance(x), wallets);
-}
+};
 
-export const getGranteesTargetFunding = async (contract: Contract, wallets: Signer[]) => {
-  return await callOnEach((x) => contract.getGranteeTargetFunding(x), wallets);
-}
+export const getEtherBalances = async (
+  provider: Provider,
+  wallets: Signer[],
+) => {
+  return await callOnEach(x => provider.getBalance(x), wallets);
+};
+
+export const getGranteesTargetFunding = async (
+  contract: Contract,
+  wallets: Signer[],
+) => {
+  return await callOnEach(x => contract.getGranteeTargetFunding(x), wallets);
+};

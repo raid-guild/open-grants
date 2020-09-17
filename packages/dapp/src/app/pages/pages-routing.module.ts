@@ -11,47 +11,53 @@ import { GrantComponent } from './grant/grant.component';
 // import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 // import { TabsPageComponent } from './tabs-page/tabs-page.component';
 
-const routes: Routes = [{
+const routes: Routes = [
+  {
     path: '',
     component: PagesComponent,
     children: [
-        {
-            path: '',
-            redirectTo: 'latest', pathMatch: 'full'
-        },
-        {
-            path: 'dashboard',
-            component: HomeComponent
-        }, {
-            path: 'latest',
-            component: LatestGrantsComponent
-        }, {
-            path: 'grant/:id',
-            component: GrantComponent,
-        }, {
+      {
+        path: '',
+        redirectTo: 'latest',
+        pathMatch: 'full',
+      },
+      {
+        path: 'dashboard',
+        component: HomeComponent,
+      },
+      {
+        path: 'latest',
+        component: LatestGrantsComponent,
+      },
+      {
+        path: 'grant/:id',
+        component: GrantComponent,
+      },
+      {
         //     path: 'profile',
         //     component: ProfileComponent,
         //     canActivate: [AuthGuard]
         // }, {
-            path: 'my-grants',
-            component: MyGrantsComponent,
-            canActivate: [AuthGuard]
-        }, {
-            path: 'create',
-            component: CreateNewGrantComponent,
-            canActivate: [AuthGuard]
-        },
-        // {
-        //     path: '**',
-        //     component: NotFoundComponent,
-        //     data: { title: '404' },
-        // }
-    ]
-}];
+        path: 'my-grants',
+        component: MyGrantsComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'create',
+        component: CreateNewGrantComponent,
+        canActivate: [AuthGuard],
+      },
+      // {
+      //     path: '**',
+      //     component: NotFoundComponent,
+      //     data: { title: '404' },
+      // }
+    ],
+  },
+];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule],
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class PagesRoutingModule {
-}
+export class PagesRoutingModule {}

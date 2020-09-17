@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, ExtraOptions } from '@angular/router';
 
-
 const routes: Routes = [
   {
     path: 'pages',
@@ -14,13 +13,11 @@ const routes: Routes = [
 const config: ExtraOptions = {
   useHash: true,
   onSameUrlNavigation: 'reload',
-  scrollPositionRestoration: 'enabled'
+  scrollPositionRestoration: 'enabled',
 };
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, config)
-  ],
-  exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes, config)],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

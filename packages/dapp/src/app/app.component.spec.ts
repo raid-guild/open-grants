@@ -10,7 +10,6 @@ import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('AppComponent', () => {
-
   let statusBarSpy, splashScreenSpy, platformReadySpy, platformSpy;
 
   beforeEach(async(() => {
@@ -30,9 +29,8 @@ describe('AppComponent', () => {
       imports: [
         ToastrModule.forRoot(),
         IonicModule.forRoot(),
-        RouterTestingModule.withRoutes([])
+        RouterTestingModule.withRoutes([]),
       ],
     }).compileComponents();
   }));
-
 });

@@ -1,9 +1,9 @@
-import chai from "chai";
-import * as waffle from "ethereum-waffle";
-import { Contract, Wallet, constants, Signer } from "ethers";
-import { BigNumber } from "ethers/utils/bignumber";
-import { AddressZero, Zero } from "ethers/constants";
-import { helpers } from "../helpers/helpers";
+import chai from 'chai';
+import * as waffle from 'ethereum-waffle';
+import { Contract, Wallet, constants, Signer } from 'ethers';
+import { BigNumber } from 'ethers/utils/bignumber';
+import { AddressZero, Zero } from 'ethers/constants';
+import { helpers } from '../helpers/helpers';
 import bre from '@nomiclabs/buidler';
 
 const fixture = helpers.fixtures.fixture;
@@ -11,12 +11,11 @@ const fixture = helpers.fixtures.fixture;
 chai.use(waffle.solidity);
 const { expect, assert } = chai;
 
-describe("Grant-Cancel", () => {
-
-  describe("Cancelling Grant", () => {
-    describe("With Ether", () => {
-      let _donorWallet: Signer
-      let _granteeWallet: Signer
+describe('Grant-Cancel', () => {
+  describe('Cancelling Grant', () => {
+    describe('With Ether', () => {
+      let _donorWallet: Signer;
+      let _granteeWallet: Signer;
 
       let _grantFromManagerWithEther: Contract;
       let _grantFromDonorWithEther: Contract;
@@ -26,48 +25,52 @@ describe("Grant-Cancel", () => {
           donorWallet,
           granteeWallet,
           grantFromManagerWithEther,
-          grantFromDonorWithEther
-        } = await fixture(bre);//waffle.loadFixture(fixture);
+          grantFromDonorWithEther,
+        } = await fixture(bre); //waffle.loadFixture(fixture);
         _donorWallet = donorWallet;
         _grantFromDonorWithEther = grantFromDonorWithEther;
         _grantFromManagerWithEther = grantFromManagerWithEther;
         _granteeWallet = granteeWallet;
       });
 
-      it("should fail if not GrantManager", async () => {
+      it('should fail if not GrantManager', async () => {
         await expect(_grantFromDonorWithEther.cancelGrant()).to.be.revertedWith(
-          "cancelGrant::Invalid Sender. Sender must be manager or expired."
+          'cancelGrant::Invalid Sender. Sender must be manager or expired.',
         );
       });
 
-      it("should cancel grant with emiting LogGrantCancellation event", async () => {
+      it('should cancel grant with emiting LogGrantCancellation event', async () => {
         await expect(_grantFromManagerWithEther.cancelGrant())
-          .to.emit(_grantFromManagerWithEther, "LogGrantCancellation")
+          .to.emit(_grantFromManagerWithEther, 'LogGrantCancellation')
           .withArgs();
         expect(await _grantFromManagerWithEther.grantCancelled()).to.be.true;
       });
 
-      it("should revert if cancelled already", async () => {
-        await expect(_grantFromManagerWithEther.cancelGrant()).to.be.revertedWith(
-          "cancelGrant::Status Error. Already cancelled."
-        );
+      it('should revert if cancelled already', async () => {
+        await expect(
+          _grantFromManagerWithEther.cancelGrant(),
+        ).to.be.revertedWith('cancelGrant::Status Error. Already cancelled.');
       });
 
-      it("should revert if donor tries to fund when grant is cancelled", async () => {
+      it('should revert if donor tries to fund when grant is cancelled', async () => {
         await expect(
           _donorWallet.sendTransaction({
             to: _grantFromDonorWithEther.address,
-            value: 1e6
-          })
-        ).to.be.revertedWith("fund::Status Error. Grant not open to funding.");
+            value: 1e6,
+          }),
+        ).to.be.revertedWith('fund::Status Error. Grant not open to funding.');
       });
 
-      describe("Grant funded by donor", () => {
+      describe('Grant funded by donor', () => {
         let _grantFromManagerWithEther: Contract;
         let _grantFromDonorWithEther: Contract;
 
         before(async () => {
-          const { granteeWallet, grantFromManagerWithEther, grantFromDonorWithEther } = await fixture(bre);// await waffle.loadFixture(fixture);
+          const {
+            granteeWallet,
+            grantFromManagerWithEther,
+            grantFromDonorWithEther,
+          } = await fixture(bre); // await waffle.loadFixture(fixture);
           _grantFromDonorWithEther = grantFromDonorWithEther;
           _grantFromManagerWithEther = grantFromManagerWithEther;
           _granteeWallet = granteeWallet;
@@ -75,22 +78,27 @@ describe("Grant-Cancel", () => {
           // funded by donor
           await _donorWallet.sendTransaction({
             to: _grantFromDonorWithEther.address,
-            value: 1e6
+            value: 1e6,
           });
 
           // Cancel Grant
           await _grantFromManagerWithEther.cancelGrant();
         });
 
-        it("Approve payout should revert if cancelled already", async () => {
-          await expect(_grantFromManagerWithEther.approvePayout(1e3, await _granteeWallet.getAddress())).to.be.revertedWith(
-            "approvePayout::Status Error. Cannot approve if grant is cancelled."
+        it('Approve payout should revert if cancelled already', async () => {
+          await expect(
+            _grantFromManagerWithEther.approvePayout(
+              1e3,
+              await _granteeWallet.getAddress(),
+            ),
+          ).to.be.revertedWith(
+            'approvePayout::Status Error. Cannot approve if grant is cancelled.',
           );
         });
       });
     });
 
-    describe("With Token", () => {
+    describe('With Token', () => {
       let _granteeWallet: Signer;
       let _grantFromManagerWithToken: Contract;
       let _grantFromDonorWithToken: Contract;
@@ -101,8 +109,8 @@ describe("Grant-Cancel", () => {
           tokenFromDonor,
           granteeWallet,
           grantFromManagerWithToken,
-          grantFromDonorWithToken
-        } = await fixture(bre);//await waffle.loadFixture(fixture);
+          grantFromDonorWithToken,
+        } = await fixture(bre); //await waffle.loadFixture(fixture);
         _grantFromDonorWithToken = grantFromDonorWithToken;
         _grantFromManagerWithToken = grantFromManagerWithToken;
         _granteeWallet = granteeWallet;
@@ -110,41 +118,46 @@ describe("Grant-Cancel", () => {
         await tokenFromDonor.approve(grantFromDonorWithToken.address, 1000);
       });
 
-      it("should permit anyone to cancel if past funding deadline");
-      it("should permit anyone to cancel if past contract expiration");
+      it('should permit anyone to cancel if past funding deadline');
+      it('should permit anyone to cancel if past contract expiration');
 
-      it("should fail if not GrantManager", async () => {
+      it('should fail if not GrantManager', async () => {
         await expect(_grantFromDonorWithToken.cancelGrant()).to.be.revertedWith(
-          "cancelGrant::Invalid Sender. Sender must be manager or expired."
+          'cancelGrant::Invalid Sender. Sender must be manager or expired.',
         );
       });
 
-      it("should cancel grant with emiting LogGrantCancellation event", async () => {
+      it('should cancel grant with emiting LogGrantCancellation event', async () => {
         await expect(_grantFromManagerWithToken.cancelGrant())
-          .to.emit(_grantFromManagerWithToken, "LogGrantCancellation")
+          .to.emit(_grantFromManagerWithToken, 'LogGrantCancellation')
           .withArgs();
         expect(await _grantFromManagerWithToken.grantCancelled()).to.be.true;
       });
 
-      it("should revert if cancelled already", async () => {
-        await expect(_grantFromManagerWithToken.cancelGrant()).to.be.revertedWith(
-          "cancelGrant::Status Error. Already cancelled."
-        );
+      it('should revert if cancelled already', async () => {
+        await expect(
+          _grantFromManagerWithToken.cancelGrant(),
+        ).to.be.revertedWith('cancelGrant::Status Error. Already cancelled.');
       });
 
-      it("should revert if donor tries to fund when grant is cancelled", async () => {
-        await expect(_grantFromDonorWithToken.fund(_fundAmount)).to.be.revertedWith(
-          "fund::Status Error. Grant not open to funding."
-        );
+      it('should revert if donor tries to fund when grant is cancelled', async () => {
+        await expect(
+          _grantFromDonorWithToken.fund(_fundAmount),
+        ).to.be.revertedWith('fund::Status Error. Grant not open to funding.');
       });
 
-      describe("Grant funded by donor", () => {
+      describe('Grant funded by donor', () => {
         let _grantFromManagerWithToken: Contract;
         let _grantFromDonorWithToken: Contract;
         const _fundAmount = 1000;
 
         before(async () => {
-          const { tokenFromDonor, granteeWallet, grantFromManagerWithToken, grantFromDonorWithToken } = await fixture(bre);//await waffle.loadFixture(fixture);
+          const {
+            tokenFromDonor,
+            granteeWallet,
+            grantFromManagerWithToken,
+            grantFromDonorWithToken,
+          } = await fixture(bre); //await waffle.loadFixture(fixture);
           _grantFromDonorWithToken = grantFromDonorWithToken;
           _grantFromManagerWithToken = grantFromManagerWithToken;
           _granteeWallet = granteeWallet;
@@ -156,9 +169,14 @@ describe("Grant-Cancel", () => {
           await _grantFromManagerWithToken.cancelGrant();
         });
 
-        it("Approve payout should revert if cancelled already", async () => {
-          await expect(_grantFromManagerWithToken.approvePayout(_fundAmount, await _granteeWallet.getAddress())).to.be.revertedWith(
-            "approvePayout::Status Error. Cannot approve if grant is cancelled."
+        it('Approve payout should revert if cancelled already', async () => {
+          await expect(
+            _grantFromManagerWithToken.approvePayout(
+              _fundAmount,
+              await _granteeWallet.getAddress(),
+            ),
+          ).to.be.revertedWith(
+            'approvePayout::Status Error. Cannot approve if grant is cancelled.',
           );
         });
       });
