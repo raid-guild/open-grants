@@ -13,7 +13,7 @@ export const getStaticProps = async () => {
   return {
     props: {
       grants,
-      revalidate: true,
+      revalidate: 1,
     },
   };
 };
