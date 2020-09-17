@@ -67,6 +67,7 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
   const disconnect = useCallback(async () => {
     web3Modal?.clearCachedProvider();
     setAccount('');
+    setEthersProvider(null);
   }, [web3Modal]);
 
   useEffect(() => {

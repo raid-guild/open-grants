@@ -10,7 +10,6 @@ import {
 import Error from 'next/error';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { parseGrant } from 'utils/grants';
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -50,11 +49,10 @@ export const getStaticProps = async (
 ) => {
   const address = context.params?.address;
   const grant = await getGrant(address);
-  const parsedGrant = await parseGrant(grant);
 
   return {
     props: {
-      grant: parsedGrant,
+      grant,
       revalidate: true,
     },
   };

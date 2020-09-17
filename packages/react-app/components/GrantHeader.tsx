@@ -1,28 +1,41 @@
 import { Button, Text, VStack } from '@chakra-ui/core';
+import { Grant } from 'graphql/autogen/types';
 import React from 'react';
-import { ParsedGrant } from 'utils/grants';
 
+import { Link } from 'components/Link';
 type Props = {
-  grant: ParsedGrant;
+  grant: Grant;
 };
 export const GrantHeader: React.FC<Props> = ({ grant }) => {
   return (
     <VStack
-      py={10}
-      spacing={5}
+      px="2rem"
       w="100%"
-      justify="space-around"
+      justify="center"
       color="white"
       background="green.500"
+      minH="30rem"
     >
-      <Text fontSize="3rem" fontWeight="800">
+      <Text
+        fontSize={{ base: '2rem', md: '3rem' }}
+        fontWeight="800"
+        textAlign="center"
+      >
         {grant.name}
       </Text>
       <Text>{grant.description}</Text>
+      <Link href={grant.link} isExternal mb={8}>
+        {grant.link}
+      </Link>
       <Button
         borderRadius="full"
-        variant="outline"
-        _hover={{ background: 'green.600' }}
+        variant="solid"
+        color="dark"
+        background="cyan.100"
+        _hover={{ background: 'cyan.200' }}
+        size="lg"
+        fontWeight="500"
+        px={10}
       >
         Fund this grant
       </Button>

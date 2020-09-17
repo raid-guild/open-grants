@@ -1,11 +1,11 @@
-import { Link } from '@chakra-ui/core';
+import { Link as ChakraLink } from '@chakra-ui/core';
 import NextLink, { LinkProps } from 'next/link';
 import React from 'react';
 
-type Props = Omit<React.ComponentProps<typeof Link>, keyof LinkProps> &
+type Props = Omit<React.ComponentProps<typeof ChakraLink>, keyof LinkProps> &
   LinkProps;
 
-export const MetaLink: React.FC<Props> = ({
+export const Link: React.FC<Props> = ({
   children,
   href,
   as,
@@ -19,9 +19,9 @@ export const MetaLink: React.FC<Props> = ({
 }) => {
   if (isExternal && typeof href === 'string') {
     return (
-      <Link color="cyan.400" isExternal href={href} {...props}>
+      <ChakraLink isExternal href={href} {...props}>
         {children}
-      </Link>
+      </ChakraLink>
     );
   }
 
@@ -36,9 +36,9 @@ export const MetaLink: React.FC<Props> = ({
       shallow={shallow}
     >
       {/*  NextLink passes the href */}
-      <Link color="cyan.400" {...props}>
+      <ChakraLink {...props}>
         {children}
-      </Link>
+      </ChakraLink>
     </NextLink>
   );
 };

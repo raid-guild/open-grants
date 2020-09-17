@@ -1,6 +1,7 @@
 import { Button, Flex, HStack, Text, useDisclosure } from '@chakra-ui/core';
 import { NavBar } from 'components/NavBar';
 import { Web3Context } from 'contexts/Web3Context';
+import { Link } from 'components/Link';
 import React, { useContext } from 'react';
 
 export const Header: React.FC = () => {
@@ -14,8 +15,8 @@ export const Header: React.FC = () => {
       align="center"
       justify="space-between"
       wrap="wrap"
-      py="6"
-      px="8"
+      py={6}
+      px={8}
       background="green.500"
       color="white"
       fontWeight="500"
@@ -24,8 +25,11 @@ export const Header: React.FC = () => {
       <HStack spacing={4}>
         <Button
           variant="link"
-          _focus={{ outline: 'none', border: 'none' }}
           onClick={onOpen}
+          minW={4}
+          p={2}
+          ml={-2}
+          _hover={{ background: 'rgba(0,0,0,0.1)' }}
         >
           <svg
             fill="white"
@@ -37,7 +41,9 @@ export const Header: React.FC = () => {
             <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
           </svg>
         </Button>
-        <Text fontSize="1.25rem">Open Grants</Text>
+        <Link href="/" fontSize="1.25rem">
+          Open Grants
+        </Link>
       </HStack>
 
       <HStack spacing={4}>
@@ -46,8 +52,7 @@ export const Header: React.FC = () => {
             onClick={connectWeb3}
             size="md"
             textTransform="uppercase"
-            variant="ghost"
-            _hover={{ background: 'green.600' }}
+            variant="link"
             color="white"
           >
             Sign In

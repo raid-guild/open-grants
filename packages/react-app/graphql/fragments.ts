@@ -11,6 +11,10 @@ export const GrantFragment = gql`
     grantees
     amounts
     totalFunded
+    name
+    description
+    link
+    contactLink
   }
 `;
 // funds

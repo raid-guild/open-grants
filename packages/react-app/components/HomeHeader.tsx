@@ -1,32 +1,44 @@
 import { Button, Image, Text, VStack } from '@chakra-ui/core';
 import React from 'react';
+import NextLink from 'next/link';
 
-import EthereumImage from '../assets/ethereum.svg';
+import EthereumImage from 'assets/ethereum.svg';
 
 export const HomeHeader: React.FC = () => {
   return (
     <VStack
-      py={10}
-      spacing={5}
+      pt="4rem"
+      pb="5rem"
+      px="2rem"
+      spacing={8}
       w="100%"
-      justify="space-around"
       color="white"
       background="green.500"
     >
-      <Text fontSize="3rem" fontWeight="800">
+      <Text
+        fontSize={{ base: '2rem', md: '3rem' }}
+        fontWeight="800"
+        textAlign="center"
+      >
         Open Grants
       </Text>
       <Image src={EthereumImage} />
-      <Text>
+      <Text textAlign="center">
         Together we empower developers to build the next generation of ETH
       </Text>
-      <Button
-        borderRadius="full"
-        variant="outline"
-        _hover={{ background: 'green.600' }}
-      >
-        Read the FAQ
-      </Button>
+      <NextLink href="/faq">
+        <Button
+          borderRadius="full"
+          variant="outline"
+          borderColor="white"
+          _hover={{ background: 'green.600' }}
+          px={10}
+          fontWeight="500"
+          size="lg"
+        >
+          Read the FAQ
+        </Button>
+      </NextLink>
     </VStack>
   );
 };

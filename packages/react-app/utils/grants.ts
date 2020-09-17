@@ -1,39 +1,29 @@
-import { utils } from 'ethers';
-import { Grant } from 'graphql/autogen/types';
+import { Contract, providers } from 'ethers';
+import { CONFIG } from '../config';
 
-import { getMetadata, Metadata } from './ipfs';
+const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
+const ZERO_HASH = '0x';
 
-export type ParsedGrant = Grant & Metadata;
+export const createGrant = async (
+  ethersProvider: providers.Web3Provider,
+  grantees: Array<string>,
+  amounts: Array<string>,
+  metadataHash: string,
+) => {
+  const abi = [
+    'function create(address[] _grantees, uint256[] _amounts, address _currency, bytes _uri, bytes _extraData) returns (address)',
+  ];
+  const factory = new Contract(
+    CONFIG.grantFactory,
+    abi,
+    ethersProvider.getSigner(),
+  );
 
-export const parseGrant = async (
-  grant: Grant | undefined | null,
-): Promise<ParsedGrant | undefined> => {
-  if (!grant) return undefined;
-  const unnamedGrant = {
-    ...grant,
-    name: 'Unnamed Grant',
-    description: '',
-    link: '',
-    additionalLink: '',
-  };
-  try {
-    if (grant.uri && grant.uri !== '0x') {
-      const uri = new Uint8Array(utils.arrayify(grant.uri));
-      const metadata = await getMetadata(uri);
-      return {
-        ...unnamedGrant,
-        ...metadata,
-      };
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log(error);
-  }
-  return unnamedGrant;
-};
-
-export const parseGrants = async (
-  grants: Array<Grant | undefined | null>,
-): Promise<Array<ParsedGrant | undefined>> => {
-  return Promise.all(grants.map(grant => parseGrant(grant)));
+  return factory.create(
+    grantees,
+    amounts,
+    ADDRESS_ZERO,
+    metadataHash,
+    ZERO_HASH,
+  );
 };

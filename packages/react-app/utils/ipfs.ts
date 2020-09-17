@@ -1,5 +1,5 @@
-import CID from 'cids';
 import IPFSClient from 'ipfs-http-client';
+import Base58 from 'base-58';
 
 const ipfs = new IPFSClient({
   host: 'ipfs.infura.io',
@@ -11,19 +11,12 @@ export type Metadata = {
   name: string;
   description: string;
   link: string;
-  additionalLink: string;
+  contactLink: string;
 };
 
-export const uploadMetadata = async (
-  metadata: Metadata,
-): Promise<Uint8Array> => {
-  const node = await ipfs.dag.put(metadata);
-  const cids = new CID(1, 'dag-cbor', node.multihash);
-  return cids.bytes;
-};
-
-export const getMetadata = async (bytes: Uint8Array): Promise<Metadata> => {
-  const cid = new CID(bytes);
-  const data = await ipfs.dag.get(cid);
-  return data.value;
+export const uploadMetadata = async (metadata: Metadata): Promise<string> => {
+  const objectString = JSON.stringify(metadata);
+  const bufferedString = Buffer.from(objectString);
+  const node = await ipfs.add(bufferedString);
+  return '0x' + Buffer.from(Base58.decode(node.path)).toString('hex');
 };

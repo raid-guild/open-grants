@@ -2,6 +2,9 @@ import chakraTheme, { Theme as ChakraTheme } from '@chakra-ui/theme';
 
 interface MetaColors {
   background: string;
+  text: string;
+  dark: string;
+  white60: string;
 }
 
 interface MetaTheme {
@@ -35,6 +38,18 @@ export const theme: Theme = {
   },
   colors: {
     ...chakraTheme.colors,
+    cyan: {
+      50: '#dffffe',
+      100: '#b5fcf7',
+      200: '#89faf9',
+      300: '#5feff8',
+      400: '#40e0f6',
+      500: '#33bedd',
+      600: '#248aac',
+      700: '#155a7a',
+      800: '#032e4a',
+      900: '#000f1a',
+    },
     green: {
       50: '#dcfef7',
       100: '#b7f5e7',
@@ -47,19 +62,22 @@ export const theme: Theme = {
       800: '#004233',
       900: '#00180f',
     },
-    background: '#EAECEF',
     gray: {
-      50: '#fafcff',
-      100: '#e8f3ff',
-      200: '#cfd7e4',
-      300: '#b2bdcd',
-      400: '#95a3b6',
-      500: '#7888a0',
-      600: '#5f6f87',
-      700: '#49566a',
-      800: '#343d4d',
-      900: '#1d2531',
+      50: '#e8f3ff',
+      100: '#cfd7e4',
+      200: '#b2bdcd',
+      300: '#95a2b6',
+      400: '#7888a0',
+      500: '#5f6e87',
+      600: '#49566a',
+      700: '#343d4d',
+      800: '#1d2531',
+      900: '#070c18',
     },
+    background: '#EAECEF',
+    text: '#5D6A74',
+    dark: '#1A3344',
+    white60: 'rgba(255, 255, 255, 0.6)'
   },
   fonts: {
     ...chakraTheme.fonts,
