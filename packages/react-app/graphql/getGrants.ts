@@ -6,7 +6,12 @@ import { GrantFragment } from './fragments';
 
 const grantsQuery = gql`
   query GetGrants($first: Int) {
-    grants(first: $first) {
+    grants(
+      first: $first
+      orderBy: timestamp
+      where: { name_not: "" }
+      orderDirection: desc
+    ) {
       ...GrantFragment
     }
   }

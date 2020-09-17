@@ -11,7 +11,8 @@ import { fetchGrantInfo } from './helpers';
 export function handleLogNewGrant(event: LogNewGrant): void {
   let grant = new Grant(event.params.grant.toHexString());
   grant.factoryAddress = event.address;
-  grant.createBy = event.transaction.from;
+  grant.createdBy = event.transaction.from;
+  grant.timestamp = event.block.timestamp;
   grant.grantId = event.params.id;
   grant.grantAddress = event.params.grant;
   grant.grantees = event.params.grantees as Array<Bytes>;
@@ -35,6 +36,7 @@ export function handleLogNewGrant(event: LogNewGrant): void {
 export function handleLogFunding(event: LogFunding): void {
   let fund = new Fund(event.transaction.hash.toHexString());
   fund.grantAddress = event.address;
+  fund.timestamp = event.block.timestamp;
   fund.donor = event.params.donor;
   fund.amount = event.params.value;
   fund.save();
@@ -61,6 +63,7 @@ export function handleLogPayment(event: LogPayment): void {
   let payment = new Payment(event.logIndex.toHexString());
   payment.grantee = event.params.grantee;
   payment.grantAddress = event.address;
+  payment.timestamp = event.block.timestamp;
   payment.amount = event.params.value;
   payment.save();
   log.info('New Payment: {}', [payment.id]);

@@ -36,9 +36,7 @@ export const Link: React.FC<Props> = ({
       shallow={shallow}
     >
       {/*  NextLink passes the href */}
-      <ChakraLink {...props}>
-        {children}
-      </ChakraLink>
+      <ChakraLink {...props}>{children}</ChakraLink>
     </NextLink>
   );
 };
