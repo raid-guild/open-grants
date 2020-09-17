@@ -4,7 +4,7 @@ import React from 'react';
 
 const Create: React.FC = () => (
   <VStack w="100%">
-      <CreateGrantForm />
+    <CreateGrantForm />
   </VStack>
 );
 

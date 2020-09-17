@@ -1,14 +1,13 @@
-import { SimpleGrid, HStack, VStack, Text, Flex } from '@chakra-ui/core';
+import { Flex,HStack, SimpleGrid, Text, VStack } from '@chakra-ui/core';
 import { GrantTile } from 'components/GrantTile';
 import { HomeHeader } from 'components/HomeHeader';
 import { getGrants } from 'graphql/getGrants';
-import { InferGetStaticPropsType } from 'next';
-import React from 'react';
-
 import { FeaturedIcon } from 'icons/FeaturedIcon';
 import { LatestIcon } from 'icons/LatestIcon';
 import { TrendingIcon } from 'icons/TrendingIcon';
-import { InNeedIcon } from 'icons/InNeedIcon';
+import { InferGetStaticPropsType } from 'next';
+import React from 'react';
+// import { InNeedIcon } from 'icons/InNeedIcon';
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -47,7 +46,7 @@ const Home: React.FC<Props> = ({ grants }) => (
         _hover={{ color: 'green.500' }}
         cursor="pointer"
       >
-        <LatestIcon boxSize="4.25rem" mt="-0.25rem"/>
+        <LatestIcon boxSize="4.25rem" mt="-0.25rem" />
         <Text fontWeight="600" fontSize="lg" textTransform="uppercase" mt={2}>
           Latest
         </Text>

@@ -1,7 +1,14 @@
-import { Flex, Button, Text, VStack, SimpleGrid, Spacer } from '@chakra-ui/core';
+import {
+  Button,
+  Flex,
+  SimpleGrid,
+  Spacer,
+  Text,
+  VStack,
+} from '@chakra-ui/core';
+import { Link } from 'components/Link';
 import { Grant } from 'graphql/autogen/types';
 import NextLink from 'next/link';
-import { Link } from 'components/Link';
 import React from 'react';
 import { formatValue } from 'utils/helpers';
 
@@ -35,8 +42,8 @@ export const GrantTile: React.FC<Props> = ({ grant }) => {
           </Link>
           <Text fontSize="sm" mb={8}>
             {grant.description}
-        </Text>
-        <Spacer />
+          </Text>
+          <Spacer />
           <SimpleGrid columns={2} spacing={4} mb={16} letterSpacing="0.3px">
             <Flex direction="column">
               <Text fontWeight="500" fontSize="2xl">

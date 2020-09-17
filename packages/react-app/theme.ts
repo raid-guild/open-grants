@@ -77,7 +77,7 @@ export const theme: Theme = {
     background: '#EAECEF',
     text: '#5D6A74',
     dark: '#1A3344',
-    white60: 'rgba(255, 255, 255, 0.6)'
+    white60: 'rgba(255, 255, 255, 0.6)',
   },
   fonts: {
     ...chakraTheme.fonts,

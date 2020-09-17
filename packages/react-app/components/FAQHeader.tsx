@@ -5,9 +5,8 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/core';
-import React from 'react';
-
 import { SearchIcon } from 'icons/SearchIcon';
+import React from 'react';
 
 export const FAQHeader: React.FC = () => {
   return (
@@ -37,11 +36,9 @@ export const FAQHeader: React.FC = () => {
         borderRadius="full"
         variant="solid"
       >
-        <InputLeftElement
-          mx={1}
-          pointerEvents="none"
-          children={<SearchIcon />}
-        />
+        <InputLeftElement mx={1} pointerEvents="none">
+          <SearchIcon />
+        </InputLeftElement>
         <Input
           background="transparent"
           border="none"
