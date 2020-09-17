@@ -16,7 +16,7 @@ export const getStaticProps = async () => {
   return {
     props: {
       grants: grants.filter(grant => grant.name !== ''),
-      revalidate: true,
+      revalidate: 1,
     },
   };
 };
