@@ -1,8 +1,7 @@
 import { Button, Image, Text, VStack } from '@chakra-ui/core';
-import React from 'react';
-import NextLink from 'next/link';
-
 import EthereumImage from 'assets/ethereum.svg';
+import NextLink from 'next/link';
+import React from 'react';
 
 export const HomeHeader: React.FC = () => {
   return (

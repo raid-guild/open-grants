@@ -10,5 +10,5 @@ declare module 'fake-tag' {
   ): string;
   export = gql;
 }
-
 declare module 'ipfs-http-client';
+declare module 'base-58';

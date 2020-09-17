@@ -15,11 +15,11 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
 const GrantPage: React.FC<Props> = ({ grant }) => {
   const router = useRouter();
-  if (!grant) {
-    return <Error statusCode={404} />;
-  }
   if (router.isFallback) {
     return <div>Loading...</div>;
+  }
+  if (!grant) {
+    return <Error statusCode={404} />;
   }
 
   return (

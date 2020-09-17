@@ -1,5 +1,4 @@
 import {
-  Flex,
   Button,
   Drawer,
   DrawerBody,
@@ -8,13 +7,13 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  Flex,
   VStack,
 } from '@chakra-ui/core';
-import { Web3Context } from 'contexts/Web3Context';
-import { Link } from 'components/Link';
-import React, { useContext } from 'react';
-
 import DrawerBG from 'assets/navbar.jpg';
+import { Link } from 'components/Link';
+import { Web3Context } from 'contexts/Web3Context';
+import React, { useContext } from 'react';
 
 type Props = {
   isOpen: boolean;
@@ -42,11 +41,7 @@ export const NavBar: React.FC<Props> = ({ isOpen, onClose }) => {
             h="100%"
             p={2}
           >
-            <DrawerCloseButton
-              top={6}
-              right={6}
-              fontSize={18}
-            />
+            <DrawerCloseButton top={6} right={6} fontSize={18} />
             <DrawerHeader fontWeight={600} fontSize="2xl" mb={4}>
               Menu
             </DrawerHeader>

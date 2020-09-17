@@ -1,11 +1,12 @@
-import { Text, VStack, Divider, Button } from '@chakra-ui/core';
-import React, { useState, useContext } from 'react';
+import { Button,Divider, Text, VStack } from '@chakra-ui/core';
+import { Web3Context } from 'contexts/Web3Context';
+import React, { useContext,useState } from 'react';
+import { createGrant } from 'utils/grants';
+import { uploadMetadata } from 'utils/ipfs';
+
+import { GranteesInput } from './GranteesInput';
 import { Link } from './Link';
 import { TextInput } from './TextInput';
-import { GranteesInput } from './GranteesInput';
-import { uploadMetadata } from 'utils/ipfs';
-import { createGrant } from 'utils/grants';
-import { Web3Context } from 'contexts/Web3Context';
 
 const reduceEmpty = (isValid: boolean, str: string): boolean => {
   return isValid && str !== '';
@@ -28,7 +29,7 @@ export const CreateGrantForm: React.FC = () => {
     const isValid =
       grantees.reduce(reduceEmpty, true) &&
       amounts.reduce(reduceEmpty, true) &&
-      100.0 === amounts.reduce(reduceTotal, 0.0);
+      amounts.reduce(reduceTotal, 0.0) === 100.0;
     if (!ethersProvider || !isValid) {
       // eslint-disable-next-line no-console
       console.log({ validateError: 'Validation Error' });
@@ -119,10 +120,10 @@ export const CreateGrantForm: React.FC = () => {
         mb={8}
         onClick={() => {
           setTotal(t => t + 1);
-          let newGrantees = grantees.slice();
+          const newGrantees = grantees.slice();
           newGrantees.push('');
           setGrantees(newGrantees);
-          let newAmounts = amounts.slice();
+          const newAmounts = amounts.slice();
           newAmounts.push('');
           setAmounts(newAmounts);
         }}

@@ -1,4 +1,5 @@
-import { Contract, providers } from 'ethers';
+import { Contract, providers,Transaction } from 'ethers';
+
 import { CONFIG } from '../config';
 
 const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
@@ -9,7 +10,7 @@ export const createGrant = async (
   grantees: Array<string>,
   amounts: Array<string>,
   metadataHash: string,
-) => {
+): Promise<Transaction> => {
   const abi = [
     'function create(address[] _grantees, uint256[] _amounts, address _currency, bytes _uri, bytes _extraData) returns (address)',
   ];

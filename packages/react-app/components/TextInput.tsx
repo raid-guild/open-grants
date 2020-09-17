@@ -1,4 +1,4 @@
-import { Flex, Text, Input } from '@chakra-ui/core';
+import { Flex, Input,Text } from '@chakra-ui/core';
 import React from 'react';
 
 type Props = {
@@ -18,7 +18,7 @@ export const TextInput: React.FC<Props> = ({
   setValue,
   maxLength,
 }) => {
-  //TODO add a check for validating if links are valid
+  // TODO add a check for validating if links are valid
   return (
     <Flex direction="column" w="100%">
       <Flex justify="space-between" align="center" fontSize="sm" w="100%" p={1}>

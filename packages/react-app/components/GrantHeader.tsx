@@ -1,8 +1,8 @@
 import { Button, Text, VStack } from '@chakra-ui/core';
+import { Link } from 'components/Link';
 import { Grant } from 'graphql/autogen/types';
 import React from 'react';
 
-import { Link } from 'components/Link';
 type Props = {
   grant: Grant;
 };

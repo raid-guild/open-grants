@@ -1,7 +1,7 @@
 import { Button, Flex, HStack, Text, useDisclosure } from '@chakra-ui/core';
+import { Link } from 'components/Link';
 import { NavBar } from 'components/NavBar';
 import { Web3Context } from 'contexts/Web3Context';
-import { Link } from 'components/Link';
 import React, { useContext } from 'react';
 
 export const Header: React.FC = () => {
