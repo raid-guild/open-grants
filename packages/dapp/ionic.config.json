@@ -1,7 +1,0 @@
-{
-  "name": "grantPlatform",
-  "integrations": {
-    "cordova": {}
-  },
-  "type": "angular"
-}

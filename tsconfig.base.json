@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
     "module": "esnext",
-    "target": "es6",
+    "target": "esnext",
     "moduleResolution": "node",
     "jsx": "react",
-    "outDir": "./dist",
     "skipLibCheck": true,
     "strict": true,
     "declaration": true,
@@ -19,8 +18,7 @@
     "resolveJsonModule": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "typeRoots": ["./packages/@types", "./node_modules/@types"]
+    "allowSyntheticDefaultImports": true
   },
   "exclude": ["**/node_modules", "**/dist"]
 }
