@@ -1,0 +1,19 @@
+name: Open Grants CI
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  check:
+    name: Lint & Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Install Dependencies
+        run: yarn
+      - name: Lintcheck
+        run: yarn dapp:lint
+      - name: Typecheck
+        run: yarn dapp:typecheck

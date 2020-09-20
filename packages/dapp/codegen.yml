@@ -1,0 +1,12 @@
+overwrite: true
+schema: 'https://api.thegraph.com/subgraphs/name/dan13ram/kovan-grants-platform'
+generates:
+  ./src/graphql/autogen/types.tsx:
+    documents:
+      - ./src/graphql/**/(!(*.d)).ts
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-urql
+      - add:
+          content: '/* eslint-disable */'

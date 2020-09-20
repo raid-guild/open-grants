@@ -1,7 +1,7 @@
 node_modules
 *.sw[a-z]
 .env
-build/*
+build
 .coverage*
 coverage/
 coverage.json
@@ -39,3 +39,5 @@ www
 *.Zip
 .history
 .DS_Store
+.firebase/*
+firebase-debug.log*
