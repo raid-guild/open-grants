@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Open Grants CI
 on:
   push:
     branches:
