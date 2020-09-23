@@ -14,6 +14,8 @@
     "subgraph:build": "yarn workspace @open-grants/subgraph build",
     "subgraph:deploy-kovan": "yarn workspace @open-grants/subgraph deploy-kovan",
     "dapp:start": "yarn workspace @open-grants/dapp start",
+    "dapp:generate": "yarn workspace @open-grants/dapp generate",
+    "generate": "yarn dapp:generate",
     "dapp:lint": "yarn workspace @open-grants/dapp lint",
     "lint": "yarn dapp:lint",
     "dapp:typecheck": "yarn workspace @open-grants/dapp typecheck",
