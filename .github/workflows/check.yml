@@ -12,7 +12,9 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@master
       - name: Install Dependencies
-        run: yarn
+        run: yarn --frozen-lockfile
+      - name: Generate graphql types
+        run: yarn dapp:generate
       - name: Lintcheck
         run: yarn dapp:lint
       - name: Typecheck

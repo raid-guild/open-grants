@@ -2,6 +2,7 @@ node_modules
 *.sw[a-z]
 .env
 build
+autogen
 .coverage*
 coverage/
 coverage.json
