@@ -1,7 +1,6 @@
+import { CONFIG } from 'config';
 import { Contract, providers, utils } from 'ethers';
 import { Metadata, uploadMetadata } from 'utils/ipfs';
-
-import { CONFIG } from '../config';
 
 const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
 const ZERO_HASH = '0x';
