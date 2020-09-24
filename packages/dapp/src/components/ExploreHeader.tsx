@@ -1,42 +1,55 @@
 import { Image, Text, VStack } from '@chakra-ui/core';
-import EthereumImage from 'assets/ethereum.svg';
+import EthereumCrystalImage from 'assets/eth-crystal-wave.png';
+import HeaderBG from 'assets/header.jpg';
 import { LinkButton } from 'components/Link';
 import React from 'react';
 
 export const ExploreHeader: React.FC = () => {
   return (
     <VStack
-      pt="4rem"
-      pb="5rem"
-      px="2rem"
-      spacing={8}
+      py="5rem"
       w="100%"
-      color="white"
-      background="green.500"
+      bgImage={`url(${HeaderBG})`}
+      bgSize="cover"
+      bgRepeat="no-repeat"
+      overflow="hidden"
     >
-      <Text
-        fontSize={{ base: '2rem', md: '3rem' }}
-        fontWeight="800"
-        textAlign="center"
-      >
-        Open Grants
-      </Text>
-      <Image src={EthereumImage} />
-      <Text textAlign="center">
-        Together we empower developers to build the next generation of ETH
-      </Text>
-      <LinkButton
-        to="/faq"
-        borderRadius="full"
-        variant="outline"
-        borderColor="white"
-        _hover={{ background: 'green.600' }}
-        px={10}
-        fontWeight="500"
-        size="lg"
-      >
-        Read the FAQ
-      </LinkButton>
+      <VStack w="100%" spacing={8} color="white" position="relative">
+        <Image
+          position="absolute"
+          src={EthereumCrystalImage}
+          left="50%"
+          top={{ base: '40%', sm: '45%', md: '50%' }}
+          transform="translate(-78.15%, -23.35%)"
+          maxH="27rem"
+          minW="30rem"
+        />
+        <Text
+          fontSize={{ base: '2rem', md: '3rem' }}
+          fontWeight="800"
+          textAlign="center"
+          position="relative"
+        >
+          Open Grants
+        </Text>
+        <VStack h={{ base: '4rem', md: '8rem' }} />
+        <Text textAlign="center" position="relative">
+          Together we empower developers to build the next generation of ETH
+        </Text>
+        <LinkButton
+          to="/faq"
+          borderRadius="full"
+          variant="outline"
+          borderColor="white"
+          _hover={{ background: 'black10' }}
+          px={10}
+          fontWeight="500"
+          size="lg"
+          position="relative"
+        >
+          Read the FAQ
+        </LinkButton>
+      </VStack>
     </VStack>
   );
 };

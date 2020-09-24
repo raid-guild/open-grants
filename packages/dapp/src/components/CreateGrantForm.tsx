@@ -1,8 +1,8 @@
 import { Button, Divider, Text, VStack } from '@chakra-ui/core';
 import { Web3Context } from 'contexts/Web3Context';
 import React, { useContext, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { createGrant } from 'utils/grants';
-import { uploadMetadata } from 'utils/ipfs';
 
 import { GranteesInput } from './GranteesInput';
 import { Link } from './Link';
@@ -25,6 +25,7 @@ export const CreateGrantForm: React.FC = () => {
   const [grantees, setGrantees] = useState<Array<string>>(['']);
   const [amounts, setAmounts] = useState<Array<string>>(['']);
   const [total, setTotal] = useState<number>(1);
+  const history = useHistory();
   const submitForm = async () => {
     const isValid =
       grantees.reduce(reduceEmpty, true) &&
@@ -41,13 +42,15 @@ export const CreateGrantForm: React.FC = () => {
       link,
       contactLink,
     };
-    const ipfsHash = await uploadMetadata(metadata);
-    await createGrant(
+    const grantAddress = await createGrant(
       ethersProvider,
       grantees,
-      amounts.map(a => Math.floor(Number(a))),
-      ipfsHash,
+      amounts,
+      metadata,
     );
+    if (grantAddress) {
+      history.push(`/grant/${grantAddress}`);
+    }
   };
   return (
     <VStack

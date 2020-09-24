@@ -60,7 +60,7 @@ export const NavBar: React.FC<Props> = ({ isOpen, onClose }) => {
                     Create a Grant
                   </Link>
                 )}
-                <Link to="/faq" onClick={onClose}>
+                <Link to="/faq" onClick={onClose} minW="2rem">
                   FAQ
                 </Link>
               </VStack>

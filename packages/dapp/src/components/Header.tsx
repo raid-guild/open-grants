@@ -7,18 +7,21 @@ import {
   PopoverContent,
   PopoverTrigger,
   Text,
-  useDisclosure,
 } from '@chakra-ui/core';
+import HeaderBG from 'assets/header.jpg';
 import { Link } from 'components/Link';
-import { NavBar } from 'components/NavBar';
 import { Web3Context } from 'contexts/Web3Context';
 import { ArrowDownIcon } from 'icons/ArrowDownIcon';
 import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { getProfile, Profile } from 'utils/3box';
 
-export const Header: React.FC = () => {
+type Props = {
+  onOpen: () => void;
+};
+
+export const Header: React.FC<Props> = ({ onOpen }) => {
   const { account, connectWeb3, disconnect } = useContext(Web3Context);
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const [profile, setProfile] = useState<Profile | undefined>();
   useEffect(() => {
     async function fetchProfile() {
@@ -28,6 +31,9 @@ export const Header: React.FC = () => {
       fetchProfile();
     }
   }, [account]);
+  const history = useHistory();
+  const bgImage =
+    history.location.pathname === '/create' ? `url(${HeaderBG})` : undefined;
 
   return (
     <Flex
@@ -36,13 +42,16 @@ export const Header: React.FC = () => {
       align="center"
       justify="space-between"
       wrap="wrap"
-      py={4}
       px={{ base: 4, sm: 8 }}
-      background="green.500"
       color="white"
       fontWeight="500"
+      bgImage={bgImage}
+      bgSize="cover"
+      h="5rem"
+      position="absolute"
+      top="0"
+      left="0"
     >
-      <NavBar isOpen={isOpen} onClose={onClose} />
       <HStack spacing={{ base: 2, sm: 4 }}>
         <Button
           variant="link"
@@ -50,7 +59,7 @@ export const Header: React.FC = () => {
           minW={4}
           p={2}
           ml={-2}
-          _hover={{ background: 'rgba(0,0,0,0.1)' }}
+          _hover={{ background: 'black10' }}
         >
           <svg
             fill="white"
@@ -87,10 +96,10 @@ export const Header: React.FC = () => {
                   borderRadius="full"
                   size="lg"
                   h="auto"
-                  _hover={{ background: 'white' }}
                   fontWeight="normal"
-                  bg="white60"
-                  color="black"
+                  background="white60"
+                  _hover={{ background: 'white80' }}
+                  color="dark"
                   border="white60"
                   p={2}
                 >
@@ -119,7 +128,7 @@ export const Header: React.FC = () => {
                     disconnect();
                   }}
                   bg="white"
-                  color="black"
+                  color="dark"
                   border="white"
                   fontWeight="normal"
                 >

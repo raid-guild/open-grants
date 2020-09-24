@@ -5,20 +5,22 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/core';
+import HeaderBG from 'assets/header.jpg';
 import { SearchIcon } from 'icons/SearchIcon';
 import React from 'react';
 
 export const FAQHeader: React.FC = () => {
   return (
     <VStack
-      pt="4rem"
-      pb="5rem"
+      py="5rem"
       px="2rem"
       w="100%"
       justify="center"
       color="white"
-      background="green.500"
-      minH="30rem"
+      bgImage={`url(${HeaderBG})`}
+      bgSize="cover"
+      bgRepeat="no-repeat"
+      minH="35rem"
     >
       <Text
         fontSize={{ base: '2rem', md: '3rem' }}

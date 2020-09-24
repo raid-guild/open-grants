@@ -15,6 +15,7 @@ export type Metadata = {
 };
 
 export const uploadMetadata = async (metadata: Metadata): Promise<string> => {
+  if (!metadata.name) return '0x';
   const objectString = JSON.stringify(metadata);
   const bufferedString = Buffer.from(objectString);
   const node = await ipfs.add(bufferedString);

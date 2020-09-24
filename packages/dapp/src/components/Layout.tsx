@@ -1,32 +1,35 @@
-import { Flex } from '@chakra-ui/core';
+import { Flex, useDisclosure } from '@chakra-ui/core';
+import { Header } from 'components/Header';
+import { NavBar } from 'components/NavBar';
 import React from 'react';
 
-import { Header } from './Header';
-
-export const Layout: React.FC = ({ children }) => (
-  <Flex
-    p={0}
-    m={0}
-    overflowX="hidden"
-    fontFamily="body"
-    w="100%"
-    minH="100vh"
-    align="center"
-    direction="column"
-    background="background"
-    position="relative"
-  >
-    <Header />
+export const Layout: React.FC = ({ children }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  return (
     <Flex
-      flex={1}
-      align="center"
-      justify="flex-start"
-      direction="column"
+      p={0}
+      m={0}
+      overflowX="hidden"
+      fontFamily="body"
       w="100%"
-      h="100%"
+      minH="100vh"
+      align="center"
+      direction="column"
+      background="background"
       position="relative"
     >
-      {children}
+      <NavBar isOpen={isOpen} onClose={onClose} />
+      <Header onOpen={onOpen} />
+      <Flex
+        flex={1}
+        align="center"
+        justify="flex-start"
+        direction="column"
+        w="100%"
+        h="100%"
+      >
+        {children}
+      </Flex>
     </Flex>
-  </Flex>
-);
+  );
+};
