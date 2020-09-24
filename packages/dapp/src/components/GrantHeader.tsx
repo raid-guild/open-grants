@@ -1,4 +1,5 @@
 import { Button, Text, VStack } from '@chakra-ui/core';
+import HeaderBG from 'assets/header.jpg';
 import { Link } from 'components/Link';
 import { Grant } from 'graphql/autogen/types';
 import React from 'react';
@@ -13,8 +14,11 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
       w="100%"
       justify="center"
       color="white"
-      background="green.500"
-      minH="30rem"
+      bgImage={`url(${HeaderBG})`}
+      bgSize="cover"
+      bgRepeat="no-repeat"
+      minH="35rem"
+      pt="5rem"
     >
       <Text
         fontSize={{ base: '2rem', md: '3rem' }}

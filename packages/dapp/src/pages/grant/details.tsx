@@ -20,7 +20,7 @@ const GrantPage: React.FC<Props> = ({
 
   useEffect(() => {
     async function fetchGrant() {
-      setGrant(await getGrant(grantAddress));
+      setGrant(await getGrant(grantAddress.toLowerCase()));
     }
     fetchGrant();
   }, [grantAddress]);

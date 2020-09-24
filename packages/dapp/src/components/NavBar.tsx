@@ -41,17 +41,28 @@ export const NavBar: React.FC<Props> = ({ isOpen, onClose }) => {
             h="100%"
             p={2}
           >
-            <DrawerCloseButton top={6} right={6} fontSize={18} />
             <DrawerHeader fontWeight={600} fontSize="2xl" mb={4}>
               Menu
             </DrawerHeader>
 
             <DrawerBody>
               <VStack spacing={5} align="flex-start" color="white">
-                <Link to="/explore">Explore Grants</Link>
-                {account && <Link to="/">My Grants</Link>}
-                {account && <Link to="/create">Create a Grant</Link>}
-                <Link to="/faq">FAQ</Link>
+                <Link to="/explore" onClick={onClose}>
+                  Explore Grants
+                </Link>
+                {account && (
+                  <Link to="/" onClick={onClose}>
+                    My Grants
+                  </Link>
+                )}
+                {account && (
+                  <Link to="/create" onClick={onClose}>
+                    Create a Grant
+                  </Link>
+                )}
+                <Link to="/faq" onClick={onClose} minW="2rem">
+                  FAQ
+                </Link>
               </VStack>
             </DrawerBody>
 
@@ -70,6 +81,7 @@ export const NavBar: React.FC<Props> = ({ isOpen, onClose }) => {
                 </Button>
               )}
             </DrawerFooter>
+            <DrawerCloseButton top={6} right={6} fontSize={18} />
           </Flex>
         </DrawerContent>
       </DrawerOverlay>

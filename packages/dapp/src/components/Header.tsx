@@ -1,12 +1,39 @@
-import { Button, Flex, HStack, Text, useDisclosure } from '@chakra-ui/core';
+import {
+  Button,
+  Flex,
+  HStack,
+  Image,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Text,
+} from '@chakra-ui/core';
+import HeaderBG from 'assets/header.jpg';
 import { Link } from 'components/Link';
-import { NavBar } from 'components/NavBar';
 import { Web3Context } from 'contexts/Web3Context';
-import React, { useContext } from 'react';
+import { ArrowDownIcon } from 'icons/ArrowDownIcon';
+import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { getProfile, Profile } from 'utils/3box';
 
-export const Header: React.FC = () => {
-  const { account, connectWeb3 } = useContext(Web3Context);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+type Props = {
+  onOpen: () => void;
+};
+
+export const Header: React.FC<Props> = ({ onOpen }) => {
+  const { account, connectWeb3, disconnect } = useContext(Web3Context);
+  const [profile, setProfile] = useState<Profile | undefined>();
+  useEffect(() => {
+    async function fetchProfile() {
+      setProfile(await getProfile(account));
+    }
+    if (account) {
+      fetchProfile();
+    }
+  }, [account]);
+  const history = useHistory();
+  const bgImage =
+    history.location.pathname === '/create' ? `url(${HeaderBG})` : undefined;
 
   return (
     <Flex
@@ -15,21 +42,24 @@ export const Header: React.FC = () => {
       align="center"
       justify="space-between"
       wrap="wrap"
-      py={6}
-      px={8}
-      background="green.500"
+      px={{ base: 4, sm: 8 }}
       color="white"
       fontWeight="500"
+      bgImage={bgImage}
+      bgSize="cover"
+      h="5rem"
+      position="absolute"
+      top="0"
+      left="0"
     >
-      <NavBar isOpen={isOpen} onClose={onClose} />
-      <HStack spacing={4}>
+      <HStack spacing={{ base: 2, sm: 4 }}>
         <Button
           variant="link"
           onClick={onOpen}
           minW={4}
           p={2}
           ml={-2}
-          _hover={{ background: 'rgba(0,0,0,0.1)' }}
+          _hover={{ background: 'black10' }}
         >
           <svg
             fill="white"
@@ -60,7 +90,52 @@ export const Header: React.FC = () => {
         )}
         {account && (
           <Flex justify="center" align="center">
-            <Text>{account}</Text>
+            <Popover placement="bottom-end">
+              <PopoverTrigger>
+                <Button
+                  borderRadius="full"
+                  size="lg"
+                  h="auto"
+                  fontWeight="normal"
+                  background="white60"
+                  _hover={{ background: 'white80' }}
+                  color="dark"
+                  border="white60"
+                  p={2}
+                >
+                  <Flex
+                    borderRadius="50%"
+                    w="2.5rem"
+                    h="2.5rem"
+                    overflow="hidden"
+                    justify="center"
+                    align="center"
+                    background="white"
+                  >
+                    {profile && (
+                      <Image w="100%" h="100%" src={profile.imageUrl} />
+                    )}
+                  </Flex>
+                  <Text px={2}>
+                    {`${account.slice(0, 4).toUpperCase()}...`}
+                  </Text>
+                  <ArrowDownIcon boxSize="1.5rem" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent bg="none" maxW="auto" w="auto">
+                <Button
+                  onClick={() => {
+                    disconnect();
+                  }}
+                  bg="white"
+                  color="dark"
+                  border="white"
+                  fontWeight="normal"
+                >
+                  Sign Out
+                </Button>
+              </PopoverContent>
+            </Popover>
           </Flex>
         )}
       </HStack>

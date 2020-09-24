@@ -80,7 +80,7 @@ export const GrantTile: React.FC<Props> = ({ grant }) => {
         <LinkButton
           to={`/grant/${grant.grantAddress}`}
           bg="background"
-          colorScheme="gray"
+          // _hover={{background: 'black20'}}
           textTransform="uppercase"
           w="100%"
         >
