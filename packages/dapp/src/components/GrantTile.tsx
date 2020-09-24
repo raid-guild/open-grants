@@ -7,6 +7,7 @@ import {
   VStack,
 } from '@chakra-ui/core';
 import { Link, LinkButton } from 'components/Link';
+import { ProfileImage } from 'components/ProfileImage';
 import { Grant } from 'graphql/autogen/types';
 import React from 'react';
 import { formatValue } from 'utils/helpers';
@@ -18,6 +19,10 @@ export const GrantTile: React.FC<Props> = ({ grant }) => {
   if (!grant) return null;
   const pledged = BigInt('20000000000000000000');
   const vested = BigInt('12000000000000000000');
+  const displayGrantees = grant.grantees
+    ? grant.grantees.slice(0, 4).reverse()
+    : [];
+  const leftOver = grant.grantees ? grant.grantees.length - 4 : 0;
   return (
     <VStack
       style={{ backdropFilter: 'blur(7px)' }}
@@ -58,22 +63,25 @@ export const GrantTile: React.FC<Props> = ({ grant }) => {
           </SimpleGrid>
         </Flex>
         <Flex direction="column-reverse" justify="flex-end">
-          <Flex
-            background="background"
-            borderRadius="50%"
-            border="1px solid #E6E6E6"
-            w="2.5rem"
-            h="2.5rem"
-            mb={-2}
-          />
-          <Flex
-            border="1px solid #E6E6E6"
-            background="background"
-            borderRadius="50%"
-            w="2.5rem"
-            h="2.5rem"
-            mb={-2}
-          />
+          {leftOver > 0 && (
+            <Flex
+              border="1px solid #E6E6E6"
+              background="background"
+              borderRadius="50%"
+              w="2.5rem"
+              h="2.5rem"
+              mb={-2}
+              fontSize="0.75rem"
+              justify="center"
+              align="center"
+              overflow="hidden"
+            >
+              {`+${leftOver}`}
+            </Flex>
+          )}
+          {displayGrantees.map(a => (
+            <ProfileImage account={a} key={a} />
+          ))}
         </Flex>
       </Flex>
       <SimpleGrid columns={2} spacing={4}>
@@ -83,10 +91,16 @@ export const GrantTile: React.FC<Props> = ({ grant }) => {
           // _hover={{background: 'black20'}}
           textTransform="uppercase"
           w="100%"
+          boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
         >
           Details
         </LinkButton>
-        <Button colorScheme="green" textTransform="uppercase" w="100%">
+        <Button
+          colorScheme="green"
+          textTransform="uppercase"
+          w="100%"
+          boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
+        >
           Fund
         </Button>
       </SimpleGrid>

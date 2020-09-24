@@ -26,10 +26,10 @@ const GrantPage: React.FC<Props> = ({
   }, [grantAddress]);
 
   if (grant === undefined) {
-    return <Box> Loading ... </Box>;
+    return <Box mt="5rem"> Loading ... </Box>;
   }
   if (grant === null) {
-    return <Box> Grant not found </Box>;
+    return <Box mt="5rem"> Grant not found </Box>;
   }
   return (
     <VStack w="100%">

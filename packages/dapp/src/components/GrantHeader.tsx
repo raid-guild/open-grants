@@ -1,13 +1,16 @@
-import { Button, Text, VStack } from '@chakra-ui/core';
+import { Button, Text, useDisclosure,VStack } from '@chakra-ui/core';
 import HeaderBG from 'assets/header.jpg';
 import { Link } from 'components/Link';
 import { Grant } from 'graphql/autogen/types';
 import React from 'react';
 
+import { FundGrantModal } from './FundGrantModal';
+
 type Props = {
   grant: Grant;
 };
 export const GrantHeader: React.FC<Props> = ({ grant }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <VStack
       px="2rem"
@@ -40,9 +43,15 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         size="lg"
         fontWeight="500"
         px={10}
+        onClick={onOpen}
       >
         Fund this grant
       </Button>
+      <FundGrantModal
+        grantAddress={grant.grantAddress}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </VStack>
   );
 };

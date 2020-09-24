@@ -2,7 +2,6 @@ import {
   Button,
   Flex,
   HStack,
-  Image,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -111,11 +110,12 @@ export const Header: React.FC<Props> = ({ onOpen }) => {
                     justify="center"
                     align="center"
                     background="white"
-                  >
-                    {profile && (
-                      <Image w="100%" h="100%" src={profile.imageUrl} />
-                    )}
-                  </Flex>
+                    border="1px solid #E6E6E6"
+                    bgImage={profile && `url(${profile.imageUrl})`}
+                    bgSize="cover"
+                    bgRepeat="no-repeat"
+                    bgPosition="center center"
+                  />
                   <Text px={2}>
                     {`${account.slice(0, 4).toUpperCase()}...`}
                   </Text>
