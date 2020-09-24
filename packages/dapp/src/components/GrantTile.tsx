@@ -91,10 +91,16 @@ export const GrantTile: React.FC<Props> = ({ grant }) => {
           // _hover={{background: 'black20'}}
           textTransform="uppercase"
           w="100%"
+          boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
         >
           Details
         </LinkButton>
-        <Button colorScheme="green" textTransform="uppercase" w="100%">
+        <Button
+          colorScheme="green"
+          textTransform="uppercase"
+          w="100%"
+          boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
+        >
           Fund
         </Button>
       </SimpleGrid>

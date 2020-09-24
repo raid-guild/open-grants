@@ -145,7 +145,8 @@ export const CreateGrantForm: React.FC = () => {
         w="100%"
         colorScheme="green"
         textTransform="uppercase"
-        letterSpacing="2px"
+        boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
+        letterSpacing="0.115em"
         onClick={submitForm}
       >
         Create Grant

@@ -43,7 +43,6 @@ export const FAQHeader: React.FC = () => {
         </InputLeftElement>
         <Input
           background="transparent"
-          border="none"
           mx={2}
           fontSize="md"
           placeholder="SEARCH"
