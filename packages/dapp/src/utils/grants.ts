@@ -8,7 +8,7 @@ const ZERO_HASH = '0x';
 export const createGrant = async (
   ethersProvider: providers.Web3Provider,
   grantees: Array<string>,
-  amounts: Array<string>,
+  amounts: Array<number>,
   metadataHash: string,
 ): Promise<Transaction> => {
   const abi = [

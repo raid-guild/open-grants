@@ -35,13 +35,19 @@ export const CreateGrantForm: React.FC = () => {
       console.log({ validateError: 'Validation Error' });
       return;
     }
-    const ipfsHash = await uploadMetadata({
+    const metadata = {
       name,
       description,
       link,
       contactLink,
-    });
-    await createGrant(ethersProvider, grantees, amounts, ipfsHash);
+    };
+    const ipfsHash = await uploadMetadata(metadata);
+    await createGrant(
+      ethersProvider,
+      grantees,
+      amounts.map(a => Math.floor(Number(a))),
+      ipfsHash,
+    );
   };
   return (
     <VStack
@@ -107,6 +113,7 @@ export const CreateGrantForm: React.FC = () => {
         amounts={amounts}
         setAmounts={setAmounts}
         total={total}
+        setTotal={setTotal}
       />
       <Button
         w="100%"

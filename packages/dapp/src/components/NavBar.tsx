@@ -41,7 +41,6 @@ export const NavBar: React.FC<Props> = ({ isOpen, onClose }) => {
             h="100%"
             p={2}
           >
-            <DrawerCloseButton top={6} right={6} fontSize={18} />
             <DrawerHeader fontWeight={600} fontSize="2xl" mb={4}>
               Menu
             </DrawerHeader>
@@ -82,6 +81,7 @@ export const NavBar: React.FC<Props> = ({ isOpen, onClose }) => {
                 </Button>
               )}
             </DrawerFooter>
+            <DrawerCloseButton top={6} right={6} fontSize={18} />
           </Flex>
         </DrawerContent>
       </DrawerOverlay>
