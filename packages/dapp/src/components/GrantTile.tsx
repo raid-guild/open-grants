@@ -4,8 +4,10 @@ import {
   SimpleGrid,
   Spacer,
   Text,
+  useDisclosure,
   VStack,
 } from '@chakra-ui/core';
+import { FundGrantModal } from 'components/FundGrantModal';
 import { Link, LinkButton } from 'components/Link';
 import { ProfileImage } from 'components/ProfileImage';
 import { Grant } from 'graphql/autogen/types';
@@ -16,6 +18,7 @@ type Props = {
   grant: Grant;
 };
 export const GrantTile: React.FC<Props> = ({ grant }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   if (!grant) return null;
   const pledged = BigInt('20000000000000000000');
   const vested = BigInt('12000000000000000000');
@@ -100,10 +103,16 @@ export const GrantTile: React.FC<Props> = ({ grant }) => {
           textTransform="uppercase"
           w="100%"
           boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
+          onClick={onOpen}
         >
           Fund
         </Button>
       </SimpleGrid>
+      <FundGrantModal
+        grantAddress={grant.grantAddress}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </VStack>
   );
 };

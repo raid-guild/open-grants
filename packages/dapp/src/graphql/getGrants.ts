@@ -1,8 +1,8 @@
 import gql from 'fake-tag';
+import { client } from 'graphql/client';
+import { GrantFragment } from 'graphql/fragments';
 
 import { GetGrantsQuery, GetGrantsQueryVariables } from './autogen/types';
-import { client } from './client';
-import { GrantFragment } from './fragments';
 
 const grantsQuery = gql`
   query GetGrants($first: Int) {

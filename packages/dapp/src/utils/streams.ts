@@ -1,6 +1,5 @@
-import { Contract, providers, Transaction,utils } from 'ethers';
-
-import { CONFIG } from '../config';
+import { CONFIG } from 'config';
+import { Contract, providers, Transaction, utils } from 'ethers';
 
 export const createStream = async (
   ethersProvider: providers.Web3Provider,

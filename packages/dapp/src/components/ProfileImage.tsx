@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/core';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getProfile, Profile } from 'utils/3box';
 
 type Props = {

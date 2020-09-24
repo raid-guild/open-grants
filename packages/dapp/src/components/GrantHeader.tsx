@@ -1,10 +1,9 @@
-import { Button, Text, useDisclosure,VStack } from '@chakra-ui/core';
+import { Button, Text, useDisclosure, VStack } from '@chakra-ui/core';
 import HeaderBG from 'assets/header.jpg';
+import { FundGrantModal } from 'components/FundGrantModal';
 import { Link } from 'components/Link';
 import { Grant } from 'graphql/autogen/types';
 import React from 'react';
-
-import { FundGrantModal } from './FundGrantModal';
 
 type Props = {
   grant: Grant;

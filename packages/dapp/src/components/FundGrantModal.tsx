@@ -14,8 +14,8 @@ import { DurationSelector, SIXMONTHS } from 'components/DurationSelector';
 import { Link } from 'components/Link';
 import { MethodSelector } from 'components/MethodSelector';
 import { Web3Context } from 'contexts/Web3Context';
-import React, { useContext,useState } from 'react';
-import { createStream,fundGrant } from 'utils/streams';
+import React, { useContext, useState } from 'react';
+import { createStream, fundGrant } from 'utils/streams';
 
 type Props = {
   grantAddress: string;
