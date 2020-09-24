@@ -10,7 +10,7 @@ type Props = {
   setValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export const TextInput: React.FC<Props> = ({
+export const GrantTextInput: React.FC<Props> = ({
   title,
   description = '',
   label,

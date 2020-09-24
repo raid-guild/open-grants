@@ -1,11 +1,10 @@
 import WalletConnectProvider from '@walletconnect/web3-provider';
+import { CONFIG } from 'config';
 import { ethers } from 'ethers';
 import { AsyncSendable } from 'ethers/providers';
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
-
-import { CONFIG } from '../config';
 
 type Web3ContextType = {
   ethersProvider: ethers.providers.Web3Provider | null;

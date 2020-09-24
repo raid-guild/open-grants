@@ -18,13 +18,13 @@ export const ProfileImage: React.FC<Props> = ({ account }) => {
   }, [account]);
   return (
     <Flex
-      background="background"
       borderRadius="50%"
       border="1px solid #E6E6E6"
       w="2.5rem"
       h="2.5rem"
       mb={-2}
       overflow="hidden"
+      background="white"
       bgImage={profile && `url(${profile.imageUrl})`}
       bgSize="cover"
       bgRepeat="no-repeat"

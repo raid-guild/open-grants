@@ -1,12 +1,11 @@
 import { Button, Divider, Text, VStack } from '@chakra-ui/core';
+import { GranteesInput } from 'components/GranteesInput';
+import { GrantTextInput } from 'components/GrantTextInput';
+import { Link } from 'components/Link';
 import { Web3Context } from 'contexts/Web3Context';
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { createGrant } from 'utils/grants';
-
-import { GranteesInput } from './GranteesInput';
-import { Link } from './Link';
-import { TextInput } from './TextInput';
 
 const reduceEmpty = (isValid: boolean, str: string): boolean => {
   return isValid && str !== '';
@@ -77,7 +76,7 @@ export const CreateGrantForm: React.FC = () => {
           Read the FAQ
         </Link>
       </Text>
-      <TextInput
+      <GrantTextInput
         title="What is the name of your project?"
         description="48 characters max"
         label="Grant Name"
@@ -85,7 +84,7 @@ export const CreateGrantForm: React.FC = () => {
         setValue={setName}
         maxLength={48}
       />
-      <TextInput
+      <GrantTextInput
         title="What do you aim to achieve?"
         description="240 characters max"
         label="Description"
@@ -93,7 +92,7 @@ export const CreateGrantForm: React.FC = () => {
         setValue={setDescription}
         maxLength={240}
       />
-      <TextInput
+      <GrantTextInput
         title="Where can folks learn more about what you’re working on?"
         description="Optional"
         label="Project Link"
@@ -101,7 +100,7 @@ export const CreateGrantForm: React.FC = () => {
         setValue={setLink}
         maxLength={240}
       />
-      <TextInput
+      <GrantTextInput
         title="How can folks contact you?"
         description="Optional"
         label="Additional Link"
