@@ -1,5 +1,5 @@
-import { Contract, providers,utils } from 'ethers';
-import { Metadata,uploadMetadata } from 'utils/ipfs';
+import { Contract, providers, utils } from 'ethers';
+import { Metadata, uploadMetadata } from 'utils/ipfs';
 
 import { CONFIG } from '../config';
 
