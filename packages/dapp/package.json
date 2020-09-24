@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.3",
     "@chakra-ui/core": "^1.0.0-rc.3",
     "@chakra-ui/icon": "^1.0.0-rc.3",
     "@chakra-ui/theme": "^1.0.0-rc.3",
@@ -16,6 +12,10 @@
     "fake-tag": "2.0.0",
     "graphql": "^15.0.0",
     "ipfs-http-client": "^47.0.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.3",
     "urql": "^1.9.7",
     "web3": "^1.2.11",
     "web3modal": "^1.9.0"
