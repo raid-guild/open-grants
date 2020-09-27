@@ -1,5 +1,5 @@
 {
-  "name": "open-grants-contracts",
+  "name": "@open-grants/contracts",
   "version": "0.0.1",
   "scripts": {
     "test": "buidler --network ganache test",
