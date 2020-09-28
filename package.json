@@ -80,5 +80,9 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix",
     "*.{ts,tsx,js,jsx,json,yml,yaml,md}": "prettier --write"
+  },
+  "dependencies": {
+    "react-vis": "^1.11.7",
+    "styled-components": "^5.2.0"
   }
 }

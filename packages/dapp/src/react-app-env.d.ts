@@ -2,6 +2,8 @@
 declare module '*.png';
 declare module '*.jpg';
 declare module '*.svg';
+declare module 'react-vis';
+declare module 'styled-components';
 declare module 'fake-tag' {
   function gql(
     literals: TemplateStringsArray,
