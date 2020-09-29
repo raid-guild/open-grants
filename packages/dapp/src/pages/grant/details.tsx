@@ -4,12 +4,10 @@ import { Grant } from 'graphql/autogen/types';
 import { getGrant } from 'graphql/getGrant';
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { FlexibleWidthXYPlot, AreaSeries, XAxis, YAxis } from 'react-vis';
+import { AreaSeries, FlexibleWidthXYPlot, XAxis, YAxis } from 'react-vis';
+/*
 import styled from 'styled-components';
 
-interface MatchParams {
-  grantAddress: string;
-}
 
 const ChartDiv = styled.div`
   width: 100%;
@@ -31,7 +29,31 @@ const ChartDiv = styled.div`
   }
 `;
 
-type Props = RouteComponentProps<MatchParams>;
+*/
+
+const ChartDiv: React.FC = ({ children }) => (
+  <Box
+    w="100%"
+    maxW="800px"
+    h="420px"
+    position="relative"
+    borderLeft="1px solid #ccc"
+    borderBottom="1px solid #ccc"
+    m="0"
+    p="0"
+    _before={{
+      content: 'ETH',
+      fontFamily: 'sans-serif',
+      position: 'absolute',
+      left: '-30px',
+      top: '50%',
+      transform: 'rotate(-90deg)',
+      color: '#ccc',
+    }}
+  >
+    {children}
+  </Box>
+);
 
 const dataOne = [
   {
@@ -197,6 +219,12 @@ const dataThree = [
     y: 11.382978279546732,
   },
 ];
+
+interface MatchParams {
+  grantAddress: string;
+}
+
+type Props = RouteComponentProps<MatchParams>;
 
 const GrantPage: React.FC<Props> = ({
   match: {
