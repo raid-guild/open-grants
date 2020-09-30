@@ -1,9 +1,17 @@
-import { Button, Text, useDisclosure, VStack } from '@chakra-ui/core';
+import {
+  Button,
+  Flex,
+  SimpleGrid,
+  Text,
+  useDisclosure,
+  VStack,
+} from '@chakra-ui/core';
 import HeaderBG from 'assets/header.jpg';
 import { FundGrantModal } from 'components/FundGrantModal';
 import { Link } from 'components/Link';
 import React from 'react';
 import { Grant } from 'utils/grants';
+import { formatValue } from 'utils/helpers';
 
 type Props = {
   grant: Grant;
@@ -14,7 +22,7 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
     <VStack
       px="2rem"
       w="100%"
-      justify="center"
+      justify="flex-end"
       color="white"
       bgImage={`url(${HeaderBG})`}
       bgSize="cover"
@@ -38,11 +46,12 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         variant="solid"
         color="dark"
         background="cyan.100"
-        _hover={{ background: 'cyan.200' }}
+        _hover={{ background: 'cyan.400' }}
         size="lg"
         fontWeight="500"
         px={10}
         onClick={onOpen}
+        mb={12}
       >
         Fund this grant
       </Button>
@@ -51,6 +60,46 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         isOpen={isOpen}
         onClose={onClose}
       />
+      <SimpleGrid
+        columns={4}
+        spacing={4}
+        letterSpacing="0.3px"
+        justifySelf="flex-end"
+        mb={8}
+      >
+        <Flex direction="column">
+          <Text fontWeight="500" fontSize="3xl" textAlign="center">
+            {grant.streams.length}
+          </Text>
+          <Text textTransform="uppercase" textAlign="center">
+            Funders
+          </Text>
+        </Flex>
+        <Flex direction="column">
+          <Text fontWeight="500" fontSize="3xl" textAlign="center">
+            {`${formatValue(grant.pledged)} ETH`}
+          </Text>
+          <Text textTransform="uppercase" textAlign="center">
+            Pledged
+          </Text>
+        </Flex>
+        <Flex direction="column">
+          <Text fontWeight="500" fontSize="3xl" textAlign="center">
+            {`${formatValue(grant.vested)} ETH`}
+          </Text>
+          <Text textTransform="uppercase" textAlign="center">
+            Vested
+          </Text>
+        </Flex>
+        <Flex direction="column">
+          <Text fontWeight="500" fontSize="3xl" textAlign="center">
+            {grant.grantees.length}
+          </Text>
+          <Text textTransform="uppercase" textAlign="center">
+            {grant.grantees.length > 1 ? 'Grantees' : 'Grantee'}
+          </Text>
+        </Flex>
+      </SimpleGrid>
     </VStack>
   );
 };

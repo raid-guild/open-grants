@@ -1,6 +1,6 @@
 import { Flex, HStack, Text } from '@chakra-ui/core';
 import { FeaturedIcon } from 'icons/FeaturedIcon';
-import { InNeedIcon } from 'icons/InNeedIcon';
+// import { InNeedIcon } from 'icons/InNeedIcon';
 import { LatestIcon } from 'icons/LatestIcon';
 import { TrendingIcon } from 'icons/TrendingIcon';
 import React from 'react';
@@ -47,6 +47,7 @@ export const GrantsSorter: React.FC = () => (
         Trending
       </Text>
     </Flex>
+    {/* 
     <Flex
       direction="column"
       align="center"
@@ -60,5 +61,6 @@ export const GrantsSorter: React.FC = () => (
         In Need
       </Text>
     </Flex>
+    */}
   </HStack>
 );

@@ -21,7 +21,7 @@ export const MethodSelector: React.FC<Props> = ({ split, toggleSplit }) => {
         _hover={{ background: 'gray.500' }}
         fontWeight="500"
         fontSize="md"
-        px={12}
+        px={{ base: 4, sm: 8, md: 12 }}
       >
         All At Once
       </Button>
@@ -31,7 +31,7 @@ export const MethodSelector: React.FC<Props> = ({ split, toggleSplit }) => {
         _hover={{ background: 'gray.500' }}
         fontWeight="500"
         fontSize="md"
-        px={12}
+        px={{ base: 4, sm: 8, md: 12 }}
       >
         Stream
       </Button>

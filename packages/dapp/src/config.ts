@@ -7,4 +7,5 @@ export const CONFIG = {
   streamFactory: '0xC5baEAc62cA32537693C4bb364713231c413d871',
   ipfsEndpoint: 'https://ipfs.infura.io',
   boxEndpoint: 'https://ipfs.3box.io',
+  explorerEndpoint: 'https://kovan.etherscan.io',
 };

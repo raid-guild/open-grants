@@ -1,4 +1,5 @@
 import { Box, VStack } from '@chakra-ui/core';
+import { GrantContent } from 'components/GrantContent';
 import { GrantHeader } from 'components/GrantHeader';
 import { getGrant } from 'graphql/getGrant';
 import React, { useEffect, useState } from 'react';
@@ -34,6 +35,7 @@ const GrantPage: React.FC<Props> = ({
   return (
     <VStack w="100%">
       <GrantHeader grant={grant} />
+      <GrantContent grant={grant} />
     </VStack>
   );
 };
