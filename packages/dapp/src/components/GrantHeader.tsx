@@ -69,6 +69,14 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
       >
         <Flex direction="column">
           <Text fontWeight="500" fontSize="3xl" textAlign="center">
+            {grant.streams.length}
+          </Text>
+          <Text textTransform="uppercase" textAlign="center">
+            Funders
+          </Text>
+        </Flex>
+        <Flex direction="column">
+          <Text fontWeight="500" fontSize="3xl" textAlign="center">
             {`${formatValue(grant.pledged)} ETH`}
           </Text>
           <Text textTransform="uppercase" textAlign="center">
@@ -89,14 +97,6 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
           </Text>
           <Text textTransform="uppercase" textAlign="center">
             {grant.grantees.length > 1 ? 'Grantees' : 'Grantee'}
-          </Text>
-        </Flex>
-        <Flex direction="column">
-          <Text fontWeight="500" fontSize="3xl" textAlign="center">
-            {grant.streams.length}
-          </Text>
-          <Text textTransform="uppercase" textAlign="center">
-            Funders
           </Text>
         </Flex>
       </SimpleGrid>
