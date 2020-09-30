@@ -1,4 +1,4 @@
-import { Box, Flex, HStack,Text } from '@chakra-ui/core';
+import { Box, Flex, HStack, Text } from '@chakra-ui/core';
 import React from 'react';
 import { AreaSeries, FlexibleWidthXYPlot, XAxis, YAxis } from 'react-vis';
 import { Grant } from 'utils/grants';
