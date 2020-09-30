@@ -2,6 +2,7 @@
   "compilerOptions": {
     "module": "esnext",
     "target": "esnext",
+    "lib": ["esnext"],
     "moduleResolution": "node",
     "jsx": "react",
     "skipLibCheck": true,
@@ -18,7 +19,8 @@
     "resolveJsonModule": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": ["./packages/dapp/@types", "./node_modules/@types"]
   },
   "exclude": ["**/node_modules", "**/dist"]
 }

@@ -66,9 +66,18 @@
       }
     },
     {
-      "files": ["./src/graphql/*.ts"],
+      "files": "./src/graphql/**/*.ts",
       "rules": {
         "@typescript-eslint/explicit-module-boundary-types": "off"
+      }
+    },
+    {
+      "files": "./@types/**/*.d.ts",
+      "rules": {
+        "max-classes-per-file": "off",
+        "react/prefer-stateless-function": "off",
+        "@typescript-eslint/no-empty-interface": "off",
+        "@typescript-eslint/no-explicit-any": "off"
       }
     }
   ]
