@@ -7,6 +7,7 @@ import {
   useDisclosure,
   VStack,
 } from '@chakra-ui/core';
+import TileBG from 'assets/tile-background.svg';
 import { FundGrantModal } from 'components/FundGrantModal';
 import { Link, LinkButton } from 'components/Link';
 import { ProfileImage } from 'components/ProfileImage';
@@ -34,6 +35,10 @@ export const GrantTile: React.FC<Props> = ({ grant }) => {
       background="white"
       color="gray.500"
       align="stretch"
+      bgImage={`url(${TileBG})`}
+      bgSize="contain"
+      bgRepeat="no-repeat"
+      bgPosition="center bottom"
     >
       <Flex p={2} flex={1}>
         <Flex direction="column" align="flex-start" flex={1}>
