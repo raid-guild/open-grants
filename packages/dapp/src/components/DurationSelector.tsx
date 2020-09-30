@@ -26,7 +26,7 @@ export const DurationSelector: React.FC<Props> = ({
         _hover={{ background: 'gray.500' }}
         fontWeight="500"
         fontSize="md"
-        px={12}
+        px={{ base: 4, sm: 8, md: 12 }}
       >
         6 months
       </Button>
@@ -36,7 +36,7 @@ export const DurationSelector: React.FC<Props> = ({
         _hover={{ background: 'gray.500' }}
         fontWeight="500"
         fontSize="md"
-        px={12}
+        px={{ base: 4, sm: 8, md: 12 }}
       >
         1 year
       </Button>
@@ -46,7 +46,7 @@ export const DurationSelector: React.FC<Props> = ({
         _hover={{ background: 'gray.500' }}
         fontWeight="500"
         fontSize="md"
-        px={12}
+        px={{ base: 4, sm: 8, md: 12 }}
       >
         2 years
       </Button>
