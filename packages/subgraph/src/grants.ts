@@ -1,6 +1,6 @@
 import { Bytes, log } from '@graphprotocol/graph-ts';
 
-import { Fund, Grant, Payment } from '../generated/schema';
+import { Fund, Grant, Payment, Stream } from '../generated/schema';
 import {
   LogFunding,
   LogPayment,
@@ -19,7 +19,7 @@ export function handleLogNewGrant(event: LogNewGrant): void {
   grant.amounts = event.params.amounts;
 
   let fetchedGrant = fetchGrantInfo(event.params.grant);
-  grant.totalFunded = fetchedGrant.totalFunded;
+  grant.funded = fetchedGrant.totalFunded;
   grant.uri = fetchedGrant.uri;
   grant.name = fetchedGrant.name;
   grant.description = fetchedGrant.description;
@@ -28,9 +28,10 @@ export function handleLogNewGrant(event: LogNewGrant): void {
 
   grant.funds = new Array<string>();
   grant.payments = new Array<string>();
+  grant.streams = new Array<string>();
 
   grant.save();
-  log.info('New Grant {}', [grant.id]);
+  log.debug('New Grant {}', [grant.id]);
 }
 
 export function handleLogFunding(event: LogFunding): void {
@@ -39,20 +40,23 @@ export function handleLogFunding(event: LogFunding): void {
   fund.timestamp = event.block.timestamp;
   fund.donor = event.params.donor;
   fund.amount = event.params.value;
+  let stream = Stream.load(event.address.toHexString());
+  if (stream != null) {
+    fund.stream = stream.id;
+  }
   fund.save();
-  log.info('New Funding {}', [fund.id]);
 
   let grant = Grant.load(event.address.toHexString());
   if (grant != null) {
-    log.debug('Updating Grant {} for funding {}', [grant.id, fund.id]);
+    log.debug('New Funding {} for Grant {}', [fund.id, grant.id]);
     let fetchedGrant = fetchGrantInfo(event.address);
-    grant.totalFunded = fetchedGrant.totalFunded;
+    grant.funded = fetchedGrant.totalFunded;
     let funds = grant.funds;
     funds.push(fund.id);
     grant.funds = funds;
     grant.save();
   } else {
-    log.debug('Grant {} not found for funding {}', [
+    log.debug('Grant {} not found for Funding {}', [
       event.address.toHexString(),
       fund.id,
     ]);
@@ -66,17 +70,16 @@ export function handleLogPayment(event: LogPayment): void {
   payment.timestamp = event.block.timestamp;
   payment.amount = event.params.value;
   payment.save();
-  log.info('New Payment: {}', [payment.id]);
 
   let grant = Grant.load(event.address.toHexString());
   if (grant != null) {
-    log.debug('Updating Grant for payment: {}', [grant.id]);
-    let payments = grant.funds;
+    log.debug('New Payment {} for Grant {}', [payment.id, grant.id]);
+    let payments = grant.payments;
     payments.push(payment.id);
     grant.payments = payments;
     grant.save();
   } else {
-    log.debug('Grant {} not found for payment {}', [
+    log.debug('Grant {} not found for Payment {}', [
       event.address.toHexString(),
       payment.id,
     ]);

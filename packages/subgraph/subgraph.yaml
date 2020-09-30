@@ -53,9 +53,9 @@ dataSources:
     name: EtherVestingFactory
     network: kovan
     source:
-      address: '0x429da6130153e1dbe9166f0b656f566ccd1f2f25'
+      address: '0xC5baEAc62cA32537693C4bb364713231c413d871'
       abi: EtherVestingFactory
-      startBlock: 20673587
+      startBlock: 21253523
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -90,8 +90,8 @@ dataSources:
         - name: EtherVesting
           file: ./abis/EtherVesting.json
       eventHandlers:
-        - event: LogDeposit(indexed address,uint256)
-          handler: handleLogDeposit
+        - event: LogFunding(indexed address,uint256)
+          handler: handleLogFunding
         - event: LogReleased(uint256)
           handler: handleLogReleased
         - event: LogRevoked()

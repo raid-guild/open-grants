@@ -70,6 +70,7 @@ export function fetchGrantInfo(address: Address): GrantObject {
 
 class StreamObject {
   beneficiary: Bytes;
+  totalFunded: BigInt;
   isRevocable: boolean;
   isRevoked: boolean;
   released: BigInt;
@@ -78,6 +79,7 @@ class StreamObject {
 
   constructor() {
     this.beneficiary = new Bytes(1);
+    this.totalFunded = BigInt.fromI32(0);
     this.isRevocable = false;
     this.isRevoked = false;
     this.released = BigInt.fromI32(0);
@@ -91,6 +93,7 @@ export function fetchStreamInfo(address: Address): StreamObject {
   let streamObject = new StreamObject();
 
   let beneficiary = streamInstance.try_beneficiary();
+  let totalFunding = streamInstance.try_getTotalFunding();
   let isRevocable = streamInstance.try_revocable();
   let isRevoked = streamInstance.try_revoked();
   let released = streamInstance.try_released();
@@ -99,6 +102,10 @@ export function fetchStreamInfo(address: Address): StreamObject {
 
   if (!beneficiary.reverted) {
     streamObject.beneficiary = beneficiary.value;
+  }
+
+  if (!totalFunding.reverted) {
+    streamObject.totalFunded = totalFunding.value;
   }
 
   if (!isRevocable.reverted) {
