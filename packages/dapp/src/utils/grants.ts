@@ -1,35 +1,26 @@
 import { CONFIG } from 'config';
-import { Contract, providers, utils } from 'ethers';
+import { BigNumber, Contract, providers, utils } from 'ethers';
+import { sortGrantees } from 'utils/helpers';
 import { Metadata, uploadMetadata } from 'utils/ipfs';
+import { Stream } from 'utils/streams';
 
 const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
 const ZERO_HASH = '0x';
 
-const sort = (
-  oldGrantees: Array<string>,
-  oldAmounts: Array<number>,
-): [Array<string>, Array<number>] => {
-  const grantees = oldGrantees.slice();
-  const amounts = oldAmounts.slice();
-
-  // combine the arrays:
-  const list = [];
-  for (let j = 0; j < grantees.length; j += 1)
-    list.push({ grantee: grantees[j], amount: amounts[j] });
-
-  // sort:
-  list.sort(function compare(a, b) {
-    if (a.grantee < b.grantee) return -1;
-    if (a.grantee === b.grantee) return 0;
-    return 1;
-  });
-
-  // separate them back out:
-  for (let k = 0; k < list.length; k += 1) {
-    grantees[k] = list[k].grantee;
-    amounts[k] = list[k].amount;
-  }
-  return [grantees, amounts];
+export type Grant = {
+  id: string;
+  createdBy: string;
+  timestamp: number;
+  grantees: Array<string>;
+  amounts: Array<number>;
+  name: string;
+  description: string;
+  link: string;
+  contactLink: string;
+  funded: BigNumber;
+  pledged: BigNumber;
+  vested: BigNumber;
+  streams: Array<Stream>;
 };
 
 export const createGrant = async (
@@ -39,7 +30,7 @@ export const createGrant = async (
   metadata: Metadata,
 ): Promise<string> => {
   const metadataHash = await uploadMetadata(metadata);
-  const [grantees, amounts] = sort(
+  const [grantees, amounts] = sortGrantees(
     oldGrantees.map(g => g.toLowerCase()),
     oldAmounts.map(a => Math.floor(Number(a))),
   );

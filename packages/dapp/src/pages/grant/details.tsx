@@ -1,9 +1,9 @@
 import { Box, VStack } from '@chakra-ui/core';
 import { GrantHeader } from 'components/GrantHeader';
-import { Grant } from 'graphql/autogen/types';
 import { getGrant } from 'graphql/getGrant';
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { Grant } from 'utils/grants';
 
 interface MatchParams {
   grantAddress: string;

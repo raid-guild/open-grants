@@ -2,8 +2,8 @@ import { Button, Text, useDisclosure, VStack } from '@chakra-ui/core';
 import HeaderBG from 'assets/header.jpg';
 import { FundGrantModal } from 'components/FundGrantModal';
 import { Link } from 'components/Link';
-import { Grant } from 'graphql/autogen/types';
 import React from 'react';
+import { Grant } from 'utils/grants';
 
 type Props = {
   grant: Grant;
@@ -47,7 +47,7 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         Fund this grant
       </Button>
       <FundGrantModal
-        grantAddress={grant.grantAddress}
+        grantAddress={grant.id}
         isOpen={isOpen}
         onClose={onClose}
       />

@@ -1,7 +1,9 @@
 import gql from 'fake-tag';
 import { GetGrantsQuery, GetGrantsQueryVariables } from 'graphql/autogen/types';
 import { client } from 'graphql/client';
-import { GrantFragment } from 'graphql/fragments';
+import { GrantDetails } from 'graphql/fragments';
+import { parseGrant } from 'graphql/utils';
+import { Grant } from 'utils/grants';
 
 const grantsQuery = gql`
   query GetGrants($first: Int) {
@@ -11,13 +13,13 @@ const grantsQuery = gql`
       where: { name_not: "" }
       orderDirection: desc
     ) {
-      ...GrantFragment
+      ...GrantDetails
     }
   }
-  ${GrantFragment}
+  ${GrantDetails}
 `;
 
-export const getGrants = async (first = 50) => {
+export const getGrants = async (first = 50): Promise<Array<Grant>> => {
   const { data, error } = await client
     .query<GetGrantsQuery, GetGrantsQueryVariables>(grantsQuery, { first })
     .toPromise();
@@ -30,5 +32,5 @@ export const getGrants = async (first = 50) => {
     return [];
   }
 
-  return data.grants;
+  return data.grants.map(parseGrant);
 };

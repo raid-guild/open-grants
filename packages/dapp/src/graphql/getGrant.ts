@@ -1,19 +1,17 @@
 import gql from 'fake-tag';
-import {
-  GetGrantQuery,
-  GetGrantQueryVariables,
-  Grant,
-} from 'graphql/autogen/types';
+import { GetGrantQuery, GetGrantQueryVariables } from 'graphql/autogen/types';
 import { client } from 'graphql/client';
-import { GrantFragment } from 'graphql/fragments';
+import { GrantDetails } from 'graphql/fragments';
+import { parseGrant } from 'graphql/utils';
+import { Grant } from 'utils/grants';
 
 const grantQuery = gql`
   query GetGrant($address: ID!) {
     grant(id: $address) {
-      ...GrantFragment
+      ...GrantDetails
     }
   }
-  ${GrantFragment}
+  ${GrantDetails}
 `;
 
 export const getGrant = async (
@@ -34,5 +32,8 @@ export const getGrant = async (
 
     return null;
   }
-  return data.grant;
+  if (data.grant) {
+    return parseGrant(data.grant);
+  }
+  return undefined;
 };
