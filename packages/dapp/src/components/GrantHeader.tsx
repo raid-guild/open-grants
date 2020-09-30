@@ -38,7 +38,7 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         variant="solid"
         color="dark"
         background="cyan.100"
-        _hover={{ background: 'cyan.200' }}
+        _hover={{ background: 'cyan.400' }}
         size="lg"
         fontWeight="500"
         px={10}

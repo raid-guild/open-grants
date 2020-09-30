@@ -16,7 +16,7 @@ const Explore: React.FC = () => {
     fetchGrants();
   }, []);
   return (
-    <VStack w="100%" spacing={8}>
+    <VStack w="100%" spacing={8} mb={16}>
       <ExploreHeader />
       <GrantsSorter />
       <SimpleGrid
