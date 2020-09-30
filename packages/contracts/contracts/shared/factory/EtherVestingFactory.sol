@@ -50,7 +50,12 @@ contract EtherVestingFactory {
         emit LogEtherVestingCreated(vestingId, vestingAddress);
 
         vesting.transferOwnership(msg.sender);
-        payable(vestingAddress).transfer(msg.value);
+
+        (bool success, ) = vestingAddress.call{ value: msg.value}("");
+        require(
+            success,
+            "EtherVestingFactory: Error. Unable to send msg.value to vestingAddress"
+        );
 
         return vestingAddress;
     }
