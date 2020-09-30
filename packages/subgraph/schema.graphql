@@ -10,11 +10,12 @@ type Grant @entity {
   contactLink: String!
   createdBy: Bytes!
   timestamp: BigInt!
-  grantees: [Bytes!]
-  funds: [Fund!]
-  payments: [Payment!]
-  amounts: [BigInt!]
-  totalFunded: BigInt!
+  grantees: [Bytes!]!
+  amounts: [BigInt!]!
+  funds: [Fund!]!
+  payments: [Payment!]!
+  streams: [Stream!]!
+  funded: BigInt!
 }
 
 type Fund @entity {
@@ -23,6 +24,7 @@ type Fund @entity {
   donor: Bytes!
   amount: BigInt!
   timestamp: BigInt!
+  stream: Stream
 }
 
 type Payment @entity {
@@ -42,12 +44,14 @@ type Stream @entity {
   beneficiary: Bytes!
   isRevocable: Boolean!
   isRevoked: Boolean!
-  deposits: [Deposit!]
-  releases: [Release!]
+  deposits: [Deposit!]!
+  releases: [Release!]!
   released: BigInt!
   startTime: BigInt!
   duration: BigInt!
   timestamp: BigInt!
+  funded: BigInt!
+  grant: Grant
 }
 
 type Deposit @entity {

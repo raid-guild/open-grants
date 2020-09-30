@@ -4,6 +4,7 @@ pragma solidity ^0.6.0;
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
+import "./shared/storage/Funding.sol";
 
 /**
  * @title EtherVesting
@@ -12,7 +13,7 @@ import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
  * owner.
  * NOTE: anyone can send ETH to the contract but only the owner or the beneficiary can receive ETH from this contract.
  */
-contract EtherVesting is Ownable, ReentrancyGuard {
+contract EtherVesting is Ownable, ReentrancyGuard, Funding {
     // The vesting schedule is time-based (i.e. using block timestamps as opposed to e.g. block numbers), and is
     // therefore sensitive to timestamp manipulation (which is something miners can do, to a certain degree). Therefore,
     // it is recommended to avoid using short time durations (less than a minute). Typical vesting schemes, with
@@ -21,7 +22,6 @@ contract EtherVesting is Ownable, ReentrancyGuard {
 
     using SafeMath for uint256;
 
-    event LogDeposit(address indexed sender, uint256 amount);
     event LogReleased(uint256 amount);
     event LogRevoked();
 
@@ -173,10 +173,23 @@ contract EtherVesting is Ownable, ReentrancyGuard {
         }
     }
 
+
     /**
      * @dev Receive ether transfers
      */
-    receive() external payable {
-        emit LogDeposit(msg.sender, msg.value);
+    receive()
+        external
+        payable
+        nonReentrant
+    {
+
+        require(
+            msg.value > 0,
+            "fallback::Invalid Value. msg.value must be greater than 0."
+        );
+
+        increaseTotalFundingBy(msg.value);
+
+        emit LogFunding(msg.sender, msg.value);
     }
 }

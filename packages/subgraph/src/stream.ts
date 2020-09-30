@@ -1,12 +1,12 @@
 import { log } from '@graphprotocol/graph-ts';
 
 import {
-  LogDeposit,
+  LogFunding,
   LogReleased,
   LogRevoked,
 } from '../generated/EtherVesting/EtherVesting';
 import { LogEtherVestingCreated } from '../generated/EtherVestingFactory/EtherVestingFactory';
-import { Deposit, Release, Stream } from '../generated/schema';
+import { Deposit, Grant, Release, Stream } from '../generated/schema';
 import { fetchStreamInfo } from './helpers';
 
 export function handleLogEtherVestingCreated(
@@ -21,6 +21,7 @@ export function handleLogEtherVestingCreated(
 
   let fetchedStream = fetchStreamInfo(event.params.vestingContract);
   stream.beneficiary = fetchedStream.beneficiary;
+  stream.funded = fetchedStream.totalFunded;
   stream.isRevocable = fetchedStream.isRevocable;
   stream.isRevoked = fetchedStream.isRevoked;
   stream.released = fetchedStream.released;
@@ -30,28 +31,44 @@ export function handleLogEtherVestingCreated(
   stream.deposits = new Array<string>();
   stream.releases = new Array<string>();
 
+  let grant = Grant.load(fetchedStream.beneficiary.toHexString());
+  if (grant != null) {
+    log.debug('New Stream {} for Grant {}', [stream.id, grant.id]);
+    let streams = grant.funds;
+    streams.push(stream.id);
+    grant.streams = streams;
+    grant.save();
+
+    stream.grant = grant.id;
+  } else {
+    log.debug('New Stream {} towards {}', [
+      stream.id,
+      fetchedStream.beneficiary.toHexString(),
+    ]);
+  }
+
   stream.save();
-  log.info('New Stream {}', [stream.id]);
 }
 
-export function handleLogDeposit(event: LogDeposit): void {
+export function handleLogFunding(event: LogFunding): void {
   let deposit = new Deposit(event.logIndex.toHexString());
   deposit.streamAddress = event.address;
-  deposit.depositer = event.params.sender;
+  deposit.depositer = event.params.donor;
   deposit.timestamp = event.block.timestamp;
-  deposit.amount = event.params.amount;
+  deposit.amount = event.params.value;
   deposit.save();
-  log.info('New Payment: {}', [deposit.id]);
 
   let stream = Stream.load(event.address.toHexString());
   if (stream != null) {
-    log.debug('Updating Stream for deposit: {}', [stream.id]);
+    log.debug('New Deposit {} for Stream {}', [deposit.id, stream.id]);
     let deposits = stream.deposits;
     deposits.push(deposit.id);
     stream.deposits = deposits;
+    let fetchedStream = fetchStreamInfo(event.address);
+    stream.funded = fetchedStream.totalFunded;
     stream.save();
   } else {
-    log.debug('Stream {} not found for deposit {}', [
+    log.debug('Stream {} not found for Deposit {}', [
       event.address.toHexString(),
       deposit.id,
     ]);
@@ -65,11 +82,10 @@ export function handleLogReleased(event: LogReleased): void {
   release.timestamp = event.block.timestamp;
   release.amount = event.params.amount;
   release.save();
-  log.info('New Payment: {}', [release.id]);
 
   let stream = Stream.load(event.address.toHexString());
   if (stream != null) {
-    log.debug('Updating Stream for release: {}', [stream.id]);
+    log.debug('Stream {} Released', [stream.id, release.id]);
     let releases = stream.releases;
     releases.push(release.id);
     stream.releases = releases;
@@ -77,7 +93,7 @@ export function handleLogReleased(event: LogReleased): void {
     stream.released = fetchedStream.released;
     stream.save();
   } else {
-    log.debug('Stream {} not found for release {}', [
+    log.debug('Stream {} not found for Release {}', [
       event.address.toHexString(),
       release.id,
     ]);
@@ -87,10 +103,13 @@ export function handleLogReleased(event: LogReleased): void {
 export function handleLogRevoked(event: LogRevoked): void {
   let stream = Stream.load(event.address.toHexString());
   if (stream != null) {
-    log.debug('Updating Stream for revoke: {}', [stream.id]);
+    log.debug('Stream {} Revoked', [stream.id]);
     stream.isRevoked = true;
     stream.save();
   } else {
-    log.debug('Stream {} not found for revoke', [event.address.toHexString()]);
+    log.debug('Stream {} not found for Revoke {}', [
+      event.address.toHexString(),
+      event.logIndex.toHexString(),
+    ]);
   }
 }

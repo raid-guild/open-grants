@@ -7,11 +7,12 @@ import {
   useDisclosure,
   VStack,
 } from '@chakra-ui/core';
+import TileBG from 'assets/tile-background.svg';
 import { FundGrantModal } from 'components/FundGrantModal';
 import { Link, LinkButton } from 'components/Link';
 import { ProfileImage } from 'components/ProfileImage';
-import { Grant } from 'graphql/autogen/types';
 import React from 'react';
+import { Grant } from 'utils/grants';
 import { formatValue } from 'utils/helpers';
 
 type Props = {
@@ -20,8 +21,6 @@ type Props = {
 export const GrantTile: React.FC<Props> = ({ grant }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   if (!grant) return null;
-  const pledged = BigInt('20000000000000000000');
-  const vested = BigInt('12000000000000000000');
   const displayGrantees = grant.grantees
     ? grant.grantees.slice(0, 4).reverse()
     : [];
@@ -34,11 +33,15 @@ export const GrantTile: React.FC<Props> = ({ grant }) => {
       background="white"
       color="gray.500"
       align="stretch"
+      bgImage={`url(${TileBG})`}
+      bgSize="contain"
+      bgRepeat="no-repeat"
+      bgPosition="center bottom"
     >
       <Flex p={2} flex={1}>
         <Flex direction="column" align="flex-start" flex={1}>
           <Link
-            to={`/grant/${grant.grantAddress}`}
+            to={`/grant/${grant.id}`}
             color="black"
             fontWeight="600"
             fontSize="2xl"
@@ -53,13 +56,13 @@ export const GrantTile: React.FC<Props> = ({ grant }) => {
           <SimpleGrid columns={2} spacing={4} mb={16} letterSpacing="0.3px">
             <Flex direction="column">
               <Text fontWeight="500" fontSize="2xl">
-                {`${formatValue(pledged)} ETH`}
+                {`${formatValue(grant.pledged)} ETH`}
               </Text>
               <Text textTransform="uppercase">Pledged</Text>
             </Flex>
             <Flex direction="column">
               <Text fontWeight="500" fontSize="2xl">
-                {`${formatValue(vested)} ETH`}
+                {`${formatValue(grant.vested)} ETH`}
               </Text>
               <Text textTransform="uppercase">Vested</Text>
             </Flex>
@@ -89,7 +92,7 @@ export const GrantTile: React.FC<Props> = ({ grant }) => {
       </Flex>
       <SimpleGrid columns={2} spacing={4}>
         <LinkButton
-          to={`/grant/${grant.grantAddress}`}
+          to={`/grant/${grant.id}`}
           bg="background"
           // _hover={{background: 'black20'}}
           textTransform="uppercase"
@@ -109,7 +112,7 @@ export const GrantTile: React.FC<Props> = ({ grant }) => {
         </Button>
       </SimpleGrid>
       <FundGrantModal
-        grantAddress={grant.grantAddress}
+        grantAddress={grant.id}
         isOpen={isOpen}
         onClose={onClose}
       />

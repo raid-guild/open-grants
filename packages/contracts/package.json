@@ -7,7 +7,8 @@
     "clean": "rimraf ./cache",
     "lint": "solhint contracts/*.sol",
     "coverage": "buidler coverage --network coverage --solcoverjs .solcover.js",
-    "deploy-kovan": "buidler run scripts/deploy.ts --network kovan"
+    "grant:deploy-kovan": "buidler run scripts/grantFactory.ts --network kovan",
+    "vesting:deploy-kovan": "buidler run scripts/vestingFactory.ts --network kovan"
   },
   "keywords": [
     "ethereum",

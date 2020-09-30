@@ -2,9 +2,9 @@ import { SimpleGrid, VStack } from '@chakra-ui/core';
 import { ExploreHeader } from 'components/ExploreHeader';
 import { GrantsSorter } from 'components/GrantsSorter';
 import { GrantTile } from 'components/GrantTile';
-import { Grant } from 'graphql/autogen/types';
 import { getGrants } from 'graphql/getGrants';
 import React, { useEffect, useState } from 'react';
+import { Grant } from 'utils/grants';
 
 const Explore: React.FC = () => {
   const [grants, setGrants] = useState<Array<Grant>>([]);

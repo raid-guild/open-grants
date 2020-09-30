@@ -1,21 +1,24 @@
 import gql from 'fake-tag';
 
-export const GrantFragment = gql`
-  fragment GrantFragment on Grant {
+export const GrantDetails = gql`
+  fragment GrantDetails on Grant {
     id
-    factoryAddress
-    grantId
-    grantAddress
-    uri
     createdBy
     timestamp
     grantees
     amounts
-    totalFunded
+    funded
     name
     description
     link
     contactLink
+    streams {
+      released
+      funded
+      startTime
+      duration
+      isRevoked
+    }
   }
 `;
 // funds
