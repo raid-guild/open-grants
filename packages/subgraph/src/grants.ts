@@ -43,6 +43,7 @@ export function handleLogFunding(event: LogFunding): void {
   let stream = Stream.load(event.address.toHexString());
   if (stream != null) {
     fund.stream = stream.id;
+    fund.donor = stream.owner;
   }
   fund.save();
 
