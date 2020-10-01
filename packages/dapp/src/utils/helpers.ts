@@ -1,9 +1,9 @@
 import { BigNumber, utils } from 'ethers';
 
-export const formatValue = (numberInWei: BigNumber): string => {
+export const formatValue = (numberInWei: BigNumber, p = 1): string => {
   const etherValue = Number(utils.formatEther(numberInWei));
-  const etherRound = Math.round(etherValue * 10) / 10;
-  return etherRound.toFixed(1);
+  const etherRound = Math.round(etherValue * 10 ** p) / 10 ** p;
+  return etherRound.toFixed(p);
 };
 
 export const sortGrantees = (
