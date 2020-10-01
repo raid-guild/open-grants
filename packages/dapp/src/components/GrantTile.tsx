@@ -12,8 +12,8 @@ import { FundGrantModal } from 'components/FundGrantModal';
 import { Link, LinkButton } from 'components/Link';
 import { ProfileImage } from 'components/ProfileImage';
 import React from 'react';
-import { Grant } from 'utils/grants';
 import { formatValue } from 'utils/helpers';
+import { Grant } from 'utils/types';
 
 type Props = {
   grant: Grant;

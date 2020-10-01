@@ -10,8 +10,8 @@ import HeaderBG from 'assets/header.jpg';
 import { FundGrantModal } from 'components/FundGrantModal';
 import { Link } from 'components/Link';
 import React from 'react';
-import { Grant } from 'utils/grants';
 import { formatValue } from 'utils/helpers';
+import { Grant } from 'utils/types';
 
 type Props = {
   grant: Grant;
@@ -69,10 +69,10 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
       >
         <Flex direction="column">
           <Text fontWeight="500" fontSize="3xl" textAlign="center">
-            {grant.streams.length}
+            {grant.funders ? grant.funders.length : 0}
           </Text>
           <Text textTransform="uppercase" textAlign="center">
-            Funders
+            {grant.funders && grant.funders.length === 1 ? 'Funder' : 'Funders'}
           </Text>
         </Flex>
         <Flex direction="column">
@@ -96,7 +96,7 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
             {grant.grantees.length}
           </Text>
           <Text textTransform="uppercase" textAlign="center">
-            {grant.grantees.length > 1 ? 'Grantees' : 'Grantee'}
+            {grant.grantees.length === 1 ? 'Grantee' : 'Grantees'}
           </Text>
         </Flex>
       </SimpleGrid>

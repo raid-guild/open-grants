@@ -1,7 +1,7 @@
 import { VStack } from '@chakra-ui/core';
 import { GrantChart } from 'components/GrantChart';
 import React from 'react';
-import { Grant } from 'utils/grants';
+import { Grant } from 'utils/types';
 
 type Props = {
   grant: Grant;

@@ -12,7 +12,12 @@ export const GrantDetails = gql`
     description
     link
     contactLink
+    funds {
+      donor
+      amount
+    }
     streams {
+      owner
       released
       funded
       startTime
@@ -21,5 +26,3 @@ export const GrantDetails = gql`
     }
   }
 `;
-// funds
-// payments

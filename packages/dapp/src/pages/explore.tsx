@@ -4,7 +4,7 @@ import { GrantsSorter } from 'components/GrantsSorter';
 import { GrantTile } from 'components/GrantTile';
 import { getGrants } from 'graphql/getGrants';
 import React, { useEffect, useState } from 'react';
-import { Grant } from 'utils/grants';
+import { Grant } from 'utils/types';
 
 const Explore: React.FC = () => {
   const [grants, setGrants] = useState<Array<Grant>>([]);

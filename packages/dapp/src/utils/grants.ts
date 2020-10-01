@@ -1,27 +1,10 @@
 import { CONFIG } from 'config';
-import { BigNumber, Contract, providers, utils } from 'ethers';
+import { Contract, providers, utils } from 'ethers';
 import { sortGrantees } from 'utils/helpers';
 import { Metadata, uploadMetadata } from 'utils/ipfs';
-import { Stream } from 'utils/streams';
 
 const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
 const ZERO_HASH = '0x';
-
-export type Grant = {
-  id: string;
-  createdBy: string;
-  timestamp: number;
-  grantees: Array<string>;
-  amounts: Array<number>;
-  name: string;
-  description: string;
-  link: string;
-  contactLink: string;
-  funded: BigNumber;
-  pledged: BigNumber;
-  vested: BigNumber;
-  streams: Array<Stream>;
-};
 
 export const createGrant = async (
   ethersProvider: providers.Web3Provider,

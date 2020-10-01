@@ -1,7 +1,7 @@
 import { Box, Flex, HStack, Text } from '@chakra-ui/core';
 import React from 'react';
 import { AreaSeries, FlexibleWidthXYPlot, XAxis, YAxis } from 'react-vis';
-import { Grant } from 'utils/grants';
+import { Grant } from 'utils/types';
 
 type Props = {
   grant: Grant;

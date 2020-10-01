@@ -4,7 +4,7 @@ import { GrantHeader } from 'components/GrantHeader';
 import { getGrant } from 'graphql/getGrant';
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { Grant } from 'utils/grants';
+import { Grant } from 'utils/types';
 
 interface MatchParams {
   grantAddress: string;
