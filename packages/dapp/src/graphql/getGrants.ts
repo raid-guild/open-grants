@@ -3,7 +3,7 @@ import { GetGrantsQuery, GetGrantsQueryVariables } from 'graphql/autogen/types';
 import { client } from 'graphql/client';
 import { GrantDetails } from 'graphql/fragments';
 import { parseGrant } from 'graphql/utils';
-import { Grant } from 'utils/grants';
+import { Grant } from 'utils/types';
 
 const grantsQuery = gql`
   query GetGrants($first: Int) {
@@ -32,5 +32,5 @@ export const getGrants = async (first = 50): Promise<Array<Grant>> => {
     return [];
   }
 
-  return data.grants.map(parseGrant);
+  return data.grants.map(grant => parseGrant(grant));
 };

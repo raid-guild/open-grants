@@ -1,13 +1,5 @@
 import { CONFIG } from 'config';
-import { BigNumber, Contract, providers, Transaction, utils } from 'ethers';
-
-export type Stream = {
-  funded: BigNumber;
-  released: BigNumber;
-  startTime: number;
-  duration: number;
-  isRevoked: boolean;
-};
+import { Contract, providers, Transaction, utils } from 'ethers';
 
 export const createStream = async (
   ethersProvider: providers.Web3Provider,

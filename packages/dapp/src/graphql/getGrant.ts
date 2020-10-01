@@ -3,7 +3,7 @@ import { GetGrantQuery, GetGrantQueryVariables } from 'graphql/autogen/types';
 import { client } from 'graphql/client';
 import { GrantDetails } from 'graphql/fragments';
 import { parseGrant } from 'graphql/utils';
-import { Grant } from 'utils/grants';
+import { Grant } from 'utils/types';
 
 const grantQuery = gql`
   query GetGrant($address: ID!) {
@@ -33,7 +33,7 @@ export const getGrant = async (
     return null;
   }
   if (data.grant) {
-    return parseGrant(data.grant);
+    return parseGrant(data.grant, true);
   }
   return undefined;
 };
