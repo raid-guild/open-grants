@@ -1,4 +1,4 @@
-import { Flex, Grid,HStack, Text } from '@chakra-ui/core';
+import { Flex, Grid, HStack, Text } from '@chakra-ui/core';
 import React, { useEffect, useState } from 'react';
 import { getProfile, Profile } from 'utils/3box';
 import { formatValue } from 'utils/helpers';
@@ -54,7 +54,7 @@ export const GrantFunders: React.FC<Props> = ({ funders }) => {
         </HStack>
       </Grid>
       {funders.map(funder => (
-        <GrantFunder funder={funder} />
+        <GrantFunder funder={funder} key={funder.id} />
       ))}
     </Flex>
   );

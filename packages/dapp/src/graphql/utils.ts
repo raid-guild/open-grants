@@ -74,13 +74,15 @@ export const parseFunders = (
     const funder = fundersMap[id];
     funder.pledged = BigNumber.from(funder.funded).add(
       funder.streams.reduce(
-        (total, stream) => total.add(BigNumber.from(stream.funded)),
+        (total, stream) =>
+          total.add(BigNumber.from(stream.funded).sub(stream.released)),
         BigNumber.from(0),
       ),
     );
     funder.vested = BigNumber.from(funder.funded).add(
       funder.streams.reduce(
-        (total, stream) => total.add(getVestedAmount(stream)),
+        (total, stream) =>
+          total.add(getVestedAmount(stream).sub(stream.released)),
         BigNumber.from(0),
       ),
     );
@@ -105,13 +107,15 @@ export const parseGrant = (
     funded: BigNumber.from(input.funded),
     pledged: BigNumber.from(input.funded).add(
       input.streams.reduce(
-        (total, stream) => total.add(BigNumber.from(stream.funded)),
+        (total, stream) =>
+          total.add(BigNumber.from(stream.funded).sub(stream.released)),
         BigNumber.from(0),
       ),
     ),
     vested: BigNumber.from(input.funded).add(
       input.streams.reduce(
-        (total, stream) => total.add(getVestedAmount(stream)),
+        (total, stream) =>
+          total.add(getVestedAmount(stream).sub(stream.released)),
         BigNumber.from(0),
       ),
     ),

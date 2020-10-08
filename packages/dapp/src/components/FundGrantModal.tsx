@@ -10,12 +10,13 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/core';
-import { DurationSelector, SIXMONTHS } from 'components/DurationSelector';
+import { DurationSelector } from 'components/DurationSelector';
 import { Link } from 'components/Link';
 import { LoadingModal } from 'components/LoadingModal';
 import { MethodSelector } from 'components/MethodSelector';
 import { Web3Context } from 'contexts/Web3Context';
 import React, { useContext, useState } from 'react';
+import { ONEYEAR } from 'utils/constants';
 import { createStream, fundGrant } from 'utils/streams';
 
 type Props = {
@@ -30,7 +31,7 @@ export const FundGrantModal: React.FC<Props> = ({
 }) => {
   const { ethersProvider } = useContext(Web3Context);
   const [split, toggleSplit] = useState(false);
-  const [duration, setDuration] = useState(SIXMONTHS);
+  const [duration, setDuration] = useState(ONEYEAR / 2);
   const [amount, setAmount] = useState('');
   const [txHash, setTxHash] = useState<string | undefined>('');
   const onSubmit = async () => {
