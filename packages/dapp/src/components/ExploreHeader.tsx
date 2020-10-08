@@ -20,7 +20,7 @@ export const ExploreHeader: React.FC = () => {
           src={EthereumCrystalImage}
           left="50%"
           top={{ base: '40%', sm: '45%', md: '50%' }}
-          transform="translate(-78.15%, -23.35%)"
+          transform="translate(-125.5%, 14%) scale(1.75)"
           maxH="27rem"
           minW="30rem"
         />
