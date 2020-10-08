@@ -23,6 +23,10 @@ export const GrantDetails = gql`
       startTime
       duration
       isRevoked
+      grant {
+        id
+        name
+      }
     }
   }
 `;
@@ -35,5 +39,9 @@ export const StreamDetails = gql`
     startTime
     duration
     isRevoked
+    grant {
+      id
+      name
+    }
   }
 `;

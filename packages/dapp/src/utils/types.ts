@@ -7,6 +7,8 @@ export type Stream = {
   startTime: number;
   duration: number;
   isRevoked: boolean;
+  grantName: string;
+  grantAddress: string;
 };
 
 export type Funder = {
@@ -38,4 +40,6 @@ export type Profile = {
   myGrants: Array<Grant>;
   fundedGrants: Array<Grant>;
   streams: Array<Stream>;
+  pledged: BigNumber;
+  earned: BigNumber;
 };

@@ -1,6 +1,6 @@
 import { Flex, Grid, HStack, Text } from '@chakra-ui/core';
 import React, { useEffect, useState } from 'react';
-import { BoxProfile,getProfile } from 'utils/3box';
+import { BoxProfile, getProfile } from 'utils/3box';
 import { formatValue } from 'utils/helpers';
 import { Funder } from 'utils/types';
 

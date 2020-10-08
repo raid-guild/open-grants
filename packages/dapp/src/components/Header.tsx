@@ -13,7 +13,7 @@ import { Web3Context } from 'contexts/Web3Context';
 import { ArrowDownIcon } from 'icons/ArrowDownIcon';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { BoxProfile,getProfile } from 'utils/3box';
+import { BoxProfile, getProfile } from 'utils/3box';
 
 type Props = {
   onOpen: () => void;
