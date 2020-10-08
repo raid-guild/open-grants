@@ -1,6 +1,5 @@
 import {
   Button,
-  Image,
   keyframes,
   ModalCloseButton,
   ModalContent,
@@ -8,20 +7,20 @@ import {
   VStack,
 } from '@chakra-ui/core';
 import LoadingBG from 'assets/loading-background.png';
-import WhaleImage from 'assets/whale.svg';
 import { Link } from 'components/Link';
+import { Loader } from 'components/Loader';
 import { CONFIG } from 'config';
 import React from 'react';
 
 const loading = keyframes`
   0% {
-    background-position: 50% -750%;
+    background-position: 0% -250%;
   }
   50% {
-    background-position: 50% 100%;
+    background-position: 0% -150%;
   }
   100% {
-    background-position: 50% -750%;
+    background-position: 0% -250%;
   }
 `;
 
@@ -40,7 +39,7 @@ export const LoadingModal: React.FC<Props> = ({ title, txHash, onClose }) => {
       color="text"
       p={6}
       bgImage={`url(${LoadingBG})`}
-      bgSize="100%"
+      bgSize="cover"
       bgRepeat="no-repeat"
       animation={`${loading} 10s linear infinite`}
     >
@@ -65,7 +64,7 @@ export const LoadingModal: React.FC<Props> = ({ title, txHash, onClose }) => {
         >
           View the transaction in Etherscan
         </Link>
-        <Image src={WhaleImage} />
+        <Loader />
       </VStack>
       <Button
         size="lg"
