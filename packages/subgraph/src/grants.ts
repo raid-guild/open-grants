@@ -26,6 +26,7 @@ export function handleLogNewGrant(event: LogNewGrant): void {
   grant.link = fetchedGrant.link;
   grant.contactLink = fetchedGrant.contactLink;
 
+  grant.donors = new Array<Bytes>();
   grant.funds = new Array<string>();
   grant.payments = new Array<string>();
   grant.streams = new Array<string>();
@@ -52,9 +53,17 @@ export function handleLogFunding(event: LogFunding): void {
     log.debug('New Funding {} for Grant {}', [fund.id, grant.id]);
     let fetchedGrant = fetchGrantInfo(event.address);
     grant.funded = fetchedGrant.totalFunded;
+
+    let donors = grant.donors;
+    if (donors.indexOf(fund.donor) == -1) {
+      donors.push(fund.donor);
+    }
+    grant.donors = donors;
+
     let funds = grant.funds;
     funds.push(fund.id);
     grant.funds = funds;
+
     grant.save();
   } else {
     log.debug('Grant {} not found for Funding {}', [
