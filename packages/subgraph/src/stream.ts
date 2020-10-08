@@ -34,7 +34,7 @@ export function handleLogEtherVestingCreated(
   let grant = Grant.load(fetchedStream.beneficiary.toHexString());
   if (grant != null) {
     log.debug('New Stream {} for Grant {}', [stream.id, grant.id]);
-    let streams = grant.funds;
+    let streams = grant.streams;
     streams.push(stream.id);
     grant.streams = streams;
     grant.save();
