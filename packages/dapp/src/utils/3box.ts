@@ -1,12 +1,12 @@
 import { CONFIG } from 'config';
 
-export type Profile = {
+export type BoxProfile = {
   address: string;
   name: string;
   imageUrl: string;
 };
 
-export const getProfile = async (account: string): Promise<Profile> => {
+export const getProfile = async (account: string): Promise<BoxProfile> => {
   const address = account.toLowerCase();
   const profile = {
     address,

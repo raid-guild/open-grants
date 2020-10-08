@@ -1,6 +1,6 @@
 import { Flex, Grid, HStack, Text } from '@chakra-ui/core';
 import React, { useEffect, useState } from 'react';
-import { getProfile, Profile } from 'utils/3box';
+import { BoxProfile,getProfile } from 'utils/3box';
 import { formatValue } from 'utils/helpers';
 import { Funder } from 'utils/types';
 
@@ -65,7 +65,7 @@ type FunderProps = {
 };
 
 const GrantFunder: React.FC<FunderProps> = ({ funder }) => {
-  const [profile, setProfile] = useState<Profile | undefined>();
+  const [profile, setProfile] = useState<BoxProfile | undefined>();
   useEffect(() => {
     async function fetchProfile() {
       setProfile(await getProfile(funder.id));

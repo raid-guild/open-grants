@@ -33,3 +33,9 @@ export type Grant = {
   streams: Array<Stream>;
   funders: Array<Funder> | undefined;
 };
+
+export type Profile = {
+  myGrants: Array<Grant>;
+  fundedGrants: Array<Grant>;
+  streams: Array<Stream>;
+};

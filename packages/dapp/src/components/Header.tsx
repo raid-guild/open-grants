@@ -13,7 +13,7 @@ import { Web3Context } from 'contexts/Web3Context';
 import { ArrowDownIcon } from 'icons/ArrowDownIcon';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { getProfile, Profile } from 'utils/3box';
+import { BoxProfile,getProfile } from 'utils/3box';
 
 type Props = {
   onOpen: () => void;
@@ -21,7 +21,7 @@ type Props = {
 
 export const Header: React.FC<Props> = ({ onOpen }) => {
   const { account, connectWeb3, disconnect } = useContext(Web3Context);
-  const [profile, setProfile] = useState<Profile | undefined>();
+  const [profile, setProfile] = useState<BoxProfile | undefined>();
   useEffect(() => {
     async function fetchProfile() {
       setProfile(await getProfile(account));

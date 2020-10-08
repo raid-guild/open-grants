@@ -4,7 +4,7 @@ import {
   GrantDetailsFragment,
   Stream as StreamGraph,
 } from 'graphql/autogen/types';
-import { Funder, Grant, Stream } from 'utils/types';
+import { Funder, Grant, Profile,Stream } from 'utils/types';
 
 type StreamFragment = Pick<
   StreamGraph,
@@ -126,4 +126,18 @@ export const parseGrant = (
     output.funders = parseFunders(input.funds, output.streams);
   }
   return output;
+};
+
+type ProfileFragment = {
+  myGrants: Array<GrantDetailsFragment>;
+  fundedGrants: Array<GrantDetailsFragment>;
+  streams: Array<StreamFragment>;
+};
+
+export const parseProfile = (input: ProfileFragment): Profile => {
+  return {
+    myGrants: input.myGrants.map(grant => parseGrant(grant, false)),
+    fundedGrants: input.fundedGrants.map(grant => parseGrant(grant, false)),
+    streams: input.streams.map(s => parseStream(s)),
+  };
 };

@@ -1,13 +1,13 @@
 import { Flex } from '@chakra-ui/core';
 import React, { useEffect, useState } from 'react';
-import { getProfile, Profile } from 'utils/3box';
+import { BoxProfile,getProfile } from 'utils/3box';
 
 type Props = {
   account: string;
 };
 
 export const ProfileImage: React.FC<Props> = ({ account }) => {
-  const [profile, setProfile] = useState<Profile | undefined>();
+  const [profile, setProfile] = useState<BoxProfile | undefined>();
   useEffect(() => {
     async function fetchProfile() {
       setProfile(await getProfile(account));

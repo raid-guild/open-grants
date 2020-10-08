@@ -26,3 +26,14 @@ export const GrantDetails = gql`
     }
   }
 `;
+
+export const StreamDetails = gql`
+  fragment StreamDetails on Stream {
+    owner
+    released
+    funded
+    startTime
+    duration
+    isRevoked
+  }
+`;
