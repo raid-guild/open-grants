@@ -1,8 +1,7 @@
 import { Button, ButtonGroup } from '@chakra-ui/core';
 import { QuestionIcon } from 'icons/QuestionIcon';
 import React from 'react';
-
-export const SIXMONTHS = 15768000;
+import { ONEYEAR } from 'utils/constants';
 
 type Props = {
   duration: number;
@@ -21,8 +20,8 @@ export const DurationSelector: React.FC<Props> = ({
       position="relative"
     >
       <Button
-        onClick={() => setDuration(SIXMONTHS)}
-        background={duration === SIXMONTHS ? 'gray.400' : 'gray.200'}
+        onClick={() => setDuration(ONEYEAR / 2)}
+        background={duration === ONEYEAR / 2 ? 'gray.400' : 'gray.200'}
         _hover={{ background: 'gray.500' }}
         fontWeight="500"
         fontSize="md"
@@ -31,8 +30,8 @@ export const DurationSelector: React.FC<Props> = ({
         6 months
       </Button>
       <Button
-        onClick={() => setDuration(SIXMONTHS * 2)}
-        background={duration === SIXMONTHS * 2 ? 'gray.400' : 'gray.200'}
+        onClick={() => setDuration(ONEYEAR)}
+        background={duration === ONEYEAR ? 'gray.400' : 'gray.200'}
         _hover={{ background: 'gray.500' }}
         fontWeight="500"
         fontSize="md"
@@ -41,8 +40,8 @@ export const DurationSelector: React.FC<Props> = ({
         1 year
       </Button>
       <Button
-        onClick={() => setDuration(SIXMONTHS * 4)}
-        background={duration === SIXMONTHS * 4 ? 'gray.400' : 'gray.200'}
+        onClick={() => setDuration(ONEYEAR * 2)}
+        background={duration === ONEYEAR * 2 ? 'gray.400' : 'gray.200'}
         _hover={{ background: 'gray.500' }}
         fontWeight="500"
         fontSize="md"
