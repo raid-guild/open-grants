@@ -1,7 +1,6 @@
 import { BigNumber, utils } from 'ethers';
+import { ONEWEEK } from 'utils/constants';
 import { Grant, Stream } from 'utils/types';
-
-import { ONEDAY } from './constants';
 
 type DataPoint = {
   x: number;
@@ -19,18 +18,20 @@ export const parseGrantData = (
   grant: Grant,
 ): [Array<Array<DataPoint>>, number] => {
   let max = BigNumber.from(0);
-  const data = grant.streams.map(stream => {
-    const { startTime, duration } = stream;
-    if (stream.funded.gt(max)) max = stream.funded;
-    const points = new Array<DataPoint>();
-    for (let i = startTime; i < startTime + duration; i += ONEDAY) {
-      points.push({
-        x: i,
-        y: Number(utils.formatEther(getVestedAmount(stream, i))),
-      });
-    }
-    return points;
-  });
+  const data = grant.streams
+    .filter(stream => stream.duration >= ONEWEEK)
+    .map(stream => {
+      const { startTime, duration } = stream;
+      if (stream.funded.gt(max)) max = stream.funded;
+      const points = new Array<DataPoint>();
+      for (let i = startTime; i < startTime + duration; i += ONEWEEK) {
+        points.push({
+          x: i,
+          y: Number(utils.formatEther(getVestedAmount(stream, i))),
+        });
+      }
+      return points;
+    });
   // eslint-disable-next-line no-console
   console.log({
     grant: grant.id,
