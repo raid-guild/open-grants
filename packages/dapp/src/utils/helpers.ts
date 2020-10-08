@@ -1,4 +1,15 @@
 import { BigNumber, utils } from 'ethers';
+import { Stream } from 'utils/types';
+
+export const getVestedAmount = (
+  input: Stream,
+  currentTime: number,
+): BigNumber => {
+  if (currentTime >= Number(input.startTime) + Number(input.duration)) {
+    return input.funded;
+  }
+  return input.funded.mul(currentTime - input.startTime).div(input.duration);
+};
 
 export const formatValue = (numberInWei: BigNumber, p = 1): string => {
   const etherValue = Number(utils.formatEther(numberInWei));

@@ -7,7 +7,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/core';
 import { FundGrantModal } from 'components/FundGrantModal';
-import { Link } from 'components/Link';
+import { Link, LinkButton } from 'components/Link';
 import { CONFIG } from 'config';
 import React from 'react';
 import { formatValue } from 'utils/helpers';
@@ -15,9 +15,10 @@ import { Grant } from 'utils/types';
 
 type Props = {
   grant: Grant;
+  myGrant?: boolean;
 };
 
-export const GrantDetails: React.FC<Props> = ({ grant }) => {
+export const GrantDetails: React.FC<Props> = ({ grant, myGrant = false }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Flex
@@ -33,9 +34,21 @@ export const GrantDetails: React.FC<Props> = ({ grant }) => {
       align="flex-start"
     >
       <Flex w="100%" justify="space-between" align="center" mb={8}>
-        <Text fontWeight="bold" color="black" fontSize="xl">
-          Grant Details
-        </Text>
+        {myGrant ? (
+          <Link
+            to={`/grant/${grant.id}`}
+            color="black"
+            fontWeight="bold"
+            fontSize="xl"
+            mb={6}
+          >
+            {grant.name}
+          </Link>
+        ) : (
+          <Text fontWeight="bold" color="black" fontSize="xl">
+            Grant Details
+          </Text>
+        )}
         <Text color="green.500"> Open for Funding </Text>
       </Flex>
       <SimpleGrid
@@ -82,21 +95,40 @@ export const GrantDetails: React.FC<Props> = ({ grant }) => {
           >
             View the contract
           </Link>
-          <Link isExternal textDecoration="underline" to={grant.contactLink}>
-            Contact the team
-          </Link>
-          <Link textDecoration="underline" to={`/grant/${grant.id}`}>
-            Distribute funds
-          </Link>
+          {!myGrant && (
+            <>
+              <Link
+                isExternal
+                textDecoration="underline"
+                to={grant.contactLink}
+              >
+                Contact the team
+              </Link>
+              <Link textDecoration="underline" to={`/grant/${grant.id}`}>
+                Distribute funds
+              </Link>
+            </>
+          )}
         </HStack>
-        <Button
-          colorScheme="green"
-          textTransform="uppercase"
-          boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
-          onClick={onOpen}
-        >
-          Add Funds
-        </Button>
+        {myGrant ? (
+          <LinkButton
+            colorScheme="green"
+            textTransform="uppercase"
+            boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
+            to={`/grant/${grant.id}`}
+          >
+            Distribute Funds
+          </LinkButton>
+        ) : (
+          <Button
+            colorScheme="green"
+            textTransform="uppercase"
+            boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
+            onClick={onOpen}
+          >
+            Add Funds
+          </Button>
+        )}
       </Flex>
       <FundGrantModal
         grantAddress={grant.id}

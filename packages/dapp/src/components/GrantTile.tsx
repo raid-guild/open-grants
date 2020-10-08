@@ -17,8 +17,9 @@ import { Grant } from 'utils/types';
 
 type Props = {
   grant: Grant;
+  myGrant?: boolean;
 };
-export const GrantTile: React.FC<Props> = ({ grant }) => {
+export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   if (!grant) return null;
   const displayGrantees = grant.grantees
@@ -90,17 +91,7 @@ export const GrantTile: React.FC<Props> = ({ grant }) => {
           ))}
         </Flex>
       </Flex>
-      <SimpleGrid columns={2} spacing={4}>
-        <LinkButton
-          to={`/grant/${grant.id}`}
-          bg="background"
-          // _hover={{background: 'black20'}}
-          textTransform="uppercase"
-          w="100%"
-          boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
-        >
-          Details
-        </LinkButton>
+      {myGrant ? (
         <Button
           colorScheme="green"
           textTransform="uppercase"
@@ -108,9 +99,31 @@ export const GrantTile: React.FC<Props> = ({ grant }) => {
           boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
           onClick={onOpen}
         >
-          Fund
+          Add Funds
         </Button>
-      </SimpleGrid>
+      ) : (
+        <SimpleGrid columns={2} spacing={4}>
+          <LinkButton
+            to={`/grant/${grant.id}`}
+            bg="background"
+            // _hover={{background: 'black20'}}
+            textTransform="uppercase"
+            w="100%"
+            boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
+          >
+            Details
+          </LinkButton>
+          <Button
+            colorScheme="green"
+            textTransform="uppercase"
+            w="100%"
+            boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
+            onClick={onOpen}
+          >
+            Fund
+          </Button>
+        </SimpleGrid>
+      )}
       <FundGrantModal
         grantAddress={grant.id}
         isOpen={isOpen}

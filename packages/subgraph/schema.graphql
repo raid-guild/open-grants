@@ -16,6 +16,7 @@ type Grant @entity {
   payments: [Payment!]!
   streams: [Stream!]!
   funded: BigInt!
+  donors: [Bytes!]!
 }
 
 type Fund @entity {

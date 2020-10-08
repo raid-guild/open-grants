@@ -2,18 +2,13 @@ import { BigNumber } from 'ethers';
 import {
   Fund as FundGraph,
   GrantDetailsFragment,
-  Stream as StreamGraph,
+  StreamDetailsFragment,
 } from 'graphql/autogen/types';
-import { Funder, Grant, Stream } from 'utils/types';
-
-type StreamFragment = Pick<
-  StreamGraph,
-  'funded' | 'startTime' | 'duration' | 'isRevoked' | 'released' | 'owner'
->;
+import { Funder, Grant, Profile, Stream } from 'utils/types';
 
 type FundFragment = Pick<FundGraph, 'donor' | 'amount'>;
 
-export const parseStream = (input: StreamFragment): Stream => {
+export const parseStream = (input: StreamDetailsFragment): Stream => {
   const output: Stream = {
     owner: input.owner.toLowerCase(),
     funded: BigNumber.from(input.funded),
@@ -21,11 +16,15 @@ export const parseStream = (input: StreamFragment): Stream => {
     startTime: Number(input.startTime),
     duration: Number(input.duration),
     isRevoked: Boolean(input.isRevoked),
+    grantName: input.grant ? input.grant.name : '',
+    grantAddress: input.grant ? input.grant.id : '',
   };
   return output;
 };
 
-export const getVestedAmount = (input: Stream | StreamFragment): BigNumber => {
+export const getVestedAmount = (
+  input: Stream | StreamDetailsFragment,
+): BigNumber => {
   const currentTime = Math.ceil(new Date().getTime() / 1000);
   if (currentTime >= Number(input.startTime) + Number(input.duration)) {
     return BigNumber.from(input.funded);
@@ -126,4 +125,48 @@ export const parseGrant = (
     output.funders = parseFunders(input.funds, output.streams);
   }
   return output;
+};
+
+type ProfileFragment = {
+  myGrants: Array<GrantDetailsFragment>;
+  fundedGrants: Array<GrantDetailsFragment>;
+  streams: Array<StreamDetailsFragment>;
+};
+
+export const parseProfile = (
+  account: string,
+  input: ProfileFragment,
+): Profile => {
+  return {
+    myGrants: input.myGrants.map(grant => parseGrant(grant, false)),
+    fundedGrants: input.fundedGrants.map(grant => parseGrant(grant, false)),
+    streams: input.streams.map(s => parseStream(s)),
+    pledged: input.fundedGrants
+      .reduce((total, grant) => {
+        const funds = grant.funds
+          .filter(fund => fund.donor === account)
+          .reduce((t, f) => t.add(BigNumber.from(f.amount)), BigNumber.from(0));
+        return total.add(funds);
+      }, BigNumber.from(0))
+      .add(
+        input.streams.reduce(
+          (total, stream) =>
+            total.add(BigNumber.from(stream.funded).sub(stream.released)),
+          BigNumber.from(0),
+        ),
+      ),
+    earned: input.myGrants.reduce((total, grant) => {
+      const index = grant.grantees.indexOf(account);
+      const amount = Math.floor(grant.amounts[index] * 10);
+      const totalAmount = Math.floor(
+        grant.amounts.reduce((t, a) => t + a, 0) * 10,
+      );
+      const totalFunds = grant.funds.reduce(
+        (t, f) => t.add(BigNumber.from(f.amount)),
+        BigNumber.from(0),
+      );
+      const funds = totalFunds.mul(amount).div(totalAmount);
+      return total.add(funds);
+    }, BigNumber.from(0)),
+  };
 };

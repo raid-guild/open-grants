@@ -1,6 +1,6 @@
 import { Flex, Grid, HStack, Text } from '@chakra-ui/core';
 import React, { useEffect, useState } from 'react';
-import { getProfile, Profile } from 'utils/3box';
+import { BoxProfile, getProfile } from 'utils/3box';
 
 type Props = {
   grantees: Array<string>;
@@ -69,7 +69,7 @@ const GrantRecipient: React.FC<RecipientProps> = ({
   total,
 }) => {
   const percent = ((amount * 100) / total).toFixed(1);
-  const [profile, setProfile] = useState<Profile | undefined>();
+  const [profile, setProfile] = useState<BoxProfile | undefined>();
   useEffect(() => {
     async function fetchProfile() {
       setProfile(await getProfile(account));

@@ -1,17 +1,11 @@
 import { BigNumber, utils } from 'ethers';
 import { ONEWEEK } from 'utils/constants';
-import { Grant, Stream } from 'utils/types';
+import { getVestedAmount } from 'utils/helpers';
+import { Grant } from 'utils/types';
 
 type DataPoint = {
   x: number;
   y: number;
-};
-
-const getVestedAmount = (input: Stream, currentTime: number): BigNumber => {
-  if (currentTime >= Number(input.startTime) + Number(input.duration)) {
-    return input.funded;
-  }
-  return input.funded.mul(currentTime - input.startTime).div(input.duration);
 };
 
 export const parseGrantData = (
