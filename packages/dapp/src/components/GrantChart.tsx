@@ -171,10 +171,20 @@ const dataThree = [
     y: 11.382978279546732,
   },
 ];
-export const GrantChart: React.FC<Props> = ({ grant }) => {
+
+type DataPoints = Array<{
+  x: number;
+  y: number;
+}>;
+
+const parseGrantData = (grant: Grant): Array<DataPoints> => {
   // eslint-disable-next-line no-console
   console.log({ grant: grant.id });
 
+  return [dataOne, dataTwo, dataThree];
+};
+
+export const GrantChart: React.FC<Props> = ({ grant }) => {
   return (
     <Flex
       w="100%"
@@ -214,27 +224,15 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
         borderBottom="1px solid #ccc"
       >
         <FlexibleWidthXYPlot stackBy="y" yDomain={[0, 50]} height={420}>
-          <AreaSeries
-            curve="curveBasis"
-            animation
-            data={dataOne}
-            opacity={0.25}
-            style={{}}
-          />
-          <AreaSeries
-            animation
-            curve="curveBasis"
-            data={dataTwo}
-            opacity={0.25}
-            style={{}}
-          />
-          <AreaSeries
-            animation
-            curve="curveBasis"
-            data={dataThree}
-            opacity={0.25}
-            style={{}}
-          />
+          {parseGrantData(grant).map(data => (
+            <AreaSeries
+              curve="curveBasis"
+              animation
+              data={data}
+              opacity={0.25}
+              style={{}}
+            />
+          ))}
           <XAxis style={{ fontSize: '9px' }} />
           <YAxis style={{ fontSize: '9px' }} />
         </FlexibleWidthXYPlot>

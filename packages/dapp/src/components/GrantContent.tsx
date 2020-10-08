@@ -1,4 +1,4 @@
-import { SimpleGrid,VStack } from '@chakra-ui/core';
+import { SimpleGrid, VStack } from '@chakra-ui/core';
 import { GrantChart } from 'components/GrantChart';
 import { GrantDetails } from 'components/GrantDetails';
 import { GrantFunders } from 'components/GrantFunders';
@@ -12,7 +12,7 @@ type Props = {
 export const GrantContent: React.FC<Props> = ({ grant }) => {
   return (
     <VStack w="100%" spacing={8} maxW="70rem" p={8} color="text" mb={16}>
-      <GrantChart grant={grant} />
+      {grant && grant.streams.length >= 1 && <GrantChart grant={grant} />}
       <GrantDetails grant={grant} />
       <SimpleGrid columns={2} spacing={8} w="100%">
         <GrantRecipients grantees={grant.grantees} amounts={grant.amounts} />
