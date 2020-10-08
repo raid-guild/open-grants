@@ -20,7 +20,11 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "typeRoots": ["./packages/dapp/@types", "./node_modules/@types"]
+    "typeRoots": [
+      "./packages/dapp/@types",
+      "./node_modules/@types",
+      "./packages/dapp/node_modules/@types/"
+    ]
   },
   "exclude": ["**/node_modules", "**/dist"]
 }
