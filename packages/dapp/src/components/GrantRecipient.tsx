@@ -1,4 +1,5 @@
 import { Flex, Grid, HStack, Text } from '@chakra-ui/core';
+import { Link } from 'components/Link';
 import React, { useEffect, useState } from 'react';
 import { BoxProfile, getProfile } from 'utils/3box';
 
@@ -16,11 +17,8 @@ export const GrantRecipient: React.FC<RecipientProps> = ({
   const percent = ((amount * 100) / total).toFixed(1);
   const [profile, setProfile] = useState<BoxProfile | undefined>();
   useEffect(() => {
-    async function fetchProfile() {
-      setProfile(await getProfile(account));
-    }
     if (account) {
-      fetchProfile();
+      getProfile(account).then(p => setProfile(p));
     }
   }, [account]);
   return (
@@ -32,25 +30,27 @@ export const GrantRecipient: React.FC<RecipientProps> = ({
       borderBottom="1px solid #EAECEF"
       minH="3rem"
     >
-      <HStack spacing={4}>
-        <Flex
-          borderRadius="50%"
-          border="1px solid #E6E6E6"
-          w="2.5rem"
-          h="2.5rem"
-          overflow="hidden"
-          background="white"
-          bgImage={profile && `url(${profile.imageUrl})`}
-          bgSize="cover"
-          bgRepeat="no-repeat"
-          bgPosition="center center"
-        />
-        <Text>
-          {profile && profile.name
-            ? profile.name
-            : `${account.slice(0, 7).toUpperCase()}...`}
-        </Text>
-      </HStack>
+      <Link to={`/profile/${account}`}>
+        <HStack spacing={4}>
+          <Flex
+            borderRadius="50%"
+            border="1px solid #E6E6E6"
+            w="2.5rem"
+            h="2.5rem"
+            overflow="hidden"
+            background="white"
+            bgImage={profile && `url(${profile.imageUrl})`}
+            bgSize="cover"
+            bgRepeat="no-repeat"
+            bgPosition="center center"
+          />
+          <Text>
+            {profile && profile.name
+              ? profile.name
+              : `${account.slice(0, 7).toUpperCase()}...`}
+          </Text>
+        </HStack>
+      </Link>
       <HStack>
         <Text textAlign="center" w="100%">{`${percent}%`}</Text>
       </HStack>

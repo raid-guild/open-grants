@@ -1,4 +1,4 @@
-import { Button, Divider, Text, useDisclosure,VStack } from '@chakra-ui/core';
+import { Button, Divider, Text, useDisclosure, VStack } from '@chakra-ui/core';
 import { CreateGrantModal } from 'components/CreateGrantModal';
 import { GranteesInput } from 'components/GranteesInput';
 import { GrantTextInput } from 'components/GrantTextInput';

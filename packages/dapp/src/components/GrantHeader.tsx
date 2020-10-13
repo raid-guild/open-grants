@@ -30,13 +30,15 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
       minH="35rem"
       pt="5rem"
     >
-      <Text
+      <Link
+        color="white"
         fontSize={{ base: '2rem', md: '3rem' }}
         fontWeight="800"
         textAlign="center"
+        to={`/grant/${grant.id}`}
       >
         {grant.name}
-      </Text>
+      </Link>
       <Text>{grant.description}</Text>
       <Link to={grant.link} isExternal mb={8}>
         {grant.link}
@@ -67,38 +69,64 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         justifySelf="flex-end"
         mb={8}
       >
-        <Flex direction="column">
-          <Text fontWeight="500" fontSize="3xl" textAlign="center">
-            {grant.funders ? grant.funders.length : 0}
-          </Text>
-          <Text textTransform="uppercase" textAlign="center">
-            {grant.funders && grant.funders.length === 1 ? 'Funder' : 'Funders'}
-          </Text>
-        </Flex>
-        <Flex direction="column">
-          <Text fontWeight="500" fontSize="3xl" textAlign="center">
-            {`${formatValue(grant.pledged)} ETH`}
-          </Text>
-          <Text textTransform="uppercase" textAlign="center">
-            Pledged
-          </Text>
-        </Flex>
-        <Flex direction="column">
-          <Text fontWeight="500" fontSize="3xl" textAlign="center">
-            {`${formatValue(grant.vested)} ETH`}
-          </Text>
-          <Text textTransform="uppercase" textAlign="center">
-            Vested
-          </Text>
-        </Flex>
-        <Flex direction="column">
-          <Text fontWeight="500" fontSize="3xl" textAlign="center">
-            {grant.grantees.length}
-          </Text>
-          <Text textTransform="uppercase" textAlign="center">
-            {grant.grantees.length === 1 ? 'Grantee' : 'Grantees'}
-          </Text>
-        </Flex>
+        <a href="#funders">
+          <Flex
+            direction="column"
+            _hover={{ color: 'text' }}
+            transition="0.25s"
+          >
+            <Text fontWeight="500" fontSize="3xl" textAlign="center">
+              {grant.funders ? grant.funders.length : 0}
+            </Text>
+            <Text textTransform="uppercase" textAlign="center">
+              {grant.funders && grant.funders.length === 1
+                ? 'Funder'
+                : 'Funders'}
+            </Text>
+          </Flex>
+        </a>
+        <a href="#details">
+          <Flex
+            direction="column"
+            _hover={{ color: 'text' }}
+            transition="0.25s"
+          >
+            <Text fontWeight="500" fontSize="3xl" textAlign="center">
+              {`${formatValue(grant.pledged)} ETH`}
+            </Text>
+            <Text textTransform="uppercase" textAlign="center">
+              Pledged
+            </Text>
+          </Flex>
+        </a>
+        <a href="#details">
+          <Flex
+            direction="column"
+            _hover={{ color: 'text' }}
+            transition="0.25s"
+          >
+            <Text fontWeight="500" fontSize="3xl" textAlign="center">
+              {`${formatValue(grant.vested)} ETH`}
+            </Text>
+            <Text textTransform="uppercase" textAlign="center">
+              Vested
+            </Text>
+          </Flex>
+        </a>
+        <a href="#recipients">
+          <Flex
+            direction="column"
+            _hover={{ color: 'text' }}
+            transition="0.25s"
+          >
+            <Text fontWeight="500" fontSize="3xl" textAlign="center">
+              {grant.grantees.length}
+            </Text>
+            <Text textTransform="uppercase" textAlign="center">
+              {grant.grantees.length === 1 ? 'Grantee' : 'Grantees'}
+            </Text>
+          </Flex>
+        </a>
       </SimpleGrid>
     </VStack>
   );

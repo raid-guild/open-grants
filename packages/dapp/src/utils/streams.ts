@@ -1,17 +1,15 @@
 import { CONFIG } from 'config';
 import { Contract, providers, utils } from 'ethers';
 
-const abi = new utils.Interface([
-  'function create(address beneficiary, uint256 start, uint256 duration, bool revocable) payable returns (address)',
-  'event LogEtherVestingCreated(uint256 indexed id, address vestingContract)',
-]);
-
 export const createStream = async (
   ethersProvider: providers.Web3Provider,
   beneficiary: string,
   duration: number,
   amount: string,
 ): Promise<providers.TransactionResponse> => {
+  const abi = new utils.Interface([
+    'function create(address beneficiary, uint256 start, uint256 duration, bool revocable) payable returns (address)',
+  ]);
   const factory = new Contract(
     CONFIG.streamFactory,
     abi,
@@ -29,10 +27,31 @@ export const createStream = async (
   );
 };
 
+export const releaseStream = async (
+  ethersProvider: providers.Web3Provider,
+  stream: string,
+): Promise<providers.TransactionResponse> => {
+  const abi = new utils.Interface(['function release() public']);
+  const factory = new Contract(stream, abi, ethersProvider.getSigner());
+  return factory.release();
+};
+
+export const revokeStream = async (
+  ethersProvider: providers.Web3Provider,
+  stream: string,
+): Promise<providers.TransactionResponse> => {
+  const abi = new utils.Interface(['function revoke() public']);
+  const factory = new Contract(stream, abi, ethersProvider.getSigner());
+  return factory.revoke();
+};
+
 export const awaitStreamAddress = async (
   ethersProvider: providers.Web3Provider,
   tx: providers.TransactionResponse,
 ): Promise<string> => {
+  const abi = new utils.Interface([
+    'event LogEtherVestingCreated(uint256 indexed id, address vestingContract)',
+  ]);
   await tx.wait();
   const receipt = await ethersProvider.getTransactionReceipt(tx.hash);
   const eventFragment = abi.events[Object.keys(abi.events)[0]];

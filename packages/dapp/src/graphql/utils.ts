@@ -10,6 +10,7 @@ type FundFragment = Pick<FundGraph, 'donor' | 'amount'>;
 
 export const parseStream = (input: StreamDetailsFragment): Stream => {
   const output: Stream = {
+    id: input.id.toLowerCase(),
     owner: input.owner.toLowerCase(),
     funded: BigNumber.from(input.funded),
     released: BigNumber.from(input.released),

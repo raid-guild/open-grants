@@ -1,4 +1,5 @@
 import { Box, VStack } from '@chakra-ui/core';
+import { LoadingPage } from 'components/LoadingPage';
 import { ProfileContent } from 'components/ProfileContent';
 import { ProfileHeader } from 'components/ProfileHeader';
 import { Web3Context } from 'contexts/Web3Context';
@@ -23,14 +24,11 @@ const ProfilePage: React.FC<Props> = ({
   const [profile, setProfile] = useState<Profile | null | undefined>();
 
   useEffect(() => {
-    async function fetchProfile() {
-      setProfile(await getProfile(userAddress.toLowerCase()));
-    }
-    fetchProfile();
+    getProfile(userAddress.toLowerCase()).then(p => setProfile(p));
   }, [userAddress]);
 
   if (profile === undefined) {
-    return <Box mt="5rem"> Loading ... </Box>;
+    return <LoadingPage />;
   }
   if (profile === null) {
     return <Box mt="5rem"> Profile not found </Box>;

@@ -71,20 +71,22 @@ export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
         </Flex>
         <Flex direction="column-reverse" justify="flex-end">
           {leftOver > 0 && (
-            <Flex
-              border="1px solid #E6E6E6"
-              background="background"
-              borderRadius="50%"
-              w="2.5rem"
-              h="2.5rem"
-              mb={-2}
-              fontSize="0.75rem"
-              justify="center"
-              align="center"
-              overflow="hidden"
-            >
-              {`+${leftOver}`}
-            </Flex>
+            <Link to={`/grant/${grant.id}#recipients`}>
+              <Flex
+                border="1px solid #E6E6E6"
+                background="background"
+                borderRadius="50%"
+                w="2.5rem"
+                h="2.5rem"
+                mb={-2}
+                fontSize="0.75rem"
+                justify="center"
+                align="center"
+                overflow="hidden"
+              >
+                {`+${leftOver}`}
+              </Flex>
+            </Link>
           )}
           {displayGrantees.map(a => (
             <ProfileImage account={a} key={a} />

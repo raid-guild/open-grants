@@ -35,7 +35,7 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
   useEffect(() => {
     setWeb3Modal(
       new Web3Modal({
-        network: 'mainnet',
+        network: CONFIG.network,
         cacheProvider: true,
         providerOptions,
       }),

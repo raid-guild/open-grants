@@ -13,9 +13,7 @@ export const ProfileContent: React.FC<Props> = ({ profile, loggedInUser }) => {
   return (
     <VStack w="100%" spacing={8} maxW="70rem" p={8} color="text" mb={16}>
       <Text textTransform="uppercase" fontSize="xl" w="100%">
-        {loggedInUser
-          ? `Grants I’m a recipient of`
-          : `Grants user is a  recipient of`}
+        {loggedInUser ? `Grants I’m a recipient of` : `User is a recipient of`}
       </Text>
       {profile.myGrants.length > 0 ? (
         profile.myGrants.map(grant => (
@@ -39,7 +37,7 @@ export const ProfileContent: React.FC<Props> = ({ profile, loggedInUser }) => {
         <Text> No Streams found </Text>
       )}
       <Text textTransform="uppercase" fontSize="xl" w="100%" pt={4}>
-        {loggedInUser ? `Grants I’ve funded` : `Grants user has funded`}
+        {loggedInUser ? `Grants I’ve funded` : `User has funded`}
       </Text>
       {profile.fundedGrants.length > 0 ? (
         <SimpleGrid columns={[1, null, 2, 3]} spacing={8} w="100%">

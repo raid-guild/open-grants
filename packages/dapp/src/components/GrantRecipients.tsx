@@ -11,6 +11,7 @@ export const GrantRecipients: React.FC<Props> = ({ grantees, amounts }) => {
   const total = amounts.reduce((t, a) => t + a, 0);
   return (
     <Flex
+      id="recipients"
       w="100%"
       background="white"
       boxShadow="0px 4px 4px rgba(114, 125, 129, 0.25)"

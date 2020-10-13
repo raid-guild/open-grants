@@ -22,6 +22,7 @@ export const GrantDetails: React.FC<Props> = ({ grant, myGrant = false }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Flex
+      id="details"
       w="100%"
       background="white"
       boxShadow="0px 4px 4px rgba(114, 125, 129, 0.25)"
@@ -97,14 +98,19 @@ export const GrantDetails: React.FC<Props> = ({ grant, myGrant = false }) => {
           </Link>
           {!myGrant && (
             <>
+              {grant.contactLink && (
+                <Link
+                  isExternal
+                  textDecoration="underline"
+                  to={grant.contactLink}
+                >
+                  Contact the team
+                </Link>
+              )}
               <Link
-                isExternal
                 textDecoration="underline"
-                to={grant.contactLink}
+                to={`/grant/${grant.id}/streams`}
               >
-                Contact the team
-              </Link>
-              <Link textDecoration="underline" to={`/grant/${grant.id}`}>
                 Distribute funds
               </Link>
             </>
@@ -115,7 +121,7 @@ export const GrantDetails: React.FC<Props> = ({ grant, myGrant = false }) => {
             colorScheme="green"
             textTransform="uppercase"
             boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
-            to={`/grant/${grant.id}`}
+            to={`/grant/${grant.id}/streams`}
           >
             Distribute Funds
           </LinkButton>

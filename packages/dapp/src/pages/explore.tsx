@@ -2,19 +2,25 @@ import { SimpleGrid, VStack } from '@chakra-ui/core';
 import { ExploreHeader } from 'components/ExploreHeader';
 import { GrantsSorter } from 'components/GrantsSorter';
 import { GrantTile } from 'components/GrantTile';
+import { LoadingPage } from 'components/LoadingPage';
 import { getGrants } from 'graphql/getGrants';
 import React, { useEffect, useState } from 'react';
 import { Grant } from 'utils/types';
 
 const Explore: React.FC = () => {
   const [grants, setGrants] = useState<Array<Grant>>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchGrants() {
-      setGrants(await getGrants());
-    }
-    fetchGrants();
+    getGrants().then(result => {
+      setGrants(result);
+      setLoading(false);
+    });
   }, []);
+
+  if (loading) {
+    return <LoadingPage />;
+  }
   return (
     <VStack w="100%" spacing={8} mb={16}>
       <ExploreHeader />
