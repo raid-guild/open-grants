@@ -8,8 +8,9 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/core';
+import { utils } from 'ethers';
 import { CloseIcon } from 'icons/CloseIcon';
-import React from 'react';
+import React, { useState } from 'react';
 
 type Props = {
   total: number;
@@ -68,66 +69,94 @@ export const GranteesInput: React.FC<Props> = ({
         {Array(total)
           .fill(0)
           .map((v, i) => (
-            <Grid
-              w="100%"
-              templateColumns="3fr 1fr"
-              gridGap={4}
+            <GranteeInput
               key={v.toString() + i.toString()}
-              position="relative"
-            >
-              <Input
-                size="lg"
-                border="none"
-                value={grantees[i]}
-                placeholder="Grantee Address"
-                onChange={e => {
-                  const newGrantees = grantees.slice();
-                  newGrantees[i] = e.target.value;
-                  setGrantees(newGrantees);
-                }}
-                fontSize="md"
-                maxLength={42}
-              />
-              <InputGroup size="lg">
-                <Input
-                  border="none"
-                  type="number"
-                  min={0}
-                  max={100}
-                  placeholder="Percentage"
-                  fontSize="md"
-                  value={amounts[i]}
-                  onChange={e => {
-                    const newAmounts = amounts.slice();
-                    newAmounts[i] = e.target.value;
-                    setAmounts(newAmounts);
-                  }}
-                />
-                <InputRightElement
-                  pointerEvents="none"
-                  color="green.500"
-                  fontSize="md"
-                >
-                  %
-                </InputRightElement>
-              </InputGroup>
-              {i > 0 && (
-                <CloseIcon
-                  position="absolute"
-                  right="-2rem"
-                  top="50%"
-                  transform="translateY(-50%)"
-                  cursor="pointer"
-                  transition="0.25s"
-                  color="text"
-                  _hover={{ color: 'green.500' }}
-                  boxSize="1.25rem"
-                  onClick={() => removeGrantee(i)}
-                />
-              )}
-            </Grid>
+              grantees={grantees}
+              setGrantees={setGrantees}
+              amounts={amounts}
+              setAmounts={setAmounts}
+              removeGrantee={removeGrantee}
+              index={i}
+            />
           ))}
       </VStack>
     </Flex>
+  );
+};
+
+type InputProps = {
+  grantees: Array<string>;
+  setGrantees: React.Dispatch<React.SetStateAction<Array<string>>>;
+  amounts: Array<string>;
+  setAmounts: React.Dispatch<React.SetStateAction<Array<string>>>;
+  removeGrantee: (index: number) => void;
+  index: number;
+};
+
+const GranteeInput: React.FC<InputProps> = ({
+  grantees,
+  setGrantees,
+  amounts,
+  setAmounts,
+  removeGrantee,
+  index: i,
+}) => {
+  const [addressInvalid, setAddressInvalid] = useState(false);
+  return (
+    <Grid w="100%" templateColumns="3fr 1fr" gridGap={4} position="relative">
+      <Input
+        size="lg"
+        border="none"
+        value={grantees[i]}
+        placeholder="Grantee Address"
+        isInvalid={addressInvalid}
+        onChange={e => {
+          setAddressInvalid(!utils.isAddress(e.target.value));
+          const newGrantees = grantees.slice();
+          newGrantees[i] = e.target.value;
+          setGrantees(newGrantees);
+        }}
+        fontSize="md"
+        maxLength={42}
+      />
+      <InputGroup size="lg">
+        <Input
+          border="none"
+          type="number"
+          min={0}
+          max={100}
+          placeholder="Percentage"
+          fontSize="md"
+          value={amounts[i]}
+          onChange={e => {
+            const newAmounts = amounts.slice();
+            newAmounts[i] = e.target.value;
+            setAmounts(newAmounts);
+          }}
+        />
+        <InputRightElement
+          pointerEvents="none"
+          zIndex="initial"
+          color="green.500"
+          fontSize="md"
+        >
+          %
+        </InputRightElement>
+      </InputGroup>
+      {i > 0 && (
+        <CloseIcon
+          position="absolute"
+          right="-2rem"
+          top="50%"
+          transform="translateY(-50%)"
+          cursor="pointer"
+          transition="0.25s"
+          color="text"
+          _hover={{ color: 'green.500' }}
+          boxSize="1.25rem"
+          onClick={() => removeGrantee(i)}
+        />
+      )}
+    </Grid>
   );
 };

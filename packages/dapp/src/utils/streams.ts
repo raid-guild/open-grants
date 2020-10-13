@@ -1,15 +1,17 @@
 import { CONFIG } from 'config';
-import { Contract, providers, Transaction, utils } from 'ethers';
+import { Contract, providers, utils } from 'ethers';
+
+const abi = new utils.Interface([
+  'function create(address beneficiary, uint256 start, uint256 duration, bool revocable) payable returns (address)',
+  'event LogEtherVestingCreated(uint256 indexed id, address vestingContract)',
+]);
 
 export const createStream = async (
   ethersProvider: providers.Web3Provider,
   beneficiary: string,
   duration: number,
   amount: string,
-): Promise<Transaction> => {
-  const abi = new utils.Interface([
-    'function create(address beneficiary, uint256 start, uint256 duration, bool revocable) payable returns (address)',
-  ]);
+): Promise<providers.TransactionResponse> => {
   const factory = new Contract(
     CONFIG.streamFactory,
     abi,
@@ -27,14 +29,12 @@ export const createStream = async (
   );
 };
 
-export const fetchStreamAddress = async (
+export const awaitStreamAddress = async (
   ethersProvider: providers.Web3Provider,
-  txHash: string,
+  tx: providers.TransactionResponse,
 ): Promise<string> => {
-  const abi = new utils.Interface([
-    'event LogEtherVestingCreated(uint256 indexed id, address vestingContract)',
-  ]);
-  const receipt = await ethersProvider.getTransactionReceipt(txHash);
+  await tx.wait();
+  const receipt = await ethersProvider.getTransactionReceipt(tx.hash);
   const eventFragment = abi.events[Object.keys(abi.events)[0]];
   const eventTopic = abi.getEventTopic(eventFragment);
   const event = receipt.logs.find(e => e.topics[0] === eventTopic);
@@ -53,7 +53,7 @@ export const fundGrant = async (
   ethersProvider: providers.Web3Provider,
   beneficiary: string,
   amount: string,
-): Promise<Transaction> => {
+): Promise<providers.TransactionResponse> => {
   return ethersProvider.getSigner().sendTransaction({
     to: beneficiary,
     value: utils.parseEther(amount),

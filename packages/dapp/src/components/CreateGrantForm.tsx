@@ -1,11 +1,10 @@
-import { Button, Divider, Text, VStack } from '@chakra-ui/core';
+import { Button, Divider, Text, useDisclosure,VStack } from '@chakra-ui/core';
+import { CreateGrantModal } from 'components/CreateGrantModal';
 import { GranteesInput } from 'components/GranteesInput';
 import { GrantTextInput } from 'components/GrantTextInput';
 import { Link } from 'components/Link';
 import { Web3Context } from 'contexts/Web3Context';
 import React, { useContext, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { createGrant } from 'utils/grants';
 
 const reduceEmpty = (isValid: boolean, str: string): boolean => {
   return isValid && str !== '';
@@ -24,9 +23,11 @@ export const CreateGrantForm: React.FC = () => {
   const [grantees, setGrantees] = useState<Array<string>>(['']);
   const [amounts, setAmounts] = useState<Array<string>>(['']);
   const [total, setTotal] = useState<number>(1);
-  const history = useHistory();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const submitForm = async () => {
     const isValid =
+      name &&
+      description &&
       grantees.reduce(reduceEmpty, true) &&
       amounts.reduce(reduceEmpty, true) &&
       amounts.reduce(reduceTotal, 0.0) === 100.0;
@@ -35,21 +36,7 @@ export const CreateGrantForm: React.FC = () => {
       console.log({ validateError: 'Validation Error' });
       return;
     }
-    const metadata = {
-      name,
-      description,
-      link,
-      contactLink,
-    };
-    const grantAddress = await createGrant(
-      ethersProvider,
-      grantees,
-      amounts,
-      metadata,
-    );
-    if (grantAddress) {
-      history.push(`/grant/${grantAddress}`);
-    }
+    onOpen();
   };
   return (
     <VStack
@@ -99,6 +86,7 @@ export const CreateGrantForm: React.FC = () => {
         value={link}
         setValue={setLink}
         maxLength={240}
+        optional
       />
       <GrantTextInput
         title="How can folks contact you?"
@@ -107,6 +95,7 @@ export const CreateGrantForm: React.FC = () => {
         value={contactLink}
         setValue={setContactLink}
         maxLength={240}
+        optional
       />
       <Divider color="gray.100" />
       <GranteesInput
@@ -150,6 +139,18 @@ export const CreateGrantForm: React.FC = () => {
       >
         Create Grant
       </Button>
+      <CreateGrantModal
+        metadata={{
+          name,
+          description,
+          link,
+          contactLink,
+        }}
+        grantees={grantees}
+        amounts={amounts}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </VStack>
   );
 };
