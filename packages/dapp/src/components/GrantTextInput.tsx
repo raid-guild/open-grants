@@ -43,6 +43,7 @@ export const GrantTextInput: React.FC<Props> = ({
         }}
         fontSize="md"
         maxLength={maxLength}
+        color="dark"
       />
     </Flex>
   );

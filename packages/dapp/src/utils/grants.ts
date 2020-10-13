@@ -20,7 +20,7 @@ export const createGrant = async (
   const metadataHash = await uploadMetadata(metadata);
   const [grantees, amounts] = sortGrantees(
     oldGrantees.map(g => g.toLowerCase()),
-    oldAmounts.map(a => Math.floor(Number(a))),
+    oldAmounts.map(a => Math.floor(Number(a) * 100)),
   );
 
   const factory = new Contract(

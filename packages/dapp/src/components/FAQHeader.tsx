@@ -7,9 +7,10 @@ import {
 } from '@chakra-ui/core';
 import HeaderBG from 'assets/header.jpg';
 import { SearchIcon } from 'icons/SearchIcon';
-import React from 'react';
+import React, { useState } from 'react';
 
 export const FAQHeader: React.FC = () => {
+  const [search, setSearch] = useState('');
   return (
     <VStack
       py="5rem"
@@ -39,7 +40,7 @@ export const FAQHeader: React.FC = () => {
         variant="solid"
       >
         <InputLeftElement mx={1} pointerEvents="none">
-          <SearchIcon />
+          <SearchIcon color={search ? 'dark' : 'text'} />
         </InputLeftElement>
         <Input
           background="transparent"
@@ -47,6 +48,9 @@ export const FAQHeader: React.FC = () => {
           fontSize="md"
           placeholder="SEARCH"
           px={10}
+          color="dark"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
         />
       </InputGroup>
     </VStack>

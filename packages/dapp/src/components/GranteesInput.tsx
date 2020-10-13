@@ -30,9 +30,9 @@ export const GranteesInput: React.FC<Props> = ({
   setAmounts,
 }) => {
   const distributeEvenly = () => {
-    const even = Math.floor(100 / total);
-    const newAmounts = new Array(total).fill(even);
-    newAmounts[total - 1] = 100 - even * (total - 1);
+    const even = Math.floor(1000 / total);
+    const newAmounts = new Array(total).fill((even / 10.0).toFixed(1));
+    newAmounts[total - 1] = (100.0 - (even / 10.0) * (total - 1)).toFixed(1);
     setAmounts(newAmounts);
   };
   const removeGrantee = (index: number) => {
@@ -105,6 +105,7 @@ const GranteeInput: React.FC<InputProps> = ({
   return (
     <Grid w="100%" templateColumns="3fr 1fr" gridGap={4} position="relative">
       <Input
+        color="dark"
         size="lg"
         border="none"
         value={grantees[i]}
@@ -121,6 +122,7 @@ const GranteeInput: React.FC<InputProps> = ({
       />
       <InputGroup size="lg">
         <Input
+          color="dark"
           border="none"
           type="number"
           min={0}
