@@ -3,7 +3,7 @@ import { Stream } from 'utils/types';
 
 export const getVestedAmount = (
   input: Stream,
-  currentTime: number,
+  currentTime: number, // in seconds
 ): BigNumber => {
   if (currentTime >= Number(input.startTime) + Number(input.duration)) {
     return input.funded;
@@ -30,7 +30,7 @@ export const sortGrantees = (
     list.push({ grantee: grantees[j], amount: amounts[j] });
 
   // sort:
-  list.sort(function compare(a, b) {
+  list.sort((a, b) => {
     if (a.grantee < b.grantee) return -1;
     if (a.grantee === b.grantee) return 0;
     return 1;

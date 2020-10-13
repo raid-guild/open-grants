@@ -6,8 +6,11 @@ import { Profile } from 'utils/types';
 
 type Props = {
   profile: Profile;
+  loggedInUser: boolean;
 };
-export const ProfileHeader: React.FC<Props> = ({ profile }) => {
+export const ProfileHeader: React.FC<Props> = ({ profile, loggedInUser }) => {
+  // TODO: fix rank
+  const rank = 1;
   return (
     <VStack
       px="2rem"
@@ -25,13 +28,12 @@ export const ProfileHeader: React.FC<Props> = ({ profile }) => {
         fontWeight="800"
         textAlign="center"
       >
-        My Grants
+        {loggedInUser ? `My Grants` : `User Grants`}
       </Text>
-      <Text
-        mb={24}
-        // TODO: fix text
-      >
-        Your rank #1 out of all funders
+      <Text mb={24}>
+        {loggedInUser
+          ? `You rank #${rank} out of all funders`
+          : `User ranks #${rank} out of all funders`}
       </Text>
       <SimpleGrid
         columns={4}

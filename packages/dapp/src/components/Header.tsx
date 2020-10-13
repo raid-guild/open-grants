@@ -23,16 +23,13 @@ export const Header: React.FC<Props> = ({ onOpen }) => {
   const { account, connectWeb3, disconnect } = useContext(Web3Context);
   const [profile, setProfile] = useState<BoxProfile | undefined>();
   useEffect(() => {
-    async function fetchProfile() {
-      setProfile(await getProfile(account));
-    }
     if (account) {
-      fetchProfile();
+      getProfile(account).then(p => setProfile(p));
     }
   }, [account]);
   const history = useHistory();
-  const bgImage =
-    history.location.pathname === '/create' ? `url(${HeaderBG})` : undefined;
+  const headerColorRequired = history.location.pathname === '/create';
+  const bgImage = headerColorRequired ? `url(${HeaderBG})` : undefined;
 
   return (
     <Flex

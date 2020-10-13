@@ -7,36 +7,47 @@ import { Profile } from 'utils/types';
 
 type Props = {
   profile: Profile;
+  loggedInUser: boolean;
 };
-export const ProfileContent: React.FC<Props> = ({ profile }) => {
-  // eslint-disable-next-line
-  console.log({ profile });
+export const ProfileContent: React.FC<Props> = ({ profile, loggedInUser }) => {
   return (
     <VStack w="100%" spacing={8} maxW="70rem" p={8} color="text" mb={16}>
       <Text textTransform="uppercase" fontSize="xl" w="100%">
-        Grants I’m a recipient of
+        {loggedInUser ? `Grants I’m a recipient of` : `User is a recipient of`}
       </Text>
-      {profile.myGrants.map(grant => (
-        <GrantDetails grant={grant} myGrant key={grant.id} />
-      ))}
+      {profile.myGrants.length > 0 ? (
+        profile.myGrants.map(grant => (
+          <GrantDetails grant={grant} myGrant key={grant.id} />
+        ))
+      ) : (
+        <Text> No Grants found </Text>
+      )}
       <Text textTransform="uppercase" fontSize="xl" w="100%" pt={4}>
         Active Streams
       </Text>
-      <SimpleGrid columns={[1, null, 2, 3]} spacing={8} w="100%">
-        {profile.streams
-          .filter(s => !s.isRevoked && s.grantName)
-          .map(stream => (
-            <StreamTile stream={stream} key={stream.startTime} />
-          ))}
-      </SimpleGrid>
+      {profile.streams.length > 0 ? (
+        <SimpleGrid columns={[1, null, 2, 3]} spacing={8} w="100%">
+          {profile.streams
+            .filter(s => !s.isRevoked && s.grantName)
+            .map(stream => (
+              <StreamTile stream={stream} key={stream.startTime} />
+            ))}
+        </SimpleGrid>
+      ) : (
+        <Text> No Streams found </Text>
+      )}
       <Text textTransform="uppercase" fontSize="xl" w="100%" pt={4}>
-        Grants I’ve funded
+        {loggedInUser ? `Grants I’ve funded` : `User has funded`}
       </Text>
-      <SimpleGrid columns={[1, null, 2, 3]} spacing={8} w="100%">
-        {profile.fundedGrants.map(grant => (
-          <GrantTile grant={grant} myGrant key={grant.id} />
-        ))}
-      </SimpleGrid>
+      {profile.fundedGrants.length > 0 ? (
+        <SimpleGrid columns={[1, null, 2, 3]} spacing={8} w="100%">
+          {profile.fundedGrants.map(grant => (
+            <GrantTile grant={grant} myGrant key={grant.id} />
+          ))}
+        </SimpleGrid>
+      ) : (
+        <Text> No Grants found </Text>
+      )}
     </VStack>
   );
 };

@@ -1,6 +1,7 @@
 import { BigNumber } from 'ethers';
 
 export type Stream = {
+  id: string;
   owner: string;
   funded: BigNumber;
   released: BigNumber;
@@ -9,6 +10,10 @@ export type Stream = {
   isRevoked: boolean;
   grantName: string;
   grantAddress: string;
+};
+
+export type VestedStream = Stream & {
+  vested: BigNumber;
 };
 
 export type Funder = {

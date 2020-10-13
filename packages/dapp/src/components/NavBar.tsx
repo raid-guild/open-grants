@@ -51,7 +51,7 @@ export const NavBar: React.FC<Props> = ({ isOpen, onClose }) => {
                   Explore Grants
                 </Link>
                 {account && (
-                  <Link to="/profile" onClick={onClose}>
+                  <Link to={`/profile/${account}`} onClick={onClose}>
                     My Grants
                   </Link>
                 )}

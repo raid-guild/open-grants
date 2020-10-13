@@ -48,6 +48,17 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
         borderLeft="1px solid #ccc"
         borderBottom="1px solid #ccc"
       >
+        {grant.streams.length === 0 && (
+          <Flex
+            justify="center"
+            align="center"
+            w="100%"
+            h="100%"
+            background="black10"
+          >
+            <Text color="text">No Streams found</Text>
+          </Flex>
+        )}
         <FlexibleWidthXYPlot stackBy="y" yDomain={[0, max * 1.5]} height={420}>
           {grantData.map(data => (
             <AreaSeries

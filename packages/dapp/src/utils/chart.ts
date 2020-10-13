@@ -26,12 +26,12 @@ export const parseGrantData = (
       }
       return points;
     });
-  // eslint-disable-next-line no-console
-  console.log({
-    grant: grant.id,
-    streams: grant.streams,
-    data,
-    max: Number(utils.formatEther(max)),
-  });
+  // // eslint-disable-next-line no-console
+  // console.log({
+  //   grant: grant.id,
+  //   streams: grant.streams,
+  //   data,
+  //   max: Number(utils.formatEther(max)),
+  // });
   return [data, Number(utils.formatEther(max))];
 };

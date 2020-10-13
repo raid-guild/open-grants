@@ -1,5 +1,5 @@
 import { Flex, Input, Text } from '@chakra-ui/core';
-import React from 'react';
+import React, { useState } from 'react';
 
 type Props = {
   title: string;
@@ -8,6 +8,7 @@ type Props = {
   value: string;
   maxLength: number;
   setValue: React.Dispatch<React.SetStateAction<string>>;
+  optional?: boolean;
 };
 
 export const GrantTextInput: React.FC<Props> = ({
@@ -17,7 +18,9 @@ export const GrantTextInput: React.FC<Props> = ({
   value,
   setValue,
   maxLength,
+  optional = false,
 }) => {
+  const [invalid, setInvalid] = useState(false);
   // TODO add a check for validating if links are valid
   return (
     <Flex direction="column" w="100%">
@@ -29,11 +32,18 @@ export const GrantTextInput: React.FC<Props> = ({
         w="100%"
         size="lg"
         border="none"
+        isInvalid={invalid}
         value={value}
         placeholder={label}
-        onChange={e => setValue(e.target.value)}
+        onChange={e => {
+          if (!optional) {
+            setInvalid(!e.target.value);
+          }
+          setValue(e.target.value);
+        }}
         fontSize="md"
         maxLength={maxLength}
+        color="dark"
       />
     </Flex>
   );

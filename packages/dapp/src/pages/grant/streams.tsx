@@ -1,6 +1,7 @@
 import { Box, VStack } from '@chakra-ui/core';
-import { GrantContent } from 'components/GrantContent';
+import { DistributeFunds } from 'components/DistributeFunds';
 import { GrantHeader } from 'components/GrantHeader';
+import { LoadingPage } from 'components/LoadingPage';
 import { getGrant } from 'graphql/getGrant';
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -20,14 +21,11 @@ const GrantPage: React.FC<Props> = ({
   const [grant, setGrant] = useState<Grant | null | undefined>();
 
   useEffect(() => {
-    async function fetchGrant() {
-      setGrant(await getGrant(grantAddress.toLowerCase()));
-    }
-    fetchGrant();
+    getGrant(grantAddress.toLowerCase()).then(g => setGrant(g));
   }, [grantAddress]);
 
   if (grant === undefined) {
-    return <Box mt="5rem"> Loading ... </Box>;
+    return <LoadingPage />;
   }
   if (grant === null) {
     return <Box mt="5rem"> Grant not found </Box>;
@@ -35,7 +33,7 @@ const GrantPage: React.FC<Props> = ({
   return (
     <VStack w="100%">
       <GrantHeader grant={grant} />
-      <GrantContent grant={grant} />
+      <DistributeFunds grant={grant} />
     </VStack>
   );
 };

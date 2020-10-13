@@ -17,6 +17,7 @@ export const GrantDetails = gql`
       amount
     }
     streams {
+      id
       owner
       released
       funded
@@ -33,6 +34,7 @@ export const GrantDetails = gql`
 
 export const StreamDetails = gql`
   fragment StreamDetails on Stream {
+    id
     owner
     released
     funded
