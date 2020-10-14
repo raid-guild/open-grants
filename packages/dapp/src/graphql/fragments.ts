@@ -47,3 +47,14 @@ export const StreamDetails = gql`
     }
   }
 `;
+
+export const UserDetails = gql`
+  fragment UserDetails on User {
+    id
+    funded
+    pledged
+    streamed
+    withdrawn
+    earned
+  }
+`;
