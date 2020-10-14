@@ -18,7 +18,7 @@ export const InProgressStream: React.FC<StreamProps> = ({ stream, tx }) => {
   const timestamp = tx.timestamp
     ? tx.timestamp
     : Math.floor(new Date().getTime() / 1000);
-  const available = getVestedAmount(stream, timestamp);
+  const available = getVestedAmount(stream, timestamp).sub(stream.released);
   const [profile, setProfile] = useState<BoxProfile | undefined>();
   const [loading, setLoading] = useState(true);
   useEffect(() => {

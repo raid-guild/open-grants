@@ -22,6 +22,7 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
   const { ethersProvider } = useContext(Web3Context);
   const [selected, setSelected] = useState<Array<Stream>>([]);
   const [inProgress, setInProgress] = useState<Array<ProgressStream>>([]);
+  const streams = grant.streams.filter(s => !s.isRevoked);
 
   const processStream = async (
     stream: Stream,
@@ -36,7 +37,7 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
       newSelected.splice(s.indexOf(stream), 1);
       return newSelected;
     });
-    grant.streams.splice(grant.streams.indexOf(stream), 1);
+    streams.splice(streams.indexOf(stream), 1);
     setInProgress(p => {
       const newProgress = p.slice();
       newProgress.push(processedStream);
@@ -96,25 +97,22 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
             fontWeight="500"
             fontSize="sm"
             onClick={() => {
-              if (
-                selected.length !== 0 &&
-                selected.length === grant.streams.length
-              ) {
+              if (selected.length !== 0 && selected.length === streams.length) {
                 setSelected([]);
               } else {
-                setSelected(grant.streams.slice());
+                setSelected(streams.slice());
               }
             }}
           >
-            {selected.length !== 0 && selected.length === grant.streams.length
+            {selected.length !== 0 && selected.length === streams.length
               ? 'Unselect All'
               : 'Select All'}
           </Button>
         </Flex>
       </Grid>
-      {grant.streams.length > 0 ? (
+      {streams.length > 0 ? (
         <VStack w="100%" spacing={4}>
-          {grant.streams
+          {streams
             .sort((a, b) => {
               const timestamp = Math.floor(new Date().getTime() / 1000);
               const vestedA = getVestedAmount(a, timestamp);

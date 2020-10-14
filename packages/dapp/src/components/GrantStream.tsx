@@ -16,7 +16,7 @@ export const GrantStream: React.FC<StreamProps> = ({
   stream,
 }) => {
   const timestamp = Math.floor(new Date().getTime() / 1000);
-  const available = getVestedAmount(stream, timestamp);
+  const available = getVestedAmount(stream, timestamp).sub(stream.released);
   const [profile, setProfile] = useState<BoxProfile | undefined>();
   useEffect(() => {
     getProfile(stream.owner).then(p => setProfile(p));

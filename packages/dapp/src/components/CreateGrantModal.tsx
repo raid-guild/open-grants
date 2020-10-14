@@ -12,9 +12,11 @@ import {
 import { GrantRecipient } from 'components/GrantRecipient';
 import { Link } from 'components/Link';
 import { LoadingModal } from 'components/LoadingModal';
+import { SuccessModal } from 'components/SuccessModal';
 import { Web3Context } from 'contexts/Web3Context';
-import React, { useContext, useState } from 'react';
-import { createGrant } from 'utils/grants';
+import { providers } from 'ethers';
+import React, { useContext, useEffect, useState } from 'react';
+import { awaitGrantAddress, createGrant } from 'utils/grants';
 import { Metadata } from 'utils/ipfs';
 
 type Props = {
@@ -34,27 +36,42 @@ export const CreateGrantModal: React.FC<Props> = ({
 }) => {
   const total = amounts.reduce((t, a) => t + Number(a), 0);
   const { ethersProvider } = useContext(Web3Context);
-  const [txHash, setTxHash] = useState<string | undefined>('');
+  const [tx, setTx] = useState<providers.TransactionResponse | undefined>();
   const onSubmit = async () => {
     if (!ethersProvider) {
       // eslint-disable-next-line no-console
       console.log({ validateError: 'Validation Error' });
       return;
     }
-    const tx = await createGrant(ethersProvider, grantees, amounts, metadata);
-    setTxHash(tx.hash);
+    setTx(await createGrant(ethersProvider, grantees, amounts, metadata));
   };
+  const [grantAddress, setGrantAddress] = useState('');
+  useEffect(() => {
+    if (tx && ethersProvider) {
+      awaitGrantAddress(ethersProvider, tx).then(g => setGrantAddress(g));
+    }
+  }, [tx, ethersProvider]);
+  const faq = 'Questions about grants? View the funding FAQ';
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay>
-        {txHash && (
-          <LoadingModal
-            title="Creating Grant"
-            txHash={txHash}
-            onClose={onClose}
-          />
-        )}
-        {!txHash && (
+        {tx &&
+          (grantAddress ? (
+            <SuccessModal
+              faq={faq}
+              title="Grant Created"
+              grantAddress={grantAddress}
+              onClose={onClose}
+            />
+          ) : (
+            <LoadingModal
+              faq={faq}
+              title="Creating Grant"
+              txHash={tx.hash}
+              onClose={onClose}
+            />
+          ))}
+        {!tx && (
           <ModalContent
             borderRadius="1rem"
             maxW="40rem"
@@ -64,7 +81,7 @@ export const CreateGrantModal: React.FC<Props> = ({
             p={6}
           >
             <Link to="/faq" textDecor="underline">
-              Questions about grants? View the funding FAQ
+              {faq}
             </Link>
 
             <VStack spacing={4} w="100%" p={6} pb="4.5rem">
