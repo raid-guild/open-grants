@@ -158,10 +158,8 @@ export const parseProfile = (
       ),
     earned: input.myGrants.reduce((total, grant) => {
       const index = grant.grantees.indexOf(account);
-      const amount = Math.floor(grant.amounts[index] * 10);
-      const totalAmount = Math.floor(
-        grant.amounts.reduce((t, a) => t + a, 0) * 10,
-      );
+      const amount = grant.amounts[index];
+      const totalAmount = grant.amounts.reduce((t, a) => t + a, 0);
       const totalFunds = grant.funds.reduce(
         (t, f) => t.add(BigNumber.from(f.amount)),
         BigNumber.from(0),

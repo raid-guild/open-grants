@@ -1,5 +1,13 @@
-import { Button, Flex, SimpleGrid, Text, VStack } from '@chakra-ui/core';
+import {
+  Button,
+  Flex,
+  SimpleGrid,
+  Text,
+  useDisclosure,
+  VStack,
+} from '@chakra-ui/core';
 import { Link } from 'components/Link';
+import { StopStreamModal } from 'components/StopStreamModal';
 import React from 'react';
 import { formatValue, getVestedAmount } from 'utils/helpers';
 import { Stream } from 'utils/types';
@@ -8,6 +16,7 @@ type Props = {
   stream: Stream;
 };
 export const StreamTile: React.FC<Props> = ({ stream }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   if (!stream) return null;
   const currentTime = Math.ceil(new Date().getTime() / 1000);
   const vested = getVestedAmount(stream, currentTime);
@@ -53,13 +62,14 @@ export const StreamTile: React.FC<Props> = ({ stream }) => {
       </Flex>
       <Button
         bg="background"
-        // _hover={{background: 'black20'}}
         textTransform="uppercase"
         w="100%"
         boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
+        onClick={onOpen}
       >
         Stop the stream
       </Button>
+      <StopStreamModal stream={stream} isOpen={isOpen} onClose={onClose} />
     </VStack>
   );
 };

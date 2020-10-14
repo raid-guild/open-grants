@@ -10,6 +10,8 @@ type Props = {
   loggedInUser: boolean;
 };
 export const ProfileContent: React.FC<Props> = ({ profile, loggedInUser }) => {
+  const streams = profile.streams.filter(s => !s.isRevoked && s.grantName);
+
   return (
     <VStack w="100%" spacing={8} maxW="70rem" p={8} color="text" mb={16}>
       <Text textTransform="uppercase" fontSize="xl" w="100%">
@@ -25,13 +27,11 @@ export const ProfileContent: React.FC<Props> = ({ profile, loggedInUser }) => {
       <Text textTransform="uppercase" fontSize="xl" w="100%" pt={4}>
         Active Streams
       </Text>
-      {profile.streams.length > 0 ? (
+      {streams.length > 0 ? (
         <SimpleGrid columns={[1, null, 2, 3]} spacing={8} w="100%">
-          {profile.streams
-            .filter(s => !s.isRevoked && s.grantName)
-            .map(stream => (
-              <StreamTile stream={stream} key={stream.startTime} />
-            ))}
+          {streams.map(stream => (
+            <StreamTile stream={stream} key={stream.startTime} />
+          ))}
         </SimpleGrid>
       ) : (
         <Text> No Streams found </Text>

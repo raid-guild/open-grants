@@ -14,8 +14,10 @@ import { DurationSelector } from 'components/DurationSelector';
 import { Link } from 'components/Link';
 import { LoadingModal } from 'components/LoadingModal';
 import { MethodSelector } from 'components/MethodSelector';
+import { SuccessModal } from 'components/SuccessModal';
 import { Web3Context } from 'contexts/Web3Context';
-import React, { useContext, useState } from 'react';
+import { providers } from 'ethers';
+import React, { useContext, useEffect, useState } from 'react';
 import { ONEYEAR } from 'utils/constants';
 import { createStream, fundGrant } from 'utils/streams';
 
@@ -33,7 +35,7 @@ export const FundGrantModal: React.FC<Props> = ({
   const [split, toggleSplit] = useState(false);
   const [duration, setDuration] = useState(ONEYEAR / 2);
   const [amount, setAmount] = useState('');
-  const [txHash, setTxHash] = useState<string | undefined>('');
+  const [tx, setTx] = useState<providers.TransactionResponse | undefined>();
   const onSubmit = async () => {
     if (!ethersProvider) {
       // eslint-disable-next-line no-console
@@ -41,29 +43,40 @@ export const FundGrantModal: React.FC<Props> = ({
       return;
     }
     if (split) {
-      const tx = await createStream(
-        ethersProvider,
-        grantAddress,
-        duration,
-        amount,
-      );
-      setTxHash(tx.hash);
+      setTx(await createStream(ethersProvider, grantAddress, duration, amount));
     } else {
-      const tx = await fundGrant(ethersProvider, grantAddress, amount);
-      setTxHash(tx.hash);
+      setTx(await fundGrant(ethersProvider, grantAddress, amount));
     }
   };
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (tx) {
+      setLoading(true);
+      tx.wait().then(() => setLoading(false));
+    }
+  }, [tx]);
+
+  const faq = 'Questions about grants? View the funding FAQ';
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay>
-        {txHash && (
-          <LoadingModal
-            title="Funding In Progress"
-            txHash={txHash}
-            onClose={onClose}
-          />
-        )}
-        {!txHash && (
+        {tx &&
+          (loading ? (
+            <LoadingModal
+              faq={faq}
+              title="Funding In Progress"
+              txHash={tx.hash}
+              onClose={onClose}
+            />
+          ) : (
+            <SuccessModal
+              faq={faq}
+              title="Grant Funded"
+              grantAddress={grantAddress}
+              onClose={onClose}
+            />
+          ))}
+        {!tx && (
           <ModalContent
             borderRadius="1rem"
             maxW="40rem"
@@ -73,7 +86,7 @@ export const FundGrantModal: React.FC<Props> = ({
             p={6}
           >
             <Link to="/faq" textDecor="underline">
-              First time? View the funding FAQ
+              {faq}
             </Link>
 
             <VStack spacing={4} w="100%" py={6}>
