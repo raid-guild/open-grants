@@ -92,7 +92,8 @@ open-grants
 │   │   │       └── GrantToken.sol
 │   │   ├── package.json
 │   │   ├── scripts
-│   │   │   └── deploy.ts
+│   │   │   ├── grantFactory.ts
+│   │   │   └── vestingFactory.ts
 │   │   ├── test
 │   │   │   ├── GranteeConstructor.spec.ts
 │   │   │   ├── UnmanagedStream.spec.ts
@@ -104,39 +105,81 @@ open-grants
 │   │   ├── tsconfig.json
 │   │   └── waffle.js
 │   ├── dapp
+│   │   ├── @types
+│   │   │   ├── base-58
+│   │   │   │   └── index.d.ts
+│   │   │   ├── fake-tag
+│   │   │   │   └── index.d.ts
+│   │   │   ├── ipfs-http-client
+│   │   │   │   └── index.d.ts
+│   │   │   └── react-vis
+│   │   │       └── index.d.ts
 │   │   ├── README.md
 │   │   ├── codegen.yml
 │   │   ├── package.json
 │   │   ├── public
+│   │   │   ├── android-chrome-192x192.png
+│   │   │   ├── android-chrome-256x256.png
+│   │   │   ├── apple-touch-icon.png
+│   │   │   ├── browserconfig.xml
+│   │   │   ├── favicon-16x16.png
+│   │   │   ├── favicon-32x32.png
+│   │   │   ├── favicon.ico
 │   │   │   ├── index.html
 │   │   │   ├── manifest.json
-│   │   │   └── robots.txt
+│   │   │   ├── mstile-150x150.png
+│   │   │   ├── robots.txt
+│   │   │   └── safari-pinned-tab.svg
 │   │   ├── src
 │   │   │   ├── App.tsx
 │   │   │   ├── Routes.tsx
 │   │   │   ├── assets
+│   │   │   │   ├── done.svg
 │   │   │   │   ├── eth-crystal-wave.png
 │   │   │   │   ├── header.jpg
-│   │   │   │   └── navbar.jpg
+│   │   │   │   ├── loading-background.png
+│   │   │   │   ├── loading.svg
+│   │   │   │   ├── navbar.jpg
+│   │   │   │   ├── tile-background.svg
+│   │   │   │   ├── whale.svg
+│   │   │   │   └── whaleLoader__data.json
 │   │   │   ├── components
 │   │   │   │   ├── CreateGrantForm.tsx
+│   │   │   │   ├── CreateGrantModal.tsx
+│   │   │   │   ├── DistributeFunds.tsx
 │   │   │   │   ├── DurationSelector.tsx
 │   │   │   │   ├── ErrorBoundary.tsx
 │   │   │   │   ├── ExploreHeader.tsx
 │   │   │   │   ├── FAQContent.tsx
 │   │   │   │   ├── FAQHeader.tsx
 │   │   │   │   ├── FundGrantModal.tsx
+│   │   │   │   ├── GrantChart.tsx
+│   │   │   │   ├── GrantContent.tsx
+│   │   │   │   ├── GrantDetails.tsx
+│   │   │   │   ├── GrantFunders.tsx
 │   │   │   │   ├── GrantHeader.tsx
+│   │   │   │   ├── GrantRecipient.tsx
+│   │   │   │   ├── GrantRecipients.tsx
+│   │   │   │   ├── GrantStream.tsx
 │   │   │   │   ├── GrantTextInput.tsx
 │   │   │   │   ├── GrantTile.tsx
 │   │   │   │   ├── GranteesInput.tsx
 │   │   │   │   ├── GrantsSorter.tsx
 │   │   │   │   ├── Header.tsx
+│   │   │   │   ├── InProgressStream.tsx
 │   │   │   │   ├── Layout.tsx
 │   │   │   │   ├── Link.tsx
+│   │   │   │   ├── Loader.tsx
+│   │   │   │   ├── LoadingModal.tsx
+│   │   │   │   ├── LoadingPage.tsx
 │   │   │   │   ├── MethodSelector.tsx
 │   │   │   │   ├── NavBar.tsx
-│   │   │   │   └── ProfileImage.tsx
+│   │   │   │   ├── ProfileContent.tsx
+│   │   │   │   ├── ProfileHeader.tsx
+│   │   │   │   ├── ProfileImage.tsx
+│   │   │   │   ├── StopStreamModal.tsx
+│   │   │   │   ├── StreamTile.tsx
+│   │   │   │   └── SuccessModal.tsx
 │   │   │   ├── config.ts
 │   │   │   ├── contexts
 │   │   │   │   └── Web3Context.tsx
@@ -144,31 +187,39 @@ open-grants
 │   │   │   │   ├── client.ts
 │   │   │   │   ├── fragments.ts
 │   │   │   │   ├── getGrant.ts
-│   │   │   │   └── getGrants.ts
+│   │   │   │   ├── getGrants.ts
+│   │   │   │   ├── getProfile.ts
+│   │   │   │   └── utils.ts
 │   │   │   ├── icons
-│   │   │   │   ├── ArrowDownIcon.jsx
-│   │   │   │   ├── CloseIcon.jsx
-│   │   │   │   ├── FeaturedIcon.jsx
-│   │   │   │   ├── InNeedIcon.jsx
-│   │   │   │   ├── LatestIcon.jsx
-│   │   │   │   ├── QuestionIcon.jsx
-│   │   │   │   ├── SearchIcon.jsx
-│   │   │   │   └── TrendingIcon.jsx
+│   │   │   │   ├── ArrowDownIcon.tsx
+│   │   │   │   ├── CloseIcon.tsx
+│   │   │   │   ├── FeaturedIcon.tsx
+│   │   │   │   ├── InNeedIcon.tsx
+│   │   │   │   ├── LatestIcon.tsx
+│   │   │   │   ├── QuestionIcon.tsx
+│   │   │   │   ├── SearchIcon.tsx
+│   │   │   │   └── TrendingIcon.tsx
 │   │   │   ├── index.tsx
 │   │   │   ├── pages
 │   │   │   │   ├── create.tsx
 │   │   │   │   ├── explore.tsx
 │   │   │   │   ├── faq.tsx
-│   │   │   │   └── grant
-│   │   │   │       └── details.tsx
+│   │   │   │   ├── grant
+│   │   │   │   │   ├── address.tsx
+│   │   │   │   │   └── streams.tsx
+│   │   │   │   └── profile
+│   │   │   │       └── address.tsx
 │   │   │   ├── react-app-env.d.ts
 │   │   │   ├── theme.ts
 │   │   │   └── utils
 │   │   │       ├── 3box.ts
+│   │   │       ├── chart.ts
+│   │   │       ├── constants.ts
 │   │   │       ├── grants.ts
 │   │   │       ├── helpers.ts
 │   │   │       ├── ipfs.ts
-│   │   │       └── streams.ts
+│   │   │       ├── streams.ts
+│   │   │       └── types.ts
 │   │   └── tsconfig.json
 │   └── subgraph
 │       ├── README.md
