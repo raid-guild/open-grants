@@ -46,7 +46,9 @@ export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
             color="black"
             fontWeight="600"
             fontSize="2xl"
+            textAlign="left"
             mb={6}
+            style={{ whiteSpace: 'pre-wrap' }}
           >
             {grant.name}
           </Link>
@@ -54,7 +56,7 @@ export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
             {grant.description}
           </Text>
           <Spacer />
-          <SimpleGrid columns={2} spacing={4} mb={16} letterSpacing="0.3px">
+          <SimpleGrid columns={2} spacing={4} mb={4} letterSpacing="0.3px">
             <Flex direction="column">
               <Text fontWeight="500" fontSize="2xl">
                 {`${formatValue(grant.pledged)} ETH`}

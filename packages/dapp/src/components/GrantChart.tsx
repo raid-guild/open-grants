@@ -70,8 +70,8 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
               style={{}}
             />
           ))}
-          <XAxis style={{ fontSize: '9px' }} />
-          <YAxis style={{ fontSize: '9px' }} />
+          <XAxis style={{ fontSize: '9px', opacity: '0.75' }} tickTotal={10} />
+          <YAxis style={{ fontSize: '9px', opacity: '0.75' }} tickTotal={10} />
         </FlexibleWidthXYPlot>
       </Box>
       <Flex w="100%" justify="space-around" align="center" mt={4}>
