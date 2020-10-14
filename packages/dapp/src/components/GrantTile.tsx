@@ -31,6 +31,7 @@ export const GrantTile: React.FC<Props> = ({ grant }) => {
       rounded="lg"
       p={4}
       background="white"
+      boxShadow="0px 4px 4px rgba(114, 125, 129, 0.25)"
       color="gray.500"
       align="stretch"
       bgImage={`url(${TileBG})`}
