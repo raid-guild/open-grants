@@ -48,9 +48,13 @@ export type Grant = {
 };
 
 export type Profile = {
-  myGrants: Array<Grant>;
-  fundedGrants: Array<Grant>;
+  id: string;
+  grantsReceived: Array<Grant>;
+  grantsFunded: Array<Grant>;
   streams: Array<Stream>;
   pledged: BigNumber;
   earned: BigNumber;
+  funded: BigNumber;
+  withdrawn: BigNumber;
+  streamed: BigNumber;
 };

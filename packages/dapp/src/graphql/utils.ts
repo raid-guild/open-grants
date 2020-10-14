@@ -3,6 +3,7 @@ import {
   Fund as FundGraph,
   GrantDetailsFragment,
   StreamDetailsFragment,
+  User as UserGraph,
 } from 'graphql/autogen/types';
 import { Funder, Grant, Profile, Stream } from 'utils/types';
 
@@ -128,44 +129,25 @@ export const parseGrant = (
   return output;
 };
 
-type ProfileFragment = {
-  myGrants: Array<GrantDetailsFragment>;
-  fundedGrants: Array<GrantDetailsFragment>;
+type ProfileFragment = Pick<
+  UserGraph,
+  'id' | 'funded' | 'earned' | 'pledged' | 'withdrawn' | 'streamed'
+> & {
+  grantsReceived: Array<GrantDetailsFragment>;
+  grantsFunded: Array<GrantDetailsFragment>;
   streams: Array<StreamDetailsFragment>;
 };
 
-export const parseProfile = (
-  account: string,
-  input: ProfileFragment,
-): Profile => {
+export const parseProfile = (input: ProfileFragment): Profile => {
   return {
-    myGrants: input.myGrants.map(grant => parseGrant(grant, false)),
-    fundedGrants: input.fundedGrants.map(grant => parseGrant(grant, false)),
+    id: input.id.toLowerCase(),
+    grantsReceived: input.grantsReceived.map(grant => parseGrant(grant, false)),
+    grantsFunded: input.grantsFunded.map(grant => parseGrant(grant, false)),
     streams: input.streams.map(s => parseStream(s)),
-    pledged: input.fundedGrants
-      .reduce((total, grant) => {
-        const funds = grant.funds
-          .filter(fund => fund.donor === account)
-          .reduce((t, f) => t.add(BigNumber.from(f.amount)), BigNumber.from(0));
-        return total.add(funds);
-      }, BigNumber.from(0))
-      .add(
-        input.streams.reduce(
-          (total, stream) =>
-            total.add(BigNumber.from(stream.funded).sub(stream.released)),
-          BigNumber.from(0),
-        ),
-      ),
-    earned: input.myGrants.reduce((total, grant) => {
-      const index = grant.grantees.indexOf(account);
-      const amount = grant.amounts[index];
-      const totalAmount = grant.amounts.reduce((t, a) => t + a, 0);
-      const totalFunds = grant.funds.reduce(
-        (t, f) => t.add(BigNumber.from(f.amount)),
-        BigNumber.from(0),
-      );
-      const funds = totalFunds.mul(amount).div(totalAmount);
-      return total.add(funds);
-    }, BigNumber.from(0)),
+    funded: BigNumber.from(input.funded),
+    earned: BigNumber.from(input.earned),
+    pledged: BigNumber.from(input.pledged),
+    withdrawn: BigNumber.from(input.withdrawn),
+    streamed: BigNumber.from(input.streamed),
   };
 };
