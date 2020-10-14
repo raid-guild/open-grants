@@ -58,3 +58,12 @@ export type Profile = {
   withdrawn: BigNumber;
   streamed: BigNumber;
 };
+
+export type User = {
+  id: string;
+  pledged: BigNumber;
+  earned: BigNumber;
+  funded: BigNumber;
+  withdrawn: BigNumber;
+  streamed: BigNumber;
+};

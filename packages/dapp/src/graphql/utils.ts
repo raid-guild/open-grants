@@ -4,8 +4,9 @@ import {
   GrantDetailsFragment,
   StreamDetailsFragment,
   User as UserGraph,
+  UserDetailsFragment,
 } from 'graphql/autogen/types';
-import { Funder, Grant, Profile, Stream } from 'utils/types';
+import { Funder, Grant, Profile, Stream, User } from 'utils/types';
 
 type FundFragment = Pick<FundGraph, 'donor' | 'amount'>;
 
@@ -144,6 +145,17 @@ export const parseProfile = (input: ProfileFragment): Profile => {
     grantsReceived: input.grantsReceived.map(grant => parseGrant(grant, false)),
     grantsFunded: input.grantsFunded.map(grant => parseGrant(grant, false)),
     streams: input.streams.map(s => parseStream(s)),
+    funded: BigNumber.from(input.funded),
+    earned: BigNumber.from(input.earned),
+    pledged: BigNumber.from(input.pledged),
+    withdrawn: BigNumber.from(input.withdrawn),
+    streamed: BigNumber.from(input.streamed),
+  };
+};
+
+export const parseUser = (input: UserDetailsFragment): User => {
+  return {
+    id: input.id.toLowerCase(),
     funded: BigNumber.from(input.funded),
     earned: BigNumber.from(input.earned),
     pledged: BigNumber.from(input.pledged),
