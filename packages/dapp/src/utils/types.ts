@@ -1,5 +1,11 @@
 import { BigNumber } from 'ethers';
 
+export enum Sort {
+  Latest,
+  Featured,
+  Trending,
+}
+
 export type Stream = {
   id: string;
   owner: string;
@@ -42,9 +48,22 @@ export type Grant = {
 };
 
 export type Profile = {
-  myGrants: Array<Grant>;
-  fundedGrants: Array<Grant>;
+  id: string;
+  grantsReceived: Array<Grant>;
+  grantsFunded: Array<Grant>;
   streams: Array<Stream>;
   pledged: BigNumber;
   earned: BigNumber;
+  funded: BigNumber;
+  withdrawn: BigNumber;
+  streamed: BigNumber;
+};
+
+export type User = {
+  id: string;
+  pledged: BigNumber;
+  earned: BigNumber;
+  funded: BigNumber;
+  withdrawn: BigNumber;
+  streamed: BigNumber;
 };

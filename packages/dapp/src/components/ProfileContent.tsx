@@ -17,8 +17,8 @@ export const ProfileContent: React.FC<Props> = ({ profile, loggedInUser }) => {
       <Text textTransform="uppercase" fontSize="xl" w="100%">
         {loggedInUser ? `Grants I’m a recipient of` : `User is a recipient of`}
       </Text>
-      {profile.myGrants.length > 0 ? (
-        profile.myGrants.map(grant => (
+      {profile.grantsReceived.length > 0 ? (
+        profile.grantsReceived.map(grant => (
           <GrantDetails grant={grant} myGrant key={grant.id} />
         ))
       ) : (
@@ -39,9 +39,9 @@ export const ProfileContent: React.FC<Props> = ({ profile, loggedInUser }) => {
       <Text textTransform="uppercase" fontSize="xl" w="100%" pt={4}>
         {loggedInUser ? `Grants I’ve funded` : `User has funded`}
       </Text>
-      {profile.fundedGrants.length > 0 ? (
+      {profile.grantsFunded.length > 0 ? (
         <SimpleGrid columns={[1, null, 2, 3]} spacing={8} w="100%">
-          {profile.fundedGrants.map(grant => (
+          {profile.grantsFunded.map(grant => (
             <GrantTile grant={grant} myGrant key={grant.id} />
           ))}
         </SimpleGrid>

@@ -1,12 +1,12 @@
 import { Bytes, log } from '@graphprotocol/graph-ts';
 
-import { Fund, Grant, Payment, Stream } from '../generated/schema';
+import { User, Fund, Grant, Payment, Stream } from '../generated/schema';
 import {
   LogFunding,
   LogPayment,
 } from '../generated/UnmanagedStream/UnmanagedStream';
 import { LogNewGrant } from '../generated/UnmanagedStreamFactory/UnmanagedStreamFactory';
-import { fetchGrantInfo } from './helpers';
+import { fetchGrantInfo, newUser } from './helpers';
 
 export function handleLogNewGrant(event: LogNewGrant): void {
   let grant = new Grant(event.params.grant.toHexString());
@@ -33,6 +33,19 @@ export function handleLogNewGrant(event: LogNewGrant): void {
 
   grant.save();
   log.debug('New Grant {}', [grant.id]);
+
+  let grantees = event.params.grantees as Array<Bytes>;
+  for (let i = 0; i < grantees.length; ++i) {
+    let grantee = grantees[i];
+    let user = User.load(grantee.toHexString());
+    if (user == null) {
+      user = newUser(grantee);
+    }
+    let grantsReceived = user.grantsReceived;
+    grantsReceived.push(event.params.grant.toHexString());
+    user.grantsReceived = grantsReceived;
+    user.save();
+  }
 }
 
 export function handleLogFunding(event: LogFunding): void {
@@ -65,6 +78,18 @@ export function handleLogFunding(event: LogFunding): void {
     grant.funds = funds;
 
     grant.save();
+
+    let user = User.load(fund.donor.toHexString());
+    if (user == null) {
+      user = newUser(fund.donor);
+    }
+    if (user.grantsFunded.indexOf(grant.id) == -1) {
+      let grantsFunded = user.grantsFunded;
+      grantsFunded.push(grant.id);
+      user.grantsFunded = grantsFunded;
+    }
+    user.funded = user.funded.plus(fund.amount);
+    user.save();
   } else {
     log.debug('Grant {} not found for Funding {}', [
       event.address.toHexString(),
@@ -88,6 +113,13 @@ export function handleLogPayment(event: LogPayment): void {
     payments.push(payment.id);
     grant.payments = payments;
     grant.save();
+
+    let user = User.load(payment.grantee.toHexString());
+    if (user == null) {
+      user = newUser(payment.grantee);
+    }
+    user.earned = user.earned.plus(payment.amount);
+    user.save();
   } else {
     log.debug('Grant {} not found for Payment {}', [
       event.address.toHexString(),

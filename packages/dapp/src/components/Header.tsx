@@ -28,7 +28,9 @@ export const Header: React.FC<Props> = ({ onOpen }) => {
     }
   }, [account]);
   const history = useHistory();
-  const headerColorRequired = history.location.pathname === '/create';
+  const headerColorRequired =
+    history.location.pathname === '/create' ||
+    history.location.pathname === '/leaderboard';
   const bgImage = headerColorRequired ? `url(${HeaderBG})` : undefined;
 
   return (

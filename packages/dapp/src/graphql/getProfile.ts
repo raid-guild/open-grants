@@ -9,30 +9,33 @@ import { parseProfile } from 'graphql/utils';
 import { Profile } from 'utils/types';
 
 const grantQuery = gql`
-  query GetProfile($address: Bytes!, $addressList: [Bytes!], $first: Int!) {
-    myGrants: grants(
-      first: $first
-      orderBy: timestamp
-      where: { name_not: "", grantees_contains: $addressList }
-      orderDirection: desc
-    ) {
-      ...GrantDetails
-    }
-    fundedGrants: grants(
-      first: $first
-      orderBy: timestamp
-      where: { name_not: "", donors_contains: $addressList }
-      orderDirection: desc
-    ) {
-      ...GrantDetails
-    }
-    streams(
-      first: $first
-      orderBy: timestamp
-      where: { owner: $address }
-      orderDirection: desc
-    ) {
-      ...StreamDetails
+  query GetProfile($address: ID!, $first: Int!) {
+    user(id: $address) {
+      id
+      funded
+      earned
+      pledged
+      withdrawn
+      streamed
+      grantsFunded(
+        first: $first
+        orderBy: timestamp
+        where: { name_not: "" }
+        orderDirection: desc
+      ) {
+        ...GrantDetails
+      }
+      grantsReceived(
+        first: $first
+        orderBy: timestamp
+        where: { name_not: "" }
+        orderDirection: desc
+      ) {
+        ...GrantDetails
+      }
+      streams(first: $first, orderBy: timestamp, orderDirection: desc) {
+        ...StreamDetails
+      }
     }
   }
   ${GrantDetails}
@@ -48,7 +51,6 @@ export const getProfile = async (
   const { data, error } = await client
     .query<GetProfileQuery, GetProfileQueryVariables>(grantQuery, {
       address,
-      addressList: [address],
       first,
     })
     .toPromise();
@@ -60,5 +62,8 @@ export const getProfile = async (
 
     return null;
   }
-  return parseProfile(address, data);
+  if (data.user) {
+    return parseProfile(data.user);
+  }
+  return undefined;
 };

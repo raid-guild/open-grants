@@ -44,17 +44,19 @@ export const ProfileHeader: React.FC<Props> = ({ profile, loggedInUser }) => {
       >
         <Flex direction="column">
           <Text fontWeight="500" fontSize="3xl" textAlign="center">
-            {profile.fundedGrants ? profile.fundedGrants.length : 0}
+            {profile.grantsFunded ? profile.grantsFunded.length : 0}
           </Text>
           <Text textTransform="uppercase" textAlign="center">
-            {profile.fundedGrants && profile.fundedGrants.length === 1
+            {profile.grantsFunded && profile.grantsFunded.length === 1
               ? 'Grant Funded'
               : 'Grants Funded'}
           </Text>
         </Flex>
         <Flex direction="column">
           <Text fontWeight="500" fontSize="3xl" textAlign="center">
-            {`${formatValue(profile.pledged)} ETH`}
+            {`${formatValue(
+              profile.pledged.add(profile.funded).sub(profile.streamed),
+            )} ETH`}
           </Text>
           <Text textTransform="uppercase" textAlign="center">
             Pledged
@@ -62,10 +64,10 @@ export const ProfileHeader: React.FC<Props> = ({ profile, loggedInUser }) => {
         </Flex>
         <Flex direction="column">
           <Text fontWeight="500" fontSize="3xl" textAlign="center">
-            {profile.myGrants ? profile.myGrants.length : 0}
+            {profile.grantsReceived ? profile.grantsReceived.length : 0}
           </Text>
           <Text textTransform="uppercase" textAlign="center">
-            {profile.myGrants && profile.myGrants.length === 1
+            {profile.grantsReceived && profile.grantsReceived.length === 1
               ? 'Grant Received'
               : 'Grants Received'}
           </Text>

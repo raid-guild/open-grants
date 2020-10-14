@@ -6,8 +6,8 @@ import {
   LogRevoked,
 } from '../generated/EtherVesting/EtherVesting';
 import { LogEtherVestingCreated } from '../generated/EtherVestingFactory/EtherVestingFactory';
-import { Deposit, Grant, Release, Stream } from '../generated/schema';
-import { fetchStreamInfo } from './helpers';
+import { User, Deposit, Grant, Release, Stream } from '../generated/schema';
+import { fetchStreamInfo, newUser } from './helpers';
 
 export function handleLogEtherVestingCreated(
   event: LogEtherVestingCreated,
@@ -31,6 +31,15 @@ export function handleLogEtherVestingCreated(
   stream.deposits = new Array<string>();
   stream.releases = new Array<string>();
 
+  let user = User.load(stream.owner.toHexString());
+  if (user == null) {
+    user = newUser(stream.owner);
+  }
+  let streams = user.streams;
+  streams.push(stream.id);
+  user.streams = streams;
+  user.save();
+
   let grant = Grant.load(fetchedStream.beneficiary.toHexString());
   if (grant != null) {
     log.debug('New Stream {} for Grant {}', [stream.id, grant.id]);
@@ -45,6 +54,13 @@ export function handleLogEtherVestingCreated(
     grant.save();
 
     stream.grant = grant.id;
+
+    if (user.grantsFunded.indexOf(grant.id) == -1) {
+      let grantsFunded = user.grantsFunded;
+      grantsFunded.push(grant.id);
+      user.grantsFunded = grantsFunded;
+      user.save();
+    }
   } else {
     log.debug('New Stream {} towards {}', [
       stream.id,
@@ -72,6 +88,15 @@ export function handleLogFunding(event: LogFunding): void {
     let fetchedStream = fetchStreamInfo(event.address);
     stream.funded = fetchedStream.totalFunded;
     stream.save();
+
+    if (stream.grant != null) {
+      let user = User.load(stream.owner.toHexString());
+      if (user == null) {
+        user = newUser(stream.owner);
+      }
+      user.pledged = user.pledged.plus(deposit.amount);
+      user.save();
+    }
   } else {
     log.debug('Stream {} not found for Deposit {}', [
       event.address.toHexString(),
@@ -97,6 +122,15 @@ export function handleLogReleased(event: LogReleased): void {
     let fetchedStream = fetchStreamInfo(event.address);
     stream.released = fetchedStream.released;
     stream.save();
+
+    if (stream.grant != null) {
+      let user = User.load(stream.owner.toHexString());
+      if (user == null) {
+        user = newUser(stream.owner);
+      }
+      user.streamed = user.streamed.plus(release.amount);
+      user.save();
+    }
   } else {
     log.debug('Stream {} not found for Release {}', [
       event.address.toHexString(),
@@ -111,6 +145,17 @@ export function handleLogRevoked(event: LogRevoked): void {
     log.debug('Stream {} Revoked', [stream.id]);
     stream.isRevoked = true;
     stream.save();
+
+    if (stream.grant != null) {
+      let user = User.load(stream.owner.toHexString());
+      if (user == null) {
+        user = newUser(stream.owner);
+      }
+      user.withdrawn = user.withdrawn
+        .plus(stream.funded)
+        .minus(stream.released);
+      user.save();
+    }
   } else {
     log.debug('Stream {} not found for Revoke {}', [
       event.address.toHexString(),

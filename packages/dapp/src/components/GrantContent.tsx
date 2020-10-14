@@ -15,8 +15,14 @@ export const GrantContent: React.FC<Props> = ({ grant }) => {
       <GrantChart grant={grant} />
       <GrantDetails grant={grant} />
       <SimpleGrid columns={2} spacing={8} w="100%">
-        <GrantRecipients grantees={grant.grantees} amounts={grant.amounts} />
-        {grant.funders && <GrantFunders funders={grant.funders} />}
+        <GrantRecipients
+          grantAddress={grant.id}
+          grantees={grant.grantees}
+          amounts={grant.amounts}
+        />
+        {grant.funders && (
+          <GrantFunders grantAddress={grant.id} funders={grant.funders} />
+        )}
       </SimpleGrid>
     </VStack>
   );

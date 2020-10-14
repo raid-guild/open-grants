@@ -9,6 +9,7 @@ import {
 
 import { EtherVesting } from '../generated/EtherVesting/EtherVesting';
 import { UnmanagedStream } from '../generated/UnmanagedStream/UnmanagedStream';
+import { User } from '../generated/schema';
 
 class GrantObject {
   uri: Bytes;
@@ -129,4 +130,18 @@ export function fetchStreamInfo(address: Address): StreamObject {
   }
 
   return streamObject;
+}
+
+export function newUser(address: Bytes): User {
+  let user = new User(address.toHexString());
+  user.grantsReceived = new Array<string>();
+  user.grantsFunded = new Array<string>();
+  user.streams = new Array<string>();
+  user.funded = BigInt.fromI32(0);
+  user.pledged = BigInt.fromI32(0);
+  user.streamed = BigInt.fromI32(0);
+  user.withdrawn = BigInt.fromI32(0);
+  user.earned = BigInt.fromI32(0);
+  log.debug('New User {}', [address.toHexString()]);
+  return user;
 }

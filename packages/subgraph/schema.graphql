@@ -70,3 +70,15 @@ type Release @entity {
   amount: BigInt!
   timestamp: BigInt!
 }
+
+type User @entity {
+  id: ID!
+  grantsReceived: [Grant!]!
+  grantsFunded: [Grant!]!
+  streams: [Stream!]!
+  funded: BigInt!
+  earned: BigInt!
+  pledged: BigInt!
+  withdrawn: BigInt!
+  streamed: BigInt!
+}

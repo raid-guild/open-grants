@@ -1,22 +1,29 @@
 import { Flex, Grid, HStack, Text } from '@chakra-ui/core';
+import { GrantFunder } from 'components/GrantFunder';
 import { Link } from 'components/Link';
-import React, { useEffect, useState } from 'react';
-import { BoxProfile, getProfile } from 'utils/3box';
-import { formatValue } from 'utils/helpers';
+import React from 'react';
 import { Funder } from 'utils/types';
 
 type Props = {
+  grantAddress: string;
   funders: Array<Funder>;
+  page?: boolean;
 };
 
-export const GrantFunders: React.FC<Props> = ({ funders }) => {
+export const GrantFunders: React.FC<Props> = ({
+  grantAddress,
+  funders,
+  page = false,
+}) => {
+  const displayFunders = page ? funders : funders.slice(0, 5);
   return (
     <Flex
       id="funders"
       w="100%"
-      background="white"
-      boxShadow="0px 4px 4px rgba(114, 125, 129, 0.25)"
-      borderRadius="0.5rem"
+      maxW="50rem"
+      background={page ? 'transparent' : 'white'}
+      boxShadow={page ? 'none' : '0px 4px 4px rgba(114, 125, 129, 0.25)'}
+      borderRadius={page ? '0' : '0.5rem'}
       px={12}
       py={8}
       position="relative"
@@ -24,8 +31,18 @@ export const GrantFunders: React.FC<Props> = ({ funders }) => {
       direction="column"
       align="flex-start"
     >
-      <Flex w="100%" justify="space-between" align="center" mb={8}>
-        <Text fontWeight="bold" color="black" fontSize="xl">
+      <Flex
+        w="100%"
+        justify="space-between"
+        align="center"
+        mb={8}
+        direction={page ? 'column' : 'row'}
+      >
+        <Text
+          color="dark"
+          fontSize={page ? { base: '1.5rem', md: '2rem' } : 'xl'}
+          fontWeight={page ? '800' : 'bold'}
+        >
           Grant Funders
         </Text>
         <Text>
@@ -55,64 +72,29 @@ export const GrantFunders: React.FC<Props> = ({ funders }) => {
           </Text>
         </HStack>
       </Grid>
-      {funders.map(funder => (
-        <GrantFunder funder={funder} key={funder.id} />
-      ))}
+      {displayFunders.length > 0 ? (
+        displayFunders.map(funder => (
+          <GrantFunder funder={funder} key={funder.id} />
+        ))
+      ) : (
+        <Text w="100%" textAlign="center" mt={8}>
+          No Funders found
+        </Text>
+      )}
+      {!page && funders.length > 5 && (
+        <Flex w="100%" justify="space-between" align="center" mt={4}>
+          <Text fontSize="sm">{`+ ${funders.length - 5} more`}</Text>
+          <Link
+            to={`/grant/${grantAddress}/funders`}
+            textDecor="underline"
+            color="green.500"
+            fontWeight="500"
+            fontSize="sm"
+          >
+            View all funders
+          </Link>
+        </Flex>
+      )}
     </Flex>
-  );
-};
-
-type FunderProps = {
-  funder: Funder;
-};
-
-const GrantFunder: React.FC<FunderProps> = ({ funder }) => {
-  const [profile, setProfile] = useState<BoxProfile | undefined>();
-  useEffect(() => {
-    if (funder) {
-      getProfile(funder.id).then(p => setProfile(p));
-    }
-  }, [funder]);
-  return (
-    <Grid
-      w="100%"
-      gap={4}
-      templateColumns="4fr 1fr 1fr"
-      color="dark"
-      borderBottom="1px solid #EAECEF"
-      minH="3rem"
-    >
-      <Link to={`/profile/${funder.id}`}>
-        <HStack spacing={4}>
-          <Flex
-            borderRadius="50%"
-            border="1px solid #E6E6E6"
-            w="2.5rem"
-            h="2.5rem"
-            overflow="hidden"
-            background="white"
-            bgImage={profile && `url(${profile.imageUrl})`}
-            bgSize="cover"
-            bgRepeat="no-repeat"
-            bgPosition="center center"
-          />
-          <Text>
-            {profile && profile.name
-              ? profile.name
-              : `${funder.id.slice(0, 7).toUpperCase()}...`}
-          </Text>
-        </HStack>
-      </Link>
-      <HStack>
-        <Text textAlign="center" w="100%">{`${formatValue(
-          funder.pledged,
-        )} ETH`}</Text>
-      </HStack>
-      <HStack>
-        <Text textAlign="center" w="100%">{`${formatValue(
-          funder.vested,
-        )} ETH`}</Text>
-      </HStack>
-    </Grid>
   );
 };
