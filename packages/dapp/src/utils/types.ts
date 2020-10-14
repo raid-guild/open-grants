@@ -1,5 +1,11 @@
 import { BigNumber } from 'ethers';
 
+export enum Sort {
+  Latest,
+  Featured,
+  Trending,
+}
+
 export type Stream = {
   id: string;
   owner: string;

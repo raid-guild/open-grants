@@ -5,18 +5,20 @@ import { GrantTile } from 'components/GrantTile';
 import { LoadingPage } from 'components/LoadingPage';
 import { getGrants } from 'graphql/getGrants';
 import React, { useEffect, useState } from 'react';
-import { Grant } from 'utils/types';
+import { Grant, Sort } from 'utils/types';
 
 const Explore: React.FC = () => {
   const [grants, setGrants] = useState<Array<Grant>>([]);
   const [loading, setLoading] = useState(true);
+  const [sort, setSort] = useState<Sort>(Sort.Featured);
 
   useEffect(() => {
-    getGrants().then(result => {
+    setLoading(true);
+    getGrants(sort).then(result => {
       setGrants(result);
       setLoading(false);
     });
-  }, []);
+  }, [sort]);
 
   if (loading) {
     return <LoadingPage />;
@@ -24,7 +26,7 @@ const Explore: React.FC = () => {
   return (
     <VStack w="100%" spacing={8} mb={16}>
       <ExploreHeader />
-      <GrantsSorter />
+      <GrantsSorter sort={sort} setSort={setSort} />
       <SimpleGrid
         columns={[1, null, 2, 3]}
         spacing={8}
