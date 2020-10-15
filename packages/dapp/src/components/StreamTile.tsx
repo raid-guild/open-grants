@@ -26,6 +26,7 @@ export const StreamTile: React.FC<Props> = ({ stream }) => {
       rounded="lg"
       p={4}
       background="white"
+      boxShadow="0px 4px 4px rgba(114, 125, 129, 0.25)"
       color="gray.500"
       align="stretch"
     >
