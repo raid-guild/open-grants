@@ -14,17 +14,28 @@ export const ProfileContent: React.FC<Props> = ({ profile, loggedInUser }) => {
 
   return (
     <VStack w="100%" spacing={8} maxW="70rem" p={8} color="text" mb={16}>
-      <Text textTransform="uppercase" fontSize="xl" w="100%">
+      <Text textTransform="uppercase" fontSize="xl" w="100%" id="received">
         {loggedInUser ? `Grants I’m a recipient of` : `User is a recipient of`}
       </Text>
       {profile.grantsReceived.length > 0 ? (
         profile.grantsReceived.map(grant => (
-          <GrantDetails grant={grant} myGrant key={grant.id} />
+          <GrantDetails
+            grant={grant}
+            myGrant={loggedInUser}
+            showName
+            key={grant.id}
+          />
         ))
       ) : (
         <Text> No Grants found </Text>
       )}
-      <Text textTransform="uppercase" fontSize="xl" w="100%" pt={4}>
+      <Text
+        textTransform="uppercase"
+        fontSize="xl"
+        w="100%"
+        pt={4}
+        id="streams"
+      >
         Active Streams
       </Text>
       {streams.length > 0 ? (
@@ -36,13 +47,13 @@ export const ProfileContent: React.FC<Props> = ({ profile, loggedInUser }) => {
       ) : (
         <Text> No Streams found </Text>
       )}
-      <Text textTransform="uppercase" fontSize="xl" w="100%" pt={4}>
+      <Text textTransform="uppercase" fontSize="xl" w="100%" pt={4} id="funded">
         {loggedInUser ? `Grants I’ve funded` : `User has funded`}
       </Text>
       {profile.grantsFunded.length > 0 ? (
         <SimpleGrid columns={[1, null, 2, 3]} spacing={8} w="100%">
           {profile.grantsFunded.map(grant => (
-            <GrantTile grant={grant} myGrant key={grant.id} />
+            <GrantTile grant={grant} myGrant={loggedInUser} key={grant.id} />
           ))}
         </SimpleGrid>
       ) : (

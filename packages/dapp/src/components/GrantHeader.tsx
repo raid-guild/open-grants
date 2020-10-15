@@ -22,25 +22,28 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
     <VStack
       px="2rem"
       w="100%"
-      justify="flex-end"
       color="white"
       bgImage={`url(${HeaderBG})`}
       bgSize="cover"
       bgRepeat="no-repeat"
-      minH="35rem"
-      pt="5rem"
+      backgroundAttachment="fixed"
+      pt="6rem"
+      pb="1rem"
     >
       <Link
         color="white"
-        fontSize={{ base: '1.5rem', md: '3rem' }}
+        fontSize="clamp(1.5rem, 5vw, 3rem)"
         fontWeight="800"
         textAlign="center"
         to={`/grant/${grant.id}`}
-        style={{ maxWidth: '600px', whiteSpace: 'pre-wrap' }}
+        maxW="35rem"
+        whiteSpace="pre-wrap"
       >
         {grant.name}
       </Link>
-      <Text style={{ maxWidth: '600px' }}>{grant.description}</Text>
+      <Text maxW="55rem" w="auto">
+        {grant.description}
+      </Text>
       <Link to={grant.link} isExternal mb={8}>
         {grant.link}
       </Link>
@@ -73,6 +76,8 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         <a href="#funders">
           <Flex
             direction="column"
+            h="100%"
+            justify="space-between"
             _hover={{ color: 'text' }}
             transition="0.25s"
           >
@@ -89,6 +94,8 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         <a href="#details">
           <Flex
             direction="column"
+            h="100%"
+            justify="space-between"
             _hover={{ color: 'text' }}
             transition="0.25s"
           >
@@ -103,6 +110,8 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         <a href="#details">
           <Flex
             direction="column"
+            h="100%"
+            justify="space-between"
             _hover={{ color: 'text' }}
             transition="0.25s"
           >
@@ -117,6 +126,8 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         <a href="#recipients">
           <Flex
             direction="column"
+            h="100%"
+            justify="space-between"
             _hover={{ color: 'text' }}
             transition="0.25s"
           >

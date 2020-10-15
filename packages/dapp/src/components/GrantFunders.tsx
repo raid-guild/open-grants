@@ -77,7 +77,7 @@ export const GrantFunders: React.FC<Props> = ({
           <GrantFunder funder={funder} key={funder.id} />
         ))
       ) : (
-        <Text w="100%" textAlign="center" mt={8}>
+        <Text minW="100%" w="100%" textAlign="center" mt={8}>
           No Funders found
         </Text>
       )}

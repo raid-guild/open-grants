@@ -10,6 +10,7 @@ export const CONFIG = {
   boxEndpoint: 'https://ipfs.3box.io',
   explorerEndpoint: 'https://kovan.etherscan.io',
   featuredGrants: [
+    '0xa6c4366601fd12c4095bdedfacc5906a73cb1fe2',
     '0x2862c2c26581a106665c4f4733e0b2bcccdaf38d',
     '0xa9a17e4afc0bfafbac076ddcb5b224b0a7194660',
     '0xd610a73468218b8bc3f833179206a128c7a233ae',
