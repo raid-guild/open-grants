@@ -32,14 +32,15 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
     >
       <Link
         color="white"
-        fontSize={{ base: '2rem', md: '3rem' }}
+        fontSize={{ base: '1.5rem', md: '3rem' }}
         fontWeight="800"
         textAlign="center"
         to={`/grant/${grant.id}`}
+        style={{ maxWidth: '600px', whiteSpace: 'pre-wrap' }}
       >
         {grant.name}
       </Link>
-      <Text>{grant.description}</Text>
+      <Text style={{ maxWidth: '600px' }}>{grant.description}</Text>
       <Link to={grant.link} isExternal mb={8}>
         {grant.link}
       </Link>
