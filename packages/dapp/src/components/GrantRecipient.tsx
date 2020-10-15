@@ -29,6 +29,7 @@ export const GrantRecipient: React.FC<RecipientProps> = ({
       color="dark"
       borderBottom="1px solid #EAECEF"
       minH="3rem"
+      padding=".5rem 0 .5rem 0"
     >
       <Link to={`/profile/${account}`}>
         <HStack spacing={4}>

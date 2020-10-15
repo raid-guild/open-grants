@@ -24,6 +24,7 @@ export const GrantFunder: React.FC<FunderProps> = ({ funder }) => {
       color="dark"
       borderBottom="1px solid #EAECEF"
       minH="3rem"
+      padding=".5rem 0 .5rem 0"
     >
       <Link to={`/profile/${funder.id}`}>
         <HStack spacing={4}>
