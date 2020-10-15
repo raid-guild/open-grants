@@ -9,7 +9,10 @@ type Props = {
 };
 
 export const GrantChart: React.FC<Props> = ({ grant }) => {
-  const [grantData, max] = parseGrantData(grant);
+  const [grantData, xMin, xMax, yMax] = parseGrantData(grant);
+  // eslint-disable-next-line
+  console.log({ xMin, xMax, yMax });
+
   return (
     <Flex
       w="100%"
@@ -49,7 +52,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
         borderLeft="1px solid #ccc"
         borderBottom="1px solid #ccc"
       >
-        {grant.streams.length === 0 && (
+        {grantData.length === 0 && (
           <Flex
             justify="center"
             align="center"
@@ -60,18 +63,30 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
             <Text color="text">No Streams found</Text>
           </Flex>
         )}
-        <FlexibleWidthXYPlot stackBy="y" yDomain={[0, max * 1.5]} height={420}>
-          {grantData.map(data => (
+        <FlexibleWidthXYPlot stackBy="y" height={420} yDomain={[0, yMax * 1.2]}>
+          {grantData.map((data, i) => (
             <AreaSeries
-              key={data[0].x}
+              key={data[i].x}
               curve="curveBasis"
               animation
               data={data}
               opacity={0.25}
-              style={{}}
             />
           ))}
-          <XAxis style={{ fontSize: '9px', opacity: '0.75' }} tickTotal={10} />
+          <XAxis
+            style={{ fontSize: '9px', opacity: '0.75' }}
+            tickTotal={10}
+            tickFormat={d => {
+              const date = new Date(d * 1000);
+              const ye = new Intl.DateTimeFormat('en', {
+                year: '2-digit',
+              }).format(date);
+              const mo = new Intl.DateTimeFormat('en', {
+                month: 'short',
+              }).format(date);
+              return `${mo}'${ye}`;
+            }}
+          />
           <YAxis style={{ fontSize: '9px', opacity: '0.75' }} tickTotal={10} />
         </FlexibleWidthXYPlot>
       </Box>
