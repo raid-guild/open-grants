@@ -4,6 +4,7 @@ import { ProfileContent } from 'components/ProfileContent';
 import { ProfileHeader } from 'components/ProfileHeader';
 import { Web3Context } from 'contexts/Web3Context';
 import { getProfile } from 'graphql/getProfile';
+import { getRank } from 'graphql/getRank';
 import React, { useContext, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Profile } from 'utils/types';
@@ -22,9 +23,11 @@ const ProfilePage: React.FC<Props> = ({
   const { account } = useContext(Web3Context);
   const loggedInUser = account.toLowerCase() === userAddress.toLowerCase();
   const [profile, setProfile] = useState<Profile | null | undefined>();
+  const [rank, setRank] = useState(-1);
 
   useEffect(() => {
-    getProfile(userAddress.toLowerCase()).then(p => setProfile(p));
+    getProfile(userAddress).then(p => setProfile(p));
+    getRank(userAddress).then(r => setRank(r));
   }, [userAddress]);
 
   if (profile === undefined) {
@@ -35,7 +38,11 @@ const ProfilePage: React.FC<Props> = ({
   }
   return (
     <VStack w="100%">
-      <ProfileHeader profile={profile} loggedInUser={loggedInUser} />
+      <ProfileHeader
+        profile={profile}
+        rank={rank}
+        loggedInUser={loggedInUser}
+      />
       <ProfileContent profile={profile} loggedInUser={loggedInUser} />
     </VStack>
   );

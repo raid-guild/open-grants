@@ -54,6 +54,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
       >
         {grantData.length === 0 && (
           <Flex
+            position="absolute"
             justify="center"
             align="center"
             w="100%"

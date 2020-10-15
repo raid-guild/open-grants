@@ -1,16 +1,20 @@
 import { Flex, SimpleGrid, Text, VStack } from '@chakra-ui/core';
 import HeaderBG from 'assets/header.jpg';
+import { Link } from 'components/Link';
 import React from 'react';
 import { formatValue } from 'utils/helpers';
 import { Profile } from 'utils/types';
 
 type Props = {
+  rank: number;
   profile: Profile;
   loggedInUser: boolean;
 };
-export const ProfileHeader: React.FC<Props> = ({ profile, loggedInUser }) => {
-  // TODO: fix rank
-  const rank = 1;
+export const ProfileHeader: React.FC<Props> = ({
+  rank,
+  profile,
+  loggedInUser,
+}) => {
   return (
     <VStack
       px="2rem"
@@ -30,11 +34,12 @@ export const ProfileHeader: React.FC<Props> = ({ profile, loggedInUser }) => {
       >
         {loggedInUser ? `My Grants` : `User Grants`}
       </Text>
-      <Text mb={24}>
-        {loggedInUser
-          ? `You rank #${rank} out of all funders`
-          : `User ranks #${rank} out of all funders`}
-      </Text>
+      <Link mb={24} to="/leaderboard">
+        {rank > 0 &&
+          (loggedInUser
+            ? `You rank #${rank} out of all funders`
+            : `User ranks #${rank} out of all funders`)}
+      </Link>
       <SimpleGrid
         columns={4}
         spacing={4}
