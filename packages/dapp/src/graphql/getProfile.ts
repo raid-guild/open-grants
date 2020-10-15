@@ -50,7 +50,7 @@ export const getProfile = async (
 
   const { data, error } = await client
     .query<GetProfileQuery, GetProfileQueryVariables>(grantQuery, {
-      address,
+      address: address.toLowerCase(),
       first,
     })
     .toPromise();
