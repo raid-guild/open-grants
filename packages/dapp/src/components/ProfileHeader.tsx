@@ -42,44 +42,76 @@ export const ProfileHeader: React.FC<Props> = ({ profile, loggedInUser }) => {
         justifySelf="flex-end"
         mb={8}
       >
-        <Flex direction="column">
-          <Text fontWeight="500" fontSize="3xl" textAlign="center">
-            {profile.grantsFunded ? profile.grantsFunded.length : 0}
-          </Text>
-          <Text textTransform="uppercase" textAlign="center">
-            {profile.grantsFunded && profile.grantsFunded.length === 1
-              ? 'Grant Funded'
-              : 'Grants Funded'}
-          </Text>
-        </Flex>
-        <Flex direction="column">
-          <Text fontWeight="500" fontSize="3xl" textAlign="center">
-            {`${formatValue(
-              profile.pledged.add(profile.funded).sub(profile.streamed),
-            )} ETH`}
-          </Text>
-          <Text textTransform="uppercase" textAlign="center">
-            Pledged
-          </Text>
-        </Flex>
-        <Flex direction="column">
-          <Text fontWeight="500" fontSize="3xl" textAlign="center">
-            {profile.grantsReceived ? profile.grantsReceived.length : 0}
-          </Text>
-          <Text textTransform="uppercase" textAlign="center">
-            {profile.grantsReceived && profile.grantsReceived.length === 1
-              ? 'Grant Received'
-              : 'Grants Received'}
-          </Text>
-        </Flex>
-        <Flex direction="column">
-          <Text fontWeight="500" fontSize="3xl" textAlign="center">
-            {`${formatValue(profile.earned)} ETH`}
-          </Text>
-          <Text textTransform="uppercase" textAlign="center">
-            Earned
-          </Text>
-        </Flex>
+        <a href="#funded">
+          <Flex
+            direction="column"
+            h="100%"
+            justify="space-between"
+            _hover={{ color: 'text' }}
+            transition="0.25s"
+          >
+            <Text fontWeight="500" fontSize="3xl" textAlign="center">
+              {profile.grantsFunded ? profile.grantsFunded.length : 0}
+            </Text>
+            <Text textTransform="uppercase" textAlign="center">
+              {profile.grantsFunded && profile.grantsFunded.length === 1
+                ? 'Grant Funded'
+                : 'Grants Funded'}
+            </Text>
+          </Flex>
+        </a>
+        <a href="#streams">
+          <Flex
+            direction="column"
+            h="100%"
+            justify="space-between"
+            _hover={{ color: 'text' }}
+            transition="0.25s"
+          >
+            <Text fontWeight="500" fontSize="3xl" textAlign="center">
+              {`${formatValue(
+                profile.pledged.add(profile.funded).sub(profile.streamed),
+              )} ETH`}
+            </Text>
+            <Text textTransform="uppercase" textAlign="center">
+              Pledged
+            </Text>
+          </Flex>
+        </a>
+        <a href="#received">
+          <Flex
+            direction="column"
+            h="100%"
+            justify="space-between"
+            _hover={{ color: 'text' }}
+            transition="0.25s"
+          >
+            <Text fontWeight="500" fontSize="3xl" textAlign="center">
+              {profile.grantsReceived ? profile.grantsReceived.length : 0}
+            </Text>
+            <Text textTransform="uppercase" textAlign="center">
+              {profile.grantsReceived && profile.grantsReceived.length === 1
+                ? 'Grant Received'
+                : 'Grants Received'}
+            </Text>
+          </Flex>
+        </a>
+        <a href="#received">
+          <Flex
+            direction="column"
+            h="100%"
+            justify="space-between"
+            _hover={{ color: 'text' }}
+            transition="0.25s"
+          >
+            <Text fontWeight="500" fontSize="3xl" textAlign="center">
+              {`${formatValue(profile.earned)} ETH`}
+            </Text>
+            <Text textTransform="uppercase" textAlign="center">
+              Earned
+            </Text>
+          </Flex>
+        </a>
       </SimpleGrid>
     </VStack>
   );

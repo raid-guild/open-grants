@@ -12,6 +12,12 @@ const defaultOptions = {
   },
 };
 
-export const Loader: React.FC = () => {
-  return <Lottie options={defaultOptions} height={177} width={201} />;
+type Props = {
+  size?: number;
+};
+
+export const Loader: React.FC<Props> = ({ size = 1 }) => {
+  return (
+    <Lottie options={defaultOptions} height={177 * size} width={201 * size} />
+  );
 };

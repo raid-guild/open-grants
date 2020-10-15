@@ -41,7 +41,7 @@ export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
       bgPosition="center bottom"
     >
       <Flex p={2} flex={1}>
-        <Flex direction="column" align="flex-start" flex={1}>
+        <Flex direction="column" align="flex-start" flex={1} pr="1rem">
           <Link
             to={`/grant/${grant.id}`}
             color="black"
@@ -74,7 +74,7 @@ export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
         </Flex>
         <Flex direction="column-reverse" justify="flex-end">
           {leftOver > 0 && (
-            <Link to={`/grant/${grant.id}#recipients`}>
+            <Link to={`/grant/${grant.id}/recipients`}>
               <Flex
                 border="1px solid #E6E6E6"
                 background="background"

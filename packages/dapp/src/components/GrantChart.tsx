@@ -43,7 +43,8 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
       </Text>
       <Box
         w="100%"
-        h="420px"
+        h="100%"
+        maxH="26.25rem"
         position="relative"
         borderLeft="1px solid #ccc"
         borderBottom="1px solid #ccc"

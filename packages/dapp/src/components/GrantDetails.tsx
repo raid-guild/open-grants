@@ -1,9 +1,9 @@
 import {
   Button,
   Flex,
-  HStack,
   SimpleGrid,
   Text,
+  useBreakpointValue,
   useDisclosure,
 } from '@chakra-ui/core';
 import { FundGrantModal } from 'components/FundGrantModal';
@@ -16,10 +16,16 @@ import { Grant } from 'utils/types';
 type Props = {
   grant: Grant;
   myGrant?: boolean;
+  showName?: boolean;
 };
 
-export const GrantDetails: React.FC<Props> = ({ grant, myGrant = false }) => {
+export const GrantDetails: React.FC<Props> = ({
+  grant,
+  myGrant = false,
+  showName = false,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const buttonSize = useBreakpointValue({ base: 'lg', md: 'md' });
   return (
     <Flex
       id="details"
@@ -34,14 +40,19 @@ export const GrantDetails: React.FC<Props> = ({ grant, myGrant = false }) => {
       direction="column"
       align="flex-start"
     >
-      <Flex w="100%" justify="space-between" align="center" mb={8}>
-        {myGrant ? (
+      <Flex
+        w="100%"
+        justify="space-between"
+        align={{ base: 'stretch', sm: 'center' }}
+        mb={8}
+        direction={{ base: 'column', sm: 'row' }}
+      >
+        {showName ? (
           <Link
             to={`/grant/${grant.id}`}
             color="black"
             fontWeight="bold"
             fontSize="xl"
-            mb={6}
           >
             {grant.name}
           </Link>
@@ -50,42 +61,58 @@ export const GrantDetails: React.FC<Props> = ({ grant, myGrant = false }) => {
             Grant Details
           </Text>
         )}
-        <Text color="green.500"> Open for Funding </Text>
+        <Text color="green.500" ml={{ base: 4, md: 0 }}>
+          {useBreakpointValue({
+            base: 'Open for Funding',
+            sm: 'Open',
+            md: 'Open for Funding',
+          })}
+        </Text>
       </Flex>
       <SimpleGrid
-        columns={4}
+        columns={[1, 2, null, 4]}
         spacing={4}
         letterSpacing="0.3px"
         justifySelf="flex-end"
         mb={8}
       >
-        <Flex direction="column">
+        <Flex direction="column" h="100%" justify="space-between">
           <Text fontWeight="500" fontSize="2xl" color="green.500">
             {`${formatValue(grant.pledged, 3)} ETH`}
           </Text>
           <Text textTransform="uppercase">Pledged</Text>
         </Flex>
-        <Flex direction="column">
+        <Flex direction="column" h="100%" justify="space-between">
           <Text fontWeight="500" fontSize="2xl" color="green.500">
             {`${formatValue(grant.vested, 3)} ETH`}
           </Text>
           <Text textTransform="uppercase">Vested</Text>
         </Flex>
-        <Flex direction="column">
+        <Flex direction="column" h="100%" justify="space-between">
           <Text fontWeight="500" fontSize="2xl" color="green.500">
             {`${formatValue(grant.funded, 3)} ETH`}
           </Text>
           <Text textTransform="uppercase">Distributed</Text>
         </Flex>
-        <Flex direction="column">
+        <Flex direction="column" h="100%" justify="space-between">
           <Text fontWeight="500" fontSize="2xl" color="green.500">
             {`${formatValue(grant.vested.sub(grant.funded), 3)} ETH`}
           </Text>
           <Text textTransform="uppercase">Current Balance</Text>
         </Flex>
       </SimpleGrid>
-      <Flex w="100%" justify="space-between" align="center">
-        <HStack spacing={8} mr={8}>
+      <Flex
+        w="100%"
+        justify="space-between"
+        align="stretch"
+        direction={{ base: 'column-reverse', md: 'row' }}
+      >
+        <Flex
+          align={{ base: 'stretch', md: 'center' }}
+          mr={{ base: 0, md: 8 }}
+          mt={{ base: 4, md: 0 }}
+          direction={{ base: 'column-reverse', md: 'row' }}
+        >
           <Text>{`Created ${new Date(
             grant.timestamp * 1000,
           ).toLocaleDateString()}`}</Text>
@@ -93,6 +120,8 @@ export const GrantDetails: React.FC<Props> = ({ grant, myGrant = false }) => {
             isExternal
             textDecoration="underline"
             to={`${CONFIG.explorerEndpoint}/address/${grant.id}`}
+            ml={{ base: 0, md: 8 }}
+            mb={{ base: 4, md: 0 }}
           >
             View the contract
           </Link>
@@ -103,6 +132,8 @@ export const GrantDetails: React.FC<Props> = ({ grant, myGrant = false }) => {
                   isExternal
                   textDecoration="underline"
                   to={grant.contactLink}
+                  ml={{ base: 0, md: 8 }}
+                  mb={{ base: 4, md: 0 }}
                 >
                   Contact the team
                 </Link>
@@ -110,26 +141,32 @@ export const GrantDetails: React.FC<Props> = ({ grant, myGrant = false }) => {
               <Link
                 textDecoration="underline"
                 to={`/grant/${grant.id}/streams`}
+                ml={{ base: 0, md: 8 }}
+                mb={{ base: 4, md: 0 }}
               >
                 Distribute funds
               </Link>
             </>
           )}
-        </HStack>
+        </Flex>
         {myGrant ? (
           <LinkButton
+            w={{ base: '100%', md: 'auto' }}
             colorScheme="green"
             textTransform="uppercase"
             boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
+            size={buttonSize}
             to={`/grant/${grant.id}/streams`}
           >
             Distribute Funds
           </LinkButton>
         ) : (
           <Button
+            w={{ base: '100%', md: 'auto' }}
             colorScheme="green"
             textTransform="uppercase"
             boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
+            size={buttonSize}
             onClick={onOpen}
           >
             Add Funds

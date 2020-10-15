@@ -14,7 +14,7 @@ export const GrantContent: React.FC<Props> = ({ grant }) => {
     <VStack w="100%" spacing={8} maxW="70rem" p={8} color="text" mb={16}>
       <GrantChart grant={grant} />
       <GrantDetails grant={grant} />
-      <SimpleGrid columns={2} spacing={8} w="100%">
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8} w="100%">
         <GrantRecipients
           grantAddress={grant.id}
           grantees={grant.grantees}

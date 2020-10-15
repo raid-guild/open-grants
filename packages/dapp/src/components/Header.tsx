@@ -6,6 +6,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   Text,
+  useBreakpointValue,
 } from '@chakra-ui/core';
 import HeaderBG from 'assets/header.jpg';
 import { Link } from 'components/Link';
@@ -32,6 +33,10 @@ export const Header: React.FC<Props> = ({ onOpen }) => {
     history.location.pathname === '/create' ||
     history.location.pathname === '/leaderboard';
   const bgImage = headerColorRequired ? `url(${HeaderBG})` : undefined;
+  const accountString = useBreakpointValue({
+    sm: `${account.slice(0, 4).toUpperCase()}...`,
+    md: `${account.slice(0, 8).toUpperCase()}...`,
+  });
 
   return (
     <Flex
@@ -40,7 +45,7 @@ export const Header: React.FC<Props> = ({ onOpen }) => {
       align="center"
       justify="space-between"
       wrap="wrap"
-      px={{ base: 4, sm: 8 }}
+      px={8}
       color="white"
       fontWeight="500"
       bgImage={bgImage}
@@ -115,8 +120,8 @@ export const Header: React.FC<Props> = ({ onOpen }) => {
                     bgRepeat="no-repeat"
                     bgPosition="center center"
                   />
-                  <Text px={2}>
-                    {`${account.slice(0, 4).toUpperCase()}...`}
+                  <Text px={2} display={{ base: 'none', sm: 'flex' }}>
+                    {accountString}
                   </Text>
                   <ArrowDownIcon boxSize="1.5rem" />
                 </Button>

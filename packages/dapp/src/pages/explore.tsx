@@ -23,6 +23,18 @@ const Explore: React.FC = () => {
   if (loading) {
     return <LoadingPage />;
   }
+  const sortedGrants =
+    sort === Sort.Featured
+      ? grants.sort((a, b) => {
+          if (a.vested.lt(b.vested)) {
+            return 1;
+          }
+          if (a.vested.eq(b.vested)) {
+            return 0;
+          }
+          return -1;
+        })
+      : grants;
   return (
     <VStack w="100%" spacing={8} mb={16}>
       <ExploreHeader />
@@ -35,7 +47,7 @@ const Explore: React.FC = () => {
         px={8}
         mb={8}
       >
-        {grants.map(grant => (
+        {sortedGrants.map(grant => (
           <GrantTile key={grant.id} grant={grant} />
         ))}
       </SimpleGrid>
