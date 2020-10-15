@@ -22,7 +22,7 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
   const { ethersProvider } = useContext(Web3Context);
   const [selected, setSelected] = useState<Array<Stream>>([]);
   const [inProgress, setInProgress] = useState<Array<ProgressStream>>([]);
-  const streams = grant.streams.filter(s => !s.isRevoked);
+  const [streams, setStreams] = useState<Array<Stream>>(grant.streams);
 
   const processStream = async (
     stream: Stream,
@@ -37,7 +37,11 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
       newSelected.splice(s.indexOf(stream), 1);
       return newSelected;
     });
-    streams.splice(streams.indexOf(stream), 1);
+    setStreams(s => {
+      const newStreams = s.slice();
+      newStreams.splice(streams.indexOf(stream), 1);
+      return newStreams;
+    });
     setInProgress(p => {
       const newProgress = p.slice();
       newProgress.push(processedStream);
@@ -117,7 +121,9 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
               const timestamp = Math.floor(new Date().getTime() / 1000);
               const vestedA = getVestedAmount(a, timestamp);
               const vestedB = getVestedAmount(b, timestamp);
-              return vestedA.lt(vestedB) ? 1 : -1;
+              if (vestedA.lt(vestedB)) return 1;
+              if (vestedA.eq(vestedB)) return 0;
+              return -1;
             })
             .map(stream => (
               <GrantStream
