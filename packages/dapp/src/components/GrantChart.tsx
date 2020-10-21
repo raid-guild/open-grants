@@ -129,7 +129,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
             align="center"
             w="100%"
             h="100%"
-            background="black10"
+            background="haze"
           >
             <Text color="text">No Streams found</Text>
           </Flex>

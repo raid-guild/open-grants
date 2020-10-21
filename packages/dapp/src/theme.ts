@@ -8,6 +8,7 @@ interface MetaColors {
   white80: string;
   black10: string;
   black20: string;
+  haze: string;
 }
 
 interface MetaTheme {
@@ -77,13 +78,14 @@ export const theme: Theme = {
       800: '#1d2531',
       900: '#070c18',
     },
-    background: '#EAECEF',
+    background: '#EEF0F4',
     text: '#5D6A74',
     dark: '#1A3344',
     white60: 'rgba(255, 255, 255, 0.6)',
     white80: 'rgba(255, 255, 255, 0.8)',
     black10: 'rgba(0, 0, 0, 0.1)',
     black20: 'rgba(0, 0, 0, 0.2)',
+    haze: '#FBFBFC',
   },
   fonts: {
     ...chakraTheme.fonts,
