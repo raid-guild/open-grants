@@ -65,7 +65,7 @@ export const CreateGrantForm: React.FC = () => {
       </Text>
       <GrantTextInput
         title="What is the name of your project?"
-        description="48 characters max"
+        description="Max 48 characters"
         label="Grant Name"
         value={name}
         setValue={setName}
@@ -73,7 +73,7 @@ export const CreateGrantForm: React.FC = () => {
       />
       <GrantTextInput
         title="What do you aim to achieve?"
-        description="240 characters max"
+        description="Max 240 characters"
         label="Description"
         value={description}
         setValue={setDescription}
