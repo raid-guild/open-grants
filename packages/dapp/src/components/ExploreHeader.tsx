@@ -33,8 +33,9 @@ export const ExploreHeader: React.FC = () => {
           Open Grants
         </Text>
         <VStack h={{ base: '4rem', md: '8rem' }} />
-        <Text textAlign="center" position="relative">
-          Together we empower developers to build the next generation of ETH
+        <Text textAlign="center" position="relative" px={8}>
+          Together we empower developers to build the next generation of
+          Ethereum
         </Text>
         <LinkButton
           to="/faq"
