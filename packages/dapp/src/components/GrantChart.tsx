@@ -28,6 +28,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
     currentTime,
     grant,
   );
+  const isDisabled = grantData.length === 0;
 
   const [state, setState] = useState<ChartState>(ChartState.ALLTIME);
 
@@ -54,10 +55,12 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
     }
   })(state);
 
-  const grid = [
-    (currentTime - xMin) / (xMax - xMin),
-    (xMax - currentTime) / (xMax - xMin),
-  ];
+  const grid = isDisabled
+    ? [1, 1]
+    : [
+        (currentTime - xMin) / (xMax - xMin),
+        (xMax - currentTime) / (xMax - xMin),
+      ];
 
   return (
     <Flex
@@ -80,7 +83,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
             variant="link"
             onClick={() => setState(ChartState.ALLTIME)}
             textTransform="uppercase"
-            isDisabled={state === ChartState.ALLTIME}
+            isDisabled={isDisabled || state === ChartState.ALLTIME}
           >
             All Time
           </Button>
@@ -88,7 +91,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
             variant="link"
             onClick={() => setState(ChartState.PAST)}
             textTransform="uppercase"
-            isDisabled={state === ChartState.PAST}
+            isDisabled={isDisabled || state === ChartState.PAST}
           >
             Past
           </Button>
@@ -96,7 +99,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
             variant="link"
             onClick={() => setState(ChartState.FUTURE)}
             textTransform="uppercase"
-            isDisabled={state === ChartState.FUTURE}
+            isDisabled={isDisabled || state === ChartState.FUTURE}
           >
             Future
           </Button>
@@ -119,7 +122,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
         borderLeft="1px solid #ccc"
         borderBottom="1px solid #ccc"
       >
-        {grantData.length === 0 && (
+        {isDisabled && (
           <Flex
             position="absolute"
             justify="center"
@@ -165,7 +168,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
             }}
           />
           <YAxis style={{ fontSize: '9px', opacity: '0.75' }} tickTotal={10} />
-          {grantData.length > 0 && (
+          {!isDisabled && (
             <AreaSeries
               data={[
                 { x: currentTime, y: yMax * 1.5 },
@@ -175,7 +178,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
               stroke="rgba(255, 255, 255, 0.35)"
             />
           )}
-          {grantData.length > 0 && (
+          {!isDisabled && (
             <LineSeries
               data={[
                 { x: currentTime, y: 0 },
@@ -187,7 +190,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
             />
           )}
         </FlexibleWidthXYPlot>
-        {grantData.length > 0 && (
+        {!isDisabled && (
           <Grid
             w="100%"
             h="100%"
