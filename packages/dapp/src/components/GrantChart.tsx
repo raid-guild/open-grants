@@ -7,13 +7,14 @@ import {
   Text,
   useBreakpointValue,
 } from '@chakra-ui/core';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   AreaSeries,
   FlexibleWidthXYPlot,
   LineSeries,
   XAxis,
   YAxis,
+  Hint,
 } from 'react-vis';
 import { MAX_STACK, parseGrantData } from 'utils/chart';
 import { Grant } from 'utils/types';
@@ -37,6 +38,13 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
     grant,
   );
   const isDisabled = grantData.length === 0;
+
+  // Handle hover on lines
+  const isHoveringOverLine = useRef<{ [key: string]: Boolean }>({});
+  const [hoveredPoint, setHoveredPoint] = useState<{
+    x: number;
+    y: number;
+  }>();
 
   const [state, setState] = useState<ChartState>(ChartState.ALLTIME);
 
@@ -163,8 +171,24 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
               data={data}
               fill={chartColors[i % MAX_STACK]}
               stroke={chartColors[i % MAX_STACK]}
+              onSeriesMouseOver={(e) => {
+                isHoveringOverLine.current[data[i].x] = true;
+              }}
+              onSeriesMouseOut={(e: React.MouseEvent<HTMLOrSVGElement>) => {
+                isHoveringOverLine.current[data[i].x] = false;
+              }}
+              onNearestXY={(e, { index }) => {
+                if (isHoveringOverLine.current[data[i].x]) {
+                  const hoveredLine = data[index];
+                  setHoveredPoint({
+                    x: hoveredLine.x,
+                    y: hoveredLine.y,
+                  });
+                }
+              }}
             />
           ))}
+          {hoveredPoint && <Hint value={hoveredPoint} />}
           <XAxis
             style={{ fontSize: '9px', opacity: '0.75' }}
             tickTotal={xTicks}
