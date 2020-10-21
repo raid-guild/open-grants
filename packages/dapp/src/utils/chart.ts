@@ -1,87 +1,65 @@
 import { BigNumber, utils } from 'ethers';
 import { ONEWEEK } from 'utils/constants';
 import { getVestedAmount } from 'utils/helpers';
-import { Grant } from 'utils/types';
+import { Grant, Stream } from 'utils/types';
 
 type DataPoint = {
   x: number;
   y: number;
 };
 
-// export const parseGrantData = (
-//   grant: Grant,
-// ): [Array<Array<DataPoint>>, number, number, number] => {
-//   let xMin = new Date().getTime();
-//   let xMax = 0;
-//   let yMax = BigNumber.from(0);
-//   const data0 = grant.streams
-//     .filter(stream => !stream.isRevoked && stream.duration >= ONEWEEK)
-//     .sort((a, b) => {
-//       if (a.startTime < b.startTime) return 1;
-//       if (a.startTime === b.startTime) return 0;
-//       return -1;
-//     })
-//     .map(stream => {
-//       const { startTime, duration } = stream;
-//       if (startTime < xMin) xMin = startTime;
-//       if (startTime + duration > xMax) xMax = startTime + duration;
-//       if (stream.funded.gt(yMax)) yMax = stream.funded;
-//       const points = new Array<DataPoint>();
-//       for (let i = startTime; i < startTime + duration; i += ONEWEEK) {
-//         points.push({
-//           x: i,
-//           y: Number(utils.formatEther(getVestedAmount(stream, i))),
-//         });
-//       }
-//       return points;
-//     });
-//   const data1 = data0.map(points => {
-//     const len = points.length;
-//     const lastTimestamp = points[len - 1].x;
-//     const lastValue = points[len - 1].y;
-//     if (lastTimestamp < xMax) {
-//       for (let i = lastTimestamp; i <= xMax; i += ONEWEEK) {
-//         points.push({
-//           x: i,
-//           y: lastValue,
-//         });
-//       }
-//     }
-//     return points;
-//   });
-//   const data2 = new Array<Array<DataPoint>>();
-//   if (data1.length > 0) {
-//     data2.push(data1[0]);
-//     for (let i = 1; i < data1.length; i += 1) {
-//       const points = data1[i].map((point, j) => {
-//         if (data1[i - 1][j]) {
-//           return {
-//             x: point.x,
-//             y: point.y + data1[i - 1][j].y,
-//             y0: data1[i - 1][j].y,
-//           };
-//         }
-//         return {
-//           x: point.x,
-//           y: point.y + data1[i - 1][j - 1].y,
-//           y0: data1[i - 1][j - 1].y,
-//         };
-//       });
-//       data2.push(points);
-//     }
-//   }
-//   return [data1, xMin, xMax, Number(utils.formatEther(yMax))];
-// };
+export const MAX_STACK = 4;
+
+const reduceStreams = (input: Array<Stream>): Array<Stream> => {
+  const filtered = input
+    .filter(stream => !stream.isRevoked && stream.duration >= ONEWEEK)
+    .sort((a, b) => {
+      if (a.funded.lt(b.funded)) return 1;
+      if (a.funded.eq(b.funded)) return 0;
+      return -1;
+    });
+  if (filtered.length < MAX_STACK) {
+    return filtered;
+  }
+  const last = filtered.slice(MAX_STACK - 1);
+  const squashed = last.reduce(
+    (res, s) => {
+      if (res.startTime > s.startTime) res.startTime = s.startTime;
+      if (res.startTime + res.duration < s.startTime + s.duration) {
+        res.duration = s.startTime + s.duration - res.startTime;
+      }
+      res.funded = res.funded.add(s.funded);
+      return res;
+    },
+    {
+      id: 'squashed',
+      owner: 'squashed',
+      funded: BigNumber.from(0),
+      released: BigNumber.from(0),
+      startTime: Number.MAX_SAFE_INTEGER,
+      duration: 0,
+      isRevoked: false,
+      grantName: 'squashed',
+      grantAddress: 'squashed',
+    },
+  );
+  const output = filtered.slice(0, MAX_STACK - 1);
+  output.push(squashed);
+  return output;
+};
 
 export const parseGrantData = (
+  currentTime: number,
   grant: Grant,
-): [Array<Array<DataPoint>>, number, number, number] => {
-  let xMin = new Date().getTime();
+): [Array<Array<DataPoint>>, number, number, number, number] => {
+  let xMin = Number.MAX_SAFE_INTEGER;
   let xMax = 0;
   let yMax = BigNumber.from(0);
+  let currentYMax = BigNumber.from(0);
 
-  const data0 = grant.streams
-    .filter(stream => !stream.isRevoked && stream.duration >= ONEWEEK)
+  const streams = reduceStreams(grant.streams);
+
+  const data0 = streams
     .sort((a, b) => {
       if (a.startTime < b.startTime) return 1;
       if (a.startTime === b.startTime) return 0;
@@ -92,6 +70,7 @@ export const parseGrantData = (
       if (startTime < xMin) xMin = startTime;
       if (startTime + duration > xMax) xMax = startTime + duration;
       yMax = yMax.add(stream.funded);
+      currentYMax = currentYMax.add(getVestedAmount(stream, currentTime));
       return stream;
     });
 
@@ -120,5 +99,11 @@ export const parseGrantData = (
     }
     return points;
   });
-  return [data1, xMin, xMax, Number(utils.formatEther(yMax))];
+  return [
+    data1,
+    xMin,
+    xMax,
+    Number(utils.formatEther(currentYMax)),
+    Number(utils.formatEther(yMax)),
+  ];
 };
