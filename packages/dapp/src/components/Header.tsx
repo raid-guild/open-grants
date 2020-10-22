@@ -177,7 +177,7 @@ export const Header: React.FC<Props> = ({ onOpen }) => {
                                 bgImage={
                                   u.imageHash
                                     ? `url(${CONFIG.ipfsEndpoint}/ipfs/${u.imageHash})`
-                                    : `https://avatars.dicebear.com/api/jdenticon/${u.id}.svg`
+                                    : `url(https://avatars.dicebear.com/api/jdenticon/${u.id}.svg)`
                                 }
                                 bgSize="cover"
                                 bgRepeat="no-repeat"
