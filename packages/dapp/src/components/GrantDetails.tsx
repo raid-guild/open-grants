@@ -33,8 +33,7 @@ export const GrantDetails: React.FC<Props> = ({
       background="white"
       boxShadow="0px 4px 4px rgba(114, 125, 129, 0.25)"
       borderRadius="0.5rem"
-      px={12}
-      py={8}
+      p={{ base: '6', md: '8' }}
       position="relative"
       color="text"
       direction="column"
@@ -44,24 +43,25 @@ export const GrantDetails: React.FC<Props> = ({
         w="100%"
         justify="space-between"
         align={{ base: 'stretch', sm: 'center' }}
-        mb={8}
+        mb={4}
+        p={2}
         direction={{ base: 'column', sm: 'row' }}
       >
         {showName ? (
           <Link
             to={`/grant/${grant.id}`}
-            color="black"
+            color="dark"
             fontWeight="bold"
             fontSize="xl"
           >
             {grant.name}
           </Link>
         ) : (
-          <Text fontWeight="bold" color="black" fontSize="xl">
+          <Text fontWeight="bold" color="dark" fontSize="xl">
             Grant Details
           </Text>
         )}
-        <Text color="green.500" ml={{ base: 4, md: 0 }}>
+        <Text fontSize="sm" color="green.500" ml={{ base: 0, md: 4 }}>
           {useBreakpointValue({
             base: 'Open for Funding',
             sm: 'Open',
@@ -74,7 +74,8 @@ export const GrantDetails: React.FC<Props> = ({
         spacing={4}
         letterSpacing="0.3px"
         justifySelf="flex-end"
-        mb={8}
+        mb={4}
+        p={2}
       >
         <Flex direction="column" h="100%" justify="space-between">
           <Text fontWeight="500" fontSize="2xl" color="green.500">
@@ -111,9 +112,10 @@ export const GrantDetails: React.FC<Props> = ({
           align={{ base: 'stretch', md: 'center' }}
           mr={{ base: 0, md: 8 }}
           mt={{ base: 4, md: 0 }}
+          p={2}
           direction={{ base: 'column-reverse', md: 'row' }}
         >
-          <Text>{`Created ${new Date(
+          <Text fontSize="sm">{`Created ${new Date(
             grant.timestamp * 1000,
           ).toLocaleDateString()}`}</Text>
           <Link
@@ -121,7 +123,8 @@ export const GrantDetails: React.FC<Props> = ({
             textDecoration="underline"
             to={`${CONFIG.explorerEndpoint}/address/${grant.id}`}
             ml={{ base: 0, md: 8 }}
-            mb={{ base: 4, md: 0 }}
+            mb={{ base: 2, md: 0 }}
+            fontSize="sm"
           >
             View the contract
           </Link>
@@ -134,6 +137,7 @@ export const GrantDetails: React.FC<Props> = ({
                   to={grant.contactLink}
                   ml={{ base: 0, md: 8 }}
                   mb={{ base: 4, md: 0 }}
+                  fontSize="sm"
                 >
                   Contact the team
                 </Link>
@@ -143,6 +147,7 @@ export const GrantDetails: React.FC<Props> = ({
                 to={`/grant/${grant.id}/streams`}
                 ml={{ base: 0, md: 8 }}
                 mb={{ base: 4, md: 0 }}
+                fontSize="sm"
               >
                 Distribute funds
               </Link>
