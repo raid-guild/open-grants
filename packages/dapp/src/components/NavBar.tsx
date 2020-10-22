@@ -47,23 +47,23 @@ export const NavBar: React.FC<Props> = ({ isOpen, onClose }) => {
 
             <DrawerBody>
               <VStack spacing={5} align="flex-start" color="white">
-                <Link to="/explore" onClick={onClose}>
+                <Link to="/explore" onClick={onClose} size="lg">
                   Explore Grants
                 </Link>
-                <Link to="/leaderboard" onClick={onClose}>
-                  Leaderboard
-                </Link>
                 {account && (
-                  <Link to={`/profile/${account}`} onClick={onClose}>
-                    My Grants
+                  <Link to={`/profile/${account}`} onClick={onClose} size="lg">
+                    My Grants Dashboard
                   </Link>
                 )}
                 {account && (
-                  <Link to="/create" onClick={onClose}>
+                  <Link to="/create" onClick={onClose} size="lg">
                     Create a Grant
                   </Link>
                 )}
-                <Link to="/faq" onClick={onClose} minW="2rem">
+                <Link to="/leaderboard" onClick={onClose} size="lg">
+                  Leaderboard
+                </Link>
+                <Link to="/faq" onClick={onClose} minW="2rem" size="lg">
                   FAQ
                 </Link>
               </VStack>
@@ -76,7 +76,7 @@ export const NavBar: React.FC<Props> = ({ isOpen, onClose }) => {
                     disconnect();
                     onClose();
                   }}
-                  size="md"
+                  size="lg"
                   variant="link"
                   color="white"
                 >
