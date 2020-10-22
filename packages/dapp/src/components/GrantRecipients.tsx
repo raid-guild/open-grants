@@ -26,8 +26,7 @@ export const GrantRecipients: React.FC<Props> = ({
       background={page ? 'transparent' : 'white'}
       boxShadow={page ? 'none' : '0px 4px 4px rgba(114, 125, 129, 0.25)'}
       borderRadius={page ? '0' : '0.5rem'}
-      px={12}
-      py={8}
+      p={{ base: '6', md: '8' }}
       position="relative"
       color="text"
       direction="column"
@@ -37,7 +36,7 @@ export const GrantRecipients: React.FC<Props> = ({
         w="100%"
         justify="space-between"
         align="center"
-        mb={8}
+        mb={4}
         direction={page ? 'column' : 'row'}
       >
         <Text
@@ -47,7 +46,7 @@ export const GrantRecipients: React.FC<Props> = ({
         >
           Grant Recipients
         </Text>
-        <Text>
+        <Text fontSize="sm">
           {`${grantees.length} ${
             grantees.length === 1 ? 'Recipient' : 'Recipients'
           }`}
@@ -76,7 +75,7 @@ export const GrantRecipients: React.FC<Props> = ({
           />
         ))
       ) : (
-        <Text w="100%" textAlign="center" mt={8}>
+        <Text w="100%" textAlign="center" mt={2} p={3} background="haze">
           No Recipients found
         </Text>
       )}

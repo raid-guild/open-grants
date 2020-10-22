@@ -30,12 +30,12 @@ export const StreamTile: React.FC<Props> = ({ stream }) => {
       color="gray.500"
       align="stretch"
     >
-      <Flex direction="column" align="flex-start">
+      <Flex direction="column" align="flex-start" p={2}>
         <Link
           to={`/grant/${stream.grantAddress}`}
-          color="black"
-          fontWeight="600"
-          fontSize="2xl"
+          color="dark"
+          fontWeight="bold"
+          fontSize="xl"
           mb={6}
         >
           {stream.grantName}
@@ -46,7 +46,7 @@ export const StreamTile: React.FC<Props> = ({ stream }) => {
               {`${formatValue(stream.funded)} ETH`}
             </Text>
             <Text textTransform="uppercase">Pledged</Text>
-            <Text fontSize="sm">{`Start ${new Date(
+            <Text fontSize="xs">{`Start ${new Date(
               stream.startTime * 1000,
             ).toLocaleDateString()}`}</Text>
           </Flex>
@@ -55,7 +55,7 @@ export const StreamTile: React.FC<Props> = ({ stream }) => {
               {`${formatValue(vested)} ETH`}
             </Text>
             <Text textTransform="uppercase">Vested</Text>
-            <Text fontSize="sm">{`End ${new Date(
+            <Text fontSize="xs">{`End ${new Date(
               (stream.startTime + stream.duration) * 1000,
             ).toLocaleDateString()}`}</Text>
           </Flex>

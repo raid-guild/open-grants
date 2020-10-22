@@ -44,9 +44,9 @@ export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
         <Flex direction="column" align="flex-start" flex={1} pr="1rem">
           <Link
             to={`/grant/${grant.id}`}
-            color="black"
-            fontWeight="600"
-            fontSize="2xl"
+            color="dark"
+            fontWeight="bold"
+            fontSize="xl"
             textAlign="left"
             mb={6}
             style={{ whiteSpace: 'pre-wrap' }}

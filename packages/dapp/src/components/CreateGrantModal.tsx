@@ -51,7 +51,7 @@ export const CreateGrantModal: React.FC<Props> = ({
       awaitGrantAddress(ethersProvider, tx).then(g => setGrantAddress(g));
     }
   }, [tx, ethersProvider]);
-  const faq = 'Questions about grants? View the funding FAQ';
+  const faq = 'Questions? View the grant FAQ';
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay>
@@ -91,7 +91,7 @@ export const CreateGrantModal: React.FC<Props> = ({
                 textAlign="center"
                 color="dark"
               >
-                Fund This Grant
+                Confirm Grant Details
               </Text>
               <VStack
                 spacing={2}
@@ -102,8 +102,11 @@ export const CreateGrantModal: React.FC<Props> = ({
               >
                 <Text> {metadata.name} </Text>
                 <Text> {metadata.description} </Text>
-                <Text> {metadata.link ? metadata.link : 'No link'} </Text>
-                <Text>
+                <Text overflowWrap="break-word">
+                  {' '}
+                  {metadata.link ? metadata.link : 'No link'}{' '}
+                </Text>
+                <Text overflowWrap="break-word">
                   {metadata.contactLink
                     ? metadata.contactLink
                     : 'No contact link'}

@@ -75,7 +75,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
       direction="column"
     >
       <Flex w="100%" justify="space-between" align="center" mb={4}>
-        <Text fontWeight="bold" color="black" fontSize="xl">
+        <Text fontWeight="bold" color="dark" fontSize="xl">
           Grant Funds Over Time
         </Text>
         <HStack spacing={8}>
@@ -129,7 +129,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
             align="center"
             w="100%"
             h="100%"
-            background="black10"
+            background="haze"
           >
             <Text color="text">No Streams found</Text>
           </Flex>

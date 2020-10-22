@@ -56,7 +56,7 @@ export const FundGrantModal: React.FC<Props> = ({
     }
   }, [tx]);
 
-  const faq = 'Questions about grants? View the funding FAQ';
+  const faq = 'Questions? View the funding FAQ';
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay>
@@ -103,14 +103,14 @@ export const FundGrantModal: React.FC<Props> = ({
                 size="lg"
                 color="dark"
                 background="white"
-                border="1px solid #C4C4C4"
                 borderRadius="full"
                 variant="solid"
+                boxShadow="0px 0px 4px #e2e6ee"
               >
                 <InputLeftElement
                   mx={1}
                   pointerEvents="none"
-                  borderRight="1px solid #C4C4C4"
+                  borderRight="1px solid #EAECEF"
                 >
                   Ξ
                 </InputLeftElement>
@@ -125,21 +125,19 @@ export const FundGrantModal: React.FC<Props> = ({
                   onChange={e => setAmount(e.target.value)}
                 />
               </InputGroup>
-              <Text textTransform="uppercase">
-                Choose A Distribution Method
-              </Text>
+              <Text textTransform="uppercase">Distribution Method</Text>
               <MethodSelector split={split} toggleSplit={toggleSplit} />
               {!split && (
-                <Text letterSpacing="0.3px">
+                <Text letterSpacing="0.3px" fontSize="sm" textAlign="center">
                   Funds will be made available immediately and cannot be
                   withdrawn.
                 </Text>
               )}
               {split && (
                 <>
-                  <Text letterSpacing="0.3px">
+                  <Text letterSpacing="0.3px" fontSize="sm" textAlign="center">
                     Funds will be dispersed slowly over time. You can stop the
-                    stream at any time.
+                    stream at any point and withdraw unvested funds.
                   </Text>
                   <Text textTransform="uppercase">Stream Duration</Text>
                   <DurationSelector

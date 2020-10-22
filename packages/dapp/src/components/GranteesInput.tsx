@@ -60,6 +60,8 @@ export const GranteesInput: React.FC<Props> = ({
           color="green.500"
           fontWeight="500"
           fontSize="sm"
+          textAlign="right"
+          whiteSpace="normal"
           onClick={distributeEvenly}
         >
           Distribute Evenly
@@ -108,6 +110,7 @@ const GranteeInput: React.FC<InputProps> = ({
         color="dark"
         size="lg"
         border="none"
+        boxShadow="0px 0px 4px #e2e6ee"
         value={grantees[i]}
         placeholder="Grantee Address"
         isInvalid={addressInvalid}
@@ -129,6 +132,7 @@ const GranteeInput: React.FC<InputProps> = ({
           max={100}
           placeholder="Percentage"
           fontSize="md"
+          boxShadow="0px 0px 4px #e2e6ee"
           value={amounts[i]}
           onChange={e => {
             const newAmounts = amounts.slice();

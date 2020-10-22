@@ -26,7 +26,9 @@ export const GrantTextInput: React.FC<Props> = ({
     <Flex direction="column" w="100%">
       <Flex justify="space-between" align="center" fontSize="sm" w="100%" p={1}>
         <Text>{title}</Text>
-        <Text>{description}</Text>
+        <Text fontSize="xs" align="right" pl={4}>
+          {description}
+        </Text>
       </Flex>
       <Input
         w="100%"
@@ -44,6 +46,7 @@ export const GrantTextInput: React.FC<Props> = ({
         fontSize="md"
         maxLength={maxLength}
         color="dark"
+        boxShadow="0px 0px 4px #e2e6ee"
       />
     </Flex>
   );

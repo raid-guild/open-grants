@@ -74,7 +74,12 @@ export const Header: React.FC<Props> = ({ onOpen }) => {
             <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
           </svg>
         </Button>
-        <Link to="/" fontSize="1.25rem" color="white">
+        <Link
+          to="/"
+          fontSize="1.25rem"
+          color="white"
+          _hover={{ textDecoration: 'none' }}
+        >
           Open Grants
         </Link>
       </HStack>
