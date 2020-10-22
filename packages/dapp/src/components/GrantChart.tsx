@@ -20,7 +20,7 @@ enum ChartState {
   FUTURE,
 }
 
-const chartColors = ['#D7FFEF', '#E6FFFE', '#AEEAFF', '#C7DDFF'];
+const chartColors = ['#8AE0DB', '#7BD3D3', '#A4DFD7', '#75DEC6', '#69D1B9'];
 
 export const GrantChart: React.FC<Props> = ({ grant }) => {
   const currentTime = Math.floor(new Date().getTime() / 1000);

@@ -8,7 +8,7 @@ type DataPoint = {
   y: number;
 };
 
-export const MAX_STACK = 4;
+export const MAX_STACK = 5;
 
 const reduceStreams = (input: Array<Stream>): Array<Stream> => {
   const filtered = input
