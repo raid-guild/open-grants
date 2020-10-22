@@ -58,3 +58,18 @@ export const UserDetails = gql`
     earned
   }
 `;
+
+export const UserName = gql`
+  fragment UserName on User {
+    id
+    name
+    imageHash
+  }
+`;
+
+export const GrantName = gql`
+  fragment GrantName on Grant {
+    id
+    name
+  }
+`;

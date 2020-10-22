@@ -1,6 +1,7 @@
 import { Flex, useDisclosure } from '@chakra-ui/core';
 import { Header } from 'components/Header';
 import { NavBar } from 'components/NavBar';
+import { SearchContextProvider } from 'contexts/SearchContext';
 import React from 'react';
 
 export const Layout: React.FC = ({ children }) => {
@@ -19,7 +20,9 @@ export const Layout: React.FC = ({ children }) => {
       position="relative"
     >
       <NavBar isOpen={isOpen} onClose={onClose} />
-      <Header onOpen={onOpen} />
+      <SearchContextProvider>
+        <Header onOpen={onOpen} />
+      </SearchContextProvider>
       <Flex
         flex={1}
         align="center"
