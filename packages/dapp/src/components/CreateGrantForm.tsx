@@ -115,7 +115,6 @@ export const CreateGrantForm: React.FC = () => {
         fontWeight="500"
         size="lg"
         fontSize="md"
-        mb={8}
         onClick={() => {
           setTotal(t => t + 1);
           const newGrantees = grantees.slice();
