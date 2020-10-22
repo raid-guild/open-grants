@@ -3,8 +3,11 @@ import {
   BigInt,
   Bytes,
   ipfs,
+  box,
   json,
   log,
+  TypedMap,
+  JSONValue,
 } from '@graphprotocol/graph-ts';
 
 import { EtherVesting } from '../generated/EtherVesting/EtherVesting';
@@ -132,8 +135,9 @@ export function fetchStreamInfo(address: Address): StreamObject {
   return streamObject;
 }
 
-export function newUser(address: Bytes): User {
+function newUser(address: Bytes): User {
   let user = new User(address.toHexString());
+  user.address = address;
   user.grantsReceived = new Array<string>();
   user.grantsFunded = new Array<string>();
   user.streams = new Array<string>();
@@ -144,4 +148,40 @@ export function newUser(address: Bytes): User {
   user.earned = BigInt.fromI32(0);
   log.debug('New User {}', [address.toHexString()]);
   return user;
+}
+
+export function getUser(address: Bytes): User {
+  let user = User.load(address.toHexString());
+  if (user == null) {
+    user = newUser(address);
+  }
+  let profile = box.profile(user.address.toHexString()) as TypedMap<
+    string,
+    JSONValue
+  >;
+
+  let profileName = profile.get('name');
+  if (profileName) {
+    user.name = profileName.toString();
+  }
+  let profileEmoji = profile.get('emoji');
+  if (profileEmoji) {
+    user.emoji = profileEmoji.toString();
+  }
+
+  let profileImages = profile.get('image');
+  if (profileImages) {
+    let profileImagesArray = profileImages.toArray();
+    if (profileImagesArray.length > 0) {
+      let profileImage = profileImagesArray[0].toObject().get('contentUrl');
+      if (profileImage) {
+        let profileImageHash = profileImage.toObject().get('/');
+        if (profileImageHash) {
+          user.imageHash = profileImageHash.toString();
+        }
+      }
+    }
+  }
+  log.debug('Updated User {}', [address.toHexString()]);
+  return user as User;
 }

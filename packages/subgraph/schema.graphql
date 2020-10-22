@@ -73,6 +73,7 @@ type Release @entity {
 
 type User @entity {
   id: ID!
+  address: Bytes!
   grantsReceived: [Grant!]!
   grantsFunded: [Grant!]!
   streams: [Stream!]!
@@ -81,4 +82,7 @@ type User @entity {
   pledged: BigInt!
   withdrawn: BigInt!
   streamed: BigInt!
+  name: String
+  emoji: String
+  imageHash: String
 }

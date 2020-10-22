@@ -1,4 +1,8 @@
-import { Button as ChakraButton, Link as ChakraLink } from '@chakra-ui/core';
+import {
+  Box,
+  Button as ChakraButton,
+  Link as ChakraLink,
+} from '@chakra-ui/core';
 import React from 'react';
 import {
   Link as RouterLink,
@@ -41,17 +45,21 @@ export const Link: React.FC<LinkProps & LinkButtonProps> = ({
       </ChakraLink>
     );
   }
+  const { width, w } = props;
 
   return (
-    <RouterLink to={to} replace={replace}>
-      <ChakraButton
-        variant="link"
-        fontWeight="normal"
-        color="currentColor"
-        {...props}
-      >
-        {children}
-      </ChakraButton>
-    </RouterLink>
+    <Box width={width || w}>
+      <RouterLink to={to} replace={replace}>
+        <ChakraButton
+          variant="link"
+          fontWeight="normal"
+          color="currentColor"
+          justifyContent={width || w ? 'flex-start' : 'center'}
+          {...props}
+        >
+          {children}
+        </ChakraButton>
+      </RouterLink>
+    </Box>
   );
 };

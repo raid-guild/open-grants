@@ -6,9 +6,12 @@ import {
   LogPayment,
 } from '../generated/UnmanagedStream/UnmanagedStream';
 import { LogNewGrant } from '../generated/UnmanagedStreamFactory/UnmanagedStreamFactory';
-import { fetchGrantInfo, newUser } from './helpers';
+import { fetchGrantInfo, getUser } from './helpers';
 
 export function handleLogNewGrant(event: LogNewGrant): void {
+  let fetchedGrant = fetchGrantInfo(event.params.grant);
+  if (fetchedGrant.name.length == 0) return;
+
   let grant = new Grant(event.params.grant.toHexString());
   grant.factoryAddress = event.address;
   grant.createdBy = event.transaction.from;
@@ -18,7 +21,6 @@ export function handleLogNewGrant(event: LogNewGrant): void {
   grant.grantees = event.params.grantees as Array<Bytes>;
   grant.amounts = event.params.amounts;
 
-  let fetchedGrant = fetchGrantInfo(event.params.grant);
   grant.funded = fetchedGrant.totalFunded;
   grant.uri = fetchedGrant.uri;
   grant.name = fetchedGrant.name;
@@ -37,10 +39,7 @@ export function handleLogNewGrant(event: LogNewGrant): void {
   let grantees = event.params.grantees as Array<Bytes>;
   for (let i = 0; i < grantees.length; ++i) {
     let grantee = grantees[i];
-    let user = User.load(grantee.toHexString());
-    if (user == null) {
-      user = newUser(grantee);
-    }
+    let user = getUser(grantee);
     let grantsReceived = user.grantsReceived;
     grantsReceived.push(event.params.grant.toHexString());
     user.grantsReceived = grantsReceived;
@@ -79,10 +78,7 @@ export function handleLogFunding(event: LogFunding): void {
 
     grant.save();
 
-    let user = User.load(fund.donor.toHexString());
-    if (user == null) {
-      user = newUser(fund.donor);
-    }
+    let user = getUser(fund.donor);
     if (user.grantsFunded.indexOf(grant.id) == -1) {
       let grantsFunded = user.grantsFunded;
       grantsFunded.push(grant.id);
@@ -114,10 +110,7 @@ export function handleLogPayment(event: LogPayment): void {
     grant.payments = payments;
     grant.save();
 
-    let user = User.load(payment.grantee.toHexString());
-    if (user == null) {
-      user = newUser(payment.grantee);
-    }
+    let user = getUser(payment.grantee);
     user.earned = user.earned.plus(payment.amount);
     user.save();
   } else {

@@ -7,7 +7,7 @@ import {
 } from '../generated/EtherVesting/EtherVesting';
 import { LogEtherVestingCreated } from '../generated/EtherVestingFactory/EtherVestingFactory';
 import { User, Deposit, Grant, Release, Stream } from '../generated/schema';
-import { fetchStreamInfo, newUser } from './helpers';
+import { fetchStreamInfo, getUser } from './helpers';
 
 export function handleLogEtherVestingCreated(
   event: LogEtherVestingCreated,
@@ -31,10 +31,7 @@ export function handleLogEtherVestingCreated(
   stream.deposits = new Array<string>();
   stream.releases = new Array<string>();
 
-  let user = User.load(stream.owner.toHexString());
-  if (user == null) {
-    user = newUser(stream.owner);
-  }
+  let user = getUser(stream.owner);
   let streams = user.streams;
   streams.push(stream.id);
   user.streams = streams;
@@ -90,10 +87,7 @@ export function handleLogFunding(event: LogFunding): void {
     stream.save();
 
     if (stream.grant != null) {
-      let user = User.load(stream.owner.toHexString());
-      if (user == null) {
-        user = newUser(stream.owner);
-      }
+      let user = getUser(stream.owner);
       user.pledged = user.pledged.plus(deposit.amount);
       user.save();
     }
@@ -124,10 +118,7 @@ export function handleLogReleased(event: LogReleased): void {
     stream.save();
 
     if (stream.grant != null) {
-      let user = User.load(stream.owner.toHexString());
-      if (user == null) {
-        user = newUser(stream.owner);
-      }
+      let user = getUser(stream.owner);
       user.streamed = user.streamed.plus(release.amount);
       user.save();
     }
@@ -147,10 +138,7 @@ export function handleLogRevoked(event: LogRevoked): void {
     stream.save();
 
     if (stream.grant != null) {
-      let user = User.load(stream.owner.toHexString());
-      if (user == null) {
-        user = newUser(stream.owner);
-      }
+      let user = getUser(stream.owner);
       user.withdrawn = user.withdrawn
         .plus(stream.funded)
         .minus(stream.released);

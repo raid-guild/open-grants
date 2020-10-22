@@ -3,14 +3,16 @@ import { CONFIG } from 'config';
 export type BoxProfile = {
   address: string;
   name: string;
+  emoji: string;
   imageUrl: string;
 };
 
 export const getProfile = async (account: string): Promise<BoxProfile> => {
   const address = account.toLowerCase();
-  const profile = {
+  const profile: BoxProfile = {
     address,
     name: '',
+    emoji: '',
     imageUrl: `https://avatars.dicebear.com/api/jdenticon/${address}.svg`,
   };
   const response = await fetch(
@@ -28,6 +30,7 @@ export const getProfile = async (account: string): Promise<BoxProfile> => {
       profile.imageUrl = `${CONFIG.ipfsEndpoint}/ipfs/${imageHash}`;
     }
     profile.name = boxProfile.name;
+    profile.emoji = boxProfile.emoji;
   }
   return profile;
 };
