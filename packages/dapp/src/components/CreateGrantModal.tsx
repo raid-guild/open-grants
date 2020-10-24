@@ -102,15 +102,24 @@ export const CreateGrantModal: React.FC<Props> = ({
               >
                 <Text> {metadata.name} </Text>
                 <Text> {metadata.description} </Text>
-                <Text overflowWrap="break-word">
-                  {' '}
-                  {metadata.link ? metadata.link : 'No link'}{' '}
-                </Text>
-                <Text overflowWrap="break-word">
-                  {metadata.contactLink
-                    ? metadata.contactLink
-                    : 'No contact link'}
-                </Text>
+                {metadata.link ? (
+                  <Link isExternal to={metadata.link} overflowWrap="break-word">
+                    {metadata.link}
+                  </Link>
+                ) : (
+                  <Text> No link </Text>
+                )}
+                {metadata.contactLink ? (
+                  <Link
+                    isExternal
+                    to={metadata.contactLink}
+                    overflowWrap="break-word"
+                  >
+                    {metadata.contactLink}
+                  </Link>
+                ) : (
+                  <Text> No contact link </Text>
+                )}
               </VStack>
               <Grid w="100%" gap={4} templateColumns="5fr 1fr" color="text">
                 <HStack>
