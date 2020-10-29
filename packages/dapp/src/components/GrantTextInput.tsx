@@ -1,4 +1,5 @@
 import { Flex, Input, Text } from '@chakra-ui/core';
+import { ErrorAlert } from 'components/ErrorAlert';
 import React, { useState } from 'react';
 
 type Props = {
@@ -9,7 +10,10 @@ type Props = {
   maxLength: number;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   optional?: boolean;
+  isURL?: boolean;
 };
+
+const URL_REGEX = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 
 export const GrantTextInput: React.FC<Props> = ({
   title,
@@ -19,9 +23,10 @@ export const GrantTextInput: React.FC<Props> = ({
   setValue,
   maxLength,
   optional = false,
+  isURL = false,
 }) => {
   const [invalid, setInvalid] = useState(false);
-  // TODO add a check for validating if links are valid
+
   return (
     <Flex direction="column" w="100%">
       <Flex justify="space-between" align="center" fontSize="sm" w="100%" p={1}>
@@ -38,7 +43,9 @@ export const GrantTextInput: React.FC<Props> = ({
         value={value}
         placeholder={label}
         onChange={e => {
-          if (!optional) {
+          if (isURL) {
+            setInvalid(!URL_REGEX.test(e.target.value));
+          } else if (!optional) {
             setInvalid(!e.target.value);
           }
           setValue(e.target.value);
@@ -48,6 +55,12 @@ export const GrantTextInput: React.FC<Props> = ({
         color="dark"
         boxShadow="0px 0px 4px #e2e6ee"
       />
+      {invalid ? (
+        <ErrorAlert
+          message={isURL ? 'Invalid URL' : 'Cannot be empty'}
+          mt={1}
+        />
+      ) : null}
     </Flex>
   );
 };

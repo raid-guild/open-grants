@@ -42,7 +42,7 @@ export const CreateGrantForm: React.FC = () => {
     <VStack
       w="100%"
       spacing={8}
-      maxW="45rem"
+      maxW="50rem"
       py="4rem"
       align="stretch"
       px={8}
@@ -57,7 +57,7 @@ export const CreateGrantForm: React.FC = () => {
       >
         Create a Grant
       </Text>
-      <Text textAlign="center" mb={4}>
+      <Text textAlign="center" mb={4} w="100%">
         {'Request funds for your ETH2 infrastructure project. First time? '}
         <Link to="/faq" textDecor="underline" _hover={{ color: 'green.500' }}>
           Read the FAQ
@@ -87,6 +87,7 @@ export const CreateGrantForm: React.FC = () => {
         setValue={setLink}
         maxLength={240}
         optional
+        isURL
       />
       <GrantTextInput
         title="How can folks contact you?"
@@ -96,6 +97,7 @@ export const CreateGrantForm: React.FC = () => {
         setValue={setContactLink}
         maxLength={240}
         optional
+        isURL
       />
       <Divider color="gray.100" />
       <GranteesInput
