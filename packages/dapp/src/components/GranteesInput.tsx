@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/core';
 import { utils } from 'ethers';
 import { CloseIcon } from 'icons/CloseIcon';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { ErrorAlert } from './ErrorAlert';
 
