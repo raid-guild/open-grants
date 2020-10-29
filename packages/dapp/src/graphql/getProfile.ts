@@ -12,6 +12,8 @@ const grantQuery = gql`
   query GetProfile($address: ID!, $first: Int!) {
     user(id: $address) {
       id
+      name
+      imageHash
       funded
       earned
       pledged

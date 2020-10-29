@@ -44,7 +44,7 @@ const Explore: React.FC = () => {
         spacing={8}
         w="100%"
         maxW="70rem"
-        px={8}
+        px={{ base: 4, sm: 8 }}
         mb={8}
       >
         {sortedGrants.map(grant => (

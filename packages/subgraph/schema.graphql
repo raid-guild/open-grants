@@ -86,3 +86,25 @@ type User @entity {
   emoji: String
   imageHash: String
 }
+
+# type _Schema_
+#   @fulltext(
+#     name: "grantSearch"
+#     language: en
+#     algorithm: rank
+#     include: [
+#       {
+#         entity: "Grant"
+#         fields: [
+#           { name: "name" }
+#           { name: "description" }
+#         ]
+#       }
+#     ]
+#   )
+#   @fulltext(
+#     name: "userSearch"
+#     language: en
+#     algorithm: rank
+#     include: [{ entity: "User", fields: [{ name: "name" }] }]
+#   )

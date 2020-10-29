@@ -48,18 +48,34 @@ export const Link: React.FC<LinkProps & LinkButtonProps> = ({
   const { width, w } = props;
 
   return (
-    <Box width={width || w}>
-      <RouterLink to={to} replace={replace}>
-        <ChakraButton
-          variant="link"
-          fontWeight="normal"
-          color="currentColor"
-          justifyContent={width || w ? 'flex-start' : 'center'}
-          {...props}
-        >
-          {children}
-        </ChakraButton>
-      </RouterLink>
-    </Box>
+    <>
+      {width || w ? (
+        <Box width={width || w}>
+          <RouterLink to={to} replace={replace}>
+            <ChakraButton
+              variant="link"
+              fontWeight="normal"
+              color="currentColor"
+              justifyContent={width || w ? 'flex-start' : 'center'}
+              {...props}
+            >
+              {children}
+            </ChakraButton>
+          </RouterLink>
+        </Box>
+      ) : (
+        <RouterLink to={to} replace={replace}>
+          <ChakraButton
+            variant="link"
+            fontWeight="normal"
+            color="currentColor"
+            justifyContent={width || w ? 'flex-start' : 'center'}
+            {...props}
+          >
+            {children}
+          </ChakraButton>
+        </RouterLink>
+      )}
+    </>
   );
 };

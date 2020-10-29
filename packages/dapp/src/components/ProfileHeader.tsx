@@ -15,6 +15,7 @@ export const ProfileHeader: React.FC<Props> = ({
   profile,
   loggedInUser,
 }) => {
+  const name = profile.name ? profile.name.split(' ')[0] : 'User';
   return (
     <VStack
       px="2rem"
@@ -32,7 +33,7 @@ export const ProfileHeader: React.FC<Props> = ({
         fontWeight="800"
         textAlign="center"
       >
-        {loggedInUser ? `My Grants` : `User Grants`}
+        {loggedInUser ? `My Grants` : `${name}'s Grants`}
       </Text>
       <Link mb={24} to="/leaderboard">
         {rank > 0 &&

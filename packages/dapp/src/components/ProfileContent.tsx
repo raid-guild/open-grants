@@ -1,4 +1,4 @@
-import { SimpleGrid, Text, VStack } from '@chakra-ui/core';
+import { Flex, SimpleGrid, Text, VStack } from '@chakra-ui/core';
 import { GrantDetails } from 'components/GrantDetails';
 import { GrantTile } from 'components/GrantTile';
 import { StreamTile } from 'components/StreamTile';
@@ -27,7 +27,16 @@ export const ProfileContent: React.FC<Props> = ({ profile, loggedInUser }) => {
           />
         ))
       ) : (
-        <Text> No Grants found </Text>
+        <Flex
+          border="1px solid #8694AA"
+          borderRadius="0.5rem"
+          w="100%"
+          justify="center"
+          align="center"
+          py={2}
+        >
+          <Text> No Grants found </Text>
+        </Flex>
       )}
       <Text
         textTransform="uppercase"
@@ -45,7 +54,16 @@ export const ProfileContent: React.FC<Props> = ({ profile, loggedInUser }) => {
           ))}
         </SimpleGrid>
       ) : (
-        <Text> No Streams found </Text>
+        <Flex
+          border="1px solid #8694AA"
+          borderRadius="0.5rem"
+          w="100%"
+          justify="center"
+          align="center"
+          py={2}
+        >
+          <Text> No Streams found </Text>
+        </Flex>
       )}
       <Text textTransform="uppercase" fontSize="xl" w="100%" pt={4} id="funded">
         {loggedInUser ? `Grants I’ve funded` : `User has funded`}
@@ -57,7 +75,16 @@ export const ProfileContent: React.FC<Props> = ({ profile, loggedInUser }) => {
           ))}
         </SimpleGrid>
       ) : (
-        <Text> No Grants found </Text>
+        <Flex
+          border="1px solid #8694AA"
+          borderRadius="0.5rem"
+          w="100%"
+          justify="center"
+          align="center"
+          py={2}
+        >
+          <Text> No Grants found </Text>
+        </Flex>
       )}
     </VStack>
   );

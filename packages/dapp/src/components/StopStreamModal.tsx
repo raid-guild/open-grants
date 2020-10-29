@@ -66,7 +66,6 @@ export const StopStreamModal: React.FC<Props> = ({
               faq={faq}
               title="Stream Stopped"
               grantAddress={stream.grantAddress}
-              onClose={onClose}
             />
           ))}
         {!tx && (
@@ -76,6 +75,7 @@ export const StopStreamModal: React.FC<Props> = ({
             mx={{ base: 8, lg: 0 }}
             background="background"
             color="text"
+            fontFamily="body"
             p={6}
           >
             <Link to="/faq" textDecor="underline">

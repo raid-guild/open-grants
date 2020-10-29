@@ -49,6 +49,9 @@ export type Grant = {
 
 export type Profile = {
   id: string;
+  name: string;
+  imageHash: string;
+  imageUrl: string;
   grantsReceived: Array<Grant>;
   grantsFunded: Array<Grant>;
   streams: Array<Stream>;
