@@ -3,10 +3,16 @@ import { ONEWEEK } from 'utils/constants';
 import { getVestedAmount } from 'utils/helpers';
 import { Grant, Stream } from 'utils/types';
 
-type DataPoint = {
+export type DataPoint = {
   x: number;
   y: number;
 };
+
+export enum ChartState {
+  ALLTIME,
+  PAST,
+  FUTURE,
+}
 
 export const MAX_STACK = 5;
 
@@ -51,7 +57,15 @@ const reduceStreams = (input: Array<Stream>): Array<Stream> => {
 export const parseGrantData = (
   currentTime: number,
   grant: Grant,
-): [Array<Array<DataPoint>>, number, number, number, number] => {
+): [
+  Array<Stream>,
+  Array<Array<DataPoint>>,
+  Array<DataPoint & { stream: number }>,
+  number,
+  number,
+  number,
+  number,
+] => {
   let xMin = Number.MAX_SAFE_INTEGER;
   let xMax = 0;
   let yMax = BigNumber.from(0);
@@ -74,33 +88,43 @@ export const parseGrantData = (
       return stream;
     });
 
-  const data1 = data0.map(stream => {
+  const nodes: Array<DataPoint & { stream: number }> = [];
+  const data1 = data0.map((stream, index) => {
     const { startTime, duration } = stream;
     const points = new Array<DataPoint>();
+    let j = xMin + 4 * ONEWEEK;
     for (let i = xMin; i <= xMax; i += ONEWEEK) {
+      let point = { x: 0, y: 0 };
       if (i < startTime) {
-        points.push({
+        point = {
           x: i,
           y: 0,
-        });
+        };
       } else if (i < startTime + duration) {
-        points.push({
+        point = {
           x: i,
           y: Number(utils.formatEther(getVestedAmount(stream, i))),
-        });
+        };
       } else {
-        points.push({
+        point = {
           x: i,
           y: Number(
             utils.formatEther(getVestedAmount(stream, startTime + duration)),
           ),
-        });
+        };
+      }
+      points.push(point);
+      if (i === j) {
+        nodes.push({ ...point, stream: index });
+        j += 4 * ONEWEEK;
       }
     }
     return points;
   });
   return [
+    streams,
     data1,
+    nodes,
     xMin,
     xMax,
     Number(utils.formatEther(currentYMax)),
