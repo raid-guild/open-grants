@@ -1,67 +1,27 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Grid,
-  Stack,
-  Text,
-  useBreakpointValue,
-} from '@chakra-ui/core';
+import { Box, Button, Flex, Grid, Stack, Text } from '@chakra-ui/core';
+import { GrantChartPlot } from 'components/GrantChartPlot';
 import React, { useState } from 'react';
-import {
-  AreaSeries,
-  FlexibleWidthXYPlot,
-  LineSeries,
-  XAxis,
-  YAxis,
-} from 'react-vis';
-import { MAX_STACK, parseGrantData } from 'utils/chart';
+import { ChartState, parseGrantData } from 'utils/chart';
 import { Grant } from 'utils/types';
 
 type Props = {
   grant: Grant;
 };
 
-enum ChartState {
-  ALLTIME,
-  PAST,
-  FUTURE,
-}
-
-const chartColors = ['#8AE0DB', '#7BD3D3', '#A4DFD7', '#75DEC6', '#69D1B9'];
-
 export const GrantChart: React.FC<Props> = ({ grant }) => {
   const currentTime = Math.floor(new Date().getTime() / 1000);
-  const [grantData, xMin, xMax, currentYMax, yMax] = parseGrantData(
-    currentTime,
-    grant,
-  );
+  const [
+    streams,
+    grantData,
+    nodes,
+    xMin,
+    xMax,
+    currentYMax,
+    yMax,
+  ] = parseGrantData(currentTime, grant);
   const isDisabled = grantData.length === 0;
 
   const [state, setState] = useState<ChartState>(ChartState.ALLTIME);
-
-  const yDomain = ((s: ChartState) => {
-    switch (s) {
-      case ChartState.PAST:
-        return [0, currentYMax * 1.2];
-      case ChartState.FUTURE:
-      case ChartState.ALLTIME:
-      default:
-        return [0, yMax * 1.2];
-    }
-  })(state);
-
-  const xDomain = ((s: ChartState) => {
-    switch (s) {
-      case ChartState.PAST:
-        return [xMin, currentTime];
-      case ChartState.FUTURE:
-        return [currentTime, xMax];
-      case ChartState.ALLTIME:
-      default:
-        return [xMin, xMax];
-    }
-  })(state);
 
   const grid = isDisabled
     ? [1, 1]
@@ -69,10 +29,6 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
         (currentTime - xMin) / (xMax - xMin),
         (xMax - currentTime) / (xMax - xMin),
       ];
-
-  const xTicks = useBreakpointValue({ base: 0, sm: 4, md: 8, lg: 10 });
-  const yTicks = useBreakpointValue({ base: 5, md: 10 });
-  const chartHeight = useBreakpointValue({ base: 320, sm: 420 });
 
   return (
     <Flex
@@ -149,65 +105,18 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
             <Text color="text">No Streams found</Text>
           </Flex>
         )}
-        <FlexibleWidthXYPlot
-          stackBy="y"
-          height={chartHeight}
-          yDomain={yDomain}
-          xDomain={xDomain}
-        >
-          {grantData.map((data, i) => (
-            <AreaSeries
-              key={data[i].x}
-              curve="curveBasis"
-              animation
-              data={data}
-              fill={chartColors[i % MAX_STACK]}
-              stroke={chartColors[i % MAX_STACK]}
-            />
-          ))}
-          <XAxis
-            style={{ fontSize: '9px', opacity: '0.75' }}
-            tickTotal={xTicks}
-            tickFormat={d => {
-              const date = new Date(d * 1000);
-              const ye = new Intl.DateTimeFormat('en', {
-                year: '2-digit',
-              }).format(date);
-              const mo = new Intl.DateTimeFormat('en', {
-                month: 'short',
-              }).format(date);
-              const da = new Intl.DateTimeFormat('en', {
-                day: '2-digit',
-              }).format(date);
-              return `${da}-${mo}-${ye}`;
-            }}
-          />
-          <YAxis
-            style={{ fontSize: '9px', opacity: '0.75' }}
-            tickTotal={yTicks}
-          />
-          {!isDisabled && (
-            <AreaSeries
-              data={[
-                { x: currentTime, y: yMax * 1.5 },
-                { x: xMax, y: yMax * 1.5 },
-              ]}
-              fill="rgba(255, 255, 255, 0.35)"
-              stroke="rgba(255, 255, 255, 0.35)"
-            />
-          )}
-          {!isDisabled && (
-            <LineSeries
-              data={[
-                { x: currentTime, y: 0 },
-                { x: currentTime, y: yMax * 1.5 },
-              ]}
-              strokeWidth={2}
-              stroke="#23CEA5"
-              strokeStyle="solid"
-            />
-          )}
-        </FlexibleWidthXYPlot>
+        <GrantChartPlot
+          streams={streams}
+          grantData={grantData}
+          nodes={nodes}
+          currentTime={currentTime}
+          currentYMax={currentYMax}
+          yMax={yMax}
+          xMin={xMin}
+          xMax={xMax}
+          state={state}
+          isDisabled={isDisabled}
+        />
         {!isDisabled && (
           <Grid
             w="100%"
@@ -221,6 +130,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
                 ? `${grid[0]}fr ${grid[1]}fr`
                 : undefined
             }
+            style={{ pointerEvents: 'none' }}
           >
             {state === ChartState.FUTURE && (
               <Text

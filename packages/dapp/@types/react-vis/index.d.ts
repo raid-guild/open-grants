@@ -780,15 +780,16 @@ declare module 'react-vis' {
 
   export interface VoronoiProps {
     className?: string; // default: ''
-    extent: number[][];
+    extent?: number[][];
     nodes: VoronoiPoint[];
-    onBlur?: RVMouseEventHandler;
+    onBlur?: RVNearestXYEventHandler;
     onClick?: RVMouseEventHandler;
-    onHover?: RVMouseEventHandler;
+    onHover?: RVNearestXYEventHandler;
     onMouseDown?: RVMouseEventHandler;
     onMouseUp?: RVMouseEventHandler;
     x?: (d: any) => number;
     y?: (d: any) => number;
+    polygonStyle?: CSSProperties;
   }
   export const Voronoi: SFC<VoronoiProps>;
 
