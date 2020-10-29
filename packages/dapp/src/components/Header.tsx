@@ -86,7 +86,7 @@ export const Header: React.FC<Props> = ({ onOpen: openNav }) => {
         </Link>
       </HStack>
 
-      <HStack spacing={{ base: 0, md: 4 }}>
+      <HStack spacing={{ base: 0, md: 4 }} flex={1} justify="flex-end">
         <SearchBar />
         {!account && (
           <Button
