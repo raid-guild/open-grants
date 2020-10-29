@@ -20,10 +20,20 @@ export function isAddress(value: string): string | false {
 
 const searchQuery = gql`
   query Search($search: String, $first: Int) {
-    grants(first: $first, where: { name_contains: $search }) {
+    grants(
+      first: $first
+      where: { name_contains: $search }
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
       ...GrantName
     }
-    users(first: $first, where: { name_contains: $search }) {
+    users(
+      first: $first
+      where: { name_contains: $search }
+      orderBy: name
+      orderDirection: desc
+    ) {
       ...UserName
     }
   }
@@ -33,10 +43,20 @@ const searchQuery = gql`
 
 const addressSearchQuery = gql`
   query AddressSearch($search: Bytes, $first: Int) {
-    grants(first: $first, where: { grantAddress_contains: $search }) {
+    grants(
+      first: $first
+      where: { grantAddress_contains: $search }
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
       ...GrantName
     }
-    users(first: $first, where: { address_contains: $search }) {
+    users(
+      first: $first
+      where: { address_contains: $search }
+      orderBy: name
+      orderDirection: desc
+    ) {
       ...UserName
     }
   }

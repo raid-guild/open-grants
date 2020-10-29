@@ -61,7 +61,6 @@ export const CreateGrantModal: React.FC<Props> = ({
               faq={faq}
               title="Grant Created"
               grantAddress={grantAddress}
-              onClose={onClose}
             />
           ) : (
             <LoadingModal
@@ -79,6 +78,7 @@ export const CreateGrantModal: React.FC<Props> = ({
             background="background"
             color="text"
             p={6}
+            fontFamily="body"
           >
             <Link to="/faq" textDecor="underline">
               {faq}

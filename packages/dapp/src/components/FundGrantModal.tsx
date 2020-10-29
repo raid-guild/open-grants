@@ -60,12 +60,12 @@ export const FundGrantModal: React.FC<Props> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay>
-        {tx &&
+        {!tx &&
           (loading ? (
             <LoadingModal
               faq={faq}
               title="Funding In Progress"
-              txHash={tx.hash}
+              txHash="text"
               onClose={onClose}
             />
           ) : (
@@ -73,16 +73,16 @@ export const FundGrantModal: React.FC<Props> = ({
               faq={faq}
               title="Grant Funded"
               grantAddress={grantAddress}
-              onClose={onClose}
             />
           ))}
-        {!tx && (
+        {tx && (
           <ModalContent
             borderRadius="1rem"
             maxW="40rem"
             mx={{ base: 8, lg: 0 }}
             background="background"
             color="text"
+            fontFamily="body"
             p={6}
           >
             <Link to="/faq" textDecor="underline">
@@ -111,6 +111,7 @@ export const FundGrantModal: React.FC<Props> = ({
                   mx={1}
                   pointerEvents="none"
                   borderRight="1px solid #EAECEF"
+                  fontFamily="sans-serif"
                 >
                   Ξ
                 </InputLeftElement>

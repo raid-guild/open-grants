@@ -4,7 +4,7 @@ import { client } from 'graphql/client';
 
 const rankQuery = gql`
   query GetRank {
-    users(orderBy: funded, orderDirection: desc) {
+    users(orderBy: funded, orderDirection: desc, first: 50) {
       id
     }
   }

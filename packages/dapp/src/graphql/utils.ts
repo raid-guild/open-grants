@@ -1,3 +1,4 @@
+import { CONFIG } from 'config';
 import { BigNumber } from 'ethers';
 import {
   Fund as FundGraph,
@@ -132,7 +133,14 @@ export const parseGrant = (
 
 type ProfileFragment = Pick<
   UserGraph,
-  'id' | 'funded' | 'earned' | 'pledged' | 'withdrawn' | 'streamed'
+  | 'id'
+  | 'funded'
+  | 'earned'
+  | 'pledged'
+  | 'withdrawn'
+  | 'streamed'
+  | 'name'
+  | 'imageHash'
 > & {
   grantsReceived: Array<GrantDetailsFragment>;
   grantsFunded: Array<GrantDetailsFragment>;
@@ -142,6 +150,11 @@ type ProfileFragment = Pick<
 export const parseProfile = (input: ProfileFragment): Profile => {
   return {
     id: input.id.toLowerCase(),
+    name: input.name ? input.name : '',
+    imageHash: input.imageHash ? input.imageHash : '',
+    imageUrl: input.imageHash
+      ? `url(${CONFIG.ipfsEndpoint}/ipfs/${input.imageHash})`
+      : `url(https://avatars.dicebear.com/api/jdenticon/${input.id}.svg)`,
     grantsReceived: input.grantsReceived.map(grant => parseGrant(grant, false)),
     grantsFunded: input.grantsFunded.map(grant => parseGrant(grant, false)),
     streams: input.streams.map(s => parseStream(s)),

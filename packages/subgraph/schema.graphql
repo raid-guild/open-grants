@@ -87,33 +87,24 @@ type User @entity {
   imageHash: String
 }
 
-type _Schema_
-  @fulltext(
-    name: "grantSearch",
-    language: en
-    algorithm: rank,
-    include: [
-      {
-        entity: "Grant",
-        fields: [
-          { name: "name" },
-          { name: "description" },
-          { name: "link" },
-          { name: "contactLink" },
-        ]
-      }
-    ]
-  )
-  @fulltext(
-    name: "userSearch",
-    language: en
-    algorithm: rank,
-    include: [
-      {
-        entity: "User",
-        fields: [
-          { name: "name" },
-        ]
-      }
-    ]
-  )
+# type _Schema_
+#   @fulltext(
+#     name: "grantSearch"
+#     language: en
+#     algorithm: rank
+#     include: [
+#       {
+#         entity: "Grant"
+#         fields: [
+#           { name: "name" }
+#           { name: "description" }
+#         ]
+#       }
+#     ]
+#   )
+#   @fulltext(
+#     name: "userSearch"
+#     language: en
+#     algorithm: rank
+#     include: [{ entity: "User", fields: [{ name: "name" }] }]
+#   )

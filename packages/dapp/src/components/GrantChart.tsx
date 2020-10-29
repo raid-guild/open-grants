@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Grid, HStack, Text } from '@chakra-ui/core';
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  Stack,
+  Text,
+  useBreakpointValue,
+} from '@chakra-ui/core';
 import React, { useState } from 'react';
 import {
   AreaSeries,
@@ -62,23 +70,30 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
         (xMax - currentTime) / (xMax - xMin),
       ];
 
+  const xTicks = useBreakpointValue({ base: 0, sm: 4, md: 8, lg: 10 });
+  const yTicks = useBreakpointValue({ base: 5, md: 10 });
+  const chartHeight = useBreakpointValue({ base: 320, sm: 420 });
+
   return (
     <Flex
       w="100%"
       background="white"
       boxShadow="0px 4px 4px rgba(114, 125, 129, 0.25)"
       borderRadius="0.5rem"
-      px={12}
+      px={{ base: 8, md: 12 }}
       py={8}
       position="relative"
       color="text"
       direction="column"
     >
-      <Flex w="100%" justify="space-between" align="center" mb={4}>
-        <Text fontWeight="bold" color="dark" fontSize="xl">
+      <Flex w="100%" align="center" mb={4}>
+        <Text fontWeight="bold" color="dark" fontSize="xl" flex={1}>
           Grant Funds Over Time
         </Text>
-        <HStack spacing={8}>
+        <Stack
+          direction={{ base: 'column', md: 'row' }}
+          spacing={{ base: 0, md: 8 }}
+        >
           <Button
             variant="link"
             onClick={() => setState(ChartState.ALLTIME)}
@@ -103,11 +118,11 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
           >
             Future
           </Button>
-        </HStack>
+        </Stack>
       </Flex>
       <Text
         position="absolute"
-        left={4}
+        left={{ base: 2, md: 4 }}
         top="50%"
         transform="rotate(-90deg) translateX(50%)"
         textTransform="uppercase"
@@ -136,7 +151,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
         )}
         <FlexibleWidthXYPlot
           stackBy="y"
-          height={420}
+          height={chartHeight}
           yDomain={yDomain}
           xDomain={xDomain}
         >
@@ -152,7 +167,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
           ))}
           <XAxis
             style={{ fontSize: '9px', opacity: '0.75' }}
-            tickTotal={10}
+            tickTotal={xTicks}
             tickFormat={d => {
               const date = new Date(d * 1000);
               const ye = new Intl.DateTimeFormat('en', {
@@ -167,7 +182,10 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
               return `${da}-${mo}-${ye}`;
             }}
           />
-          <YAxis style={{ fontSize: '9px', opacity: '0.75' }} tickTotal={10} />
+          <YAxis
+            style={{ fontSize: '9px', opacity: '0.75' }}
+            tickTotal={yTicks}
+          />
           {!isDisabled && (
             <AreaSeries
               data={[

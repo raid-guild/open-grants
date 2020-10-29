@@ -44,6 +44,7 @@ export const LoadingModal: React.FC<Props> = ({
       mx={{ base: 8, lg: 0 }}
       background="background"
       color="text"
+      fontFamily="body"
       p={6}
       bgImage={`url(${LoadingBG})`}
       bgRepeat="repeat-x"

@@ -1,27 +1,22 @@
 import {
-  Button,
+  Image,
   ModalCloseButton,
   ModalContent,
   Text,
   VStack,
 } from '@chakra-ui/core';
+import ChestImage from 'assets/chest.svg';
 import SuccessBG from 'assets/success.svg';
-import { Link } from 'components/Link';
+import { Link, LinkButton } from 'components/Link';
 import React from 'react';
 
 type Props = {
   faq: string;
   title: string;
   grantAddress: string;
-  onClose: () => void;
 };
 
-export const SuccessModal: React.FC<Props> = ({
-  faq,
-  title,
-  grantAddress,
-  onClose,
-}) => {
+export const SuccessModal: React.FC<Props> = ({ faq, title, grantAddress }) => {
   return (
     <ModalContent
       borderRadius="1rem"
@@ -32,13 +27,14 @@ export const SuccessModal: React.FC<Props> = ({
       bgPosition="center"
       bgRepeat="no-repeat"
       color="text"
+      fontFamily="body"
       p={6}
     >
       <Link to="/faq" textDecor="underline">
         {faq}
       </Link>
 
-      <VStack spacing={4} w="100%" py={6}>
+      <VStack spacing={4} w="100%" py={6} mb={4}>
         <Text
           fontSize={{ base: '2rem', md: '3rem' }}
           fontWeight="800"
@@ -47,11 +43,9 @@ export const SuccessModal: React.FC<Props> = ({
         >
           {title}
         </Text>
-        <Link to={`/grant/${grantAddress}`} textDecor="underline" mb={4}>
-          View the grant
-        </Link>
+        <Image src={ChestImage} alt="chest" />
       </VStack>
-      <Button
+      <LinkButton
         size="lg"
         background="white"
         color="text"
@@ -59,10 +53,10 @@ export const SuccessModal: React.FC<Props> = ({
         w="100%"
         boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
         letterSpacing="0.115em"
-        onClick={onClose}
+        to={`/grant/${grantAddress}`}
       >
-        Close
-      </Button>
+        View the grant
+      </LinkButton>
       <ModalCloseButton top={4} right={4} fontSize={16} />
     </ModalContent>
   );
