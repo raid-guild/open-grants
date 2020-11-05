@@ -4,11 +4,14 @@ import {
   SimpleGrid,
   Text,
   useDisclosure,
+  useToast,
   VStack,
 } from '@chakra-ui/core';
 import { Link } from 'components/Link';
 import { StopStreamModal } from 'components/StopStreamModal';
-import React from 'react';
+import { CONFIG } from 'config';
+import { Web3Context } from 'contexts/Web3Context';
+import React, { useContext } from 'react';
 import { formatValue, getVestedAmount } from 'utils/helpers';
 import { Stream } from 'utils/types';
 
@@ -17,9 +20,34 @@ type Props = {
 };
 export const StreamTile: React.FC<Props> = ({ stream }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { account, ethersProvider, isSupportedNetwork } = useContext(
+    Web3Context,
+  );
+  const toast = useToast();
   if (!stream) return null;
   const currentTime = Math.ceil(new Date().getTime() / 1000);
   const vested = getVestedAmount(stream, currentTime);
+  const myStream = account.toLowerCase() === stream.owner.toLowerCase();
+
+  const openStreamModal = () => {
+    if (!ethersProvider) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: 'Please connect wallet',
+      });
+    } else if (!isSupportedNetwork) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: `Please connect wallet to ${CONFIG.network.name}`,
+      });
+    } else {
+      onOpen();
+    }
+  };
   return (
     <VStack
       style={{ backdropFilter: 'blur(7px)' }}
@@ -61,15 +89,17 @@ export const StreamTile: React.FC<Props> = ({ stream }) => {
           </Flex>
         </SimpleGrid>
       </Flex>
-      <Button
-        bg="background"
-        textTransform="uppercase"
-        w="100%"
-        boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
-        onClick={onOpen}
-      >
-        Stop the stream
-      </Button>
+      {myStream && (
+        <Button
+          bg="background"
+          textTransform="uppercase"
+          w="100%"
+          boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
+          onClick={openStreamModal}
+        >
+          Stop the stream
+        </Button>
+      )}
       <StopStreamModal stream={stream} isOpen={isOpen} onClose={onClose} />
     </VStack>
   );

@@ -1,7 +1,16 @@
-import { Button, Divider, Flex, Grid, Text, VStack } from '@chakra-ui/core';
+import {
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  Text,
+  useToast,
+  VStack,
+} from '@chakra-ui/core';
 import { GrantStream } from 'components/GrantStream';
 import { InProgressStream } from 'components/InProgressStream';
 import { Link } from 'components/Link';
+import { CONFIG } from 'config';
 import { Web3Context } from 'contexts/Web3Context';
 import { BigNumber, providers } from 'ethers';
 import React, { useContext, useEffect, useState } from 'react';
@@ -19,7 +28,8 @@ type ProgressStream = {
 };
 
 export const DistributeFunds: React.FC<Props> = ({ grant }) => {
-  const { ethersProvider } = useContext(Web3Context);
+  const { ethersProvider, isSupportedNetwork } = useContext(Web3Context);
+  const toast = useToast();
   const [selected, setSelected] = useState<Array<Stream>>([]);
   const [inProgress, setInProgress] = useState<Array<ProgressStream>>([]);
   const [streams, setStreams] = useState<Array<Stream>>(grant.streams);
@@ -63,8 +73,23 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
     return processedStream;
   };
   const onSubmit = () => {
-    if (!ethersProvider) return;
-    selected.map(processStream);
+    if (!ethersProvider) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: 'Please connect wallet',
+      });
+    } else if (!isSupportedNetwork) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: `Please connect wallet to ${CONFIG.network.name}`,
+      });
+    } else {
+      selected.map(processStream);
+    }
   };
   return (
     <VStack w="100%" spacing={8} maxW="50rem" p={8} color="text" mb={16}>

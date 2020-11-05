@@ -5,13 +5,16 @@ import {
   Spacer,
   Text,
   useDisclosure,
+  useToast,
   VStack,
 } from '@chakra-ui/core';
 import TileBG from 'assets/tile-background.svg';
 import { FundGrantModal } from 'components/FundGrantModal';
 import { Link, LinkButton } from 'components/Link';
 import { ProfileImage } from 'components/ProfileImage';
-import React from 'react';
+import { CONFIG } from 'config';
+import { Web3Context } from 'contexts/Web3Context';
+import React, { useContext } from 'react';
 import { formatValue } from 'utils/helpers';
 import { Grant } from 'utils/types';
 
@@ -21,11 +24,33 @@ type Props = {
 };
 export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { ethersProvider, isSupportedNetwork } = useContext(Web3Context);
+  const toast = useToast();
   if (!grant) return null;
   const displayGrantees = grant.grantees
     ? grant.grantees.slice(0, 4).reverse()
     : [];
   const leftOver = grant.grantees ? grant.grantees.length - 4 : 0;
+
+  const openFundModal = () => {
+    if (!ethersProvider) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: 'Please connect wallet',
+      });
+    } else if (!isSupportedNetwork) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: `Please connect wallet to ${CONFIG.network.name}`,
+      });
+    } else {
+      onOpen();
+    }
+  };
   return (
     <VStack
       style={{ backdropFilter: 'blur(7px)' }}
@@ -102,7 +127,7 @@ export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
           textTransform="uppercase"
           w="100%"
           boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
-          onClick={onOpen}
+          onClick={openFundModal}
         >
           Add Funds
         </Button>
@@ -123,7 +148,7 @@ export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
             textTransform="uppercase"
             w="100%"
             boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
-            onClick={onOpen}
+            onClick={openFundModal}
           >
             Fund
           </Button>

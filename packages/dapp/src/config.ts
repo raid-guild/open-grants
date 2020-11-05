@@ -1,5 +1,5 @@
 export const CONFIG = {
-  network: 'kovan',
+  network: { chainId: 42, name: 'Kovan testnet' }, // 1 = mainnet, 42 = kovan
   graphURL:
     'https://api.thegraph.com/subgraphs/name/dan13ram/kovan-grants-platform',
   infuraId:

@@ -5,14 +5,17 @@ import {
   Text,
   useBreakpointValue,
   useDisclosure,
+  useToast,
   VStack,
 } from '@chakra-ui/core';
 import HeaderBG from 'assets/header.jpg';
 import { AmountDisplay } from 'components/AmountDisplay';
 import { FundGrantModal } from 'components/FundGrantModal';
 import { Link } from 'components/Link';
+import { CONFIG } from 'config';
+import { Web3Context } from 'contexts/Web3Context';
 import { CopyIcon } from 'icons/CopyIcon';
-import React from 'react';
+import React, { useContext } from 'react';
 import { copyToClipboard, formatValue } from 'utils/helpers';
 import { Grant } from 'utils/types';
 
@@ -21,11 +24,33 @@ type Props = {
 };
 export const GrantHeader: React.FC<Props> = ({ grant }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { ethersProvider, isSupportedNetwork } = useContext(Web3Context);
+  const toast = useToast();
   const grantAddressDisplay = useBreakpointValue({
     base: `${grant.id.slice(0, 12).toUpperCase()}...`,
     sm: `${grant.id.slice(0, 24).toUpperCase()}...`,
     md: grant.id,
   });
+
+  const openFundModal = () => {
+    if (!ethersProvider) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: 'Please connect wallet',
+      });
+    } else if (!isSupportedNetwork) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: `Please connect wallet to ${CONFIG.network.name}`,
+      });
+    } else {
+      onOpen();
+    }
+  };
 
   return (
     <VStack
@@ -90,7 +115,7 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         size="lg"
         fontWeight="500"
         px={10}
-        onClick={onOpen}
+        onClick={openFundModal}
         mb={12}
       >
         Fund this grant

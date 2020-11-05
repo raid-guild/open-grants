@@ -11,6 +11,7 @@ type Web3ContextType = {
   connectWeb3: () => Promise<void>;
   disconnect: () => void;
   account: string;
+  isSupportedNetwork: boolean;
 };
 
 export const Web3Context = createContext<Web3ContextType>({
@@ -18,6 +19,7 @@ export const Web3Context = createContext<Web3ContextType>({
   connectWeb3: async () => {},
   disconnect: () => undefined,
   account: '',
+  isSupportedNetwork: true,
 });
 
 const providerOptions = {
@@ -35,7 +37,6 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
   useEffect(() => {
     setWeb3Modal(
       new Web3Modal({
-        network: CONFIG.network,
         cacheProvider: true,
         providerOptions,
       }),
@@ -46,6 +47,8 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
     ethersProvider,
     setEthersProvider,
   ] = useState<ethers.providers.Web3Provider | null>(null);
+
+  const [isSupportedNetwork, setSupportedNetwork] = useState(true);
 
   const connectWeb3 = useCallback(async () => {
     if (web3Modal) {
@@ -60,6 +63,9 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
       const signer = provider.getSigner();
       const gotAccount = await signer.getAddress();
       setAccount(gotAccount);
+
+      const network = await provider.getNetwork();
+      setSupportedNetwork(network.chainId === CONFIG.network.chainId);
     }
   }, [web3Modal]);
 
@@ -78,7 +84,13 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
 
   return (
     <Web3Context.Provider
-      value={{ ethersProvider, connectWeb3, disconnect, account }}
+      value={{
+        ethersProvider,
+        connectWeb3,
+        disconnect,
+        account,
+        isSupportedNetwork,
+      }}
     >
       {children}
     </Web3Context.Provider>

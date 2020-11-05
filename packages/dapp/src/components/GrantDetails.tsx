@@ -1,15 +1,18 @@
 import {
+  Box,
   Button,
   Flex,
   SimpleGrid,
   Text,
   useBreakpointValue,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/core';
 import { FundGrantModal } from 'components/FundGrantModal';
 import { Link, LinkButton } from 'components/Link';
 import { CONFIG } from 'config';
-import React from 'react';
+import { Web3Context } from 'contexts/Web3Context';
+import React, { useContext } from 'react';
 import { formatValue } from 'utils/helpers';
 import { Grant } from 'utils/types';
 
@@ -26,6 +29,27 @@ export const GrantDetails: React.FC<Props> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const buttonSize = useBreakpointValue({ base: 'lg', md: 'md' });
+  const { ethersProvider, isSupportedNetwork } = useContext(Web3Context);
+  const toast = useToast();
+  const openFundModal = () => {
+    if (!ethersProvider) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: 'Please connect wallet',
+      });
+    } else if (!isSupportedNetwork) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: `Please connect wallet to ${CONFIG.network.name}`,
+      });
+    } else {
+      onOpen();
+    }
+  };
   return (
     <Flex
       id="details"
@@ -112,39 +136,39 @@ export const GrantDetails: React.FC<Props> = ({
           <Text fontSize="sm">{`Created ${new Date(
             grant.timestamp * 1000,
           ).toLocaleDateString()}`}</Text>
-          <Link
-            isExternal
-            textDecoration="underline"
-            to={`${CONFIG.explorerEndpoint}/address/${grant.id}`}
-            ml={{ base: 0, md: 8 }}
-            mb={{ base: 2, md: 0 }}
-            fontSize="sm"
-          >
-            View the contract
-          </Link>
+          <Box ml={{ base: 0, md: 8 }} mb={{ base: 2, md: 0 }}>
+            <Link
+              isExternal
+              textDecoration="underline"
+              to={`${CONFIG.explorerEndpoint}/address/${grant.id}`}
+              fontSize="sm"
+            >
+              View the contract
+            </Link>
+          </Box>
           {!myGrant && (
             <>
               {grant.contactLink && (
+                <Box ml={{ base: 0, md: 8 }} mb={{ base: 4, md: 0 }}>
+                  <Link
+                    isExternal
+                    textDecoration="underline"
+                    to={grant.contactLink}
+                    fontSize="sm"
+                  >
+                    Contact the team
+                  </Link>
+                </Box>
+              )}
+              <Box ml={{ base: 0, md: 8 }} mb={{ base: 4, md: 0 }}>
                 <Link
-                  isExternal
                   textDecoration="underline"
-                  to={grant.contactLink}
-                  ml={{ base: 0, md: 8 }}
-                  mb={{ base: 4, md: 0 }}
+                  to={`/grant/${grant.id}/streams`}
                   fontSize="sm"
                 >
-                  Contact the team
+                  Distribute funds
                 </Link>
-              )}
-              <Link
-                textDecoration="underline"
-                to={`/grant/${grant.id}/streams`}
-                ml={{ base: 0, md: 8 }}
-                mb={{ base: 4, md: 0 }}
-                fontSize="sm"
-              >
-                Distribute funds
-              </Link>
+              </Box>
             </>
           )}
         </Flex>
@@ -166,7 +190,7 @@ export const GrantDetails: React.FC<Props> = ({
             textTransform="uppercase"
             boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
             size={buttonSize}
-            onClick={onOpen}
+            onClick={openFundModal}
           >
             Add Funds
           </Button>
