@@ -70,7 +70,7 @@ export const Header: React.FC<Props> = ({ onOpen: openNav }) => {
           to="/"
           fontSize="1.25rem"
           color="white"
-          _hover={{ textDecoration: 'none', color: 'text' }}
+          _hover={{ textDecoration: 'none', color: 'cyan.400' }}
           transition="0.25s"
         >
           Open Grants
