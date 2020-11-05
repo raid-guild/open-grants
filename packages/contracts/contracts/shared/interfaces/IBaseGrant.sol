@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.8 <0.7.0;
+pragma solidity ^0.7.0;
 
 /**
  * @title Grants Spec Abstract Contract.
@@ -12,15 +12,17 @@ interface IBaseGrant {
 
     /**
      * @dev Funding target reached event.
+     * implemented in IFunding
+     * event LogFundingComplete();
      */
-    event LogFundingComplete();
 
     /**
      * @dev Grant received funding.
+     * implemented in IFunding
      * @param donor Address funding the grant.
      * @param value Amount in WEI or ATOMIC_UNITS funded.
+     * event LogFunding(address indexed donor, uint256 value);
      */
-    event LogFunding(address indexed donor, uint256 value);
 
     /**
      * @dev Grant paying grantee.
@@ -38,7 +40,7 @@ interface IBaseGrant {
     function getUri()
         external
         view
-        returns(bytes memory);
+        returns(bytes32);
 
     /**
      * @dev If null, amount is in wei, otherwise address of ERC20-compliant contract.

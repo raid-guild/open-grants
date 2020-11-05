@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.8 <0.7.0;
+pragma solidity ^0.7.0;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./IFactory.sol";
 
 
@@ -48,7 +48,7 @@ contract MasterFactory {
         address[] memory _grantees,
         uint256[] memory _amounts,
         address _currency,
-        bytes memory _uri,
+        bytes32 _uri,
         bytes memory _extraData,
         address _type
     )

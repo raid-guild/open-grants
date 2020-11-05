@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.8 <0.7.0;
+pragma solidity ^0.7.0;
 
 import "../interfaces/IBaseGrant.sol";
 
@@ -14,7 +14,7 @@ abstract contract BaseGrant is IBaseGrant {
     /*----------  Globals  ----------*/
 
     /* solhint-disable max-line-length */
-    bytes private uri;                            // URI for additional (off-chain) grant details such as description, milestones, etc.
+    bytes32 private uri;                            // URI for additional (off-chain) grant details such as description, milestones, etc.
     address private currency;                     // (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.
     uint256 private targetFunding;                // (Optional) Funding threshold required to begin releasing funds.
     uint256 private totalPaid;                    // Cumulative funding paid to grantees.
@@ -30,7 +30,7 @@ abstract contract BaseGrant is IBaseGrant {
         public
         override
         view
-        returns(bytes memory)
+        returns(bytes32)
     {
         return uri;
     }
@@ -97,7 +97,7 @@ abstract contract BaseGrant is IBaseGrant {
         totalPaid = value;
     }
 
-    function setUri(bytes memory value)
+    function setUri(bytes32 value)
         internal
     {
         uri = value;

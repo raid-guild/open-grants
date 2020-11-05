@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.8 <0.7.0;
+pragma solidity ^0.7.0;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../../UnmanagedStream.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
+import "../../UnmanagedGrant.sol";
 import "./IFactory.sol";
 
 
@@ -11,7 +11,7 @@ import "./IFactory.sol";
  * @dev Grant request, funding, and management.
  * @author @NoahMarconi @ameensol @JFickel @ArnaudBrousseau
  */
-contract UnmanagedStreamFactory is IFactory {
+contract UnmanagedGrantFactory is IFactory {
     using SafeMath for uint256;
 
 
@@ -37,22 +37,25 @@ contract UnmanagedStreamFactory is IFactory {
         address[] memory _grantees,
         uint256[] memory _amounts,
         address _currency,
-        bytes memory _uri,
-        bytes memory _extraData
+        bytes32 _uri,
+        bytes memory _extraData 
     )
         public
         override
         returns (address)
     {
 
+        require(
+            _currency == address(0),
+            "constructor::Invalid Argument. Currency must be ADDRESS_ZERO."
+        );
+
         address grantAddress;
 
-        UnmanagedStream grant = new UnmanagedStream(
+        UnmanagedGrant grant = new UnmanagedGrant(
             _grantees,
             _amounts,
-            _currency,
-            _uri,
-            _extraData
+            _uri
         );
 
         grantAddress = address(grant);

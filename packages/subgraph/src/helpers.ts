@@ -1,6 +1,7 @@
 import {
   Address,
   BigInt,
+  ByteArray,
   Bytes,
   ipfs,
   box,
@@ -32,6 +33,18 @@ class GrantObject {
   }
 }
 
+// Helper adding 0x12 and 0x20 to make the proper ipfs hash
+// the returned bytes32 is so [0,31]
+export function addQm(a: ByteArray): ByteArray {
+  let out = new Uint8Array(34);
+  out[0] = 0x12;
+  out[1] = 0x20;
+  for (let i = 0; i < 32; i++) {
+    out[i + 2] = a[i];
+  }
+  return out as ByteArray;
+}
+
 export function fetchGrantInfo(address: Address): GrantObject {
   let grantInstance = UnmanagedStream.bind(address);
   let grantObject = new GrantObject();
@@ -45,7 +58,8 @@ export function fetchGrantInfo(address: Address): GrantObject {
 
   if (!uri.reverted) {
     grantObject.uri = uri.value;
-    let base58Hash = uri.value.toBase58();
+    let hexHash = addQm(uri.value) as Bytes;
+    let base58Hash = hexHash.toBase58();
     let getIPFSData = ipfs.cat(base58Hash);
     log.debug('IPFS uri {} hash {}', [uri.value.toHexString(), base58Hash]);
     if (getIPFSData != null) {

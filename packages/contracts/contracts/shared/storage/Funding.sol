@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.8 <0.7.0;
+pragma solidity ^0.7.0;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 import "../interfaces/IFunding.sol";
 
 
@@ -27,7 +27,7 @@ abstract contract Funding is IFunding {
      * @dev Cumulative funding donated by donors.
      */
     function getTotalFunding()
-        external
+        public
         override
         view
         returns(uint256)
