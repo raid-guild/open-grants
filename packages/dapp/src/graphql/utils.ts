@@ -15,6 +15,14 @@ export const parseStream = (input: StreamDetailsFragment): Stream => {
   const output: Stream = {
     id: input.id.toLowerCase(),
     owner: input.owner.toLowerCase(),
+    ownerUser: {
+      id: input.ownerUser.id,
+      name: input.ownerUser.name,
+      imageHash: input.ownerUser.imageHash,
+      imageUrl: input.ownerUser.imageHash
+        ? `url(${CONFIG.ipfsEndpoint}/ipfs/${input.ownerUser.imageHash})`
+        : `url(https://avatars.dicebear.com/api/jdenticon/${input.id}.svg)`,
+    },
     funded: BigNumber.from(input.funded),
     released: BigNumber.from(input.released),
     startTime: Number(input.startTime),

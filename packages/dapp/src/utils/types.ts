@@ -9,6 +9,12 @@ export enum Sort {
 export type Stream = {
   id: string;
   owner: string;
+  ownerUser: {
+    id: string;
+    name: string | null | undefined;
+    imageHash: string | null | undefined;
+    imageUrl: string;
+  };
   funded: BigNumber;
   released: BigNumber;
   startTime: number;
