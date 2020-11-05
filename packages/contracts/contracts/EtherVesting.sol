@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.0;
+pragma solidity ^0.7.0;
 
-import "openzeppelin-solidity/contracts/access/Ownable.sol";
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./shared/storage/Funding.sol";
 
 /**
@@ -46,7 +46,7 @@ contract EtherVesting is Ownable, ReentrancyGuard, Funding {
      * @param duration duration in seconds of the period in which the ether will vest
      * @param revocable whether the vesting is revocable or not
      */
-    constructor (address beneficiary, uint256 start, uint256 duration, bool revocable) public {
+    constructor (address beneficiary, uint256 start, uint256 duration, bool revocable) {
         require(beneficiary != address(0), "EtherVesting: beneficiary is the zero address");
         // solhint-disable-next-line max-line-length
         require(duration > 0, "EtherVesting: duration is 0");
@@ -105,7 +105,7 @@ contract EtherVesting is Ownable, ReentrancyGuard, Funding {
      * @notice Transfers vested ether to beneficiary.
      */
     function release()
-        public
+        external
         nonReentrant
     {
         uint256 unreleased = _releasableAmount();
@@ -129,7 +129,7 @@ contract EtherVesting is Ownable, ReentrancyGuard, Funding {
      * remain in the contract, the rest are returned to the owner.
      */
     function revoke()
-        public
+        external
         onlyOwner
         nonReentrant
     {
@@ -143,11 +143,13 @@ contract EtherVesting is Ownable, ReentrancyGuard, Funding {
 
         _revoked = true;
 
-        (bool success, ) = owner().call{ value: refund}("");
-        require(
-            success,
-            "EtherVesting::Transfer Error. Unable to send refund to owner."
-        );
+        if (refund > 0) {
+            (bool success, ) = owner().call{ value: refund}("");
+            require(
+                success,
+                "EtherVesting::Transfer Error. Unable to send refund to owner."
+            );
+        }
 
         emit LogRevoked();
     }
@@ -163,6 +165,8 @@ contract EtherVesting is Ownable, ReentrancyGuard, Funding {
      * @dev Calculates the amount that has already vested.
      */
     function _vestedAmount() private view returns (uint256) {
+        if (block.timestamp <= _start) return 0;
+
         uint256 currentBalance = address(this).balance;
         uint256 totalBalance = currentBalance.add(_released);
 

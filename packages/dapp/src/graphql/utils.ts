@@ -15,6 +15,14 @@ export const parseStream = (input: StreamDetailsFragment): Stream => {
   const output: Stream = {
     id: input.id.toLowerCase(),
     owner: input.owner.toLowerCase(),
+    ownerUser: {
+      id: input.ownerUser.id,
+      name: input.ownerUser.name,
+      imageHash: input.ownerUser.imageHash,
+      imageUrl: input.ownerUser.imageHash
+        ? `${CONFIG.ipfsEndpoint}/ipfs/${input.ownerUser.imageHash}`
+        : `https://avatars.dicebear.com/api/jdenticon/${input.ownerUser.id.toLowerCase()}.svg`,
+    },
     funded: BigNumber.from(input.funded),
     released: BigNumber.from(input.released),
     startTime: Number(input.startTime),
@@ -46,13 +54,12 @@ export const parseFunders = (
   funds.map(fund => {
     if (fund.donor.toLowerCase() in fundersMap) {
       const funder = fundersMap[fund.donor.toLowerCase()];
-      funder.funded.add(fund.amount);
+      funder.funded = funder.funded.add(fund.amount);
     } else {
       fundersMap[fund.donor.toLowerCase()] = {
         id: fund.donor.toLowerCase(),
         funded: BigNumber.from(fund.amount),
         pledged: BigNumber.from(0),
-        vested: BigNumber.from(0),
         streams: [],
       };
     }
@@ -67,7 +74,6 @@ export const parseFunders = (
         id: stream.owner,
         funded: BigNumber.from(0),
         pledged: BigNumber.from(0),
-        vested: BigNumber.from(0),
         streams: [stream],
       };
     }
@@ -79,13 +85,6 @@ export const parseFunders = (
       funder.streams.reduce(
         (total, stream) =>
           total.add(BigNumber.from(stream.funded).sub(stream.released)),
-        BigNumber.from(0),
-      ),
-    );
-    funder.vested = BigNumber.from(funder.funded).add(
-      funder.streams.reduce(
-        (total, stream) =>
-          total.add(getVestedAmount(stream).sub(stream.released)),
         BigNumber.from(0),
       ),
     );
@@ -115,12 +114,10 @@ export const parseGrant = (
         BigNumber.from(0),
       ),
     ),
-    vested: BigNumber.from(input.funded).add(
-      input.streams.reduce(
-        (total, stream) =>
-          total.add(getVestedAmount(stream).sub(stream.released)),
-        BigNumber.from(0),
-      ),
+    vested: input.streams.reduce(
+      (total, stream) =>
+        total.add(getVestedAmount(stream).sub(stream.released)),
+      BigNumber.from(0),
     ),
     streams: input.streams.map(s => parseStream(s)),
     funders: undefined,

@@ -4,8 +4,8 @@ import { User, Fund, Grant, Payment, Stream } from '../generated/schema';
 import {
   LogFunding,
   LogPayment,
-} from '../generated/UnmanagedStream/UnmanagedStream';
-import { LogNewGrant } from '../generated/UnmanagedStreamFactory/UnmanagedStreamFactory';
+} from '../generated/UnmanagedGrant/UnmanagedGrant';
+import { LogNewGrant } from '../generated/UnmanagedGrantFactory/UnmanagedGrantFactory';
 import { fetchGrantInfo, getUser } from './helpers';
 
 export function handleLogNewGrant(event: LogNewGrant): void {

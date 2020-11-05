@@ -19,6 +19,11 @@ export const GrantDetails = gql`
     streams {
       id
       owner
+      ownerUser {
+        id
+        name
+        imageHash
+      }
       released
       funded
       startTime
@@ -36,6 +41,11 @@ export const StreamDetails = gql`
   fragment StreamDetails on Stream {
     id
     owner
+    ownerUser {
+      id
+      name
+      imageHash
+    }
     released
     funded
     startTime

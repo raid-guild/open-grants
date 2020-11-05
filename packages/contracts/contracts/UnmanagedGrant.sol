@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.8 <0.7.0;
+pragma solidity ^0.7.0;
 
-import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./shared/libraries/Percentages.sol";
 import "./shared/modules/GranteeConstructor.sol";
 import "./shared/storage/Funding.sol";
@@ -20,7 +20,7 @@ import "./shared/storage/BaseGrant.sol";
  *      WARNING: vulnerable to sending to Gas Token generating addresses. Trust in grantees not doing so is required.
  * @author @NoahMarconi
  */
-contract UnmanagedStream is ReentrancyGuard, BaseGrant, GranteeConstructor, Funding {
+contract UnmanagedGrant is ReentrancyGuard, BaseGrant, GranteeConstructor, Funding {
 
 
     /*----------  Constructor  ----------*/
@@ -29,25 +29,15 @@ contract UnmanagedStream is ReentrancyGuard, BaseGrant, GranteeConstructor, Fund
      * @dev Grant creation function. May be called by grantors, grantees, or any other relevant party.
      * @param _grantees Sorted recipients of unlocked funds.
      * @param _amounts Respective allocations for each Grantee (must follow sort order of _grantees).
-     * @param _currency (Optional) If null, amount is in wei, otherwise address of ERC20-compliant contract.
      * @param _uri URI for additional (off-chain) grant details such as description, milestones, etc.
-     * @param _extraData (Optional) Support for extensions to the Standard.
      */
     constructor(
         address[] memory _grantees,
         uint256[] memory _amounts,
-        address _currency,
-        bytes memory _uri,
-        bytes memory _extraData
+        bytes32 _uri
     )
         GranteeConstructor(_grantees, _amounts, true)
-        public
     {
-
-        require(
-            _currency == address(0),
-            "constructor::Invalid Argument. Currency must be ADDRESS_ZERO."
-        );
 
         // Initialize globals.
         setUri(_uri);
@@ -68,14 +58,14 @@ contract UnmanagedStream is ReentrancyGuard, BaseGrant, GranteeConstructor, Fund
             "fallback::Invalid Value. msg.value must be greater than 0."
         );
 
-        uint256 numGrantees = this.getGranteeReferenceLength();
-        address lastGrantee = payable(this.getGranteeReference(numGrantees - 1));
-        for (uint256 i = 0; i < this.getGranteeReferenceLength(); i++) {
-            address payable currentGrantee = payable(this.getGranteeReference(i));
+        uint256 numGrantees = getGranteeReferenceLength();
+        address lastGrantee = payable(getGranteeReference(numGrantees - 1));
+        for (uint256 i = 0; i < numGrantees; i++) {
+            address payable currentGrantee = payable(getGranteeReference(i));
 
             uint256 eligiblePortion = Percentages.maxAllocation(
-                this.getGranteeTargetFunding(currentGrantee),
-                this.getCumulativeTargetFunding(),
+                getGranteeTargetFunding(currentGrantee),
+                getCumulativeTargetFunding(),
                 msg.value
             );
 

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.8 <0.7.0;
+pragma solidity ^0.7.0;
 
 interface IFactory {
 
@@ -25,7 +25,7 @@ interface IFactory {
         address[] calldata _grantees,
         uint256[] calldata _amounts,
         address _currency,
-        bytes calldata _uri,
+        bytes32 _uri,
         bytes calldata _extraData
     )
         external

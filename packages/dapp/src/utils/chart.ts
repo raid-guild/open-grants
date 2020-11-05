@@ -40,6 +40,12 @@ const reduceStreams = (input: Array<Stream>): Array<Stream> => {
     {
       id: 'squashed',
       owner: 'squashed',
+      ownerUser: {
+        id: '',
+        name: '',
+        imageUrl: '',
+        imageHash: '',
+      },
       funded: BigNumber.from(0),
       released: BigNumber.from(0),
       startTime: Number.MAX_SAFE_INTEGER,
@@ -124,7 +130,7 @@ export const parseGrantData = (
   return [
     streams,
     data1,
-    nodes,
+    [{ x: xMin, y: 0, stream: -1 }, ...nodes],
     xMin,
     xMax,
     Number(utils.formatEther(currentYMax)),

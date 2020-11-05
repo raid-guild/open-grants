@@ -1,18 +1,13 @@
 export const CONFIG = {
-  network: 'kovan',
+  network: { chainId: 42, name: 'Kovan testnet' }, // 1 = mainnet, 42 = kovan
   graphURL:
     'https://api.thegraph.com/subgraphs/name/dan13ram/kovan-grants-platform',
   infuraId:
     process.env.REACT_APP_INFURA_ID || '57ba444904fd48efb684381f59419cd9',
-  grantFactory: '0x7A6f602667f22D2Ec33636148e441A7c2D124380',
-  streamFactory: '0xC5baEAc62cA32537693C4bb364713231c413d871',
+  grantFactory: '0x74CaB5920Ccb4C78EB6b260F40f29753394749AE',
+  streamFactory: '0x5320AC4f2d0F6dBfd8a2858DF21B92E2D026598e',
   ipfsEndpoint: 'https://ipfs.infura.io',
   boxEndpoint: 'https://ipfs.3box.io',
   explorerEndpoint: 'https://kovan.etherscan.io',
-  featuredGrants: [
-    '0xa6c4366601fd12c4095bdedfacc5906a73cb1fe2',
-    '0x2862c2c26581a106665c4f4733e0b2bcccdaf38d',
-    '0xa9a17e4afc0bfafbac076ddcb5b224b0a7194660',
-    '0xd610a73468218b8bc3f833179206a128c7a233ae',
-  ],
+  featuredGrants: [],
 };

@@ -1,8 +1,16 @@
-import { Button, Divider, Text, useDisclosure, VStack } from '@chakra-ui/core';
+import {
+  Button,
+  Divider,
+  Text,
+  useDisclosure,
+  useToast,
+  VStack,
+} from '@chakra-ui/core';
 import { CreateGrantModal } from 'components/CreateGrantModal';
 import { GranteesInput } from 'components/GranteesInput';
 import { GrantTextInput } from 'components/GrantTextInput';
 import { Link } from 'components/Link';
+import { CONFIG } from 'config';
 import { Web3Context } from 'contexts/Web3Context';
 import React, { useContext, useState } from 'react';
 
@@ -15,7 +23,7 @@ const reduceTotal = (total: number, str: string): number => {
 };
 
 export const CreateGrantForm: React.FC = () => {
-  const { ethersProvider } = useContext(Web3Context);
+  const { ethersProvider, isSupportedNetwork } = useContext(Web3Context);
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [link, setLink] = useState<string>('');
@@ -24,6 +32,7 @@ export const CreateGrantForm: React.FC = () => {
   const [amounts, setAmounts] = useState<Array<string>>(['']);
   const [total, setTotal] = useState<number>(1);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
   const submitForm = async () => {
     const isValid =
       name &&
@@ -31,12 +40,30 @@ export const CreateGrantForm: React.FC = () => {
       grantees.reduce(reduceEmpty, true) &&
       amounts.reduce(reduceEmpty, true) &&
       amounts.reduce(reduceTotal, 0.0) === 100.0;
-    if (!ethersProvider || !isValid) {
-      // eslint-disable-next-line no-console
-      console.log({ validateError: 'Validation Error' });
-      return;
+    if (!ethersProvider) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: 'Please connect wallet',
+      });
+    } else if (!isSupportedNetwork) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: `Please connect wallet to ${CONFIG.network.name}`,
+      });
+    } else if (!isValid) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: 'Please check input',
+      });
+    } else {
+      onOpen();
     }
-    onOpen();
   };
   return (
     <VStack
@@ -59,7 +86,12 @@ export const CreateGrantForm: React.FC = () => {
       </Text>
       <Text textAlign="center" mb={4} w="100%">
         {'Request funds for your ETH2 infrastructure project. First time? '}
-        <Link to="/faq" textDecor="underline" _hover={{ color: 'green.500' }}>
+        <Link
+          to="/faq"
+          textDecor="underline"
+          _hover={{ color: 'green.500' }}
+          isExternal
+        >
           Read the FAQ
         </Link>
       </Text>

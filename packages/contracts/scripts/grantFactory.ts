@@ -14,9 +14,7 @@ async function main() {
   }
 
   // We get the contract to deploy
-  const GrantFactory = await ethers.getContractFactory(
-    'UnmanagedStreamFactory',
-  );
+  const GrantFactory = await ethers.getContractFactory('UnmanagedGrantFactory');
   const grantFactory = await GrantFactory.deploy();
 
   await grantFactory.deployed();

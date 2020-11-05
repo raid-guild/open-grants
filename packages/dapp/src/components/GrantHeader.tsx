@@ -3,14 +3,20 @@ import {
   Flex,
   SimpleGrid,
   Text,
+  useBreakpointValue,
   useDisclosure,
+  useToast,
   VStack,
 } from '@chakra-ui/core';
 import HeaderBG from 'assets/header.jpg';
+import { AmountDisplay } from 'components/AmountDisplay';
 import { FundGrantModal } from 'components/FundGrantModal';
 import { Link } from 'components/Link';
-import React from 'react';
-import { formatValue } from 'utils/helpers';
+import { CONFIG } from 'config';
+import { Web3Context } from 'contexts/Web3Context';
+import { CopyIcon } from 'icons/CopyIcon';
+import React, { useContext } from 'react';
+import { copyToClipboard, formatValue } from 'utils/helpers';
 import { Grant } from 'utils/types';
 
 type Props = {
@@ -18,6 +24,34 @@ type Props = {
 };
 export const GrantHeader: React.FC<Props> = ({ grant }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { ethersProvider, isSupportedNetwork } = useContext(Web3Context);
+  const toast = useToast();
+  const grantAddressDisplay = useBreakpointValue({
+    base: `${grant.id.slice(0, 12).toUpperCase()}...`,
+    sm: `${grant.id.slice(0, 24).toUpperCase()}...`,
+    md: grant.id,
+  });
+
+  const openFundModal = () => {
+    if (!ethersProvider) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: 'Please connect wallet',
+      });
+    } else if (!isSupportedNetwork) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: `Please connect wallet to ${CONFIG.network.name}`,
+      });
+    } else {
+      onOpen();
+    }
+  };
+
   return (
     <VStack
       px="2rem"
@@ -44,9 +78,34 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
       <Text maxW="55rem" w="auto">
         {grant.description}
       </Text>
-      <Link to={grant.link} isExternal mb={8}>
+
+      <Link
+        to={grant.link}
+        isExternal
+        mb={4}
+        overflowWrap="break-word"
+        wordBreak="break-word"
+      >
         {grant.link}
       </Link>
+      <Flex mb={8} align="center">
+        <Text textTransform="uppercase">{grantAddressDisplay}</Text>
+        {document.queryCommandSupported('copy') && (
+          <Button
+            ml={4}
+            onClick={() => copyToClipboard(grant.id.toLowerCase())}
+            variant="ghost"
+            color="white"
+            _hover={{ background: 'black20' }}
+            h="auto"
+            w="auto"
+            minW="2"
+            p={2}
+          >
+            <CopyIcon boxSize={4} />
+          </Button>
+        )}
+      </Flex>
       <Button
         borderRadius="full"
         variant="solid"
@@ -56,7 +115,7 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         size="lg"
         fontWeight="500"
         px={10}
-        onClick={onOpen}
+        onClick={openFundModal}
         mb={12}
       >
         Fund this grant
@@ -74,70 +133,30 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         mb={8}
       >
         <a href="#funders">
-          <Flex
-            direction="column"
-            h="100%"
-            justify="space-between"
-            _hover={{ color: 'text' }}
-            transition="0.25s"
-          >
-            <Text fontWeight="500" fontSize="3xl" textAlign="center">
-              {grant.funders ? grant.funders.length : 0}
-            </Text>
-            <Text textTransform="uppercase" textAlign="center">
-              {grant.funders && grant.funders.length === 1
-                ? 'Funder'
-                : 'Funders'}
-            </Text>
-          </Flex>
+          <AmountDisplay
+            amount={grant.funders ? grant.funders.length.toString() : '0'}
+            label={
+              grant.funders && grant.funders.length === 1 ? 'Funder' : 'Funders'
+            }
+          />
         </a>
         <a href="#details">
-          <Flex
-            direction="column"
-            h="100%"
-            justify="space-between"
-            _hover={{ color: 'text' }}
-            transition="0.25s"
-          >
-            <Text fontWeight="500" fontSize="3xl" textAlign="center">
-              {`${formatValue(grant.pledged)} ETH`}
-            </Text>
-            <Text textTransform="uppercase" textAlign="center">
-              Pledged
-            </Text>
-          </Flex>
+          <AmountDisplay
+            amount={`${formatValue(grant.pledged)} ETH`}
+            label="Pledged"
+          />
         </a>
         <a href="#details">
-          <Flex
-            direction="column"
-            h="100%"
-            justify="space-between"
-            _hover={{ color: 'text' }}
-            transition="0.25s"
-          >
-            <Text fontWeight="500" fontSize="3xl" textAlign="center">
-              {`${formatValue(grant.vested)} ETH`}
-            </Text>
-            <Text textTransform="uppercase" textAlign="center">
-              Vested
-            </Text>
-          </Flex>
+          <AmountDisplay
+            amount={`${formatValue(grant.funded)} ETH`}
+            label="Paid Out"
+          />
         </a>
         <a href="#recipients">
-          <Flex
-            direction="column"
-            h="100%"
-            justify="space-between"
-            _hover={{ color: 'text' }}
-            transition="0.25s"
-          >
-            <Text fontWeight="500" fontSize="3xl" textAlign="center">
-              {grant.grantees.length}
-            </Text>
-            <Text textTransform="uppercase" textAlign="center">
-              {grant.grantees.length === 1 ? 'Grantee' : 'Grantees'}
-            </Text>
-          </Flex>
+          <AmountDisplay
+            amount={grant.grantees.length.toString()}
+            label={grant.grantees.length === 1 ? 'Grantee' : 'Grantees'}
+          />
         </a>
       </SimpleGrid>
     </VStack>

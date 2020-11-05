@@ -50,7 +50,7 @@ export const LoadingModal: React.FC<Props> = ({
       bgRepeat="repeat-x"
       animation={`${loading} 10s linear infinite`}
     >
-      <Link to="/faq" textDecor="underline">
+      <Link to="/faq" textDecor="underline" isExternal>
         {faq}
       </Link>
 

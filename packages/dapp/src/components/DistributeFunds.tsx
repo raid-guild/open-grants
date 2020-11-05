@@ -1,10 +1,19 @@
-import { Button, Divider, Flex, Grid, Text, VStack } from '@chakra-ui/core';
+import {
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  Text,
+  useToast,
+  VStack,
+} from '@chakra-ui/core';
 import { GrantStream } from 'components/GrantStream';
 import { InProgressStream } from 'components/InProgressStream';
 import { Link } from 'components/Link';
+import { CONFIG } from 'config';
 import { Web3Context } from 'contexts/Web3Context';
 import { BigNumber, providers } from 'ethers';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { formatValue, getVestedAmount } from 'utils/helpers';
 import { releaseStream } from 'utils/streams';
 import { Grant, Stream } from 'utils/types';
@@ -19,10 +28,24 @@ type ProgressStream = {
 };
 
 export const DistributeFunds: React.FC<Props> = ({ grant }) => {
-  const { ethersProvider } = useContext(Web3Context);
+  const { ethersProvider, isSupportedNetwork } = useContext(Web3Context);
+  const toast = useToast();
   const [selected, setSelected] = useState<Array<Stream>>([]);
   const [inProgress, setInProgress] = useState<Array<ProgressStream>>([]);
   const [streams, setStreams] = useState<Array<Stream>>(grant.streams);
+  const [selectedAmount, setSelectedAmount] = useState<BigNumber>(
+    BigNumber.from(0),
+  );
+
+  useEffect(() => {
+    const timestamp = Math.floor(new Date().getTime() / 1000);
+    setSelectedAmount(
+      selected.reduce(
+        (t, s) => t.add(getVestedAmount(s, timestamp).sub(s.released)),
+        BigNumber.from(0),
+      ),
+    );
+  }, [selected, setSelectedAmount]);
 
   const processStream = async (
     stream: Stream,
@@ -50,8 +73,23 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
     return processedStream;
   };
   const onSubmit = () => {
-    if (!ethersProvider) return;
-    selected.map(processStream);
+    if (!ethersProvider) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: 'Please connect wallet',
+      });
+    } else if (!isSupportedNetwork) {
+      toast({
+        status: 'error',
+        isClosable: true,
+        title: 'Error',
+        description: `Please connect wallet to ${CONFIG.network.name}`,
+      });
+    } else {
+      selected.map(processStream);
+    }
   };
   return (
     <VStack w="100%" spacing={8} maxW="50rem" p={8} color="text" mb={16}>
@@ -66,7 +104,12 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
         Select funds to be released to grant recipients. Each stream requires a
         separate transaction. It is recommended to only release those with an
         available balance above and beyond gas cost.{' '}
-        <Link to="/faq" textDecor="underline" _hover={{ color: 'green.500' }}>
+        <Link
+          to="/faq"
+          textDecor="underline"
+          _hover={{ color: 'green.500' }}
+          isExternal
+        >
           Learn how distributions work
         </Link>
       </Text>
@@ -119,10 +162,10 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
           {streams
             .sort((a, b) => {
               const timestamp = Math.floor(new Date().getTime() / 1000);
-              const vestedA = getVestedAmount(a, timestamp);
-              const vestedB = getVestedAmount(b, timestamp);
-              if (vestedA.lt(vestedB)) return 1;
-              if (vestedA.eq(vestedB)) return 0;
+              const availableA = getVestedAmount(a, timestamp).sub(a.released);
+              const availableB = getVestedAmount(b, timestamp).sub(b.released);
+              if (availableA.lt(availableB)) return 1;
+              if (availableA.eq(availableB)) return 0;
               return -1;
             })
             .map(stream => (
@@ -151,13 +194,7 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
       >
         {selected.length === 0
           ? 'Distribute Funds'
-          : `Distribute ${formatValue(
-              selected.reduce(
-                (t, s) => t.add(s.funded).sub(s.released),
-                BigNumber.from(0),
-              ),
-              2,
-            )} ETH`}
+          : `Distribute ${formatValue(selectedAmount, 2)} ETH`}
       </Button>
       {selected.length > 1 && (
         <Text> {`${selected.length} transactions will be required`} </Text>

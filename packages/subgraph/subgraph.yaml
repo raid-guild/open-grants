@@ -4,12 +4,12 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: UnmanagedStreamFactory
+    name: UnmanagedGrantFactory
     network: kovan
     source:
-      address: '0x7A6f602667f22D2Ec33636148e441A7c2D124380'
-      abi: UnmanagedStreamFactory
-      startBlock: 20460529
+      address: '0x74CaB5920Ccb4C78EB6b260F40f29753394749AE'
+      abi: UnmanagedGrantFactory
+      startBlock: 21930792
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -17,21 +17,21 @@ dataSources:
       entities:
         - Grant
       abis:
-        - name: UnmanagedStreamFactory
-          file: ./abis/UnmanagedStreamFactory.json
-        - name: UnmanagedStream
-          file: ./abis/UnmanagedStream.json
+        - name: UnmanagedGrantFactory
+          file: ./abis/UnmanagedGrantFactory.json
+        - name: UnmanagedGrant
+          file: ./abis/UnmanagedGrant.json
       eventHandlers:
         - event: LogNewGrant(indexed uint256,address[],uint256[],address)
           handler: handleLogNewGrant
 
       file: ./src/grants.ts
   - kind: ethereum/contract
-    name: UnmanagedStream
+    name: UnmanagedGrant
     network: kovan
     source:
-      abi: UnmanagedStream
-      startBlock: 20460529
+      abi: UnmanagedGrant
+      startBlock: 21930792
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -40,8 +40,8 @@ dataSources:
         - Fund
         - Payment
       abis:
-        - name: UnmanagedStream
-          file: ./abis/UnmanagedStream.json
+        - name: UnmanagedGrant
+          file: ./abis/UnmanagedGrant.json
       eventHandlers:
         - event: LogFunding(indexed address,uint256)
           handler: handleLogFunding
@@ -53,9 +53,9 @@ dataSources:
     name: EtherVestingFactory
     network: kovan
     source:
-      address: '0xC5baEAc62cA32537693C4bb364713231c413d871'
+      address: '0x5320AC4f2d0F6dBfd8a2858DF21B92E2D026598e'
       abi: EtherVestingFactory
-      startBlock: 21253523
+      startBlock: 21930798
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -77,7 +77,7 @@ dataSources:
     network: kovan
     source:
       abi: EtherVesting
-      startBlock: 20673587
+      startBlock: 21930798
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4

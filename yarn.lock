@@ -2884,6 +2884,11 @@
     safe-buffer "^5.1.1"
     util.promisify "^1.0.0"
 
+"@openzeppelin/contracts@3.1.0-solc-0.7":
+  version "3.1.0-solc-0.7"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-3.1.0-solc-0.7.tgz#c6c937d402abaefd2d541178e4c0b1131bf06b9f"
+  integrity sha512-b3DjBHKn74XC9spvQEmn6t7dRZRN7pkeZ9IlDzkMgib09FUE3CDpKmtFCIUDYSLd8lkgSmB9Ig7Chctg8GWUiA==
+
 "@popperjs/core@2.4.4":
   version "2.4.4"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.4.4.tgz#11d5db19bd178936ec89cd84519c4de439574398"
@@ -8021,7 +8026,7 @@ diff@3.5.0, diff@^3.1.0:
   resolved "https://registry.yarnpkg.com/diff/-/diff-3.5.0.tgz#800c0dd1e0a8bfbc95835c202ad220fe317e5a12"
   integrity sha512-A46qtFgd+g7pDZinpnwiRJtxbC1hpgf0uzP3iG89scHk0AUC7A1TGxf5OiiOUv/JMZR8GOt8hL900hV0bOy5xA==
 
-diff@4.0.2, diff@>=3.5.0, diff@^4.0.1:
+diff@4.0.2, diff@^4.0.1:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.2.tgz#60f3aecb89d5fae520c11aa19efc2bb982aade7d"
   integrity sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
@@ -15897,11 +15902,6 @@ opencollective-postinstall@^2.0.0, opencollective-postinstall@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.3.tgz#7a0fff978f6dbfa4d006238fbac98ed4198c3259"
   integrity sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==
-
-openzeppelin-solidity@^3.0.2:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/openzeppelin-solidity/-/openzeppelin-solidity-3.2.0.tgz#8cb9de0cf2e3ce214be75cd11161930bc6013200"
-  integrity sha512-ku9dZbpo63P1OOGvU1FflRlAxcxWauKhex+a7W0vbfjLzItaCQkZEiDedsH2TWJrg4xdo0B/BFS9taeVwKvAxw==
 
 opn@^5.5.0:
   version "5.5.0"

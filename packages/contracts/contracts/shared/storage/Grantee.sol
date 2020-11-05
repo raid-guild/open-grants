@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.8 <0.7.0;
+pragma solidity ^0.7.0;
 
 import "../interfaces/IGrantee.sol";
 
@@ -30,7 +30,7 @@ abstract contract Grantee is IGrantee {
      * @dev  Overall funding target for all grantees combined.
      */
     function getCumulativeTargetFunding()
-        external
+        public
         view
         override
         returns(uint256)
@@ -42,7 +42,7 @@ abstract contract Grantee is IGrantee {
      * @dev  Grantee amounts are percentage based (if true) or fixed (if false).
      */
     function getPercentageBased()
-        external
+        public
         view
         override
         returns(bool)
@@ -80,7 +80,7 @@ abstract contract Grantee is IGrantee {
      * @return number of grantees.
      */
     function getGranteeReferenceLength()
-        external
+        public
         override
         view
         returns(uint256)
@@ -94,7 +94,7 @@ abstract contract Grantee is IGrantee {
      * @return grantee address.
      */
     function getGranteeReference(uint256 index)
-        external
+        public
         override
         view
         returns(address)
@@ -108,7 +108,7 @@ abstract contract Grantee is IGrantee {
      * @return target funding.
      */
     function getGranteeTargetFunding(address grantee)
-        external
+        public
         override
         view
         returns(uint256)
@@ -122,7 +122,7 @@ abstract contract Grantee is IGrantee {
      * @return total paid.
      */
     function getGranteeTotalPaid(address grantee)
-        external
+        public
         override
         view
         returns(uint256)
@@ -136,7 +136,7 @@ abstract contract Grantee is IGrantee {
      * @return payout approved.
      */
     function getGranteePayoutApproved(address grantee)
-        external
+        public
         override
         view
         returns(uint256)

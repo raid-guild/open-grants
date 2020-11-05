@@ -137,7 +137,12 @@ const GranteeInput: React.FC<InputProps> = ({
   }, [refresh, setRefresh]);
   return (
     <>
-      <Grid w="100%" templateColumns="3fr 1fr" gridGap={4} position="relative">
+      <Grid
+        w="100%"
+        templateColumns={{ base: '2fr 1.5fr', sm: '3fr 1.5fr', md: '3fr 1fr' }}
+        gridGap={4}
+        position="relative"
+      >
         <Flex direction="column">
           <Input
             color="dark"

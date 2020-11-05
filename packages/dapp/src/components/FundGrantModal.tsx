@@ -17,7 +17,7 @@ import { MethodSelector } from 'components/MethodSelector';
 import { SuccessModal } from 'components/SuccessModal';
 import { Web3Context } from 'contexts/Web3Context';
 import { providers } from 'ethers';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ONEYEAR } from 'utils/constants';
 import { createStream, fundGrant } from 'utils/streams';
 
@@ -57,15 +57,21 @@ export const FundGrantModal: React.FC<Props> = ({
   }, [tx]);
 
   const faq = 'Questions? View the funding FAQ';
+  const inputRef = useRef(null);
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      isCentered
+      initialFocusRef={inputRef}
+    >
       <ModalOverlay>
-        {!tx &&
+        {tx &&
           (loading ? (
             <LoadingModal
               faq={faq}
               title="Funding In Progress"
-              txHash="text"
+              txHash={tx.hash}
               onClose={onClose}
             />
           ) : (
@@ -75,7 +81,7 @@ export const FundGrantModal: React.FC<Props> = ({
               grantAddress={grantAddress}
             />
           ))}
-        {tx && (
+        {!tx && (
           <ModalContent
             borderRadius="1rem"
             maxW="40rem"
@@ -85,7 +91,7 @@ export const FundGrantModal: React.FC<Props> = ({
             fontFamily="body"
             p={6}
           >
-            <Link to="/faq" textDecor="underline">
+            <Link to="/faq" textDecor="underline" isExternal>
               {faq}
             </Link>
 
@@ -124,6 +130,7 @@ export const FundGrantModal: React.FC<Props> = ({
                   type="number"
                   value={amount}
                   onChange={e => setAmount(e.target.value)}
+                  ref={inputRef}
                 />
               </InputGroup>
               <Text textTransform="uppercase">Distribution Method</Text>

@@ -21,7 +21,14 @@ export const GrantContent: React.FC<Props> = ({ grant }) => {
           amounts={grant.amounts}
         />
         {grant.funders && (
-          <GrantFunders grantAddress={grant.id} funders={grant.funders} />
+          <GrantFunders
+            grantAddress={grant.id}
+            funders={grant.funders.sort((a, b) => {
+              if (a.funded.lt(b.funded)) return 1;
+              if (a.funded.eq(b.funded)) return 0;
+              return -1;
+            })}
+          />
         )}
       </SimpleGrid>
     </VStack>

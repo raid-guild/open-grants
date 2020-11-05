@@ -19,5 +19,6 @@ export const uploadMetadata = async (metadata: Metadata): Promise<string> => {
   const objectString = JSON.stringify(metadata);
   const bufferedString = Buffer.from(objectString);
   const node = await ipfs.add(bufferedString);
-  return `0x${Buffer.from(Base58.decode(node.path)).toString('hex')}`;
+  const bytes = Buffer.from(Base58.decode(node.path));
+  return `0x${bytes.slice(2).toString('hex')}`;
 };

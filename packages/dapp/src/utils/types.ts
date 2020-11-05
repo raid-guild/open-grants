@@ -9,6 +9,12 @@ export enum Sort {
 export type Stream = {
   id: string;
   owner: string;
+  ownerUser: {
+    id: string;
+    name: string | null | undefined;
+    imageHash: string | null | undefined;
+    imageUrl: string;
+  };
   funded: BigNumber;
   released: BigNumber;
   startTime: number;
@@ -18,15 +24,10 @@ export type Stream = {
   grantAddress: string;
 };
 
-export type VestedStream = Stream & {
-  vested: BigNumber;
-};
-
 export type Funder = {
   id: string;
   funded: BigNumber;
   pledged: BigNumber;
-  vested: BigNumber;
   streams: Array<Stream>;
 };
 

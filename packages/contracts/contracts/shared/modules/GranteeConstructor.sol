@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.8 <0.7.0;
+pragma solidity ^0.7.0;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 import "../storage/Grantee.sol";
 
 contract GranteeConstructor is Grantee {
@@ -20,7 +20,6 @@ contract GranteeConstructor is Grantee {
         uint256[] memory _amounts,
         bool _percentageBased
     )
-        public
     {
 
         require(
@@ -47,14 +46,15 @@ contract GranteeConstructor is Grantee {
             );
 
             require(
+                currentGrantee != address(0),
+                "constructor::Invalid Argument. grantee address cannot be a ADDRESS_ZERO."
+            );
+
+            require(
                 currentGrantee > lastAddress,
                 "constructor::Invalid Argument. Duplicate or out of order _grantees."
             );
 
-            require(
-                currentGrantee != address(0),
-                "constructor::Invalid Argument. grantee address cannot be a ADDRESS_ZERO."
-            );
 
             lastAddress = currentGrantee;
             setGranteeTargetFunding(currentGrantee, currentAmount);

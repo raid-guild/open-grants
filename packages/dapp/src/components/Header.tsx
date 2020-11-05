@@ -8,13 +8,11 @@ import {
   Text,
   useBreakpointValue,
 } from '@chakra-ui/core';
-import HeaderBG from 'assets/header.jpg';
 import { Link } from 'components/Link';
 import { SearchBar } from 'components/SearchBar';
 import { Web3Context } from 'contexts/Web3Context';
 import { ArrowDownIcon } from 'icons/ArrowDownIcon';
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { BoxProfile, getProfile } from 'utils/3box';
 
 type Props = {
@@ -29,11 +27,6 @@ export const Header: React.FC<Props> = ({ onOpen: openNav }) => {
       getProfile(account).then(p => setProfile(p));
     }
   }, [account]);
-  const history = useHistory();
-  const headerColorRequired =
-    history.location.pathname === '/create' ||
-    history.location.pathname === '/leaderboard';
-  const bgImage = headerColorRequired ? `url(${HeaderBG})` : undefined;
   const accountString = useBreakpointValue({
     sm: `${account.slice(0, 4).toUpperCase()}...`,
     md: `${account.slice(0, 8).toUpperCase()}...`,
@@ -49,8 +42,6 @@ export const Header: React.FC<Props> = ({ onOpen: openNav }) => {
       px={{ base: 4, sm: 8 }}
       color="white"
       fontWeight="500"
-      bgImage={bgImage}
-      bgSize="cover"
       h="5rem"
       position="absolute"
       top="0"

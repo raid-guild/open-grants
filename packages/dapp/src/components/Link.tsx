@@ -9,15 +9,28 @@ import {
   LinkProps as RouterLinkProps,
 } from 'react-router-dom';
 
-type LinkButtonProps = React.ComponentProps<typeof ChakraButton> &
+type LinkProps = React.ComponentProps<typeof ChakraButton> &
+  Omit<React.ComponentProps<typeof ChakraLink>, keyof RouterLinkProps> &
   RouterLinkProps;
 
-export const LinkButton: React.FC<LinkButtonProps> = ({
+export const LinkButton: React.FC<LinkProps> = ({
   children,
   to,
   replace,
+  isExternal,
   ...props
 }) => {
+  if (isExternal) {
+    return (
+      <ChakraLink
+        isExternal
+        href={to.toString()}
+        _hover={{ textDecor: 'none' }}
+      >
+        <ChakraButton {...props}>{children}</ChakraButton>
+      </ChakraLink>
+    );
+  }
   return (
     <RouterLink to={to} replace={replace}>
       <ChakraButton {...props}>{children}</ChakraButton>
@@ -25,13 +38,7 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
   );
 };
 
-type LinkProps = Omit<
-  React.ComponentProps<typeof ChakraLink>,
-  keyof RouterLinkProps
-> &
-  RouterLinkProps;
-
-export const Link: React.FC<LinkProps & LinkButtonProps> = ({
+export const Link: React.FC<LinkProps> = ({
   children,
   to,
   replace,
@@ -52,28 +59,12 @@ export const Link: React.FC<LinkProps & LinkButtonProps> = ({
       {width || w ? (
         <Box width={width || w}>
           <RouterLink to={to} replace={replace}>
-            <ChakraButton
-              variant="link"
-              fontWeight="normal"
-              color="currentColor"
-              justifyContent={width || w ? 'flex-start' : 'center'}
-              {...props}
-            >
-              {children}
-            </ChakraButton>
+            <ChakraLink {...props}>{children}</ChakraLink>
           </RouterLink>
         </Box>
       ) : (
         <RouterLink to={to} replace={replace}>
-          <ChakraButton
-            variant="link"
-            fontWeight="normal"
-            color="currentColor"
-            justifyContent={width || w ? 'flex-start' : 'center'}
-            {...props}
-          >
-            {children}
-          </ChakraButton>
+          <ChakraLink {...props}>{children}</ChakraLink>
         </RouterLink>
       )}
     </>

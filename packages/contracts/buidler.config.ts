@@ -10,8 +10,7 @@ const KOVAN_PRIVATE_KEY = process.env.KOVAN_PRIVATE_KEY;
 
 const config: any = {
   solc: {
-    evmVersion: 'constantinople',
-    version: '0.6.8',
+    version: '0.7.0',
   },
   paths: {
     artifacts: './build',
