@@ -36,12 +36,13 @@ export const ProfileHeader: React.FC<Props> = ({
       >
         {loggedInUser ? `My Grants` : `${name}'s Grants`}
       </Text>
-      <Link mb={24} to="/leaderboard">
+      <Link to="/leaderboard">
         {rank > 0 &&
           (loggedInUser
             ? `You rank #${rank} out of all funders`
             : `User ranks #${rank} out of all funders`)}
       </Link>
+      <VStack h={24} />
       <SimpleGrid
         columns={4}
         spacing={4}

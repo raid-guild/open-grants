@@ -17,7 +17,7 @@ import { MethodSelector } from 'components/MethodSelector';
 import { SuccessModal } from 'components/SuccessModal';
 import { Web3Context } from 'contexts/Web3Context';
 import { providers } from 'ethers';
-import React, { useContext, useEffect, useRef,useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { ONEYEAR } from 'utils/constants';
 import { createStream, fundGrant } from 'utils/streams';
 

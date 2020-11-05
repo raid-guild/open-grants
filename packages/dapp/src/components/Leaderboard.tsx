@@ -35,7 +35,6 @@ export const Leaderboard: React.FC = () => {
         fontSize={{ base: '2rem', md: '3rem' }}
         fontWeight="800"
         color="dark"
-        mb={-4}
       >
         Leaderboard
       </Text>

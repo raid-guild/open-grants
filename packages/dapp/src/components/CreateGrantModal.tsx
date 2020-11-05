@@ -15,7 +15,7 @@ import { LoadingModal } from 'components/LoadingModal';
 import { SuccessModal } from 'components/SuccessModal';
 import { Web3Context } from 'contexts/Web3Context';
 import { providers } from 'ethers';
-import React, { useContext, useEffect, useRef,useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { awaitGrantAddress, createGrant } from 'utils/grants';
 import { Metadata } from 'utils/ipfs';
 

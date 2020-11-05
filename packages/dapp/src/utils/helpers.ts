@@ -44,7 +44,7 @@ export const sortGrantees = (
   return [grantees, amounts];
 };
 
-export const copyToClipboard = (value: string) => {
+export const copyToClipboard = (value: string): void => {
   const tempInput = document.createElement('input');
   tempInput.value = value;
   document.body.appendChild(tempInput);

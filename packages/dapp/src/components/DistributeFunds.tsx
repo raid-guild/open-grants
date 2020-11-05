@@ -79,7 +79,12 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
         Select funds to be released to grant recipients. Each stream requires a
         separate transaction. It is recommended to only release those with an
         available balance above and beyond gas cost.{' '}
-        <Link to="/faq" textDecor="underline" _hover={{ color: 'green.500' }}>
+        <Link
+          to="/faq"
+          textDecor="underline"
+          _hover={{ color: 'green.500' }}
+          isExternal
+        >
           Learn how distributions work
         </Link>
       </Text>

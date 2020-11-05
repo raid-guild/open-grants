@@ -12,7 +12,7 @@ import { LoadingModal } from 'components/LoadingModal';
 import { SuccessModal } from 'components/SuccessModal';
 import { Web3Context } from 'contexts/Web3Context';
 import { providers } from 'ethers';
-import React, { useContext, useEffect, useRef,useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { formatValue, getVestedAmount } from 'utils/helpers';
 import { revokeStream } from 'utils/streams';
 import { Stream } from 'utils/types';

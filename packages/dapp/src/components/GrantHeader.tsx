@@ -13,7 +13,7 @@ import { FundGrantModal } from 'components/FundGrantModal';
 import { Link } from 'components/Link';
 import { CopyIcon } from 'icons/CopyIcon';
 import React from 'react';
-import { copyToClipboard,formatValue } from 'utils/helpers';
+import { copyToClipboard, formatValue } from 'utils/helpers';
 import { Grant } from 'utils/types';
 
 type Props = {

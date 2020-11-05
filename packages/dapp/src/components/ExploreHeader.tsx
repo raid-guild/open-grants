@@ -48,6 +48,7 @@ export const ExploreHeader: React.FC = () => {
           fontWeight="500"
           size="lg"
           position="relative"
+          isExternal
         >
           Read the FAQ
         </LinkButton>

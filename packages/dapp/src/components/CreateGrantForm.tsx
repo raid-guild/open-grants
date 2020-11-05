@@ -59,7 +59,12 @@ export const CreateGrantForm: React.FC = () => {
       </Text>
       <Text textAlign="center" mb={4} w="100%">
         {'Request funds for your ETH2 infrastructure project. First time? '}
-        <Link to="/faq" textDecor="underline" _hover={{ color: 'green.500' }}>
+        <Link
+          to="/faq"
+          textDecor="underline"
+          _hover={{ color: 'green.500' }}
+          isExternal
+        >
           Read the FAQ
         </Link>
       </Text>
