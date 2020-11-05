@@ -67,7 +67,7 @@ export const GrantFunders: React.FC<Props> = ({
             textTransform="uppercase"
             fontSize="xs"
           >
-            Vested
+            Paid Out
           </Text>
         </HStack>
       </Grid>

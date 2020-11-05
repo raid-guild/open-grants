@@ -85,21 +85,15 @@ export const GrantDetails: React.FC<Props> = ({
         </Flex>
         <Flex direction="column" h="100%" justify="space-between">
           <Text fontWeight="500" fontSize="2xl" color="green.500">
-            {`${formatValue(grant.vested, 3)} ETH`}
-          </Text>
-          <Text textTransform="uppercase">Vested</Text>
-        </Flex>
-        <Flex direction="column" h="100%" justify="space-between">
-          <Text fontWeight="500" fontSize="2xl" color="green.500">
             {`${formatValue(grant.funded, 3)} ETH`}
           </Text>
-          <Text textTransform="uppercase">Distributed</Text>
+          <Text textTransform="uppercase">Paid Out</Text>
         </Flex>
         <Flex direction="column" h="100%" justify="space-between">
           <Text fontWeight="500" fontSize="2xl" color="green.500">
-            {`${formatValue(grant.vested.sub(grant.funded), 3)} ETH`}
+            {`${formatValue(grant.vested, 3)} ETH`}
           </Text>
-          <Text textTransform="uppercase">Current Balance</Text>
+          <Text textTransform="uppercase">Available</Text>
         </Flex>
       </SimpleGrid>
       <Flex

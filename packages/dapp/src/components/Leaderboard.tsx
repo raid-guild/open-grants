@@ -72,7 +72,7 @@ export const Leaderboard: React.FC = () => {
             textTransform="uppercase"
             fontSize="xs"
           >
-            Funded
+            Paid Out
           </Text>
         </HStack>
       </Grid>

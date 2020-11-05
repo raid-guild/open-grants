@@ -12,7 +12,7 @@ import {
 } from '@graphprotocol/graph-ts';
 
 import { EtherVesting } from '../generated/EtherVesting/EtherVesting';
-import { UnmanagedStream } from '../generated/UnmanagedStream/UnmanagedStream';
+import { UnmanagedGrant } from '../generated/UnmanagedGrant/UnmanagedGrant';
 import { User } from '../generated/schema';
 
 class GrantObject {
@@ -46,7 +46,7 @@ export function addQm(a: ByteArray): ByteArray {
 }
 
 export function fetchGrantInfo(address: Address): GrantObject {
-  let grantInstance = UnmanagedStream.bind(address);
+  let grantInstance = UnmanagedGrant.bind(address);
   let grantObject = new GrantObject();
 
   let uri = grantInstance.try_getUri();

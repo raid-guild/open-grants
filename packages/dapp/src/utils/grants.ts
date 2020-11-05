@@ -7,7 +7,7 @@ const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
 const ZERO_HASH = '0x';
 
 const abi = new utils.Interface([
-  'function create(address[] _grantees, uint256[] _amounts, address _currency, bytes _uri, bytes _extraData) returns (address)',
+  'function create(address[] _grantees, uint256[] _amounts, address _currency, bytes32 _uri, bytes _extraData) returns (address)',
   'event LogNewGrant(uint256 indexed id, address[] grantees, uint256[] amounts, address grant)',
 ]);
 
@@ -28,6 +28,7 @@ export const createGrant = async (
     abi,
     ethersProvider.getSigner(),
   );
+
   return factory.create(
     grantees,
     amounts,

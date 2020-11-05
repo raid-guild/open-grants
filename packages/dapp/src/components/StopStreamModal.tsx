@@ -12,7 +12,7 @@ import { LoadingModal } from 'components/LoadingModal';
 import { SuccessModal } from 'components/SuccessModal';
 import { Web3Context } from 'contexts/Web3Context';
 import { providers } from 'ethers';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef,useState } from 'react';
 import { formatValue, getVestedAmount } from 'utils/helpers';
 import { revokeStream } from 'utils/streams';
 import { Stream } from 'utils/types';
@@ -50,8 +50,14 @@ export const StopStreamModal: React.FC<Props> = ({
   }, [tx]);
 
   const faq = 'Question about streams? View the funding FAQ';
+  const initialRef = useRef(null);
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      isCentered
+      initialFocusRef={initialRef}
+    >
       <ModalOverlay>
         {tx &&
           (loading ? (
@@ -78,7 +84,7 @@ export const StopStreamModal: React.FC<Props> = ({
             fontFamily="body"
             p={6}
           >
-            <Link to="/faq" textDecor="underline">
+            <Link to="/faq" textDecor="underline" isExternal>
               {faq}
             </Link>
 
@@ -116,6 +122,7 @@ export const StopStreamModal: React.FC<Props> = ({
               boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
               letterSpacing="0.115em"
               onClick={onSubmit}
+              ref={initialRef}
             >
               Withdraw Funds
             </Button>

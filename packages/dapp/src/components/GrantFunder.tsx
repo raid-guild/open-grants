@@ -54,7 +54,7 @@ export const GrantFunder: React.FC<FunderProps> = ({ funder }) => {
       </HStack>
       <HStack>
         <Text textAlign="center" w="100%">{`${formatValue(
-          funder.vested,
+          funder.funded,
         )} ETH`}</Text>
       </HStack>
     </Grid>

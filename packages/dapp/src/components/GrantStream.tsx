@@ -16,7 +16,9 @@ export const GrantStream: React.FC<StreamProps> = ({
   stream,
 }) => {
   const timestamp = Math.floor(new Date().getTime() / 1000);
-  const available = getVestedAmount(stream, timestamp).sub(stream.released);
+  const available = getVestedAmount(stream, timestamp)
+    .sub(stream.released)
+    .mul('1000000000');
   const [profile, setProfile] = useState<BoxProfile | undefined>();
   useEffect(() => {
     getProfile(stream.owner).then(p => setProfile(p));
@@ -35,18 +37,13 @@ export const GrantStream: React.FC<StreamProps> = ({
       cursor="pointer"
       border={selectedIndex !== -1 ? '3px solid #21C49D' : ''}
       onClick={() => {
+        const newSelected = selected.slice();
         if (selectedIndex !== -1) {
-          setSelected(s => {
-            const newSelected = s.slice();
-            return newSelected.splice(selectedIndex, 1);
-          });
+          newSelected.splice(selectedIndex, 1);
         } else {
-          setSelected(s => {
-            const newSelected = s.slice();
-            newSelected.push(stream);
-            return newSelected;
-          });
+          newSelected.push(stream);
         }
+        setSelected(newSelected);
       }}
     >
       <HStack w="100%">

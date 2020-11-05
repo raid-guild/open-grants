@@ -1,5 +1,7 @@
 import {
   Box,
+  Flex,
+  HStack,
   Popover,
   PopoverArrow,
   PopoverContent,
@@ -7,8 +9,11 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/core';
+import { Link } from 'components/Link';
+import { utils } from 'ethers';
 import React from 'react';
 import { DataPoint } from 'utils/chart';
+import { getVestedAmount } from 'utils/helpers';
 import { Stream } from 'utils/types';
 
 type HintProps = {
@@ -16,8 +21,11 @@ type HintProps = {
   streams: Array<Stream>;
 };
 
-export const ChartHint: React.FC<HintProps> = ({ value /* , streams */ }) => {
-  // const stream = streams[value.stream];
+export const ChartHint: React.FC<HintProps> = ({ value, streams }) => {
+  const stream =
+    value.stream >= 0 && value.stream < streams.length
+      ? streams[value.stream]
+      : undefined;
   const date = new Date(value.x * 1000);
   const ye = new Intl.DateTimeFormat('en', {
     year: 'numeric',
@@ -29,9 +37,16 @@ export const ChartHint: React.FC<HintProps> = ({ value /* , streams */ }) => {
     day: '2-digit',
   }).format(date);
   const dateString = `${da} ${mo} ${ye}`;
-  const amountString = `${value.y.toFixed(2)} ETH`;
-  const h = '5rem !important';
+  const totalAmount = `${value.y.toFixed(2)} ETH`;
+
+  const streamAmount = stream
+    ? `${Math.abs(
+        Number(utils.formatEther(getVestedAmount(stream, value.x))),
+      ).toFixed(2)} ETH`
+    : `0.00 ETH`;
+  const h = '10rem !important';
   const w = '10rem !important';
+
   return (
     <Popover isOpen placement="top">
       <PopoverTrigger>
@@ -64,8 +79,36 @@ export const ChartHint: React.FC<HintProps> = ({ value /* , streams */ }) => {
             {dateString}
           </Text>
           <Text fontWeight="500" fontSize="xl" textAlign="center" color="dark">
-            {amountString}
+            {totalAmount}
           </Text>
+          <Text fontSize="sm" textAlign="center" color="dark">
+            ({streamAmount})
+          </Text>
+          {stream && stream.ownerUser.id && stream.ownerUser.imageUrl ? (
+            <Link to={`/profile/${stream.ownerUser.id}`}>
+              <HStack spacing={2}>
+                <Flex
+                  borderRadius="50%"
+                  border="1px solid #E6E6E6"
+                  w="2rem"
+                  h="2rem"
+                  overflow="hidden"
+                  background="white"
+                  bgImage={`url(${stream.ownerUser.imageUrl})`}
+                  bgSize="cover"
+                  bgRepeat="no-repeat"
+                  bgPosition="center center"
+                />
+                <Text fontSize="sm">
+                  {stream.ownerUser.name
+                    ? stream.ownerUser.name
+                    : `${stream.ownerUser.id.slice(0, 7).toUpperCase()}...`}
+                </Text>
+              </HStack>
+            </Link>
+          ) : (
+            <Text fontSize="sm"> Other </Text>
+          )}
         </VStack>
       </PopoverContent>
     </Popover>

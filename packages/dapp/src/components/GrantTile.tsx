@@ -66,9 +66,9 @@ export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
             </Flex>
             <Flex direction="column">
               <Text fontWeight="500" fontSize="2xl">
-                {`${formatValue(grant.vested)} ETH`}
+                {`${formatValue(grant.funded)} ETH`}
               </Text>
-              <Text textTransform="uppercase">Vested</Text>
+              <Text textTransform="uppercase">Paid Out</Text>
             </Flex>
           </SimpleGrid>
         </Flex>

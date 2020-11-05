@@ -1,6 +1,7 @@
 import { Flex, Input, Text } from '@chakra-ui/core';
 import { ErrorAlert } from 'components/ErrorAlert';
 import React, { useState } from 'react';
+import { URL_REGEX } from 'utils/constants';
 
 type Props = {
   title: string;
@@ -12,8 +13,6 @@ type Props = {
   optional?: boolean;
   isURL?: boolean;
 };
-
-const URL_REGEX = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 
 export const GrantTextInput: React.FC<Props> = ({
   title,

@@ -18,6 +18,7 @@ export const ExploreHeader: React.FC = () => {
         <Image
           position="absolute"
           src={EthereumCrystalImage}
+          fallbackSrc={EthereumCrystalImage}
           left="50%"
           top={{ base: '40%', sm: '45%', md: '50%' }}
           transform="translate(-125.5%, 14%) scale(1.75)"

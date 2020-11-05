@@ -30,7 +30,7 @@ export const SuccessModal: React.FC<Props> = ({ faq, title, grantAddress }) => {
       fontFamily="body"
       p={6}
     >
-      <Link to="/faq" textDecor="underline">
+      <Link to="/faq" textDecor="underline" isExternal>
         {faq}
       </Link>
 
@@ -43,7 +43,7 @@ export const SuccessModal: React.FC<Props> = ({ faq, title, grantAddress }) => {
         >
           {title}
         </Text>
-        <Image src={ChestImage} alt="chest" />
+        <Image src={ChestImage} alt="chest" transform="translateX(1rem)" />
       </VStack>
       <LinkButton
         size="lg"

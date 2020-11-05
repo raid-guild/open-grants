@@ -1,5 +1,6 @@
-import { Flex, SimpleGrid, Text, VStack } from '@chakra-ui/core';
+import { SimpleGrid, Text, VStack } from '@chakra-ui/core';
 import HeaderBG from 'assets/header.jpg';
+import { AmountDisplay } from 'components/AmountDisplay';
 import { Link } from 'components/Link';
 import React from 'react';
 import { formatValue } from 'utils/helpers';
@@ -49,74 +50,46 @@ export const ProfileHeader: React.FC<Props> = ({
         mb={8}
       >
         <a href="#funded">
-          <Flex
-            direction="column"
-            h="100%"
-            justify="space-between"
-            _hover={{ color: 'text' }}
-            transition="0.25s"
-          >
-            <Text fontWeight="500" fontSize="3xl" textAlign="center">
-              {profile.grantsFunded ? profile.grantsFunded.length : 0}
-            </Text>
-            <Text textTransform="uppercase" textAlign="center">
-              {profile.grantsFunded && profile.grantsFunded.length === 1
+          <AmountDisplay
+            amount={
+              profile.grantsFunded
+                ? profile.grantsFunded.length.toString()
+                : '0'
+            }
+            label={
+              profile.grantsFunded && profile.grantsFunded.length === 1
                 ? 'Grant Funded'
-                : 'Grants Funded'}
-            </Text>
-          </Flex>
+                : 'Grants Funded'
+            }
+          />
         </a>
         <a href="#streams">
-          <Flex
-            direction="column"
-            h="100%"
-            justify="space-between"
-            _hover={{ color: 'text' }}
-            transition="0.25s"
-          >
-            <Text fontWeight="500" fontSize="3xl" textAlign="center">
-              {`${formatValue(
-                profile.pledged.add(profile.funded).sub(profile.streamed),
-              )} ETH`}
-            </Text>
-            <Text textTransform="uppercase" textAlign="center">
-              Pledged
-            </Text>
-          </Flex>
+          <AmountDisplay
+            amount={`${formatValue(
+              profile.pledged.add(profile.funded).sub(profile.streamed),
+            )} ETH`}
+            label="Pledged"
+          />
         </a>
         <a href="#received">
-          <Flex
-            direction="column"
-            h="100%"
-            justify="space-between"
-            _hover={{ color: 'text' }}
-            transition="0.25s"
-          >
-            <Text fontWeight="500" fontSize="3xl" textAlign="center">
-              {profile.grantsReceived ? profile.grantsReceived.length : 0}
-            </Text>
-            <Text textTransform="uppercase" textAlign="center">
-              {profile.grantsReceived && profile.grantsReceived.length === 1
+          <AmountDisplay
+            amount={
+              profile.grantsReceived
+                ? profile.grantsReceived.length.toString()
+                : '0'
+            }
+            label={
+              profile.grantsReceived && profile.grantsReceived.length === 1
                 ? 'Grant Received'
-                : 'Grants Received'}
-            </Text>
-          </Flex>
+                : 'Grants Received'
+            }
+          />
         </a>
         <a href="#received">
-          <Flex
-            direction="column"
-            h="100%"
-            justify="space-between"
-            _hover={{ color: 'text' }}
-            transition="0.25s"
-          >
-            <Text fontWeight="500" fontSize="3xl" textAlign="center">
-              {`${formatValue(profile.earned)} ETH`}
-            </Text>
-            <Text textTransform="uppercase" textAlign="center">
-              Earned
-            </Text>
-          </Flex>
+          <AmountDisplay
+            amount={`${formatValue(profile.earned)} ETH`}
+            label="Earned"
+          />
         </a>
       </SimpleGrid>
     </VStack>
