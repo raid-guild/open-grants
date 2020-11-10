@@ -1,4 +1,3 @@
-import { getAddress } from '@ethersproject/address';
 import gql from 'fake-tag';
 import {
   GrantNameFragment,
@@ -8,15 +7,7 @@ import {
 } from 'graphql/autogen/types';
 import { client } from 'graphql/client';
 import { GrantName, UserName } from 'graphql/fragments';
-
-// returns the checksummed address if the address is valid, otherwise returns false
-export function isAddress(value: string): string | false {
-  try {
-    return getAddress(value).toLowerCase();
-  } catch {
-    return false;
-  }
-}
+import { isAddress } from 'utils/helpers';
 
 const searchQuery = gql`
   query Search($search: String, $first: Int) {

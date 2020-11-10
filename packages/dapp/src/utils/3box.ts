@@ -1,9 +1,13 @@
 import { CONFIG } from 'config';
+import { BigNumber } from 'ethers';
+import { isAddress } from 'utils/helpers';
+import { Profile } from 'utils/types';
 
 export type BoxProfile = {
   address: string;
   name: string;
   emoji: string;
+  imageHash: string;
   imageUrl: string;
 };
 
@@ -13,6 +17,7 @@ export const getProfile = async (account: string): Promise<BoxProfile> => {
     address,
     name: '',
     emoji: '',
+    imageHash: '',
     imageUrl: `https://avatars.dicebear.com/api/jdenticon/${address}.svg`,
   };
   const response = await fetch(
@@ -27,10 +32,32 @@ export const getProfile = async (account: string): Promise<BoxProfile> => {
       boxProfile.image[0].contentUrl &&
       boxProfile.image[0].contentUrl['/'];
     if (imageHash) {
+      profile.imageHash = imageHash;
       profile.imageUrl = `${CONFIG.ipfsEndpoint}/ipfs/${imageHash}`;
     }
     profile.name = boxProfile.name;
     profile.emoji = boxProfile.emoji;
   }
+  return profile;
+};
+
+export const fetchUser = async (account: string): Promise<Profile | null> => {
+  const address = isAddress(account);
+  if (!address) return null;
+  const boxProfile = await getProfile(address);
+  const profile = {
+    id: address,
+    name: boxProfile.name,
+    imageHash: boxProfile.imageHash,
+    imageUrl: boxProfile.imageUrl,
+    grantsReceived: [],
+    grantsFunded: [],
+    streams: [],
+    pledged: BigNumber.from(0),
+    earned: BigNumber.from(0),
+    funded: BigNumber.from(0),
+    withdrawn: BigNumber.from(0),
+    streamed: BigNumber.from(0),
+  };
   return profile;
 };

@@ -35,7 +35,7 @@ export const ExploreHeader: React.FC = () => {
         </Text>
         <VStack h={{ base: '4rem', md: '8rem' }} />
         <Text textAlign="center" position="relative" px={8}>
-          Together we empower developers to build the next generation of
+          Together we empower developers building the next generation of
           Ethereum
         </Text>
         <LinkButton

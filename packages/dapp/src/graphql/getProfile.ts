@@ -6,6 +6,7 @@ import {
 import { client } from 'graphql/client';
 import { GrantDetails, StreamDetails } from 'graphql/fragments';
 import { parseProfile } from 'graphql/utils';
+import { fetchUser } from 'utils/3box';
 import { Profile } from 'utils/types';
 
 const grantQuery = gql`
@@ -47,7 +48,7 @@ const grantQuery = gql`
 export const getProfile = async (
   address: string | undefined,
   first = 50,
-): Promise<Profile | null | undefined> => {
+): Promise<Profile | null> => {
   if (!address) return null;
 
   const { data, error } = await client
@@ -61,11 +62,8 @@ export const getProfile = async (
     if (error) {
       throw error;
     }
-
-    return null;
-  }
-  if (data.user) {
+  } else if (data.user) {
     return parseProfile(data.user);
   }
-  return undefined;
+  return fetchUser(address);
 };
