@@ -89,7 +89,12 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         {grant.link}
       </Link>
       <Flex mb={8} align="center">
-        <Text textTransform="uppercase">{grantAddressDisplay}</Text>
+        <Link
+          to={`${CONFIG.explorerEndpoint}/address/${grant.id}`}
+          textTransform="uppercase"
+        >
+          {grantAddressDisplay}
+        </Link>
         {document.queryCommandSupported('copy') && (
           <Button
             ml={4}
