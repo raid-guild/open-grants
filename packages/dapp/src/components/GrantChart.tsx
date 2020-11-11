@@ -117,63 +117,6 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
           state={state}
           isDisabled={isDisabled}
         />
-        {!isDisabled && (
-          <Grid
-            w="100%"
-            h="100%"
-            pl={8}
-            position="absolute"
-            left={0}
-            top={0}
-            templateColumns={
-              state === ChartState.ALLTIME
-                ? `${grid[0]}fr ${grid[1]}fr`
-                : undefined
-            }
-            style={{ pointerEvents: 'none' }}
-          >
-            {state === ChartState.FUTURE && (
-              <Text
-                position="absolute"
-                left={8}
-                top="15%"
-                transform="rotate(-90deg) translateX(50%)"
-                textTransform="uppercase"
-                color="green.500"
-              >
-                TODAY
-              </Text>
-            )}
-            {state === ChartState.PAST && (
-              <Text
-                position="absolute"
-                right={0}
-                top="15%"
-                transform="rotate(-90deg) translateX(50%)"
-                textTransform="uppercase"
-                color="green.500"
-              >
-                TODAY
-              </Text>
-            )}
-            {state === ChartState.ALLTIME && (
-              <>
-                <Box w="100%" h="100%" position="relative">
-                  <Text
-                    position="absolute"
-                    right={-4}
-                    top="15%"
-                    transform="rotate(-90deg) translateX(50%)"
-                    textTransform="uppercase"
-                    color="green.500"
-                  >
-                    TODAY
-                  </Text>
-                </Box>
-              </>
-            )}
-          </Grid>
-        )}
       </Box>
       <Grid
         w="100%"

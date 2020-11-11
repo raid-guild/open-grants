@@ -5,6 +5,7 @@ import {
   AreaSeries,
   FlexibleWidthXYPlot,
   Hint,
+  LabelSeries,
   LineSeries,
   MarkSeries,
   XAxis,
@@ -128,6 +129,21 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
           stroke="#23CEA5"
           strokeStyle="solid"
           style={{ pointerEvents: 'none' }}
+        />
+      )}
+      {!isDisabled && (
+        <LabelSeries
+          animation
+          allowOffsetToBeReversed
+          data={[
+            {
+              x: currentTime,
+              y: 0.8 * yDomain[1],
+              label: 'TODAY',
+              rotation: 90,
+            },
+          ]}
+          style={{ stroke: '3bdeb7' }}
         />
       )}
       {hoveredNode && (
