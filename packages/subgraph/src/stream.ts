@@ -6,7 +6,7 @@ import {
   LogRevoked,
 } from '../generated/EtherVesting/EtherVesting';
 import { LogEtherVestingCreated } from '../generated/EtherVestingFactory/EtherVestingFactory';
-import { User, Deposit, Grant, Release, Stream } from '../generated/schema';
+import { Deposit, Grant, Release, Stream } from '../generated/schema';
 import { fetchStreamInfo, getUser } from './helpers';
 
 export function handleLogEtherVestingCreated(

@@ -1,12 +1,12 @@
 import { Bytes, log } from '@graphprotocol/graph-ts';
 
-import { User, Fund, Grant, Payment, Stream } from '../generated/schema';
+import { Fund, Grant, Payment, Stream } from '../generated/schema';
 import {
   LogFunding,
   LogPayment,
 } from '../generated/UnmanagedGrant/UnmanagedGrant';
 import { LogNewGrant } from '../generated/UnmanagedGrantFactory/UnmanagedGrantFactory';
-import { fetchGrantInfo, getUser } from './helpers';
+import { /* getRecentFunds, */ fetchGrantInfo, getUser } from './helpers';
 
 export function handleLogNewGrant(event: LogNewGrant): void {
   let fetchedGrant = fetchGrantInfo(event.params.grant);
@@ -22,6 +22,7 @@ export function handleLogNewGrant(event: LogNewGrant): void {
   grant.amounts = event.params.amounts;
 
   grant.funded = fetchedGrant.totalFunded;
+  grant.recentFunds = fetchedGrant.totalFunded;
   grant.uri = fetchedGrant.uri;
   grant.name = fetchedGrant.name;
   grant.description = fetchedGrant.description;
@@ -75,6 +76,8 @@ export function handleLogFunding(event: LogFunding): void {
     let funds = grant.funds;
     funds.push(fund.id);
     grant.funds = funds;
+
+    // grant.recentFunds = getRecentFunds(grant.funds);
 
     grant.save();
 
