@@ -37,7 +37,11 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams }) => {
     day: '2-digit',
   }).format(date);
   const dateString = `${da} ${mo} ${ye}`;
-  const totalAmount = `${value.y.toFixed(2)} ETH`;
+  // const totalAmount = value.y;
+  const totalAmount = streams.reduce((t, s) => {
+    return t + Number(utils.formatEther(getVestedAmount(s, value.x)));
+  }, 0);
+  const totalAmountString = `${Math.abs(totalAmount).toFixed(2)} ETH`;
 
   const streamAmount = stream
     ? `${Math.abs(
@@ -79,7 +83,7 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams }) => {
             {dateString}
           </Text>
           <Text fontWeight="500" fontSize="xl" textAlign="center" color="dark">
-            {totalAmount}
+            {totalAmountString}
           </Text>
           <Text fontSize="sm" textAlign="center" color="dark">
             ({streamAmount})
