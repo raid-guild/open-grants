@@ -10,9 +10,9 @@ import {
 } from '@chakra-ui/core';
 import { GrantChartPlot } from 'components/GrantChartPlot';
 import { BigNumber, utils } from 'ethers';
-import React, { useMemo,useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { parseGrantData } from 'utils/chart';
-import { ONEWEEK,ONEYEAR } from 'utils/constants';
+import { ONEWEEK, ONEYEAR } from 'utils/constants';
 import { getVestedAmount } from 'utils/helpers';
 import { Grant } from 'utils/types';
 

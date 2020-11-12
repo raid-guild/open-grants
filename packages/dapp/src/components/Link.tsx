@@ -4,11 +4,11 @@ import {
   Link as ChakraLink,
 } from '@chakra-ui/core';
 import React from 'react';
-import {   Link as RouterLink,
+import {
+  Link as RouterLink,
   LinkProps as RouterLinkProps,
-useHistory ,
+  useHistory,
 } from 'react-router-dom';
-
 
 type LinkProps = React.ComponentProps<typeof ChakraButton> &
   Omit<React.ComponentProps<typeof ChakraLink>, keyof RouterLinkProps> &
