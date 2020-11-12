@@ -67,10 +67,14 @@ export const Header: React.FC<Props> = ({ onOpen: openNav }) => {
           </svg>
         </Button>
         <Link
+          ml={-2}
           to="/"
           fontSize="1.25rem"
           color="white"
-          _hover={{ textDecoration: 'none', color: 'cyan.400' }}
+          px={2}
+          py={1}
+          borderRadius={4}
+          _hover={{ textDecoration: 'none', background: 'black10' }}
           transition="0.25s"
         >
           Open Grants

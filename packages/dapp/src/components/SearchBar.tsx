@@ -46,6 +46,7 @@ export const SearchBar: React.FC = () => {
       bgImage={isOpen && isSmall ? `url(${HeaderBG})` : undefined}
       bgSize="cover"
       zIndex={isOpen && isSmall ? 1 : undefined}
+      mr={2}
     >
       <Popover
         initialFocusRef={inputRef}
@@ -63,12 +64,7 @@ export const SearchBar: React.FC = () => {
             justify={isOpen && isSmall ? 'center' : 'flex-end'}
           >
             <Flex>
-              <InputGroup
-                size="lg"
-                color="white"
-                _hover={!isOpen ? { color: 'text' } : undefined}
-                background="transparent"
-              >
+              <InputGroup size="lg" color="white" background="transparent">
                 <Input
                   borderRadius="full"
                   background="transparent"
@@ -92,12 +88,18 @@ export const SearchBar: React.FC = () => {
                   cursor={!isOpen ? 'pointer' : undefined}
                   border={!isOpen ? 'none' : undefined}
                   transition="0.25s"
+                  p={!isOpen ? 0 : undefined}
                 />
                 <InputRightElement
-                  mx={1}
-                  pointerEvents="none"
+                  _hover={!isOpen ? { background: 'black10' } : undefined}
+                  borderRadius={!isOpen ? 4 : undefined}
+                  pointerEvents={!isOpen ? undefined : 'none'}
+                  cursor={!isOpen ? 'pointer' : undefined}
                   zIndex="initial"
-                  h="100%"
+                  h="auto"
+                  w={!isOpen ? 'auto' : undefined}
+                  p={2}
+                  my={2}
                 >
                   {fetching ? (
                     <Spinner color="white" size="sm" />

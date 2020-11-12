@@ -45,7 +45,7 @@ open-grants
 │   │   │   ├── D24nGrant._sol
 │   │   │   ├── EtherVesting.sol
 │   │   │   ├── ManagedCappedGrant._sol
-│   │   │   ├── UnmanagedStream.sol
+│   │   │   ├── UnmanagedGrant.sol
 │   │   │   ├── shared
 │   │   │   │   ├── WIP
 │   │   │   │   │   ├── CancelableRefundable._sol
@@ -61,7 +61,7 @@ open-grants
 │   │   │   │   │   ├── EtherVestingFactory.sol
 │   │   │   │   │   ├── IFactory.sol
 │   │   │   │   │   ├── MasterFactory.sol
-│   │   │   │   │   └── UnmanagedStreamFactory.sol
+│   │   │   │   │   └── UnmanagedGrantFactory.sol
 │   │   │   │   ├── interfaces
 │   │   │   │   │   ├── IBaseGrant.sol
 │   │   │   │   │   ├── IDonorFund.sol
@@ -75,9 +75,10 @@ open-grants
 │   │   │   │   ├── libraries
 │   │   │   │   │   ├── Percentages.sol
 │   │   │   │   │   └── abdk-libraries
+│   │   │   │   │       ├── ABDKMath64x64.md
+│   │   │   │   │       ├── ABDKMath64x64.sol
 │   │   │   │   │       ├── ABDKMathQuad.md
 │   │   │   │   │       ├── ABDKMathQuad.sol
-│   │   │   │   │       ├── GrantNotes.md
 │   │   │   │   │       ├── LICENSE.md
 │   │   │   │   │       └── README.md
 │   │   │   │   ├── modules
@@ -89,7 +90,7 @@ open-grants
 │   │   │   │       ├── Funding.sol
 │   │   │   │       └── Grantee.sol
 │   │   │   └── test
-│   │   │       └── GrantToken.sol
+│   │   │       └── GrantToken._sol
 │   │   ├── package.json
 │   │   ├── scripts
 │   │   │   ├── grantFactory.ts
@@ -102,6 +103,7 @@ open-grants
 │   │   │       ├── Funding.ts
 │   │   │       ├── GranteeConstructor.ts
 │   │   │       └── helpers.ts
+│   │   ├── truffle-config.js
 │   │   ├── tsconfig.json
 │   │   └── waffle.js
 │   ├── dapp
@@ -134,28 +136,35 @@ open-grants
 │   │   │   ├── App.tsx
 │   │   │   ├── Routes.tsx
 │   │   │   ├── assets
+│   │   │   │   ├── chest.svg
 │   │   │   │   ├── done.svg
 │   │   │   │   ├── eth-crystal-wave.png
 │   │   │   │   ├── header.jpg
-│   │   │   │   ├── loading-background.png
 │   │   │   │   ├── loading.svg
 │   │   │   │   ├── navbar.jpg
+│   │   │   │   ├── success.svg
 │   │   │   │   ├── tile-background.svg
+│   │   │   │   ├── waves.svg
 │   │   │   │   ├── whale.svg
 │   │   │   │   └── whaleLoader__data.json
 │   │   │   ├── components
+│   │   │   │   ├── AmountDisplay.tsx
+│   │   │   │   ├── ChartHint.tsx
 │   │   │   │   ├── CreateGrantForm.tsx
 │   │   │   │   ├── CreateGrantModal.tsx
 │   │   │   │   ├── DistributeFunds.tsx
 │   │   │   │   ├── DurationSelector.tsx
+│   │   │   │   ├── ErrorAlert.tsx
 │   │   │   │   ├── ErrorBoundary.tsx
 │   │   │   │   ├── ExploreHeader.tsx
 │   │   │   │   ├── FAQContent.tsx
 │   │   │   │   ├── FAQHeader.tsx
 │   │   │   │   ├── FundGrantModal.tsx
 │   │   │   │   ├── GrantChart.tsx
+│   │   │   │   ├── GrantChartPlot.tsx
 │   │   │   │   ├── GrantContent.tsx
 │   │   │   │   ├── GrantDetails.tsx
+│   │   │   │   ├── GrantFunder.tsx
 │   │   │   │   ├── GrantFunders.tsx
 │   │   │   │   ├── GrantHeader.tsx
 │   │   │   │   ├── GrantRecipient.tsx
@@ -168,6 +177,8 @@ open-grants
 │   │   │   │   ├── Header.tsx
 │   │   │   │   ├── InProgressStream.tsx
 │   │   │   │   ├── Layout.tsx
+│   │   │   │   ├── Leader.tsx
+│   │   │   │   ├── Leaderboard.tsx
 │   │   │   │   ├── Link.tsx
 │   │   │   │   ├── Loader.tsx
 │   │   │   │   ├── LoadingModal.tsx
@@ -177,22 +188,28 @@ open-grants
 │   │   │   │   ├── ProfileContent.tsx
 │   │   │   │   ├── ProfileHeader.tsx
 │   │   │   │   ├── ProfileImage.tsx
+│   │   │   │   ├── SearchBar.tsx
 │   │   │   │   ├── StopStreamModal.tsx
 │   │   │   │   ├── StreamTile.tsx
 │   │   │   │   └── SuccessModal.tsx
 │   │   │   ├── config.ts
 │   │   │   ├── contexts
+│   │   │   │   ├── SearchContext.tsx
 │   │   │   │   └── Web3Context.tsx
 │   │   │   ├── graphql
 │   │   │   │   ├── client.ts
 │   │   │   │   ├── fragments.ts
 │   │   │   │   ├── getGrant.ts
 │   │   │   │   ├── getGrants.ts
+│   │   │   │   ├── getLeaders.ts
 │   │   │   │   ├── getProfile.ts
+│   │   │   │   ├── getRank.ts
+│   │   │   │   ├── search.ts
 │   │   │   │   └── utils.ts
 │   │   │   ├── icons
 │   │   │   │   ├── ArrowDownIcon.tsx
 │   │   │   │   ├── CloseIcon.tsx
+│   │   │   │   ├── CopyIcon.tsx
 │   │   │   │   ├── FeaturedIcon.tsx
 │   │   │   │   ├── InNeedIcon.tsx
 │   │   │   │   ├── LatestIcon.tsx
@@ -206,7 +223,10 @@ open-grants
 │   │   │   │   ├── faq.tsx
 │   │   │   │   ├── grant
 │   │   │   │   │   ├── address.tsx
+│   │   │   │   │   ├── funders.tsx
+│   │   │   │   │   ├── recipients.tsx
 │   │   │   │   │   └── streams.tsx
+│   │   │   │   ├── leaderboard.tsx
 │   │   │   │   └── profile
 │   │   │   │       └── address.tsx
 │   │   │   ├── react-app-env.d.ts
@@ -226,8 +246,8 @@ open-grants
 │       ├── abis
 │       │   ├── EtherVesting.json
 │       │   ├── EtherVestingFactory.json
-│       │   ├── UnmanagedStream.json
-│       │   └── UnmanagedStreamFactory.json
+│       │   ├── UnmanagedGrant.json
+│       │   └── UnmanagedGrantFactory.json
 │       ├── package.json
 │       ├── schema.graphql
 │       ├── src

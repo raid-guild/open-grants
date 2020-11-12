@@ -7,6 +7,7 @@ import React from 'react';
 import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
+  useHistory,
 } from 'react-router-dom';
 
 type LinkProps = React.ComponentProps<typeof ChakraButton> &
@@ -41,10 +42,10 @@ export const LinkButton: React.FC<LinkProps> = ({
 export const Link: React.FC<LinkProps> = ({
   children,
   to,
-  replace,
   isExternal,
   ...props
 }) => {
+  const history = useHistory();
   if (isExternal) {
     return (
       <ChakraLink isExternal href={to.toString()} {...props}>
@@ -58,14 +59,14 @@ export const Link: React.FC<LinkProps> = ({
     <>
       {width || w ? (
         <Box width={width || w}>
-          <RouterLink to={to} replace={replace}>
-            <ChakraLink {...props}>{children}</ChakraLink>
-          </RouterLink>
+          <ChakraLink {...props} onClick={() => history.push(to as string)}>
+            {children}
+          </ChakraLink>
         </Box>
       ) : (
-        <RouterLink to={to} replace={replace}>
-          <ChakraLink {...props}>{children}</ChakraLink>
-        </RouterLink>
+        <ChakraLink {...props} onClick={() => history.push(to as string)}>
+          {children}
+        </ChakraLink>
       )}
     </>
   );
