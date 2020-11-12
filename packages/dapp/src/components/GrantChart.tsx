@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Grid, Stack, Text } from '@chakra-ui/core';
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  Stack,
+  Text,
+  useBreakpointValue,
+} from '@chakra-ui/core';
 import { GrantChartPlot } from 'components/GrantChartPlot';
 import React, { useState } from 'react';
 import { ChartState, parseGrantData } from 'utils/chart';
@@ -29,6 +37,8 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
         (currentTime - xMin) / (xMax - xMin),
         (xMax - currentTime) / (xMax - xMin),
       ];
+
+  const chartHeight = useBreakpointValue({ base: 320, sm: 420 });
 
   return (
     <Flex
@@ -87,13 +97,12 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
       </Text>
       <Box
         w="100%"
-        h="100%"
-        maxH="26.25rem"
+        h={`${chartHeight}px`}
         position="relative"
         borderLeft="1px solid #ccc"
         borderBottom="1px solid #ccc"
       >
-        {isDisabled && (
+        {isDisabled ? (
           <Flex
             position="absolute"
             justify="center"
@@ -104,19 +113,20 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
           >
             <Text color="text">No Streams found</Text>
           </Flex>
+        ) : (
+          <GrantChartPlot
+            streams={streams}
+            grantData={grantData}
+            nodes={nodes}
+            currentTime={currentTime}
+            currentYMax={currentYMax}
+            yMax={yMax}
+            xMin={xMin}
+            xMax={xMax}
+            state={state}
+            chartHeight={chartHeight}
+          />
         )}
-        <GrantChartPlot
-          streams={streams}
-          grantData={grantData}
-          nodes={nodes}
-          currentTime={currentTime}
-          currentYMax={currentYMax}
-          yMax={yMax}
-          xMin={xMin}
-          xMax={xMax}
-          state={state}
-          isDisabled={isDisabled}
-        />
       </Box>
       <Grid
         w="100%"

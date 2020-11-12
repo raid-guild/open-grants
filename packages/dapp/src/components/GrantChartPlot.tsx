@@ -24,7 +24,7 @@ type PlotProps = {
   xMin: number;
   xMax: number;
   state: ChartState;
-  isDisabled: boolean;
+  chartHeight: number;
 };
 
 const chartColors = ['#8AE0DB', '#7BD3D3', '#A4DFD7', '#75DEC6', '#69D1B9'];
@@ -39,7 +39,7 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
   xMin,
   xMax,
   state,
-  isDisabled,
+  chartHeight,
 }) => {
   const [hoveredNode, setHoveredNode] = useState<
     DataPoint & { stream: number }
@@ -70,7 +70,6 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
 
   const xTicks = useBreakpointValue({ base: 0, sm: 4, md: 8, lg: 10 });
   const yTicks = useBreakpointValue({ base: 5, md: 10 });
-  const chartHeight = useBreakpointValue({ base: 320, sm: 420 });
   return (
     <FlexibleWidthXYPlot
       stackBy="y"
@@ -108,44 +107,38 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
           style={{ pointerEvents: 'none' }}
         />
       ))}
-      {!isDisabled && (
-        <AreaSeries
-          data={[
-            { x: currentTime, y: yMax * 1.5 },
-            { x: xMax, y: yMax * 1.5 },
-          ]}
-          fill="rgba(255, 255, 255, 0.35)"
-          stroke="rgba(255, 255, 255, 0.35)"
-          style={{ pointerEvents: 'none' }}
-        />
-      )}
-      {!isDisabled && (
-        <LineSeries
-          data={[
-            { x: currentTime, y: 0 },
-            { x: currentTime, y: yMax * 1.5 },
-          ]}
-          strokeWidth={2}
-          stroke="#23CEA5"
-          strokeStyle="solid"
-          style={{ pointerEvents: 'none' }}
-        />
-      )}
-      {!isDisabled && (
-        <LabelSeries
-          animation
-          allowOffsetToBeReversed
-          data={[
-            {
-              x: currentTime,
-              y: 0.8 * yDomain[1],
-              label: 'TODAY',
-              rotation: 90,
-            },
-          ]}
-          style={{ stroke: '3bdeb7' }}
-        />
-      )}
+      <AreaSeries
+        data={[
+          { x: currentTime, y: yMax * 1.5 },
+          { x: xMax, y: yMax * 1.5 },
+        ]}
+        fill="rgba(255, 255, 255, 0.35)"
+        stroke="rgba(255, 255, 255, 0.35)"
+        style={{ pointerEvents: 'none' }}
+      />
+      <LineSeries
+        data={[
+          { x: currentTime, y: 0 },
+          { x: currentTime, y: yMax * 1.5 },
+        ]}
+        strokeWidth={2}
+        stroke="#23CEA5"
+        strokeStyle="solid"
+        style={{ pointerEvents: 'none' }}
+      />
+      <LabelSeries
+        animation
+        allowOffsetToBeReversed
+        data={[
+          {
+            x: currentTime,
+            y: 0.8 * yDomain[1],
+            label: 'TODAY',
+            rotation: 90,
+          },
+        ]}
+        style={{ stroke: '3bdeb7' }}
+      />
       {hoveredNode && (
         <Hint
           value={hoveredNode}
