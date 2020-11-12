@@ -11,7 +11,8 @@ import {
   XAxis,
   YAxis,
 } from 'react-vis';
-import { ChartState, DataPoint, MAX_STACK } from 'utils/chart';
+import { DataPoint, MAX_STACK } from 'utils/chart';
+import { ONEWEEK } from 'utils/constants';
 import { Stream } from 'utils/types';
 
 type PlotProps = {
@@ -19,11 +20,8 @@ type PlotProps = {
   grantData: Array<Array<DataPoint>>;
   nodes: Array<DataPoint & { stream: number }>;
   currentTime: number;
-  currentYMax: number;
-  yMax: number;
-  xMin: number;
-  xMax: number;
-  state: ChartState;
+  xDomain: Array<number>;
+  yDomain: Array<number>;
   chartHeight: number;
 };
 
@@ -34,40 +32,15 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
   grantData,
   nodes,
   currentTime,
-  currentYMax,
-  yMax,
-  xMin,
-  xMax,
-  state,
+  xDomain,
+  yDomain,
   chartHeight,
 }) => {
   const [hoveredNode, setHoveredNode] = useState<
     DataPoint & { stream: number }
   >();
 
-  const yDomain = ((s: ChartState) => {
-    switch (s) {
-      case ChartState.PAST:
-        return [0, currentYMax * 1.2];
-      case ChartState.FUTURE:
-      case ChartState.ALLTIME:
-      default:
-        return [0, yMax * 1.2];
-    }
-  })(state);
-
-  const xDomain = ((s: ChartState) => {
-    switch (s) {
-      case ChartState.PAST:
-        return [xMin, currentTime];
-      case ChartState.FUTURE:
-        return [currentTime, xMax];
-      case ChartState.ALLTIME:
-      default:
-        return [xMin, xMax];
-    }
-  })(state);
-
+  const isWeeks = xDomain[1] - xDomain[0] <= 8 * ONEWEEK;
   const xTicks = useBreakpointValue({ base: 0, sm: 4, md: 8, lg: 10 });
   const yTicks = useBreakpointValue({ base: 5, md: 10 });
   return (
@@ -92,7 +65,7 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
           const da = new Intl.DateTimeFormat('en', {
             day: '2-digit',
           }).format(date);
-          return `${da}-${mo}-${ye}`;
+          return isWeeks ? `${da}-${mo}` : `${mo}-${ye}`;
         }}
       />
       <YAxis style={{ fontSize: '9px', opacity: '0.75' }} tickTotal={yTicks} />
@@ -109,8 +82,8 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
       ))}
       <AreaSeries
         data={[
-          { x: currentTime, y: yMax * 1.5 },
-          { x: xMax, y: yMax * 1.5 },
+          { x: currentTime, y: yDomain[1] * 1.5 },
+          { x: xDomain[1] * 1.5, y: yDomain[1] * 1.5 },
         ]}
         fill="rgba(255, 255, 255, 0.35)"
         stroke="rgba(255, 255, 255, 0.35)"
@@ -119,7 +92,7 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
       <LineSeries
         data={[
           { x: currentTime, y: 0 },
-          { x: currentTime, y: yMax * 1.5 },
+          { x: currentTime, y: yDomain[1] * 1.5 },
         ]}
         strokeWidth={2}
         stroke="#23CEA5"
@@ -144,7 +117,7 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
           value={hoveredNode}
           align={{ vertical: 'top', horizontal: 'left' }}
         >
-          <ChartHint value={hoveredNode} streams={streams} />
+          <ChartHint value={hoveredNode} streams={streams} isWeeks={isWeeks} />
         </Hint>
       )}
       <MarkSeries

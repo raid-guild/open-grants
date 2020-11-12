@@ -1,5 +1,6 @@
 import {
   Box,
+  Divider,
   Flex,
   HStack,
   Popover,
@@ -7,9 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   Text,
-  VStack,
 } from '@chakra-ui/core';
-import { Link } from 'components/Link';
 import { utils } from 'ethers';
 import React from 'react';
 import { DataPoint } from 'utils/chart';
@@ -19,9 +18,10 @@ import { Stream } from 'utils/types';
 type HintProps = {
   value: DataPoint & { stream: number };
   streams: Array<Stream>;
+  isWeeks: boolean;
 };
 
-export const ChartHint: React.FC<HintProps> = ({ value, streams }) => {
+export const ChartHint: React.FC<HintProps> = ({ value, streams, isWeeks }) => {
   const stream =
     value.stream >= 0 && value.stream < streams.length
       ? streams[value.stream]
@@ -36,8 +36,7 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams }) => {
   const da = new Intl.DateTimeFormat('en', {
     day: '2-digit',
   }).format(date);
-  const dateString = `${da} ${mo} ${ye}`;
-  // const totalAmount = value.y;
+  const dateString = isWeeks ? `${da} ${mo}` : `${mo} ${ye}`;
   const totalAmount = streams.reduce((t, s) => {
     return t + Number(utils.formatEther(getVestedAmount(s, value.x)));
   }, 0);
@@ -48,7 +47,7 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams }) => {
         Number(utils.formatEther(getVestedAmount(stream, value.x))),
       ).toFixed(2)} ETH`
     : `0.00 ETH`;
-  const h = '10rem !important';
+  const h = '9rem !important';
   const w = '10rem !important';
 
   return (
@@ -70,50 +69,60 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams }) => {
         maxW={w}
         w={w}
         background="#D7FFEF"
-        p={0}
+        p={2}
       >
         <PopoverArrow />
-        <VStack w={w} h={h} py={2} justify="center" fontFamily="body">
+        <Flex
+          w="100%"
+          h="100%"
+          py={2}
+          justify="center"
+          align="center"
+          fontFamily="body"
+          direction="column"
+        >
           <Text
             textTransform="uppercase"
             textAlign="center"
             color="text"
-            fontSize="sm"
+            fontSize="xs"
           >
             {dateString}
           </Text>
-          <Text fontWeight="500" fontSize="xl" textAlign="center" color="dark">
+          <Text fontWeight="500" fontSize="lg" textAlign="center" color="dark">
             {totalAmountString}
           </Text>
-          <Text fontSize="sm" textAlign="center" color="dark">
-            ({streamAmount})
+          <Text fontSize="sm" textAlign="center" color="dark" mt={-1}>
+            TOTAL
+          </Text>
+          <Divider color="white" mb={2} mt={1} />
+          <Text fontWeight="500" fontSize="sm" textAlign="center" color="dark">
+            {streamAmount}
           </Text>
           {stream && stream.ownerUser.id && stream.ownerUser.imageUrl ? (
-            <Link to={`/profile/${stream.ownerUser.id}`}>
-              <HStack spacing={2}>
-                <Flex
-                  borderRadius="50%"
-                  border="1px solid #E6E6E6"
-                  w="2rem"
-                  h="2rem"
-                  overflow="hidden"
-                  background="white"
-                  bgImage={`url(${stream.ownerUser.imageUrl})`}
-                  bgSize="cover"
-                  bgRepeat="no-repeat"
-                  bgPosition="center center"
-                />
-                <Text fontSize="sm">
-                  {stream.ownerUser.name
-                    ? stream.ownerUser.name
-                    : `${stream.ownerUser.id.slice(0, 7).toUpperCase()}...`}
-                </Text>
-              </HStack>
-            </Link>
+            <HStack spacing={1}>
+              <Flex
+                borderRadius="50%"
+                border="1px solid #E6E6E6"
+                w="1.5rem"
+                h="1.5rem"
+                overflow="hidden"
+                background="white"
+                bgImage={`url(${stream.ownerUser.imageUrl})`}
+                bgSize="cover"
+                bgRepeat="no-repeat"
+                bgPosition="center center"
+              />
+              <Text color="text" fontSize="xs">
+                {stream.ownerUser.name
+                  ? stream.ownerUser.name
+                  : `${stream.ownerUser.id.slice(0, 7).toUpperCase()}...`}
+              </Text>
+            </HStack>
           ) : (
-            <Text fontSize="sm"> Other </Text>
+            <Text fontSize="xs"> Other </Text>
           )}
-        </VStack>
+        </Flex>
       </PopoverContent>
     </Popover>
   );

@@ -8,12 +8,6 @@ export type DataPoint = {
   y: number;
 };
 
-export enum ChartState {
-  ALLTIME,
-  PAST,
-  FUTURE,
-}
-
 export const MAX_STACK = 5;
 
 const reduceStreams = (input: Array<Stream>): Array<Stream> => {
@@ -61,7 +55,6 @@ const reduceStreams = (input: Array<Stream>): Array<Stream> => {
 };
 
 export const parseGrantData = (
-  currentTime: number,
   grant: Grant,
 ): [
   Array<Stream>,
@@ -70,12 +63,10 @@ export const parseGrantData = (
   number,
   number,
   number,
-  number,
 ] => {
   let xMin = Number.MAX_SAFE_INTEGER;
   let xMax = 0;
   let yMax = BigNumber.from(0);
-  let currentYMax = BigNumber.from(0);
 
   const streams = reduceStreams(grant.streams);
 
@@ -90,7 +81,6 @@ export const parseGrantData = (
       if (startTime < xMin) xMin = startTime;
       if (startTime + duration > xMax) xMax = startTime + duration;
       yMax = yMax.add(stream.funded);
-      currentYMax = currentYMax.add(getVestedAmount(stream, currentTime));
       return stream;
     });
 
@@ -133,7 +123,6 @@ export const parseGrantData = (
     [{ x: xMin, y: 0, stream: -1 }, ...nodes],
     xMin,
     xMax,
-    Number(utils.formatEther(currentYMax)),
     Number(utils.formatEther(yMax)),
   ];
 };

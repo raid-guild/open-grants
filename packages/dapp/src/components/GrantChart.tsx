@@ -3,13 +3,17 @@ import {
   Button,
   Flex,
   Grid,
+  Select,
   Stack,
   Text,
   useBreakpointValue,
 } from '@chakra-ui/core';
 import { GrantChartPlot } from 'components/GrantChartPlot';
-import React, { useState } from 'react';
-import { ChartState, parseGrantData } from 'utils/chart';
+import { BigNumber, utils } from 'ethers';
+import React, { useMemo,useState } from 'react';
+import { parseGrantData } from 'utils/chart';
+import { ONEWEEK,ONEYEAR } from 'utils/constants';
+import { getVestedAmount } from 'utils/helpers';
 import { Grant } from 'utils/types';
 
 type Props = {
@@ -18,24 +22,38 @@ type Props = {
 
 export const GrantChart: React.FC<Props> = ({ grant }) => {
   const currentTime = Math.floor(new Date().getTime() / 1000);
-  const [
-    streams,
-    grantData,
-    nodes,
-    xMin,
-    xMax,
-    currentYMax,
-    yMax,
-  ] = parseGrantData(currentTime, grant);
+  const [streams, grantData, nodes, xMin, xMax, yMax] = useMemo(
+    () => parseGrantData(grant),
+    [grant],
+  );
   const isDisabled = grantData.length === 0;
 
-  const [state, setState] = useState<ChartState>(ChartState.ALLTIME);
+  const yMaxAt = (time: number): number => {
+    const yMaxAtTime = streams.reduce((t, s) => {
+      return t.add(getVestedAmount(s, time));
+    }, BigNumber.from(0));
+    return Number(utils.formatEther(yMaxAtTime));
+  };
+
+  const [past, setPast] = useState<number>(-1);
+  const [future, setFuture] = useState<number>(-1);
+  const yDomain = ((_p, f) => {
+    return f === -1 || currentTime + f + ONEWEEK >= xMax
+      ? [0, yMax * 1.2]
+      : [0, yMaxAt(currentTime + f + ONEWEEK) * 1.2];
+  })(past, future);
+
+  const xDomain = ((p, f) => {
+    const end = f === -1 ? xMax : currentTime + f;
+    const start = p === -1 ? xMin : currentTime - p;
+    return [start, end];
+  })(past, future);
 
   const grid = isDisabled
     ? [1, 1]
     : [
-        (currentTime - xMin) / (xMax - xMin),
-        (xMax - currentTime) / (xMax - xMin),
+        (currentTime - xDomain[0]) / (xDomain[1] - xDomain[0]),
+        (xDomain[1] - currentTime) / (xDomain[1] - xDomain[0]),
       ];
 
   const chartHeight = useBreakpointValue({ base: 320, sm: 420 });
@@ -53,37 +71,67 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
       direction="column"
     >
       <Flex w="100%" align="center" mb={4}>
-        <Text fontWeight="bold" color="dark" fontSize="xl" flex={1}>
+        <Text fontWeight="bold" color="dark" fontSize="xl" flex={1} mr={2}>
           Grant Funds Over Time
         </Text>
         <Stack
           direction={{ base: 'column', md: 'row' }}
-          spacing={{ base: 0, md: 8 }}
+          spacing={{ base: 2, md: 8 }}
+          align={{ base: 'stretch', md: 'center' }}
         >
-          <Button
-            variant="link"
-            onClick={() => setState(ChartState.ALLTIME)}
-            textTransform="uppercase"
-            isDisabled={isDisabled || state === ChartState.ALLTIME}
-          >
-            All Time
-          </Button>
-          <Button
-            variant="link"
-            onClick={() => setState(ChartState.PAST)}
-            textTransform="uppercase"
-            isDisabled={isDisabled || state === ChartState.PAST}
-          >
-            Past
-          </Button>
-          <Button
-            variant="link"
-            onClick={() => setState(ChartState.FUTURE)}
-            textTransform="uppercase"
-            isDisabled={isDisabled || state === ChartState.FUTURE}
-          >
-            Future
-          </Button>
+          <Flex align="center">
+            <Text fontWeight="600" mr={2}>
+              PAST
+            </Text>
+            <Select
+              onChange={e => {
+                setPast(Number(e.target.value));
+                if (future === 0 && Number(e.target.value) === 0) {
+                  setFuture(-1);
+                }
+              }}
+              value={past}
+            >
+              <option value={0}>None</option>
+              <option value={ONEYEAR / 2}>6 months</option>
+              <option value={ONEYEAR}>1 year</option>
+              <option value={ONEYEAR * 2}>2 years</option>
+              <option value={-1}>All time</option>
+            </Select>
+          </Flex>
+          <Flex align="center">
+            <Text fontWeight="600" mr={2}>
+              FUTURE
+            </Text>
+            <Select
+              onChange={e => {
+                setFuture(Number(e.target.value));
+                if (past === 0 && Number(e.target.value) === 0) {
+                  setPast(-1);
+                }
+              }}
+              value={future}
+            >
+              <option value={0}>None</option>
+              <option value={ONEYEAR / 2}>6 months</option>
+              <option value={ONEYEAR}>1 year</option>
+              <option value={ONEYEAR * 2}>2 years</option>
+              <option value={-1}>All time</option>
+            </Select>
+          </Flex>
+          {past === -1 && future === -1 ? null : (
+            <Button
+              variant="link"
+              onClick={() => {
+                setPast(-1);
+                setFuture(-1);
+              }}
+              textTransform="uppercase"
+              justifyContent={{ base: 'flex-start', md: 'center' }}
+            >
+              ALL TIME
+            </Button>
+          )}
         </Stack>
       </Flex>
       <Text
@@ -119,11 +167,8 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
             grantData={grantData}
             nodes={nodes}
             currentTime={currentTime}
-            currentYMax={currentYMax}
-            yMax={yMax}
-            xMin={xMin}
-            xMax={xMax}
-            state={state}
+            xDomain={xDomain}
+            yDomain={yDomain}
             chartHeight={chartHeight}
           />
         )}
@@ -134,15 +179,15 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
         pl={8}
         fontSize="sm"
         templateColumns={
-          state === ChartState.ALLTIME ? `${grid[0]}fr ${grid[1]}fr` : undefined
+          future === 0 || past === 0 ? undefined : `${grid[0]}fr ${grid[1]}fr`
         }
       >
-        {state !== ChartState.FUTURE && (
+        {past !== 0 && (
           <Text w="100%" textAlign="center" textTransform="uppercase">
             Vesting To Date
           </Text>
         )}
-        {state !== ChartState.PAST && (
+        {future !== 0 && (
           <Text w="100%" textAlign="center" textTransform="uppercase">
             Future (Projected)
           </Text>

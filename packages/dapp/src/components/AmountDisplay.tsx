@@ -11,8 +11,10 @@ export const AmountDisplay: React.FC<Props> = ({ amount, label }) => (
     direction="column"
     h="100%"
     justify="space-between"
-    _hover={{ color: 'cyan.400' }}
+    _hover={{ background: 'black10' }}
+    borderRadius={4}
     transition="0.25s"
+    px={1}
   >
     <Text
       fontWeight="500"
