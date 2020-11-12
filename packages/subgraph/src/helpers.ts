@@ -13,7 +13,7 @@ import {
 
 import { EtherVesting } from '../generated/EtherVesting/EtherVesting';
 import { UnmanagedGrant } from '../generated/UnmanagedGrant/UnmanagedGrant';
-import { User } from '../generated/schema';
+import { User, Fund } from '../generated/schema';
 
 class GrantObject {
   uri: Bytes;
@@ -199,3 +199,23 @@ export function getUser(address: Bytes): User {
   log.debug('Updated User {}', [address.toHexString()]);
   return user as User;
 }
+
+// let PAST_DURATION_SECS = BigInt.fromI32(15780000); // 6 months
+// let PAST_DURATION_SECS = BigInt.fromI32(24 * 60 * 60); // one day
+
+// export function getRecentFunds(
+//   funds: Array<string>
+// ): BigInt {
+//   let currentTime = BigInt.fromI32(new Date().getTime() / 1000);
+//   let total = BigInt.fromI32(0);
+//   for (let i = 0; i < funds.length; i = i + 1) {
+//     let fund = Fund.load(funds[i]);
+//     if (
+//       fund != null &&
+//       fund.timestamp >= currentTime.minus(PAST_DURATION_SECS)
+//     ) {
+//       total = total.plus(fund.amount);
+//     }
+//   }
+//   return total;
+// }

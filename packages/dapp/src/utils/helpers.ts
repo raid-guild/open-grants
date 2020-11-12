@@ -1,3 +1,4 @@
+import { getAddress } from '@ethersproject/address';
 import { BigNumber, utils } from 'ethers';
 import { Stream } from 'utils/types';
 
@@ -52,3 +53,12 @@ export const copyToClipboard = (value: string): void => {
   document.execCommand('copy');
   document.body.removeChild(tempInput);
 };
+
+// returns the checksummed address if the address is valid, otherwise returns false
+export function isAddress(value: string): string | false {
+  try {
+    return getAddress(value).toLowerCase();
+  } catch {
+    return false;
+  }
+}

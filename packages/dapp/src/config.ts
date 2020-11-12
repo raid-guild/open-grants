@@ -9,5 +9,5 @@ export const CONFIG = {
   ipfsEndpoint: 'https://ipfs.infura.io',
   boxEndpoint: 'https://ipfs.3box.io',
   explorerEndpoint: 'https://kovan.etherscan.io',
-  featuredGrants: [],
+  featuredGrants: ['0x6ac3fd48a50a97f5f68e432fe36639cf03bf1159'],
 };
