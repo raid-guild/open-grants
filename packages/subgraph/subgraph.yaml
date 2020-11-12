@@ -94,7 +94,7 @@ dataSources:
           handler: handleLogFunding
         - event: LogReleased(uint256)
           handler: handleLogReleased
-        - event: LogRevoked()
+        - event: LogRevoked(bool)
           handler: handleLogRevoked
 
       file: ./src/stream.ts
