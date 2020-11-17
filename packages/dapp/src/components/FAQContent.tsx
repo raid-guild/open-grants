@@ -203,6 +203,33 @@ export const FAQContent: React.FC = () => {
               color="dark"
               py={4}
             >
+              How should I create a grant?
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel py={6}>
+            Once logged in, open the menu and click “Create Grant”. Complete the
+            form, keeping in mind that once a grant is created these details
+            cannot be changed. For project description, provide a high-level
+            overview of the project, specifically how this grant will benefit
+            the Ethereum ecosystem. For the project link we recommend you point
+            to a webpage,blog post or document that covers things like scope of
+            the project, goals, timeline, and funding goals. Once you’re ready,
+            click “Create Grant” which will initiate a transaction to complete
+            the action. Note that once a grant is created, its details cannot be
+            modified.
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem>
+          <AccordionButton>
+            <Box
+              flex="1"
+              textAlign="left"
+              fontSize="xl"
+              fontWeight="600"
+              color="dark"
+              py={4}
+            >
               How are funds distributed to grantees?
             </Box>
             <AccordionIcon />
