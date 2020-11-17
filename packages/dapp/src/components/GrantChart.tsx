@@ -77,10 +77,14 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
         <Stack
           direction={{ base: 'column', md: 'row' }}
           spacing={{ base: 2, md: 8 }}
-          align={{ base: 'stretch', md: 'center' }}
+          align={{ base: 'flex-end', sm: 'stretch', md: 'center' }}
         >
           <Flex align="center">
-            <Text fontWeight="600" mr={2}>
+            <Text
+              fontWeight="600"
+              mr={2}
+              fontSize={{ base: '.6rem', md: '.8rem' }}
+            >
               PAST
             </Text>
             <Select
@@ -91,6 +95,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
                 }
               }}
               value={past}
+              fontSize={{ base: '.6rem', md: '.8rem' }}
             >
               <option value={0}>None</option>
               <option value={ONEYEAR / 2}>6 months</option>
@@ -100,7 +105,11 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
             </Select>
           </Flex>
           <Flex align="center">
-            <Text fontWeight="600" mr={2}>
+            <Text
+              fontWeight="600"
+              mr={2}
+              fontSize={{ base: '.6rem', md: '.8rem' }}
+            >
               FUTURE
             </Text>
             <Select
@@ -111,6 +120,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
                 }
               }}
               value={future}
+              fontSize={{ base: '.6rem', md: '.8rem' }}
             >
               <option value={0}>None</option>
               <option value={ONEYEAR / 2}>6 months</option>
@@ -127,7 +137,9 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
                 setFuture(-1);
               }}
               textTransform="uppercase"
+              textDecoration="underline lightgrey"
               justifyContent={{ base: 'flex-start', md: 'center' }}
+              fontSize={{ base: '.6rem', md: '.8rem' }}
             >
               ALL TIME
             </Button>
