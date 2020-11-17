@@ -1,5 +1,6 @@
 import {
   Button,
+  Divider,
   Flex,
   SimpleGrid,
   Text,
@@ -75,20 +76,19 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
       >
         {grant.name}
       </Link>
-      <Text maxW="55rem" w="auto">
+      <Text maxW="40rem" w="auto" mb={2} textAlign="center">
         {grant.description}
       </Text>
-
+      <Divider w="2rem" borderWidth="2px" mb={2} />
       <Link
         to={grant.link}
         isExternal
-        mb={4}
         overflowWrap="break-word"
         wordBreak="break-word"
       >
         {grant.link}
       </Link>
-      <Flex mb={8} align="center">
+      <Flex mb={6} align="center">
         <Link
           to={`${CONFIG.explorerEndpoint}/address/${grant.id}`}
           textTransform="uppercase"
@@ -122,7 +122,7 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         fontWeight="500"
         px={10}
         onClick={openFundModal}
-        mb={12}
+        mb={8}
       >
         Fund this grant
       </Button>
