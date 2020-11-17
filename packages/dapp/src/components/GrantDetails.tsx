@@ -192,7 +192,7 @@ export const GrantDetails: React.FC<Props> = ({
             size={buttonSize}
             onClick={openFundModal}
           >
-            Add Funds
+            Fund this grant
           </Button>
         )}
       </Flex>
