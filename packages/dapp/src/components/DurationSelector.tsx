@@ -1,5 +1,4 @@
 import { Button, ButtonGroup } from '@chakra-ui/core';
-import { QuestionIcon } from 'icons/QuestionIcon';
 import React from 'react';
 import { ONEYEAR } from 'utils/constants';
 
@@ -49,17 +48,6 @@ export const DurationSelector: React.FC<Props> = ({
       >
         2 years
       </Button>
-      <QuestionIcon
-        position="absolute"
-        right="-2rem"
-        top="50%"
-        transform="translateY(-50%)"
-        cursor="pointer"
-        transition="0.25s"
-        color="text"
-        _hover={{ color: 'green.500' }}
-        boxSize="1.25rem"
-      />
     </ButtonGroup>
   );
 };
