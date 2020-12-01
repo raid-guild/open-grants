@@ -90,7 +90,7 @@ export const CreateGrantModal: React.FC<Props> = ({
               {faq}
             </Link>
 
-            <VStack spacing={4} w="100%" p={6} pb="4.5rem">
+            <VStack spacing={4} w="100%" p={6} pb="2rem">
               <Text
                 fontSize={{ base: '2rem', md: '3rem' }}
                 fontWeight="800"
@@ -99,13 +99,11 @@ export const CreateGrantModal: React.FC<Props> = ({
               >
                 Confirm Grant Details
               </Text>
-              <VStack
-                spacing={2}
-                w="100%"
-                fontSize="sm"
-                align="stretch"
-                mb={12}
-              >
+              <Text fontSize="xs" textAlign="center">
+                Please double-check that all information is correct. Once a
+                grant is created it cannot be modified.
+              </Text>
+              <VStack spacing={2} w="100%" fontSize="sm" align="stretch" mb={6}>
                 <Text> {metadata.name} </Text>
                 <Text> {metadata.description} </Text>
                 {metadata.link ? (

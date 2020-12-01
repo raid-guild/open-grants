@@ -104,7 +104,7 @@ export const CreateGrantForm: React.FC = () => {
         maxLength={48}
       />
       <GrantTextInput
-        title="What do you aim to achieve?"
+        title="What do you aim to achieve? How will it benefit the ETH2 ecosystem?"
         description="Max 240 characters"
         label="Description"
         value={description}
@@ -112,7 +112,7 @@ export const CreateGrantForm: React.FC = () => {
         maxLength={240}
       />
       <GrantTextInput
-        title="Where can folks learn more about what you’re working on?"
+        title="Where can funders learn about the details of your project? eg: website, blog post, document"
         description="Optional"
         label="Project Link"
         value={link}
@@ -122,7 +122,7 @@ export const CreateGrantForm: React.FC = () => {
         isURL
       />
       <GrantTextInput
-        title="How can folks contact you?"
+        title="How can folks contact you? eg: Twitter, Discord, Telegram link"
         description="Optional"
         label="Additional Link"
         value={contactLink}

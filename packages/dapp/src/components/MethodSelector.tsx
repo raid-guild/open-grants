@@ -1,5 +1,4 @@
 import { Button, ButtonGroup } from '@chakra-ui/core';
-import { QuestionIcon } from 'icons/QuestionIcon';
 import React from 'react';
 
 type Props = {
@@ -35,17 +34,6 @@ export const MethodSelector: React.FC<Props> = ({ split, toggleSplit }) => {
       >
         Stream
       </Button>
-      <QuestionIcon
-        position="absolute"
-        right="-2rem"
-        top="50%"
-        transform="translateY(-50%)"
-        cursor="pointer"
-        transition="0.25s"
-        color="text"
-        _hover={{ color: 'green.500' }}
-        boxSize="1.25rem"
-      />
     </ButtonGroup>
   );
 };

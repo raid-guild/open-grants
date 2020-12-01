@@ -149,7 +149,7 @@ export const GrantDetails: React.FC<Props> = ({
           {!myGrant && (
             <>
               {grant.contactLink && (
-                <Box ml={{ base: 0, md: 8 }} mb={{ base: 4, md: 0 }}>
+                <Box ml={{ base: 0, md: 8 }} mb={{ base: 2, md: 0 }}>
                   <Link
                     isExternal
                     textDecoration="underline"
@@ -160,7 +160,7 @@ export const GrantDetails: React.FC<Props> = ({
                   </Link>
                 </Box>
               )}
-              <Box ml={{ base: 0, md: 8 }} mb={{ base: 4, md: 0 }}>
+              <Box ml={{ base: 0, md: 8 }} mb={{ base: 2, md: 0 }}>
                 <Link
                   textDecoration="underline"
                   to={`/grant/${grant.id}/streams`}
@@ -192,7 +192,7 @@ export const GrantDetails: React.FC<Props> = ({
             size={buttonSize}
             onClick={openFundModal}
           >
-            Add Funds
+            Fund
           </Button>
         )}
       </Flex>
