@@ -104,7 +104,7 @@ export const CreateGrantForm: React.FC = () => {
         maxLength={48}
       />
       <GrantTextInput
-        title="What do you aim to achieve? How will it benefit the ETH2 ecosystem?"
+        title="What do you aim to achieve? How will it benefit the Ethereum ecosystem?"
         description="Max 240 characters"
         label="Description"
         value={description}
