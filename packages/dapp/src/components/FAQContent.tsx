@@ -182,7 +182,7 @@ export const FAQContent: React.FC = () => {
               color="dark"
               py={4}
             >
-              Can anyone create a grant?
+              Who is this for? Can anyone create a grant?
             </Box>
             <AccordionIcon />
           </AccordionButton>
