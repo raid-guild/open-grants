@@ -43,6 +43,7 @@ const reduceStreams = (input: Array<Stream>): Array<Stream> => {
       funded: BigNumber.from(0),
       released: BigNumber.from(0),
       startTime: Number.MAX_SAFE_INTEGER,
+      revokeTime: Number.MAX_SAFE_INTEGER,
       duration: 0,
       isRevoked: false,
       grantName: 'squashed',

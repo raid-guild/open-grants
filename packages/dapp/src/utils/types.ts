@@ -20,6 +20,7 @@ export type Stream = {
   startTime: number;
   duration: number;
   isRevoked: boolean;
+  revokeTime: number;
   grantName: string;
   grantAddress: string;
 };

@@ -1,4 +1,4 @@
-import { log } from '@graphprotocol/graph-ts';
+import { log, BigInt } from '@graphprotocol/graph-ts';
 
 import {
   LogFunding,
@@ -24,6 +24,7 @@ export function handleLogEtherVestingCreated(
   stream.funded = fetchedStream.totalFunded;
   stream.isRevocable = fetchedStream.isRevocable;
   stream.isRevoked = fetchedStream.isRevoked;
+  stream.revokeTime = BigInt.fromI32(0);
   stream.released = fetchedStream.released;
   stream.startTime = fetchedStream.startTime;
   stream.duration = fetchedStream.duration;
@@ -136,7 +137,10 @@ export function handleLogRevoked(event: LogRevoked): void {
   let stream = Stream.load(event.address.toHexString());
   if (stream != null) {
     log.debug('Stream {} Revoked', [stream.id]);
-    stream.isRevoked = true;
+    let fetchedStream = fetchStreamInfo(event.address);
+    stream.isRevoked = fetchedStream.isRevoked;
+    stream.released = fetchedStream.released;
+    stream.revokeTime = event.block.timestamp;
     stream.save();
 
     if (stream.grant != null) {
