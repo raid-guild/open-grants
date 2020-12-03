@@ -31,7 +31,7 @@ export const Leader: React.FC<LeaderProps> = ({ rank, user }) => {
           {`${rank}.`}
         </Text>
       </HStack>
-      <Link to={`/profile/${user.id}`}>
+      <Link to={`/profile/${user.id}`} fontFamily="Roboto Mono, monospace">
         <HStack spacing={4}>
           <Flex
             borderRadius="50%"
@@ -53,14 +53,14 @@ export const Leader: React.FC<LeaderProps> = ({ rank, user }) => {
         </HStack>
       </Link>
       <HStack>
-        <Text textAlign="center" w="100%">{`${formatValue(
-          user.pledged,
-        )} ETH`}</Text>
+        <Text textAlign="center" w="100%" fontFamily="Roboto Mono, monospace">
+          {`Ξ${formatValue(user.pledged)}`}
+        </Text>
       </HStack>
       <HStack>
-        <Text textAlign="center" w="100%">{`${formatValue(
-          user.funded,
-        )} ETH`}</Text>
+        <Text textAlign="center" w="100%" fontFamily="Roboto Mono, monospace">
+          {`Ξ${formatValue(user.funded)}`}
+        </Text>
       </HStack>
     </Grid>
   );

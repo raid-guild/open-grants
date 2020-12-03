@@ -40,7 +40,7 @@ export const GrantFunder: React.FC<FunderProps> = ({ funder }) => {
             bgRepeat="no-repeat"
             bgPosition="center center"
           />
-          <Text>
+          <Text fontFamily="Roboto Mono, monospace">
             {profile && profile.name
               ? profile.name
               : `${funder.id.slice(0, 7).toUpperCase()}...`}
@@ -48,14 +48,14 @@ export const GrantFunder: React.FC<FunderProps> = ({ funder }) => {
         </HStack>
       </Link>
       <HStack>
-        <Text textAlign="center" w="100%">{`${formatValue(
-          funder.pledged,
-        )} ETH`}</Text>
+        <Text textAlign="center" w="100%" fontFamily="Roboto Mono, monospace">
+          {`Ξ${formatValue(funder.pledged)}`}
+        </Text>
       </HStack>
       <HStack>
-        <Text textAlign="center" w="100%">{`${formatValue(
-          funder.funded,
-        )} ETH`}</Text>
+        <Text textAlign="center" w="100%" fontFamily="Roboto Mono, monospace">
+          {`Ξ${formatValue(funder.funded)}`}
+        </Text>
       </HStack>
     </Grid>
   );

@@ -45,7 +45,7 @@ export const GrantRecipient: React.FC<RecipientProps> = ({
             bgRepeat="no-repeat"
             bgPosition="center center"
           />
-          <Text>
+          <Text fontFamily="Roboto Mono, monospace">
             {profile && profile.name
               ? profile.name
               : `${account.slice(0, 7).toUpperCase()}...`}
@@ -53,7 +53,9 @@ export const GrantRecipient: React.FC<RecipientProps> = ({
         </HStack>
       </Link>
       <HStack>
-        <Text textAlign="center" w="100%">{`${percent}%`}</Text>
+        <Text textAlign="center" w="100%" fontFamily="Roboto Mono, monospace">
+          {`${percent}%`}
+        </Text>
       </HStack>
     </Grid>
   );

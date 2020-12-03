@@ -138,6 +138,7 @@ export const Header: React.FC<Props> = ({ onOpen: openNav }) => {
                     px={2}
                     display={{ base: 'none', sm: 'flex' }}
                     fontSize={{ base: '.75rem', md: '.9rem' }}
+                    fontFamily="'Roboto Mono', monospace;"
                   >
                     {accountString}
                   </Text>

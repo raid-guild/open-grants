@@ -46,7 +46,12 @@ export const InProgressStream: React.FC<StreamProps> = ({ stream, tx }) => {
         )}
       </Flex>
       <HStack w="100%">
-        <Text w="100%" fontWeight="bold" textAlign="center">
+        <Text
+          w="100%"
+          fontWeight="bold"
+          textAlign="center"
+          fontFamily="Roboto Mono, monospace"
+        >
           {`${formatValue(available, 2)} ETH`}
         </Text>
       </HStack>
@@ -72,7 +77,7 @@ export const InProgressStream: React.FC<StreamProps> = ({ stream, tx }) => {
           bgRepeat="no-repeat"
           bgPosition="center center"
         />
-        <Text>
+        <Text fontFamily="Roboto Mono, monospace">
           {profile && profile.name
             ? profile.name
             : `${stream.owner.slice(0, 7).toUpperCase()}...`}

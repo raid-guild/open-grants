@@ -94,28 +94,28 @@ export const GrantDetails: React.FC<Props> = ({
         </Text>
       </Flex>
       <SimpleGrid
-        columns={[1, 2, null, 4]}
-        spacing={4}
+        columns={[1, 2, 3]}
+        spacing={8}
         letterSpacing="0.3px"
         justifySelf="flex-end"
         mb={4}
         p={2}
       >
         <Flex direction="column" h="100%" justify="space-between">
-          <Text fontWeight="500" fontSize="2xl" color="green.500">
-            {`${formatValue(grant.pledged, 3)} ETH`}
+          <Text fontFamily="Roboto Mono, monospace" fontSize="2xl" color="dark">
+            {`Ξ${formatValue(grant.pledged, 3)}`}
           </Text>
           <Text textTransform="uppercase">Pledged</Text>
         </Flex>
         <Flex direction="column" h="100%" justify="space-between">
-          <Text fontWeight="500" fontSize="2xl" color="green.500">
-            {`${formatValue(grant.funded, 3)} ETH`}
+          <Text fontFamily="Roboto Mono, monospace" fontSize="2xl" color="dark">
+            {`Ξ${formatValue(grant.funded, 3)}`}
           </Text>
           <Text textTransform="uppercase">Paid Out</Text>
         </Flex>
         <Flex direction="column" h="100%" justify="space-between">
-          <Text fontWeight="500" fontSize="2xl" color="green.500">
-            {`${formatValue(grant.vested, 3)} ETH`}
+          <Text fontFamily="Roboto Mono, monospace" fontSize="2xl" color="dark">
+            {`Ξ${formatValue(grant.vested, 3)}`}
           </Text>
           <Text textTransform="uppercase">Available</Text>
         </Flex>

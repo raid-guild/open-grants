@@ -49,6 +49,7 @@ export const ProfileHeader: React.FC<Props> = ({
         letterSpacing="0.3px"
         justifySelf="flex-end"
         mb={8}
+        fontFamily="Roboto Mono, monospace"
       >
         <a href="#funded">
           <AmountDisplay
@@ -66,9 +67,9 @@ export const ProfileHeader: React.FC<Props> = ({
         </a>
         <a href="#streams">
           <AmountDisplay
-            amount={`${formatValue(
+            amount={`Ξ${formatValue(
               profile.pledged.add(profile.funded).sub(profile.streamed),
-            )} ETH`}
+            )}`}
             label="Pledged"
           />
         </a>
@@ -88,7 +89,7 @@ export const ProfileHeader: React.FC<Props> = ({
         </a>
         <a href="#received">
           <AmountDisplay
-            amount={`${formatValue(profile.earned)} ETH`}
+            amount={`Ξ${formatValue(profile.earned)}`}
             label="Earned"
           />
         </a>

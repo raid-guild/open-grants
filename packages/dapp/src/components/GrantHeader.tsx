@@ -76,7 +76,13 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
       >
         {grant.name}
       </Link>
-      <Text maxW="40rem" w="auto" mb={2} textAlign="center">
+      <Text
+        maxW="40rem"
+        w="auto"
+        mb={2}
+        textAlign="center"
+        fontSize={{ base: '.8rem', sm: '1rem' }}
+      >
         {grant.description}
       </Text>
       <Divider w="2rem" borderWidth="2px" mb={2} />
@@ -85,14 +91,17 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         isExternal
         overflowWrap="break-word"
         wordBreak="break-word"
+        fontSize={{ base: '.7rem', sm: '.8rem' }}
+        fontFamily="Roboto Mono, monospace"
       >
-        {grant.link}
+        Project details: {grant.link}
       </Link>
-      <Flex mb={6} align="center">
+      <Flex mb={6} align="center" fontFamily="Roboto Mono, monospace">
         <Link
           to={`${CONFIG.explorerEndpoint}/address/${grant.id}`}
           textTransform="uppercase"
           isExternal
+          fontSize={{ base: '.7rem', sm: '.8rem' }}
         >
           {grantAddressDisplay}
         </Link>
@@ -134,9 +143,9 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
       <SimpleGrid
         columns={4}
         spacing={4}
-        letterSpacing="0.3px"
         justifySelf="flex-end"
         mb={8}
+        fontFamily="Roboto Mono, monospace"
       >
         <a href="#funders">
           <AmountDisplay
@@ -148,13 +157,13 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         </a>
         <a href="#details">
           <AmountDisplay
-            amount={`${formatValue(grant.pledged)} ETH`}
+            amount={`Ξ${formatValue(grant.pledged)}`}
             label="Pledged"
           />
         </a>
         <a href="#details">
           <AmountDisplay
-            amount={`${formatValue(grant.funded)} ETH`}
+            amount={`Ξ${formatValue(grant.funded)}`}
             label="Paid Out"
           />
         </a>
