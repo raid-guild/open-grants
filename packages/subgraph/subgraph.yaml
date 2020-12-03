@@ -53,7 +53,7 @@ dataSources:
     name: EtherVestingFactory
     network: kovan
     source:
-      address: '0x5320AC4f2d0F6dBfd8a2858DF21B92E2D026598e'
+      address: '0x1fabdd5EB942759e74558af52fCA27760b8E5E1f'
       abi: EtherVestingFactory
       startBlock: 21930798
     mapping:
