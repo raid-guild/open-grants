@@ -70,20 +70,28 @@ export const StreamTile: React.FC<Props> = ({ stream }) => {
         </Link>
         <SimpleGrid columns={2} spacing={4} mb={16} letterSpacing="0.3px">
           <Flex direction="column">
-            <Text fontWeight="500" fontSize="2xl">
-              {`${formatValue(stream.funded)} ETH`}
+            <Text
+              fontFamily="Roboto Mono, monospace"
+              color="dark"
+              fontSize="2xl"
+            >
+              {`Ξ${formatValue(stream.funded)}`}
             </Text>
             <Text textTransform="uppercase">Pledged</Text>
-            <Text fontSize="xs">{`Start ${new Date(
+            <Text fontSize="xs" mt={4}>{`Start ${new Date(
               stream.startTime * 1000,
             ).toLocaleDateString()}`}</Text>
           </Flex>
           <Flex direction="column">
-            <Text fontWeight="500" fontSize="2xl">
-              {`${formatValue(vested)} ETH`}
+            <Text
+              fontFamily="Roboto Mono, monospace"
+              color="dark"
+              fontSize="2xl"
+            >
+              {`Ξ${formatValue(vested)}`}
             </Text>
             <Text textTransform="uppercase">Vested</Text>
-            <Text fontSize="xs">{`End ${new Date(
+            <Text fontSize="xs" mt={4}>{`End ${new Date(
               (stream.startTime + stream.duration) * 1000,
             ).toLocaleDateString()}`}</Text>
           </Flex>

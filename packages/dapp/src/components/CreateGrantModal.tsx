@@ -1,5 +1,6 @@
 import {
   Button,
+  Divider,
   Grid,
   HStack,
   Modal,
@@ -99,11 +100,12 @@ export const CreateGrantModal: React.FC<Props> = ({
               >
                 Confirm Grant Details
               </Text>
-              <Text fontSize="xs" textAlign="center">
+              <Text textAlign="center">
                 Please double-check that all information is correct. Once a
                 grant is created it cannot be modified.
               </Text>
-              <VStack spacing={2} w="100%" fontSize="sm" align="stretch" mb={6}>
+              <Divider color="haze" />
+              <VStack spacing={2} w="100%" align="stretch" mb={4} color="dark">
                 <Text> {metadata.name} </Text>
                 <Text> {metadata.description} </Text>
                 {metadata.link ? (

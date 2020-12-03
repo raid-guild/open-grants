@@ -2,12 +2,14 @@ import {
   Button,
   Flex,
   HStack,
+  Image,
   Popover,
   PopoverContent,
   PopoverTrigger,
   Text,
   useBreakpointValue,
 } from '@chakra-ui/core';
+import EthereumCrystalIcon from 'assets/eth-icon.png';
 import { Link } from 'components/Link';
 import { SearchBar } from 'components/SearchBar';
 import { Web3Context } from 'contexts/Web3Context';
@@ -77,6 +79,13 @@ export const Header: React.FC<Props> = ({ onOpen: openNav }) => {
           _hover={{ textDecoration: 'none', background: 'black10' }}
           transition="0.25s"
         >
+          <Image
+            src={EthereumCrystalIcon}
+            alt="Ethereum Crystal Icon"
+            height="2rem"
+            pr={2}
+            display={{ base: 'none', sm: 'inline' }}
+          />
           Open Grants
         </Link>
       </HStack>
@@ -113,8 +122,8 @@ export const Header: React.FC<Props> = ({ onOpen: openNav }) => {
                 >
                   <Flex
                     borderRadius="50%"
-                    w="2.5rem"
-                    h="2.5rem"
+                    w={{ base: '1.5rem', md: '2.25rem' }}
+                    h={{ base: '1.5rem', md: '2.25rem' }}
                     overflow="hidden"
                     justify="center"
                     align="center"
@@ -125,7 +134,12 @@ export const Header: React.FC<Props> = ({ onOpen: openNav }) => {
                     bgRepeat="no-repeat"
                     bgPosition="center center"
                   />
-                  <Text px={2} display={{ base: 'none', sm: 'flex' }}>
+                  <Text
+                    px={2}
+                    display={{ base: 'none', sm: 'flex' }}
+                    fontSize={{ base: '.75rem', md: '.9rem' }}
+                    fontFamily="'Roboto Mono', monospace;"
+                  >
                     {accountString}
                   </Text>
                   <ArrowDownIcon

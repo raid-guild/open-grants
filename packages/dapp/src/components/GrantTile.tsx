@@ -82,18 +82,30 @@ export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
             {grant.description}
           </Text>
           <Spacer />
-          <SimpleGrid columns={2} spacing={4} mb={4} letterSpacing="0.3px">
+          <SimpleGrid columns={2} spacing={6} mb={6}>
             <Flex direction="column">
-              <Text fontWeight="500" fontSize="2xl">
-                {`${formatValue(grant.pledged)} ETH`}
+              <Text
+                fontFamily="'Roboto Mono', monospace"
+                color="dark"
+                fontSize="2xl"
+              >
+                {`Ξ${formatValue(grant.pledged)}`}
               </Text>
-              <Text textTransform="uppercase">Pledged</Text>
+              <Text textTransform="uppercase" letterSpacing="0.3px">
+                Pledged
+              </Text>
             </Flex>
             <Flex direction="column">
-              <Text fontWeight="500" fontSize="2xl">
-                {`${formatValue(grant.funded)} ETH`}
+              <Text
+                fontFamily="'Roboto Mono', monospace"
+                color="dark"
+                fontSize="2xl"
+              >
+                {`Ξ${formatValue(grant.funded)}`}
               </Text>
-              <Text textTransform="uppercase">Paid Out</Text>
+              <Text textTransform="uppercase" letterSpacing="0.3px">
+                Paid Out
+              </Text>
             </Flex>
           </SimpleGrid>
         </Flex>

@@ -92,7 +92,7 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
     }
   };
   return (
-    <VStack w="100%" spacing={8} maxW="50rem" p={8} color="text" mb={16}>
+    <VStack w="100%" spacing={6} maxW="50rem" p={8} color="text" mb={16}>
       <Text
         fontSize={{ base: '1.5rem', md: '2rem' }}
         fontWeight="800"
@@ -100,7 +100,7 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
       >
         Distribute Funds
       </Text>
-      <Text mb={8} w="100%">
+      <Text mb={6} w="100%">
         Select funds to be released to grant recipients. Each stream requires a
         separate transaction. It is recommended to only release those with an
         available balance above and beyond gas cost.{' '}
@@ -114,9 +114,9 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
         </Link>
       </Text>
       <Text fontWeight="bold" fontSize="lg" w="100%">
-        Select Streams to Release
+        Select Streams to Release:
       </Text>
-      <Divider />
+      <Divider color="haze" />
       <Grid w="100%" gap={4} templateColumns="1fr 1fr 4fr" color="text" px={4}>
         <Text
           textAlign="center"
@@ -158,7 +158,7 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
         </Flex>
       </Grid>
       {streams.length > 0 ? (
-        <VStack w="100%" spacing={4}>
+        <VStack w="100%" spacing={4} fontFamily="Roboto Mono, monospace">
           {streams
             .sort((a, b) => {
               const timestamp = Math.floor(new Date().getTime() / 1000);
