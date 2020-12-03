@@ -9,6 +9,7 @@ import {
   PopoverTrigger,
   Text,
 } from '@chakra-ui/core';
+import { Link } from 'components/Link';
 import { utils } from 'ethers';
 import React from 'react';
 import { DataPoint } from 'utils/chart';
@@ -59,6 +60,7 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams, isWeeks }) => {
           borderRadius="50%"
           bgColor="green.500"
           transform="translate(1rem,0.5rem)"
+          transition="0.25s"
         />
       </PopoverTrigger>
       <PopoverContent
@@ -100,25 +102,27 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams, isWeeks }) => {
             {streamAmount}
           </Text>
           {stream && stream.ownerUser.id && stream.ownerUser.imageUrl ? (
-            <HStack spacing={1}>
-              <Flex
-                borderRadius="50%"
-                border="1px solid #E6E6E6"
-                w="1.5rem"
-                h="1.5rem"
-                overflow="hidden"
-                background="white"
-                bgImage={`url(${stream.ownerUser.imageUrl})`}
-                bgSize="cover"
-                bgRepeat="no-repeat"
-                bgPosition="center center"
-              />
-              <Text color="text" fontSize="xs">
-                {stream.ownerUser.name
-                  ? stream.ownerUser.name
-                  : `${stream.ownerUser.id.slice(0, 7).toUpperCase()}...`}
-              </Text>
-            </HStack>
+            <Link to={`/profile/${stream.ownerUser.id}`}>
+              <HStack spacing={1}>
+                <Flex
+                  borderRadius="50%"
+                  border="1px solid #E6E6E6"
+                  w="1.5rem"
+                  h="1.5rem"
+                  overflow="hidden"
+                  background="white"
+                  bgImage={`url(${stream.ownerUser.imageUrl})`}
+                  bgSize="cover"
+                  bgRepeat="no-repeat"
+                  bgPosition="center center"
+                />
+                <Text color="text" fontSize="xs">
+                  {stream.ownerUser.name
+                    ? stream.ownerUser.name
+                    : `${stream.ownerUser.id.slice(0, 7).toUpperCase()}...`}
+                </Text>
+              </HStack>
+            </Link>
           ) : (
             <Text fontSize="xs"> Other </Text>
           )}
