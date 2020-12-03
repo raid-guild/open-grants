@@ -43,6 +43,7 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
   const isWeeks = xDomain[1] - xDomain[0] <= 8 * ONEWEEK;
   const xTicks = useBreakpointValue({ base: 0, sm: 4, md: 8, lg: 10 });
   const yTicks = useBreakpointValue({ base: 5, md: 10 });
+  const isSmallScreen = useBreakpointValue({ base: true, sm: false });
   return (
     <FlexibleWidthXYPlot
       stackBy="y"
@@ -112,7 +113,7 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
         ]}
         style={{ stroke: '3bdeb7' }}
       />
-      {hoveredNode && (
+      {hoveredNode && !isSmallScreen && (
         <Hint
           value={hoveredNode}
           align={{ vertical: 'top', horizontal: 'left' }}
@@ -120,17 +121,19 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
           <ChartHint value={hoveredNode} streams={streams} isWeeks={isWeeks} />
         </Hint>
       )}
-      <MarkSeries
-        data={nodes}
-        onNearestXY={node => {
-          setHoveredNode({
-            x: Number(node.x),
-            y: Number(node.y),
-            stream: Number(node.stream),
-          });
-        }}
-        opacity={0}
-      />
+      {!isSmallScreen && (
+        <MarkSeries
+          data={nodes}
+          onNearestXY={node => {
+            setHoveredNode({
+              x: Number(node.x),
+              y: Number(node.y),
+              stream: Number(node.stream),
+            });
+          }}
+          opacity={0}
+        />
+      )}
     </FlexibleWidthXYPlot>
   );
 };
