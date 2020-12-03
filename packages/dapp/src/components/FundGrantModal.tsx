@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalOverlay,
   Text,
+  useBreakpointValue,
   VStack,
 } from '@chakra-ui/core';
 import { DurationSelector } from 'components/DurationSelector';
@@ -18,7 +19,7 @@ import { SuccessModal } from 'components/SuccessModal';
 import { Web3Context } from 'contexts/Web3Context';
 import { providers } from 'ethers';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { ONEYEAR } from 'utils/constants';
+import { ONEMONTH } from 'utils/constants';
 import { createStream, fundGrant } from 'utils/streams';
 
 type Props = {
@@ -33,7 +34,7 @@ export const FundGrantModal: React.FC<Props> = ({
 }) => {
   const { ethersProvider } = useContext(Web3Context);
   const [split, toggleSplit] = useState(false);
-  const [duration, setDuration] = useState(ONEYEAR / 2);
+  const [duration, setDuration] = useState(ONEMONTH * 6);
   const [amount, setAmount] = useState('');
   const [tx, setTx] = useState<providers.TransactionResponse | undefined>();
   const onSubmit = async () => {
@@ -49,6 +50,7 @@ export const FundGrantModal: React.FC<Props> = ({
     }
   };
   const [loading, setLoading] = useState(false);
+  const [isValid, setValid] = useState(false);
   useEffect(() => {
     if (tx) {
       setLoading(true);
@@ -56,7 +58,15 @@ export const FundGrantModal: React.FC<Props> = ({
     }
   }, [tx]);
 
-  const faq = 'Questions? View the funding FAQ';
+  useEffect(() => {
+    const valid = Number(amount) > 0 && duration > 0;
+    setValid(valid);
+  }, [amount, duration, setValid]);
+
+  const faq = useBreakpointValue({
+    base: 'Questions? View FAQ',
+    sm: 'Questions? View the funding FAQ',
+  });
   const inputRef = useRef(null);
   return (
     <Modal
@@ -159,6 +169,7 @@ export const FundGrantModal: React.FC<Props> = ({
               size="lg"
               colorScheme="green"
               textTransform="uppercase"
+              disabled={!isValid}
               w="100%"
               boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
               letterSpacing="0.115em"
