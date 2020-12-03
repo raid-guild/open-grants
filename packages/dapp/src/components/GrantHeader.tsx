@@ -93,6 +93,7 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         wordBreak="break-word"
         fontSize={{ base: '.7rem', sm: '.8rem' }}
         fontFamily="Roboto Mono, monospace"
+        textAlign="center"
       >
         Project details: {grant.link}
       </Link>
