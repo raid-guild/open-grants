@@ -28,6 +28,7 @@ export const parseStream = (input: StreamDetailsFragment): Stream => {
     startTime: Number(input.startTime),
     duration: Number(input.duration),
     isRevoked: Boolean(input.isRevoked),
+    revokeTime: Number(input.revokeTime),
     grantName: input.grant ? input.grant.name : '',
     grantAddress: input.grant ? input.grant.id : '',
   };
