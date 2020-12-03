@@ -75,9 +75,18 @@ export const GrantRecipients: React.FC<Props> = ({
           />
         ))
       ) : (
-        <Text w="100%" textAlign="center" mt={2} p={3} background="haze">
-          No Recipients found
-        </Text>
+        <Flex
+          align="center"
+          justify="center"
+          mt={2}
+          p={3}
+          background="haze"
+          minW="100%"
+          w="100%"
+          height="100%"
+        >
+          <Text textAlign="center">No Recipients found</Text>
+        </Flex>
       )}
       {!page && grantees.length > 5 && (
         <Flex w="100%" justify="space-between" align="center" mt={4}>
