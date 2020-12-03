@@ -7,7 +7,7 @@ import {
   SimpleGrid,
 } from '@chakra-ui/core';
 import React, { useState } from 'react';
-import { ONEMONTH,ONEYEAR } from 'utils/constants';
+import { ONEMONTH, ONEYEAR } from 'utils/constants';
 
 type Props = {
   duration: number;
