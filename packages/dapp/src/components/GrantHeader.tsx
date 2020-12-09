@@ -91,7 +91,7 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         isExternal
         overflowWrap="break-word"
         wordBreak="break-word"
-        fontSize={{ base: '.7rem', sm: '.8rem' }}
+        fontSize={{ base: '.8rem', sm: '1rem' }}
         fontFamily="Roboto Mono, monospace"
         textAlign="center"
       >
