@@ -89,14 +89,24 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams, isWeeks }) => {
           >
             {dateString}
           </Text>
-          <Text fontWeight="500" fontSize="lg" textAlign="center" color="dark">
+          <Text
+            fontFamily="Roboto Mono, monospace"
+            fontSize="lg"
+            textAlign="center"
+            color="dark"
+          >
             {totalAmountString}
           </Text>
           <Text fontSize="sm" textAlign="center" color="dark" mt={-1}>
             TOTAL
           </Text>
           <Divider color="white" mb={2} mt={1} />
-          <Text fontWeight="500" fontSize="sm" textAlign="center" color="dark">
+          <Text
+            fontFamily="Roboto Mono, monospace"
+            fontSize="sm"
+            textAlign="center"
+            color="dark"
+          >
             {streamAmount}
           </Text>
           {stream && stream.ownerUser.id && stream.ownerUser.imageUrl ? (
@@ -113,7 +123,11 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams, isWeeks }) => {
                 bgRepeat="no-repeat"
                 bgPosition="center center"
               />
-              <Text color="text" fontSize="xs">
+              <Text
+                color="text"
+                fontSize="xs"
+                fontFamily="Roboto Mono, monospace"
+              >
                 {stream.ownerUser.name
                   ? stream.ownerUser.name
                   : `${stream.ownerUser.id.slice(0, 7).toUpperCase()}...`}
