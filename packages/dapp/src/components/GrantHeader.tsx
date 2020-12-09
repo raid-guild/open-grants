@@ -95,7 +95,7 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         fontFamily="Roboto Mono, monospace"
         textAlign="center"
       >
-        Project details: {grant.link}
+        {grant.link}
       </Link>
       <Flex mb={6} align="center" fontFamily="Roboto Mono, monospace">
         <Link
