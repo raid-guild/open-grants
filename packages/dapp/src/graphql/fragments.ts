@@ -27,6 +27,7 @@ export const GrantDetails = gql`
       released
       funded
       startTime
+      revokeTime
       duration
       isRevoked
       grant {
@@ -51,6 +52,7 @@ export const StreamDetails = gql`
     startTime
     duration
     isRevoked
+    revokeTime
     grant {
       id
       name

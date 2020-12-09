@@ -12,7 +12,13 @@ import { GrantTextInput } from 'components/GrantTextInput';
 import { Link } from 'components/Link';
 import { CONFIG } from 'config';
 import { Web3Context } from 'contexts/Web3Context';
-import React, { useContext, useState } from 'react';
+import { utils } from 'ethers';
+import React, { useContext, useEffect, useState } from 'react';
+import { URL_REGEX } from 'utils/constants';
+
+const reduceAddresses = (isValid: boolean, str: string): boolean => {
+  return isValid && str !== '' && utils.isAddress(str);
+};
 
 const reduceEmpty = (isValid: boolean, str: string): boolean => {
   return isValid && str !== '';
@@ -33,13 +39,21 @@ export const CreateGrantForm: React.FC = () => {
   const [total, setTotal] = useState<number>(1);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-  const submitForm = async () => {
-    const isValid =
-      name &&
-      description &&
-      grantees.reduce(reduceEmpty, true) &&
+  const [isValid, setValid] = useState(false);
+
+  useEffect(() => {
+    const valid =
+      name !== '' &&
+      description !== '' &&
+      URL_REGEX.test(link) &&
+      URL_REGEX.test(contactLink) &&
+      grantees.reduce(reduceAddresses, true) &&
       amounts.reduce(reduceEmpty, true) &&
       amounts.reduce(reduceTotal, 0.0) === 100.0;
+    setValid(valid);
+  }, [name, description, link, contactLink, grantees, amounts, setValid]);
+
+  const submitForm = async () => {
     if (!ethersProvider) {
       toast({
         status: 'error',
@@ -168,6 +182,7 @@ export const CreateGrantForm: React.FC = () => {
         textTransform="uppercase"
         boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
         letterSpacing="0.115em"
+        disabled={!isValid}
         onClick={submitForm}
       >
         Create Grant

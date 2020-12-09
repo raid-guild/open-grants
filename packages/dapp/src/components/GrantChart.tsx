@@ -57,6 +57,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
       ];
 
   const chartHeight = useBreakpointValue({ base: 320, sm: 420 });
+  const [mouseLeave, setMouseLeave] = useState(true);
 
   return (
     <Flex
@@ -161,6 +162,8 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
         position="relative"
         borderLeft="1px solid #ccc"
         borderBottom="1px solid #ccc"
+        onMouseOver={() => setMouseLeave(false)}
+        onMouseLeave={() => setMouseLeave(true)}
       >
         {isDisabled ? (
           <Flex
@@ -182,6 +185,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
             xDomain={xDomain}
             yDomain={yDomain}
             chartHeight={chartHeight}
+            mouseLeave={mouseLeave}
           />
         )}
       </Box>

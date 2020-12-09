@@ -1,6 +1,6 @@
 import { useBreakpointValue } from '@chakra-ui/core';
 import { ChartHint } from 'components/ChartHint';
-import React, { useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import {
   AreaSeries,
   FlexibleWidthXYPlot,
@@ -23,6 +23,7 @@ type PlotProps = {
   xDomain: Array<number>;
   yDomain: Array<number>;
   chartHeight: number;
+  mouseLeave: boolean;
 };
 
 const chartColors = ['#8AE0DB', '#7BD3D3', '#A4DFD7', '#75DEC6', '#69D1B9'];
@@ -35,21 +36,35 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
   xDomain,
   yDomain,
   chartHeight,
+  mouseLeave,
 }) => {
   const [hoveredNode, setHoveredNode] = useState<
     DataPoint & { stream: number }
   >();
-
+  const filteredNodes = nodes.filter(
+    node =>
+      node.x >= xDomain[0] &&
+      node.x <= xDomain[1] &&
+      node.y >= yDomain[0] &&
+      node.y <= yDomain[1],
+  );
   const isWeeks = xDomain[1] - xDomain[0] <= 8 * ONEWEEK;
   const xTicks = useBreakpointValue({ base: 0, sm: 4, md: 8, lg: 10 });
   const yTicks = useBreakpointValue({ base: 5, md: 10 });
+  const isSmallScreen = useBreakpointValue({ base: true, sm: false });
+
+  useEffect(() => {
+    if (mouseLeave) {
+      setHoveredNode(undefined);
+    }
+  }, [mouseLeave]);
+
   return (
     <FlexibleWidthXYPlot
       stackBy="y"
       height={chartHeight || 420}
       yDomain={yDomain}
       xDomain={xDomain}
-      onMouseLeave={() => setHoveredNode(undefined)}
     >
       <XAxis
         style={{ fontSize: '9px', opacity: '0.75' }}
@@ -112,7 +127,7 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
         ]}
         style={{ stroke: '3bdeb7' }}
       />
-      {hoveredNode && (
+      {hoveredNode && !isSmallScreen && (
         <Hint
           value={hoveredNode}
           align={{ vertical: 'top', horizontal: 'left' }}
@@ -120,17 +135,20 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
           <ChartHint value={hoveredNode} streams={streams} isWeeks={isWeeks} />
         </Hint>
       )}
-      <MarkSeries
-        data={nodes}
-        onNearestXY={node => {
-          setHoveredNode({
-            x: Number(node.x),
-            y: Number(node.y),
-            stream: Number(node.stream),
-          });
-        }}
-        opacity={0}
-      />
+      {!isSmallScreen && (
+        <MarkSeries
+          data={filteredNodes}
+          onNearestXY={node => {
+            const n = {
+              x: Number(node.x),
+              y: Number(node.y),
+              stream: Number(node.stream),
+            };
+            setHoveredNode(n);
+          }}
+          opacity={0}
+        />
+      )}
     </FlexibleWidthXYPlot>
   );
 };
