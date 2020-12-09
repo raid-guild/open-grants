@@ -102,7 +102,7 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
           to={`${CONFIG.explorerEndpoint}/address/${grant.id}`}
           textTransform="uppercase"
           isExternal
-          fontSize={{ base: '.7rem', sm: '.8rem' }}
+          fontSize={{ base: '.8rem', sm: '1rem' }}
         >
           {grantAddressDisplay}
         </Link>
