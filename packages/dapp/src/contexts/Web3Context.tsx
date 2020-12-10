@@ -50,22 +50,28 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
 
   const [isSupportedNetwork, setSupportedNetwork] = useState(true);
 
-  const connectWeb3 = useCallback(async () => {
-    if (web3Modal) {
-      const modalProvider = await web3Modal.connect();
-
-      const web3Provider = new Web3(modalProvider);
+  const setWeb3Provider = async (web3Provider: Web3, updateAccount = false) => {
+    if (web3Provider) {
       const provider = new ethers.providers.Web3Provider(
         web3Provider.currentProvider as AsyncSendable,
       );
 
       setEthersProvider(provider);
-      const signer = provider.getSigner();
-      const gotAccount = await signer.getAddress();
-      setAccount(gotAccount);
-
       const network = await provider.getNetwork();
       setSupportedNetwork(network.chainId === CONFIG.network.chainId);
+      if (updateAccount) {
+        const signer = provider.getSigner();
+        const gotAccount = await signer.getAddress();
+        setAccount(gotAccount);
+      }
+    }
+  };
+
+  const connectWeb3 = useCallback(async () => {
+    if (web3Modal) {
+      const modalProvider = await web3Modal.connect();
+
+      setWeb3Provider(new Web3(modalProvider), true);
 
       // Subscribe to accounts change
       modalProvider.on('accountsChanged', (accounts: Array<string>) => {
@@ -73,8 +79,8 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
       });
 
       // Subscribe to chainId change
-      modalProvider.on('chainChanged', (chainId: string) => {
-        setSupportedNetwork(parseInt(chainId, 16) === CONFIG.network.chainId);
+      modalProvider.on('chainChanged', () => {
+        setWeb3Provider(new Web3(modalProvider));
       });
     }
   }, [web3Modal]);
