@@ -54,7 +54,7 @@ export const Leader: React.FC<LeaderProps> = ({ rank, user }) => {
       </Link>
       <HStack>
         <Text textAlign="center" w="100%" fontFamily="Roboto Mono, monospace">
-          {`Ξ${formatValue(user.pledged)}`}
+          {`Ξ${formatValue(user.pledged.sub(user.withdrawn))}`}
         </Text>
       </HStack>
       <HStack>

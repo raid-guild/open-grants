@@ -153,15 +153,17 @@ export const GrantDetails: React.FC<Props> = ({
                   </Link>
                 </Box>
               )}
-              <Box ml={{ base: 0, md: 8 }} mb={{ base: 2, md: 0 }}>
-                <Link
-                  textDecoration="underline"
-                  to={`/grant/${grant.id}/streams`}
-                  fontSize="sm"
-                >
-                  Distribute funds
-                </Link>
-              </Box>
+              {grant.streams.filter(s => !s.isRevoked).length > 0 && (
+                <Box ml={{ base: 0, md: 8 }} mb={{ base: 2, md: 0 }}>
+                  <Link
+                    textDecoration="underline"
+                    to={`/grant/${grant.id}/streams`}
+                    fontSize="sm"
+                  >
+                    Distribute funds
+                  </Link>
+                </Box>
+              )}
             </>
           )}
         </Flex>
@@ -173,6 +175,7 @@ export const GrantDetails: React.FC<Props> = ({
             boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
             size={buttonSize}
             to={`/grant/${grant.id}/streams`}
+            isDisabled={grant.streams.filter(s => !s.isRevoked).length === 0}
           >
             Distribute Funds
           </LinkButton>

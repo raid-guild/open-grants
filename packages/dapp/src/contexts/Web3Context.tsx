@@ -66,6 +66,16 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
 
       const network = await provider.getNetwork();
       setSupportedNetwork(network.chainId === CONFIG.network.chainId);
+
+      // Subscribe to accounts change
+      modalProvider.on('accountsChanged', (accounts: Array<string>) => {
+        setAccount(accounts[0]);
+      });
+
+      // Subscribe to chainId change
+      modalProvider.on('chainChanged', (chainId: number) => {
+        setSupportedNetwork(chainId === CONFIG.network.chainId);
+      });
     }
   }, [web3Modal]);
 

@@ -22,6 +22,7 @@ export function handleLogEtherVestingCreated(
   let fetchedStream = fetchStreamInfo(event.params.vestingContract);
   stream.beneficiary = fetchedStream.beneficiary;
   stream.funded = fetchedStream.totalFunded;
+  stream.withdrawn = BigInt.fromI32(0);
   stream.isRevocable = fetchedStream.isRevocable;
   stream.isRevoked = fetchedStream.isRevoked;
   stream.revokeTime = BigInt.fromI32(0);
@@ -140,14 +141,13 @@ export function handleLogRevoked(event: LogRevoked): void {
     let fetchedStream = fetchStreamInfo(event.address);
     stream.isRevoked = true;
     stream.released = fetchedStream.released;
+    stream.withdrawn = fetchedStream.totalFunded.minus(fetchedStream.released);
     stream.revokeTime = event.block.timestamp;
     stream.save();
 
     if (stream.grant != null) {
       let user = getUser(stream.owner);
-      user.withdrawn = user.withdrawn
-        .plus(stream.funded)
-        .minus(stream.released);
+      user.withdrawn = user.withdrawn.plus(stream.withdrawn);
       user.save();
     }
   } else {

@@ -29,6 +29,7 @@ const reduceStreams = (input: Array<Stream>): Array<Stream> => {
         res.duration = s.startTime + s.duration - res.startTime;
       }
       res.funded = res.funded.add(s.funded);
+      res.withdrawn = res.withdrawn.add(s.withdrawn);
       return res;
     },
     {
@@ -41,6 +42,7 @@ const reduceStreams = (input: Array<Stream>): Array<Stream> => {
         imageHash: '',
       },
       funded: BigNumber.from(0),
+      withdrawn: BigNumber.from(0),
       released: BigNumber.from(0),
       startTime: Number.MAX_SAFE_INTEGER,
       revokeTime: Number.MAX_SAFE_INTEGER,

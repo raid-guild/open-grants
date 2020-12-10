@@ -68,7 +68,10 @@ export const ProfileHeader: React.FC<Props> = ({
         <a href="#streams">
           <AmountDisplay
             amount={`Ξ${formatValue(
-              profile.pledged.add(profile.funded).sub(profile.streamed),
+              profile.pledged
+                .add(profile.funded)
+                .sub(profile.streamed)
+                .sub(profile.withdrawn),
             )}`}
             label="Pledged"
           />

@@ -16,6 +16,7 @@ export type Stream = {
     imageUrl: string;
   };
   funded: BigNumber;
+  withdrawn: BigNumber;
   released: BigNumber;
   startTime: number;
   duration: number;
@@ -29,6 +30,7 @@ export type Funder = {
   id: string;
   funded: BigNumber;
   pledged: BigNumber;
+  withdrawn: BigNumber;
   streams: Array<Stream>;
 };
 

@@ -49,7 +49,7 @@ export const GrantFunder: React.FC<FunderProps> = ({ funder }) => {
       </Link>
       <HStack>
         <Text textAlign="center" w="100%" fontFamily="Roboto Mono, monospace">
-          {`Ξ${formatValue(funder.pledged)}`}
+          {`Ξ${formatValue(funder.pledged.sub(funder.withdrawn))}`}
         </Text>
       </HStack>
       <HStack>
