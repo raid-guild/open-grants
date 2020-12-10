@@ -21,7 +21,7 @@ jobs:
           REACT_APP_INFURA_ID: ${{ secrets.INFURA_ID }}
           REACT_APP_NETWORK: mainnet
 
-      - name: Deploy for Network
+      - name: Deploy for ETH Mainnet
         uses: w9jds/firebase-action@master
         with:
           args: deploy --only hosting --project=mainnet

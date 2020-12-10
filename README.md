@@ -15,7 +15,8 @@ open-grants
 ├── .github
 │   └── workflows
 │       ├── check.yml
-│       └── deploy.yml
+│       ├── deploy-kovan.yml
+│       └── deploy-mainnet.yml
 ├── .gitignore
 ├── .prettierrc.json
 ├── README.md
@@ -91,6 +92,7 @@ open-grants
 │   │   │   │       └── Grantee.sol
 │   │   │   └── test
 │   │   │       └── GrantToken._sol
+│   │   ├── deployments.json
 │   │   ├── package.json
 │   │   ├── scripts
 │   │   │   ├── grantFactory.ts
@@ -139,6 +141,7 @@ open-grants
 │   │   │   │   ├── chest.svg
 │   │   │   │   ├── done.svg
 │   │   │   │   ├── eth-crystal-wave.png
+│   │   │   │   ├── eth-icon.png
 │   │   │   │   ├── header.jpg
 │   │   │   │   ├── loading.svg
 │   │   │   │   ├── navbar.jpg
@@ -248,13 +251,16 @@ open-grants
 │       │   ├── EtherVestingFactory.json
 │       │   ├── UnmanagedGrant.json
 │       │   └── UnmanagedGrantFactory.json
+│       ├── config
+│       │   ├── kovan.json
+│       │   └── mainnet.json
 │       ├── package.json
 │       ├── schema.graphql
 │       ├── src
 │       │   ├── grants.ts
 │       │   ├── helpers.ts
 │       │   └── stream.ts
-│       └── subgraph.yaml
+│       └── subgraph.template.yaml
 ├── tsconfig.base.json
 ├── tsconfig.json
 └── yarn.lock
