@@ -1,0 +1,29 @@
+name: Open Grants CI
+on:
+  push:
+    branches:
+      - mainnet
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+
+      - name: Install Dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Build
+        run: yarn dapp:build
+        env:
+          REACT_APP_INFURA_ID: ${{ secrets.INFURA_ID }}
+          REACT_APP_NETWORK: mainnet
+
+      - name: Deploy for Network
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting --project=mainnet
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

@@ -69,3 +69,5 @@ generated/
 
 # vim
 *.swp
+
+subgraph.yaml

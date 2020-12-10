@@ -37,17 +37,27 @@ export const FundGrantModal: React.FC<Props> = ({
   const [duration, setDuration] = useState(ONEMONTH * 6);
   const [amount, setAmount] = useState('');
   const [tx, setTx] = useState<providers.TransactionResponse | undefined>();
+  const [submitting, setSubmitting] = useState(false);
   const onSubmit = async () => {
-    if (!ethersProvider) {
+    if (!ethersProvider || submitting) {
       // eslint-disable-next-line no-console
       console.log({ validateError: 'Validation Error' });
       return;
     }
-    if (split) {
-      setTx(await createStream(ethersProvider, grantAddress, duration, amount));
-    } else {
-      setTx(await fundGrant(ethersProvider, grantAddress, amount));
+    setSubmitting(true);
+    try {
+      if (split) {
+        setTx(
+          await createStream(ethersProvider, grantAddress, duration, amount),
+        );
+      } else {
+        setTx(await fundGrant(ethersProvider, grantAddress, amount));
+      }
+    } catch (fundingError) {
+      // eslint-disable-next-line no-console
+      console.log({ fundingError });
     }
+    setSubmitting(false);
   };
   const [loading, setLoading] = useState(false);
   const [isValid, setValid] = useState(false);
@@ -107,7 +117,7 @@ export const FundGrantModal: React.FC<Props> = ({
 
             <VStack spacing={4} w="100%" py={6}>
               <Text
-                fontSize={{ base: '2rem', md: '3rem' }}
+                fontSize={{ base: '1.5rem', sm: '2rem', md: '3rem' }}
                 fontWeight="800"
                 textAlign="center"
                 color="dark"
@@ -174,6 +184,7 @@ export const FundGrantModal: React.FC<Props> = ({
               boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
               letterSpacing="0.115em"
               onClick={onSubmit}
+              isLoading={submitting}
             >
               Fund It
             </Button>

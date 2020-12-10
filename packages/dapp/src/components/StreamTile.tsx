@@ -96,6 +96,14 @@ export const StreamTile: React.FC<Props> = ({ stream }) => {
             ).toLocaleDateString()}`}</Text>
           </Flex>
         </SimpleGrid>
+        <Link
+          isExternal
+          textDecoration="underline"
+          to={`${CONFIG.explorerEndpoint}/address/${stream.id}`}
+          fontSize="sm"
+        >
+          View the contract
+        </Link>
       </Flex>
       {myStream && (
         <Button

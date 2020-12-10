@@ -1,0 +1,7 @@
+{
+  "network": "mainnet",
+  "grantStart": "11425107",
+  "grantFactory": "0xd91f4e34716c00d83117570ec6b3cbaf13a3fe71",
+  "vestingStart": "11425196",
+  "vestingFactory": "0xf65Ab2b0043c999D3889d7e789ab0808ec50E7A4"
+}

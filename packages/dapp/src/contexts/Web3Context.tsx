@@ -73,8 +73,8 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
       });
 
       // Subscribe to chainId change
-      modalProvider.on('chainChanged', (chainId: number) => {
-        setSupportedNetwork(chainId === CONFIG.network.chainId);
+      modalProvider.on('chainChanged', (chainId: string) => {
+        setSupportedNetwork(parseInt(chainId, 16) === CONFIG.network.chainId);
       });
     }
   }, [web3Modal]);
@@ -86,6 +86,7 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
   }, [web3Modal]);
 
   useEffect(() => {
+    window.ethereum.autoRefreshOnNetworkChange = false;
     if (web3Modal?.cachedProvider) {
       // eslint-disable-next-line no-console
       connectWeb3().catch(console.error);

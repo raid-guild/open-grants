@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "open-grants"
+    "kovan": "kovan-open-grants",
+    "mainnet": "open-grants"
   }
 }

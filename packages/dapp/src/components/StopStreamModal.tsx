@@ -5,6 +5,7 @@ import {
   ModalContent,
   ModalOverlay,
   Text,
+  useBreakpointValue,
   VStack,
 } from '@chakra-ui/core';
 import { Link } from 'components/Link';
@@ -33,13 +34,21 @@ export const StopStreamModal: React.FC<Props> = ({
 
   const timestamp = Math.floor(new Date().getTime() / 1000);
   const available = stream.funded.sub(getVestedAmount(stream, timestamp));
+  const [submitting, setSubmitting] = useState(false);
   const onSubmit = async () => {
-    if (!ethersProvider) {
+    if (!ethersProvider || submitting) {
       // eslint-disable-next-line no-console
       console.log({ validateError: 'Validation Error' });
       return;
     }
-    setTx(await revokeStream(ethersProvider, stream.id));
+    setSubmitting(true);
+    try {
+      setTx(await revokeStream(ethersProvider, stream.id));
+    } catch (revokeStreamError) {
+      // eslint-disable-next-line no-console
+      console.log({ revokeStreamError });
+    }
+    setSubmitting(false);
   };
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -49,7 +58,11 @@ export const StopStreamModal: React.FC<Props> = ({
     }
   }, [tx]);
 
-  const faq = 'Question about streams? View the funding FAQ';
+  const faq = useBreakpointValue({
+    base: 'Questions? View FAQ',
+    sm: 'Questions? View the funding FAQ',
+    md: 'Question about streams? View the funding FAQ',
+  });
   const initialRef = useRef(null);
   return (
     <Modal
@@ -90,19 +103,19 @@ export const StopStreamModal: React.FC<Props> = ({
 
             <VStack spacing={4} w="100%" py={6}>
               <Text
-                fontSize={{ base: '2rem', md: '3rem' }}
+                fontSize={{ base: '1.5rem', sm: '2rem', md: '3rem' }}
                 fontWeight="800"
                 textAlign="center"
                 color="dark"
               >
                 Stop the Stream
               </Text>
-              <Text mb={12}>
+              <Text mb={{ base: 6, sm: 12 }} textAlign="center">
                 By stopping the stream, all unvested funds will be returned to
                 you.
               </Text>
               <VStack
-                mb={12}
+                mb={{ base: 6, sm: 12 }}
                 spacing={4}
                 p={8}
                 background="white"
@@ -123,6 +136,7 @@ export const StopStreamModal: React.FC<Props> = ({
               letterSpacing="0.115em"
               onClick={onSubmit}
               ref={initialRef}
+              isLoading={submitting}
             >
               Withdraw Funds
             </Button>

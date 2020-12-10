@@ -1,0 +1,7 @@
+{
+  "network": "kovan",
+  "grantStart": "21930792",
+  "grantFactory": "0x74CaB5920Ccb4C78EB6b260F40f29753394749AE",
+  "vestingStart": "22516351",
+  "vestingFactory": "0x94Cb6B9D9dB7e6AE9b992d4410113bFc24D97f4E"
+}

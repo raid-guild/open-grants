@@ -56,7 +56,7 @@ export const LoadingModal: React.FC<Props> = ({
 
       <VStack spacing={4} w="100%" py={4}>
         <Text
-          fontSize={{ base: '2rem', md: '3rem' }}
+          fontSize={{ base: '1.5rem', sm: '2rem', md: '3rem' }}
           fontWeight="800"
           textAlign="center"
           color="dark"
@@ -66,6 +66,7 @@ export const LoadingModal: React.FC<Props> = ({
         <Link
           to={`${CONFIG.explorerEndpoint}/tx/${txHash}`}
           textDecor="underline"
+          textAlign="center"
           isExternal
           mb={16}
         >

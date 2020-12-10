@@ -22,10 +22,15 @@ type Props = {
 
 export const GrantChart: React.FC<Props> = ({ grant }) => {
   const currentTime = Math.floor(new Date().getTime() / 1000);
-  const [streams, grantData, nodes, xMin, xMax, yMax] = useMemo(
-    () => parseGrantData(grant),
-    [grant],
-  );
+  const [
+    streams,
+    grantData,
+    nodes,
+    weeklyNodes,
+    xMin,
+    xMax,
+    yMax,
+  ] = useMemo(() => parseGrantData(grant), [grant]);
   const isDisabled = grantData.length === 0;
 
   const yMaxAt = (time: number): number => {
@@ -181,6 +186,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
             streams={streams}
             grantData={grantData}
             nodes={nodes}
+            weeklyNodes={weeklyNodes}
             currentTime={currentTime}
             xDomain={xDomain}
             yDomain={yDomain}
