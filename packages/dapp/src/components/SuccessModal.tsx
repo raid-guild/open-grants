@@ -24,7 +24,7 @@ export const SuccessModal: React.FC<Props> = ({ faq, title, grantAddress }) => {
       maxW="40rem"
       mx={{ base: 8, lg: 0 }}
       bgImage={`url(${SuccessBG})`}
-      bgSize="200% 200%"
+      bgSize="300% 300%"
       bgPosition="center"
       bgRepeat="no-repeat"
       color="text"
@@ -37,7 +37,7 @@ export const SuccessModal: React.FC<Props> = ({ faq, title, grantAddress }) => {
 
       <VStack spacing={4} w="100%" py={6} mb={4}>
         <Text
-          fontSize={{ base: '2rem', md: '3rem' }}
+          fontSize={{ base: '1.5rem', sm: '2rem', md: '3rem' }}
           fontWeight="800"
           textAlign="center"
           color="dark"

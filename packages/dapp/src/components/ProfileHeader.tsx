@@ -34,7 +34,7 @@ export const ProfileHeader: React.FC<Props> = ({
   });
   return (
     <VStack
-      px="2rem"
+      px={{ base: '1rem', sm: '2rem' }}
       w="100%"
       justify="flex-end"
       color="white"

@@ -55,7 +55,7 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
 
   return (
     <VStack
-      px="2rem"
+      px={{ base: '1rem', sm: '2rem' }}
       w="100%"
       color="white"
       bgImage={`url(${HeaderBG})`}

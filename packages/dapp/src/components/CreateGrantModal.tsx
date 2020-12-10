@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalOverlay,
   Text,
+  useBreakpointValue,
   VStack,
 } from '@chakra-ui/core';
 import { GrantRecipient } from 'components/GrantRecipient';
@@ -38,13 +39,21 @@ export const CreateGrantModal: React.FC<Props> = ({
   const total = amounts.reduce((t, a) => t + Number(a), 0);
   const { ethersProvider } = useContext(Web3Context);
   const [tx, setTx] = useState<providers.TransactionResponse | undefined>();
+  const [submitting, setSubmitting] = useState(false);
   const onSubmit = async () => {
-    if (!ethersProvider) {
+    if (!ethersProvider || submitting) {
       // eslint-disable-next-line no-console
       console.log({ validateError: 'Validation Error' });
       return;
     }
-    setTx(await createGrant(ethersProvider, grantees, amounts, metadata));
+    setSubmitting(true);
+    try {
+      setTx(await createGrant(ethersProvider, grantees, amounts, metadata));
+    } catch (createGrantError) {
+      // eslint-disable-next-line no-console
+      console.log({ createGrantError });
+    }
+    setSubmitting(false);
   };
   const [grantAddress, setGrantAddress] = useState('');
   useEffect(() => {
@@ -52,7 +61,10 @@ export const CreateGrantModal: React.FC<Props> = ({
       awaitGrantAddress(ethersProvider, tx).then(g => setGrantAddress(g));
     }
   }, [tx, ethersProvider]);
-  const faq = 'Questions? View the grant FAQ';
+  const faq = useBreakpointValue({
+    base: 'Questions? View FAQ',
+    sm: 'Questions? View the grant FAQ',
+  });
   const initialRef = useRef(null);
   return (
     <Modal
@@ -93,7 +105,7 @@ export const CreateGrantModal: React.FC<Props> = ({
 
             <VStack spacing={4} w="100%" p={6} pb="2rem">
               <Text
-                fontSize={{ base: '2rem', md: '3rem' }}
+                fontSize={{ base: '1.5rem', sm: '2rem', md: '3rem' }}
                 fontWeight="800"
                 textAlign="center"
                 color="dark"
@@ -174,6 +186,7 @@ export const CreateGrantModal: React.FC<Props> = ({
               letterSpacing="0.115em"
               onClick={onSubmit}
               ref={initialRef}
+              isLoading={submitting}
             >
               Create Grant
             </Button>
