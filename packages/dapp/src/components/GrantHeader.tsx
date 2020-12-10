@@ -86,17 +86,19 @@ export const GrantHeader: React.FC<Props> = ({ grant }) => {
         {grant.description}
       </Text>
       <Divider w="2rem" borderWidth="2px" mb={2} />
-      <Link
-        to={grant.link}
-        isExternal
-        overflowWrap="break-word"
-        wordBreak="break-word"
-        fontSize={{ base: '.8rem', sm: '1rem' }}
-        fontFamily="Roboto Mono, monospace"
-        textAlign="center"
-      >
-        {grant.link}
-      </Link>
+      {grant.link && (
+        <Link
+          to={grant.link}
+          isExternal
+          overflowWrap="break-word"
+          wordBreak="break-word"
+          fontSize={{ base: '.8rem', sm: '1rem' }}
+          fontFamily="Roboto Mono, monospace"
+          textAlign="center"
+        >
+          {grant.link}
+        </Link>
+      )}
       <Flex mb={6} align="center" fontFamily="Roboto Mono, monospace">
         <Link
           to={`${CONFIG.explorerEndpoint}/address/${grant.id}`}

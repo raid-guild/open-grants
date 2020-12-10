@@ -6,7 +6,7 @@
   },
   {
     "network": "mainnet",
-    "mono": "",
-    "factory": ""
+    "vestingFactory": "",
+    "grantFactory": ""
   }
 ]
