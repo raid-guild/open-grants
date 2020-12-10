@@ -138,7 +138,7 @@ export function handleLogRevoked(event: LogRevoked): void {
   if (stream != null) {
     log.debug('Stream {} Revoked', [stream.id]);
     let fetchedStream = fetchStreamInfo(event.address);
-    stream.isRevoked = fetchedStream.isRevoked;
+    stream.isRevoked = true;
     stream.released = fetchedStream.released;
     stream.revokeTime = event.block.timestamp;
     stream.save();
