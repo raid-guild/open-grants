@@ -12,13 +12,14 @@ import {
   YAxis,
 } from 'react-vis';
 import { DataPoint, MAX_STACK } from 'utils/chart';
-import { ONEWEEK } from 'utils/constants';
+import { ONEMONTH } from 'utils/constants';
 import { Stream } from 'utils/types';
 
 type PlotProps = {
   streams: Array<Stream>;
   grantData: Array<Array<DataPoint>>;
   nodes: Array<DataPoint & { stream: number }>;
+  weeklyNodes: Array<DataPoint & { stream: number }>;
   currentTime: number;
   xDomain: Array<number>;
   yDomain: Array<number>;
@@ -32,6 +33,7 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
   streams,
   grantData,
   nodes,
+  weeklyNodes,
   currentTime,
   xDomain,
   yDomain,
@@ -41,14 +43,23 @@ export const GrantChartPlot: React.FC<PlotProps> = ({
   const [hoveredNode, setHoveredNode] = useState<
     DataPoint & { stream: number }
   >();
-  const filteredNodes = nodes.filter(
-    node =>
-      node.x >= xDomain[0] &&
-      node.x <= xDomain[1] &&
-      node.y >= yDomain[0] &&
-      node.y <= yDomain[1],
-  );
-  const isWeeks = xDomain[1] - xDomain[0] <= 8 * ONEWEEK;
+  const isMonths = xDomain[1] - xDomain[0] < 6 * ONEMONTH;
+  const isWeeks = xDomain[1] - xDomain[0] <= 2 * ONEMONTH;
+  const filteredNodes = isMonths
+    ? nodes.filter(
+        node =>
+          node.x >= xDomain[0] &&
+          node.x <= xDomain[1] &&
+          node.y >= yDomain[0] &&
+          node.y <= yDomain[1],
+      )
+    : weeklyNodes.filter(
+        node =>
+          node.x >= xDomain[0] &&
+          node.x <= xDomain[1] &&
+          node.y >= yDomain[0] &&
+          node.y <= yDomain[1],
+      );
   const xTicks = useBreakpointValue({ base: 0, sm: 4, md: 8, lg: 10 });
   const yTicks = useBreakpointValue({ base: 5, md: 10 });
   const isSmallScreen = useBreakpointValue({ base: true, sm: false });

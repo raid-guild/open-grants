@@ -1,5 +1,5 @@
 import { BigNumber, utils } from 'ethers';
-import { ONEWEEK } from 'utils/constants';
+import { ONEDAY, ONEWEEK } from 'utils/constants';
 import { getVestedAmount } from 'utils/helpers';
 import { Grant, Stream } from 'utils/types';
 
@@ -63,6 +63,7 @@ export const parseGrantData = (
   Array<Stream>,
   Array<Array<DataPoint>>,
   Array<DataPoint & { stream: number }>,
+  Array<DataPoint & { stream: number }>,
   number,
   number,
   number,
@@ -88,10 +89,12 @@ export const parseGrantData = (
     });
 
   const nodes: Array<DataPoint & { stream: number }> = [];
+  const weeklyNodes: Array<DataPoint & { stream: number }> = [];
   const data1 = data0.map((stream, index) => {
     const { startTime, duration } = stream;
     const points = new Array<DataPoint>();
-    for (let i = xMin; i <= xMax; i += ONEWEEK) {
+    let j = xMin;
+    for (let i = xMin; i <= xMax; i += ONEDAY) {
       let point = { x: 0, y: 0 };
       if (i < startTime) {
         point = {
@@ -113,6 +116,10 @@ export const parseGrantData = (
       }
       points.push(point);
       nodes.push({ ...point, stream: index });
+      if (j === i) {
+        weeklyNodes.push({ ...point, stream: index });
+        j += ONEWEEK;
+      }
     }
     return points;
   });
@@ -120,6 +127,7 @@ export const parseGrantData = (
     streams,
     data1,
     [{ x: xMin, y: 0, stream: -1 }, ...nodes],
+    [{ x: xMin, y: 0, stream: -1 }, ...weeklyNodes],
     xMin,
     xMax,
     Number(utils.formatEther(yMax)),

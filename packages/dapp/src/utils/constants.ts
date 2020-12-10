@@ -1,3 +1,4 @@
+export const ONEDAY = 86400;
 export const ONEWEEK = 604800;
 export const ONEMONTH = 2592000;
 export const ONEYEAR = 31536000;
