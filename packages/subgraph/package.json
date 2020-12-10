@@ -7,13 +7,16 @@
     "codegen": "graph codegen",
     "build": "graph build",
     "auth": "graph auth https://api.thegraph.com/ $GRAPH_ACCESS_TOKEN",
+    "prepare-kovan": "mustache config/kovan.json subgraph.template.yaml > subgraph.yaml",
     "deploy-kovan": "graph deploy dan13ram/kovan-grants-platform --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug",
-    "create-local": "graph create --node http://localhost:8020/ dipaksavaliya/grant-platform",
-    "remove-local": "graph remove --node http://localhost:8020/ dipaksavaliya/grant-platform",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 dipaksavaliya/grant-platform"
+    "prepare-mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
+    "deploy-mainnet": "graph deploy dan13ram/open-grants --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.18.0",
     "@graphprotocol/graph-ts": "0.18.0"
+  },
+  "devDependencies": {
+    "mustache": "^4.1.0"
   }
 }
