@@ -55,6 +55,7 @@ type Stream @entity {
   duration: BigInt!
   timestamp: BigInt!
   funded: BigInt!
+  withdrawn: BigInt!
   grant: Grant
 }
 

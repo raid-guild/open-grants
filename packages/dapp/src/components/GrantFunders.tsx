@@ -76,16 +76,18 @@ export const GrantFunders: React.FC<Props> = ({
           <GrantFunder funder={funder} key={funder.id} />
         ))
       ) : (
-        <Text
-          minW="100%"
-          w="100%"
-          textAlign="center"
+        <Flex
+          align="center"
+          justify="center"
           mt={2}
           p={3}
           background="haze"
+          minW="100%"
+          w="100%"
+          height="100%"
         >
-          No Funders found
-        </Text>
+          <Text textAlign="center">No Funders found</Text>
+        </Flex>
       )}
       {!page && funders.length > 5 && (
         <Flex w="100%" justify="space-between" align="center" mt={4}>

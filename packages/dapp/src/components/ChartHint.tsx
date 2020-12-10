@@ -126,9 +126,9 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams, isWeeks }) => {
                   bgRepeat="no-repeat"
                   bgPosition="center center"
                 />
-                <Text 
-                  color="text" 
-                  fontSize="xs" 
+                <Text
+                  color="text"
+                  fontSize="xs"
                   fontFamily="Roboto Mono, monospace"
                 >
                   {stream.ownerUser.name

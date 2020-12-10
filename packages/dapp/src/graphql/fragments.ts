@@ -26,6 +26,7 @@ export const GrantDetails = gql`
       }
       released
       funded
+      withdrawn
       startTime
       revokeTime
       duration
@@ -49,6 +50,7 @@ export const StreamDetails = gql`
     }
     released
     funded
+    withdrawn
     startTime
     duration
     isRevoked

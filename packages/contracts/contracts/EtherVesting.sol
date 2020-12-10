@@ -23,7 +23,7 @@ contract EtherVesting is Ownable, ReentrancyGuard, Funding {
     using SafeMath for uint256;
 
     event LogReleased(uint256 amount);
-    event LogRevoked();
+    event LogRevoked(bool releaseSuccessful);
 
     // beneficiary of Ether after they are released
     address private _beneficiary;
@@ -136,10 +136,16 @@ contract EtherVesting is Ownable, ReentrancyGuard, Funding {
         require(_revocable, "EtherVesting: cannot revoke");
         require(!_revoked, "EtherVesting: ether already revoked");
 
-        uint256 balance = address(this).balance;
 
         uint256 unreleased = _releasableAmount();
-        uint256 refund = balance.sub(unreleased);
+
+        (bool releaseSuccessful, ) = _beneficiary.call{ value: unreleased }("");
+        if (releaseSuccessful) {
+            _released = _released.add(unreleased);
+            emit LogReleased(unreleased);
+        }
+
+        uint256 refund = address(this).balance;
 
         _revoked = true;
 
@@ -151,7 +157,7 @@ contract EtherVesting is Ownable, ReentrancyGuard, Funding {
             );
         }
 
-        emit LogRevoked();
+        emit LogRevoked(releaseSuccessful);
     }
 
     /**

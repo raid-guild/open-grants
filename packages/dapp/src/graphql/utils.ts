@@ -24,6 +24,7 @@ export const parseStream = (input: StreamDetailsFragment): Stream => {
         : `https://avatars.dicebear.com/api/jdenticon/${input.ownerUser.id.toLowerCase()}.svg`,
     },
     funded: BigNumber.from(input.funded),
+    withdrawn: BigNumber.from(input.withdrawn),
     released: BigNumber.from(input.released),
     startTime: Number(input.startTime),
     duration: Number(input.duration),
@@ -61,6 +62,7 @@ export const parseFunders = (
         id: fund.donor.toLowerCase(),
         funded: BigNumber.from(fund.amount),
         pledged: BigNumber.from(0),
+        withdrawn: BigNumber.from(0),
         streams: [],
       };
     }
@@ -75,6 +77,7 @@ export const parseFunders = (
         id: stream.owner,
         funded: BigNumber.from(0),
         pledged: BigNumber.from(0),
+        withdrawn: BigNumber.from(0),
         streams: [stream],
       };
     }
@@ -86,6 +89,12 @@ export const parseFunders = (
       funder.streams.reduce(
         (total, stream) =>
           total.add(BigNumber.from(stream.funded).sub(stream.released)),
+        BigNumber.from(0),
+      ),
+    );
+    funder.withdrawn = BigNumber.from(0).add(
+      funder.streams.reduce(
+        (total, stream) => total.add(BigNumber.from(stream.withdrawn)),
         BigNumber.from(0),
       ),
     );
@@ -111,7 +120,11 @@ export const parseGrant = (
     pledged: BigNumber.from(input.funded).add(
       input.streams.reduce(
         (total, stream) =>
-          total.add(BigNumber.from(stream.funded).sub(stream.released)),
+          total.add(
+            BigNumber.from(stream.funded)
+              .sub(stream.released)
+              .sub(stream.withdrawn),
+          ),
         BigNumber.from(0),
       ),
     ),

@@ -1,6 +1,6 @@
 import { useBreakpointValue } from '@chakra-ui/core';
 import { ChartHint } from 'components/ChartHint';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AreaSeries,
   FlexibleWidthXYPlot,

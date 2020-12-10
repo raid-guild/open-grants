@@ -72,7 +72,7 @@ export const SearchBar: React.FC = () => {
                   fontSize="md"
                   placeholder="SEARCH"
                   _placeholder={{ color: 'white80' }}
-                  px={!isOpen ? 0 : 10}
+                  p={!isOpen ? 0 : undefined}
                   minH="3.25rem"
                   color="white"
                   value={search}
@@ -88,7 +88,6 @@ export const SearchBar: React.FC = () => {
                   cursor={!isOpen ? 'pointer' : undefined}
                   border={!isOpen ? 'none' : undefined}
                   transition="0.25s"
-                  p={!isOpen ? 0 : undefined}
                 />
                 <InputRightElement
                   _hover={!isOpen ? { background: 'black10' } : undefined}
@@ -100,6 +99,7 @@ export const SearchBar: React.FC = () => {
                   w={!isOpen ? 'auto' : undefined}
                   p={2}
                   my={2}
+                  mr={isOpen ? 2 : undefined}
                 >
                   {fetching ? (
                     <Spinner color="white" size="sm" />
