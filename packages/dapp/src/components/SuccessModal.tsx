@@ -1,4 +1,5 @@
 import {
+  Button,
   Image,
   ModalCloseButton,
   ModalContent,
@@ -7,7 +8,7 @@ import {
 } from '@chakra-ui/core';
 import ChestImage from 'assets/chest.svg';
 import SuccessBG from 'assets/success.svg';
-import { Link, LinkButton } from 'components/Link';
+import { Link } from 'components/Link';
 import React from 'react';
 
 type Props = {
@@ -45,7 +46,7 @@ export const SuccessModal: React.FC<Props> = ({ faq, title, grantAddress }) => {
         </Text>
         <Image src={ChestImage} alt="chest" transform="translateX(1rem)" />
       </VStack>
-      <LinkButton
+      <Button
         size="lg"
         background="white"
         color="text"
@@ -53,10 +54,12 @@ export const SuccessModal: React.FC<Props> = ({ faq, title, grantAddress }) => {
         w="100%"
         boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
         letterSpacing="0.115em"
-        to={`/grant/${grantAddress}`}
+        onClick={() => {
+          window.location.href = `/grant/${grantAddress}`;
+        }}
       >
         View the grant
-      </LinkButton>
+      </Button>
       <ModalCloseButton top={4} right={4} fontSize={16} />
     </ModalContent>
   );
