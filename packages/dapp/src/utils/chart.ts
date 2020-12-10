@@ -91,7 +91,6 @@ export const parseGrantData = (
   const data1 = data0.map((stream, index) => {
     const { startTime, duration } = stream;
     const points = new Array<DataPoint>();
-    let j = xMin + 4 * ONEWEEK;
     for (let i = xMin; i <= xMax; i += ONEWEEK) {
       let point = { x: 0, y: 0 };
       if (i < startTime) {
@@ -113,10 +112,7 @@ export const parseGrantData = (
         };
       }
       points.push(point);
-      if (i === j) {
-        nodes.push({ ...point, stream: index });
-        j += 4 * ONEWEEK;
-      }
+      nodes.push({ ...point, stream: index });
     }
     return points;
   });
