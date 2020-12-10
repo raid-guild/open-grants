@@ -3,7 +3,7 @@ import { ethers } from '@nomiclabs/buidler';
 async function main() {
   const [deployer] = await ethers.getSigners();
   const address = await deployer.getAddress();
-  console.log('Deploying GrantFactory with the account:', address);
+  console.log('Deploying GrantFactory with the account: ', address);
 
   if (deployer.provider) {
     console.log(
@@ -17,9 +17,11 @@ async function main() {
   const GrantFactory = await ethers.getContractFactory('UnmanagedGrantFactory');
   const grantFactory = await GrantFactory.deploy();
 
+  console.log('Transaction: ', grantFactory.deployTransaction.hash);
+
   await grantFactory.deployed();
 
-  console.log('Grant Factory deployed to:', grantFactory.address);
+  console.log('Grant Factory deployed to: ', grantFactory.address);
 }
 
 main()

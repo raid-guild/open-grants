@@ -3,7 +3,7 @@ import { ethers } from '@nomiclabs/buidler';
 async function main() {
   const [deployer] = await ethers.getSigners();
   const address = await deployer.getAddress();
-  console.log('Deploying VestingFactory with the account:', address);
+  console.log('Deploying VestingFactory with the account: ', address);
 
   if (deployer.provider) {
     console.log(
@@ -17,9 +17,11 @@ async function main() {
   const VestingFactory = await ethers.getContractFactory('EtherVestingFactory');
   const vestingFactory = await VestingFactory.deploy();
 
+  console.log('Transaction: ', vestingFactory.deployTransaction.hash);
+
   await vestingFactory.deployed();
 
-  console.log('Vesting Factory deployed to:', vestingFactory.address);
+  console.log('Vesting Factory deployed to: ', vestingFactory.address);
 }
 
 main()

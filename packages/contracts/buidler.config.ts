@@ -7,6 +7,7 @@ usePlugin('solidity-coverage');
 
 const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID;
 const KOVAN_PRIVATE_KEY = process.env.KOVAN_PRIVATE_KEY;
+const MAINNET_PRIVATE_KEY = process.env.MAINNET_PRIVATE_KEY;
 
 const config: any = {
   solc: {
@@ -21,6 +22,10 @@ const config: any = {
       // blockGasLimit: 0xfffffffffff,
       // gas: 0xfffffffffff,
       // gasPrice: 0x01
+    },
+    mainnet: {
+      url: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
+      accounts: [`0x${MAINNET_PRIVATE_KEY}`],
     },
     kovan: {
       url: `https://kovan.infura.io/v3/${INFURA_PROJECT_ID}`,
