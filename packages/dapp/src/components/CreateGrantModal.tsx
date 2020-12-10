@@ -100,12 +100,19 @@ export const CreateGrantModal: React.FC<Props> = ({
               >
                 Confirm Grant Details
               </Text>
-              <Text textAlign="center">
+              <Text textAlign="center" fontSize="sm">
                 Please double-check that all information is correct. Once a
                 grant is created it cannot be modified.
               </Text>
               <Divider color="haze" />
-              <VStack spacing={2} w="100%" align="stretch" mb={4} color="dark">
+              <VStack
+                spacing={2}
+                w="100%"
+                align="stretch"
+                mb={4}
+                color="dark"
+                fontSize="sm"
+              >
                 <Text> {metadata.name} </Text>
                 <Text> {metadata.description} </Text>
                 {metadata.link ? (

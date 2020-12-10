@@ -22,7 +22,9 @@ export const FAQHeader: React.FC = () => {
       >
         FAQ
       </Text>
-      <Text mb={8}>Common questions about the Open Grants Project</Text>
+      <Text mb={8} textAlign="center">
+        Common questions about the Open Grants Project
+      </Text>
     </VStack>
   );
 };
