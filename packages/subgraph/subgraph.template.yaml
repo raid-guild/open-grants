@@ -5,12 +5,13 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: UnmanagedGrantFactory
-    network: { { network } }
+    # prettier-ignore
+    network: {{network}}
     source:
       address: '{{grantFactory}}'
       abi: UnmanagedGrantFactory
-      # prettierIgnore
-      startBlock: { { grantStart } }
+      # prettier-ignore
+      startBlock: {{grantStart}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -29,11 +30,12 @@ dataSources:
       file: ./src/grants.ts
   - kind: ethereum/contract
     name: UnmanagedGrant
-    network: { { network } }
+    # prettier-ignore
+    network: {{network}}
     source:
       abi: UnmanagedGrant
-      # prettierIgnore
-      startBlock: { { grantStart } }
+      # prettier-ignore
+      startBlock: {{grantStart}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -53,12 +55,13 @@ dataSources:
       file: ./src/grants.ts
   - kind: ethereum/contract
     name: EtherVestingFactory
-    network: { { network } }
+    # prettier-ignore
+    network: {{network}}
     source:
       address: '{{vestingFactory}}'
       abi: EtherVestingFactory
-      # prettierIgnore
-      startBlock: { { vestingStart } }
+      # prettier-ignore
+      startBlock: {{vestingStart}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -77,11 +80,12 @@ dataSources:
       file: ./src/stream.ts
   - kind: ethereum/contract
     name: EtherVesting
-    network: { { network } }
+    # prettier-ignore
+    network: {{network}}
     source:
       abi: EtherVesting
-      # prettierIgnore
-      startBlock: { { vestingStart } }
+      # prettier-ignore
+      startBlock: {{vestingStart}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
