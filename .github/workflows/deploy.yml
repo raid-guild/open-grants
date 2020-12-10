@@ -20,6 +20,13 @@ jobs:
         env:
           REACT_APP_INFURA_ID: ${{ secrets.INFURA_ID }}
 
+      - name: Deploy to Firbase ${{ DEPLOYMENT }}
+        uses: w9jds/firebase-action@master
+        with:
+          args: use ${{ DEPLOYMENT }}
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
