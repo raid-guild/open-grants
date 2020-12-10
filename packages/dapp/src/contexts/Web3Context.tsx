@@ -86,7 +86,7 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
   }, [web3Modal]);
 
   useEffect(() => {
-    window.ethereum.autoRefreshOnNetworkChange = false;
+    if (window.ethereum) window.ethereum.autoRefreshOnNetworkChange = false;
     if (web3Modal?.cachedProvider) {
       // eslint-disable-next-line no-console
       connectWeb3().catch(console.error);
