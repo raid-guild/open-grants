@@ -5,9 +5,16 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Flex,
+  Image,
+  Link,
+  Spacer,
   Text,
   VStack,
 } from '@chakra-ui/core';
+import DiscordIcon from 'assets/discord.svg';
+import GithubIcon from 'assets/github.svg';
+import TwitterIcon from 'assets/twitter.svg';
 import React from 'react';
 
 export const FAQContent: React.FC = () => {
@@ -21,9 +28,38 @@ export const FAQContent: React.FC = () => {
       px={8}
       color="text"
     >
-      <Text fontSize="4xl" fontWeight="800" color="dark">
-        About the Project
-      </Text>
+      <Flex>
+        <Text fontSize="4xl" fontWeight="800" color="dark">
+          About the Project
+        </Text>
+        <Spacer />
+        <Flex direction={{ base: 'column', sm: 'row' }}>
+          <Link
+            href="https://discord.gg/4jTbTBgvBs"
+            isExternal
+            px=".5rem"
+            py={{ base: '.5rem', sm: '0' }}
+          >
+            <Image src={DiscordIcon} alt="Discord icon" w="2rem" />
+          </Link>
+          <Link
+            href="https://twitter.com/ethopengrants"
+            isExternal
+            px=".5rem"
+            py={{ base: '.5rem', sm: '0' }}
+          >
+            <Image src={TwitterIcon} alt="Twitter icon" w="2rem" />
+          </Link>
+          <Link
+            href="https://github.com/raid-guild/open-grants"
+            isExternal
+            px=".5rem"
+            py={{ base: '.5rem', sm: '0' }}
+          >
+            <Image src={GithubIcon} alt="Github icon" w="2rem" />
+          </Link>
+        </Flex>
+      </Flex>
       <Text>
         Our goal is to create long-term incentives for open-source developers
         working on Ethereum’s roadmap, especially public goods R&D, which are
@@ -161,6 +197,29 @@ export const FAQContent: React.FC = () => {
             Not currently. You should create another stream for the grant.
           </AccordionPanel>
         </AccordionItem>
+        <AccordionItem>
+          <AccordionButton>
+            <Box
+              flex="1"
+              textAlign="left"
+              fontSize="xl"
+              fontWeight="600"
+              color="dark"
+              py={4}
+            >
+              Are the smart contracts audited?
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel py={6}>
+            <Link href="https://sigmaprime.io" isExternal>
+              Sigma Prime &nbsp;
+            </Link>
+            audited both the payment stream contract and the grant contract
+            (payment splitter). There were no major vulnerabilities found. This
+            is not a guarantee that the contracts are free from vulnerabilities.
+          </AccordionPanel>
+        </AccordionItem>
       </Accordion>
       <Text
         textTransform="uppercase"
@@ -240,6 +299,83 @@ export const FAQContent: React.FC = () => {
             recipient of on the “My Grants” page. Anyone can “distribute” vested
             funds to grant recipients by calling the withdraw function on a
             stream.
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
+      <Text
+        textTransform="uppercase"
+        fontStyle="italic"
+        fontSize="xl"
+        letterSpacing="1.3px"
+        pl={4}
+      >
+        For Community
+      </Text>
+
+      <Accordion borderColor="white">
+        <AccordionItem>
+          <AccordionButton>
+            <Box
+              flex="1"
+              textAlign="left"
+              fontSize="xl"
+              fontWeight="600"
+              color="dark"
+              py={4}
+            >
+              How can I add a profile photo and name to my account?
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel py={6}>
+            Create a &nbsp;
+            <Link href="https://3box.io/hub" isExternal>
+              3Box
+            </Link>
+            &nbsp; profile for the address you use to sign in to OpenGrants.
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem>
+          <AccordionButton>
+            <Box
+              flex="1"
+              textAlign="left"
+              fontSize="xl"
+              fontWeight="600"
+              color="dark"
+              py={4}
+            >
+              How can I get in contact with the Open Grants team?
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel py={6}>
+            If you want to ask a question, report a bug, request a feature, or
+            just say hi...&nbsp;
+            <Link href="https://discord.gg/4jTbTBgvBs" isExternal>
+              hop into our community Discord!
+            </Link>
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem>
+          <AccordionButton>
+            <Box
+              flex="1"
+              textAlign="left"
+              fontSize="xl"
+              fontWeight="600"
+              color="dark"
+              py={4}
+            >
+              How can I contribute to the project?
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel py={6}>
+            If you would like to submit an issue or contribute code,&nbsp;
+            <Link href="https://github.com/raid-guild/open-grants" isExternal>
+              check out our project on Github!
+            </Link>
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
