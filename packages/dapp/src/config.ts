@@ -10,7 +10,7 @@ export const CONFIG =
         ipfsEndpoint: 'https://ipfs.infura.io',
         boxEndpoint: 'https://ipfs.3box.io',
         explorerEndpoint: 'https://etherscan.io',
-        featuredGrants: [],
+        featuredGrants: ['0x53e7daa8e3aa23cd30c75b2f599c303bada17064'],
       }
     : {
         network: { chainId: 42, name: 'Kovan Testnet' },
