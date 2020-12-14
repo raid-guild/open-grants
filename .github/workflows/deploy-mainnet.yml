@@ -2,7 +2,7 @@ name: Open Grants CI
 on:
   push:
     branches:
-      - mainnet
+      - master
 
 jobs:
   deploy:
