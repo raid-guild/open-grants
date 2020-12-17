@@ -128,11 +128,13 @@ export const parseGrant = (
         BigNumber.from(0),
       ),
     ),
-    vested: input.streams.reduce(
-      (total, stream) =>
-        total.add(getVestedAmount(stream).sub(stream.released)),
-      BigNumber.from(0),
-    ),
+    vested: input.streams
+      .filter(stream => !stream.isRevoked)
+      .reduce(
+        (total, stream) =>
+          total.add(getVestedAmount(stream).sub(stream.released)),
+        BigNumber.from(0),
+      ),
     streams: input.streams.map(s => parseStream(s)),
     funders: undefined,
   };
