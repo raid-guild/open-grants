@@ -213,11 +213,12 @@ export const FAQContent: React.FC = () => {
           </AccordionButton>
           <AccordionPanel py={6}>
             <Link href="https://sigmaprime.io" isExternal>
-              Sigma Prime &nbsp;
+              Sigma Prime
             </Link>
-            audited both the payment stream contract and the grant contract
-            (payment splitter). There were no major vulnerabilities found. This
-            is not a guarantee that the contracts are free from vulnerabilities.
+            &nbsp;audited both the payment stream contract and the grant
+            contract (payment splitter). There were no major vulnerabilities
+            found. This is not a guarantee that the contracts are free from
+            vulnerabilities.
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
@@ -272,7 +273,7 @@ export const FAQContent: React.FC = () => {
             cannot be changed. For project description, provide a high-level
             overview of the project, specifically how this grant will benefit
             the Ethereum ecosystem. For the project link we recommend you point
-            to a webpage,blog post or document that covers things like scope of
+            to a webpage, blog post or document that covers things like scope of
             the project, goals, timeline, and funding goals. Once you’re ready,
             click “Create Grant” which will initiate a transaction to complete
             the action. Note that once a grant is created, its details cannot be
@@ -296,9 +297,34 @@ export const FAQContent: React.FC = () => {
           <AccordionPanel py={6}>
             Grantees may receive funds by one-off donations or over a longer
             duration with streams. You can view any grant that you’re a
-            recipient of on the “My Grants” page. Anyone can “distribute” vested
-            funds to grant recipients by calling the withdraw function on a
-            stream.
+            recipient of on the “My Grants” page to see the available balance.
+            Anyone can distribute vested funds to grant recipients by clicking
+            the “distribute” button and following the prompts, or by calling the
+            withdraw function on a stream.
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem>
+          <AccordionButton>
+            <Box
+              flex="1"
+              textAlign="left"
+              fontSize="xl"
+              fontWeight="600"
+              color="dark"
+              py={4}
+            >
+              How can I get my grant featured on the discover page?
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel py={6}>
+            Submit a request using&nbsp;
+            <Link
+              href="https://github.com/raid-guild/open-grants/issues/new?assignees=&labels=&template=add-featured-grant.md&title=Add+Featured+Grant"
+              isExternal
+            >
+              this template on our Github repo.
+            </Link>
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
@@ -328,11 +354,11 @@ export const FAQContent: React.FC = () => {
             <AccordionIcon />
           </AccordionButton>
           <AccordionPanel py={6}>
-            Create a &nbsp;
+            Create a&nbsp;
             <Link href="https://3box.io/hub" isExternal>
               3Box
             </Link>
-            &nbsp; profile for the address you use to sign in to OpenGrants.
+            &nbsp;profile for the address you use to sign in to OpenGrants.
           </AccordionPanel>
         </AccordionItem>
         <AccordionItem>
