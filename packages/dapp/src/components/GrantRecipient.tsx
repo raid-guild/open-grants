@@ -14,7 +14,7 @@ export const GrantRecipient: React.FC<RecipientProps> = ({
   amount,
   total,
 }) => {
-  const percent = ((amount * 100) / total).toFixed(1);
+  const percent = ((amount * 100) / total).toFixed(2);
   const [profile, setProfile] = useState<BoxProfile | undefined>();
   useEffect(() => {
     if (account) {

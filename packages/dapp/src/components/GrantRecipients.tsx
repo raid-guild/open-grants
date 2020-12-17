@@ -2,6 +2,7 @@ import { Flex, Grid, HStack, Text } from '@chakra-ui/core';
 import { GrantRecipient } from 'components/GrantRecipient';
 import { Link } from 'components/Link';
 import React from 'react';
+import { sortGranteesByAmount } from 'utils/helpers';
 
 type Props = {
   grantAddress: string;
@@ -12,10 +13,11 @@ type Props = {
 
 export const GrantRecipients: React.FC<Props> = ({
   grantAddress,
-  grantees,
-  amounts,
+  grantees: oldGrantees,
+  amounts: oldAmounts,
   page = false,
 }) => {
+  const [grantees, amounts] = sortGranteesByAmount(oldGrantees, oldAmounts);
   const total = amounts.reduce((t, a) => t + a, 0);
   const displayGrantees = page ? grantees : grantees.slice(0, 5);
   return (
