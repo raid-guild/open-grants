@@ -8,7 +8,7 @@ const UPDATE_INTERVAL = 60000;
 const THRESHOLD_BLOCKS = 10;
 
 export const useGraphHealth = (description: string): void => {
-  const { ethersProvider } = useContext(Web3Context);
+  const { ethersProvider, isSupportedNetwork } = useContext(Web3Context);
 
   const [healthy, setHealthy] = useState(true);
 
@@ -68,7 +68,7 @@ export const useGraphHealth = (description: string): void => {
       if (toastIdRef.current) {
         toast.close(toastIdRef.current);
       }
-      if (!healthy) {
+      if (!healthy && isSupportedNetwork) {
         toastIdRef.current = toast({
           title: 'Subgraph Error',
           description,
@@ -78,5 +78,5 @@ export const useGraphHealth = (description: string): void => {
         });
       }
     }
-  }, [healthy, loading, toast, description]);
+  }, [healthy, loading, toast, description, isSupportedNetwork]);
 };

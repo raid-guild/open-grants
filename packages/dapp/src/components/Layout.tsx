@@ -53,8 +53,7 @@ export const Layout: React.FC = ({ children }) => {
             mr={0}
           />
           <AlertTitle
-            mt={4}
-            mb={1}
+            my={4}
             fontSize={{ base: '1.5rem', sm: '2rem', md: '3rem' }}
           >
             Unsupported Network!
