@@ -5,7 +5,7 @@ import {
   ModalContent,
   Text,
   VStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import ChestImage from 'assets/chest.svg';
 import SuccessBG from 'assets/success.svg';
 import { Link } from 'components/Link';

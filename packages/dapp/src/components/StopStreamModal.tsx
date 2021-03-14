@@ -7,7 +7,7 @@ import {
   Text,
   useBreakpointValue,
   VStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { Link } from 'components/Link';
 import { LoadingModal } from 'components/LoadingModal';
 import { SuccessModal } from 'components/SuccessModal';
@@ -58,11 +58,12 @@ export const StopStreamModal: React.FC<Props> = ({
     }
   }, [tx]);
 
-  const faq = useBreakpointValue({
-    base: 'Questions? View FAQ',
-    sm: 'Questions? View the funding FAQ',
-    md: 'Question about streams? View the funding FAQ',
-  });
+  const faq =
+    useBreakpointValue({
+      base: 'Questions? View FAQ',
+      sm: 'Questions? View the funding FAQ',
+      md: 'Question about streams? View the funding FAQ',
+    }) || 'Questions? View FAQ';
   const initialRef = useRef(null);
   return (
     <Modal

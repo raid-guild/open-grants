@@ -1,4 +1,4 @@
-import { SimpleGrid, VStack } from '@chakra-ui/core';
+import { SimpleGrid, VStack } from '@chakra-ui/react';
 import { ExploreHeader } from 'components/ExploreHeader';
 import { GrantsSorter } from 'components/GrantsSorter';
 import { GrantTile } from 'components/GrantTile';

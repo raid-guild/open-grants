@@ -1,4 +1,4 @@
-import { Flex, VStack } from '@chakra-ui/core';
+import { Flex, VStack } from '@chakra-ui/react';
 import HeaderBG from 'assets/header.jpg';
 import { CreateGrantForm } from 'components/CreateGrantForm';
 import React from 'react';

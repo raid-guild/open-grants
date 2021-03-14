@@ -1,4 +1,4 @@
-import { Button, ButtonGroup } from '@chakra-ui/core';
+import { Button, ButtonGroup } from '@chakra-ui/react';
 import React from 'react';
 
 type Props = {

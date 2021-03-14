@@ -1,4 +1,4 @@
-import { Text, VStack } from '@chakra-ui/core';
+import { Text, VStack } from '@chakra-ui/react';
 import HeaderBG from 'assets/header.jpg';
 import React from 'react';
 

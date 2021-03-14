@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/core';
+import { Flex } from '@chakra-ui/react';
 import HeaderBG from 'assets/header.jpg';
 import { Loader } from 'components/Loader';
 import React from 'react';

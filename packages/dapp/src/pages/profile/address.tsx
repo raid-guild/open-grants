@@ -1,4 +1,4 @@
-import { Box, VStack } from '@chakra-ui/core';
+import { Box, VStack } from '@chakra-ui/react';
 import { LoadingPage } from 'components/LoadingPage';
 import { ProfileContent } from 'components/ProfileContent';
 import { ProfileHeader } from 'components/ProfileHeader';

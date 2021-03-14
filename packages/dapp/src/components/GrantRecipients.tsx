@@ -1,4 +1,4 @@
-import { Flex, Grid, HStack, Text } from '@chakra-ui/core';
+import { Flex, Grid, HStack, Text } from '@chakra-ui/react';
 import { GrantRecipient } from 'components/GrantRecipient';
 import { Link } from 'components/Link';
 import React from 'react';

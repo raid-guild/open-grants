@@ -6,7 +6,7 @@ import {
   Text,
   useBreakpointValue,
   VStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import HeaderBG from 'assets/header.jpg';
 import { AmountDisplay } from 'components/AmountDisplay';
 import { Link } from 'components/Link';

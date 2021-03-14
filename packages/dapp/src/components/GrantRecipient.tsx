@@ -1,4 +1,4 @@
-import { Flex, Grid, HStack, Text } from '@chakra-ui/core';
+import { Flex, Grid, HStack, Text } from '@chakra-ui/react';
 import { Link } from 'components/Link';
 import React, { useEffect, useState } from 'react';
 import { BoxProfile, getProfile } from 'utils/3box';

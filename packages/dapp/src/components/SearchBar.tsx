@@ -13,7 +13,7 @@ import {
   useBreakpointValue,
   useDisclosure,
   VStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import HeaderBG from 'assets/header.jpg';
 import { Link } from 'components/Link';
 import { SearchContext } from 'contexts/SearchContext';

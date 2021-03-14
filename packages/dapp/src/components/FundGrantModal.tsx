@@ -10,7 +10,7 @@ import {
   Text,
   useBreakpointValue,
   VStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { DurationSelector } from 'components/DurationSelector';
 import { Link } from 'components/Link';
 import { LoadingModal } from 'components/LoadingModal';
@@ -73,10 +73,11 @@ export const FundGrantModal: React.FC<Props> = ({
     setValid(valid);
   }, [amount, duration, setValid]);
 
-  const faq = useBreakpointValue({
-    base: 'Questions? View FAQ',
-    sm: 'Questions? View the funding FAQ',
-  });
+  const faq =
+    useBreakpointValue({
+      base: 'Questions? View FAQ',
+      sm: 'Questions? View the funding FAQ',
+    }) || 'Questions? View FAQ';
   const inputRef = useRef(null);
   return (
     <Modal

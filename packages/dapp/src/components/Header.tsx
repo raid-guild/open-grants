@@ -8,7 +8,7 @@ import {
   PopoverTrigger,
   Text,
   useBreakpointValue,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import EthereumCrystalIcon from 'assets/eth-icon.png';
 import { Link } from 'components/Link';
 import { SearchBar } from 'components/SearchBar';

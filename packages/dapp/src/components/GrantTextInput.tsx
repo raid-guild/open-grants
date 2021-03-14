@@ -1,4 +1,4 @@
-import { Flex, Input, Text } from '@chakra-ui/core';
+import { Flex, Input, Text } from '@chakra-ui/react';
 import { ErrorAlert } from 'components/ErrorAlert';
 import React, { useState } from 'react';
 import { URL_REGEX } from 'utils/constants';

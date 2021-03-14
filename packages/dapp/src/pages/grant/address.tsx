@@ -1,4 +1,4 @@
-import { Box, VStack } from '@chakra-ui/core';
+import { Box, VStack } from '@chakra-ui/react';
 import { GrantContent } from 'components/GrantContent';
 import { GrantHeader } from 'components/GrantHeader';
 import { LoadingPage } from 'components/LoadingPage';

@@ -5,7 +5,7 @@ import {
   ModalContent,
   Text,
   VStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import LoadingBG from 'assets/waves.svg';
 import { Link } from 'components/Link';
 import { Loader } from 'components/Loader';

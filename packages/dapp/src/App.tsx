@@ -1,4 +1,4 @@
-import { ChakraProvider, CSSReset } from '@chakra-ui/core';
+import { ChakraProvider, CSSReset } from '@chakra-ui/react';
 import { ErrorBoundary } from 'components/ErrorBoundary';
 import { Layout } from 'components/Layout';
 import { Web3ContextProvider } from 'contexts/Web3Context';

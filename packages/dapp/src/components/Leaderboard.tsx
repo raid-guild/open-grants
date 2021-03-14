@@ -1,4 +1,4 @@
-import { Grid, HStack, Text, VStack } from '@chakra-ui/core';
+import { Grid, HStack, Text, VStack } from '@chakra-ui/react';
 import { Leader } from 'components/Leader';
 import { LoadingPage } from 'components/LoadingPage';
 import { getLeaders } from 'graphql/getLeaders';

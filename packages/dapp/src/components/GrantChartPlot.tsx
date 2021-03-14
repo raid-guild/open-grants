@@ -1,4 +1,4 @@
-import { useBreakpointValue } from '@chakra-ui/core';
+import { useBreakpointValue } from '@chakra-ui/react';
 import { ChartHint } from 'components/ChartHint';
 import React, { useEffect, useState } from 'react';
 import {

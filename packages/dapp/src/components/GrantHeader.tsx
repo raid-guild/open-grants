@@ -8,7 +8,7 @@ import {
   useDisclosure,
   useToast,
   VStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import HeaderBG from 'assets/header.jpg';
 import { AmountDisplay } from 'components/AmountDisplay';
 import { FundGrantModal } from 'components/FundGrantModal';

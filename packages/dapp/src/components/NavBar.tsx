@@ -9,7 +9,7 @@ import {
   DrawerOverlay,
   Flex,
   VStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import DrawerBG from 'assets/navbar.jpg';
 import { Link } from 'components/Link';
 import { Web3Context } from 'contexts/Web3Context';
