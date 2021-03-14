@@ -30,7 +30,7 @@ export const Header: React.FC<Props> = ({ onOpen: openNav }) => {
     }
   }, [account]);
   const accountString = useBreakpointValue({
-    sm: `${account.slice(0, 4).toUpperCase()}...`,
+    base: `${account.slice(0, 4).toUpperCase()}...`,
     md: `${account.slice(0, 8).toUpperCase()}...`,
   });
 
@@ -140,7 +140,7 @@ export const Header: React.FC<Props> = ({ onOpen: openNav }) => {
                     fontSize={{ base: '.75rem', md: '.9rem' }}
                     fontFamily="'Roboto Mono', monospace;"
                   >
-                    {accountString}
+                    {profile?.name ? profile.name : accountString}
                   </Text>
                   <ArrowDownIcon
                     boxSize="1.5rem"

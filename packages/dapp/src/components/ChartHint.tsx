@@ -11,7 +11,8 @@ import {
 } from '@chakra-ui/core';
 import { Link } from 'components/Link';
 import { utils } from 'ethers';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { BoxProfile, getProfile } from 'utils/3box';
 import { DataPoint } from 'utils/chart';
 import { getVestedAmount } from 'utils/helpers';
 import { Stream } from 'utils/types';
@@ -50,6 +51,12 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams, isWeeks }) => {
     : `0.00 ETH`;
   const h = '9rem !important';
   const w = '10rem !important';
+  const [profile, setProfile] = useState<BoxProfile | undefined>();
+  useEffect(() => {
+    if (stream && stream.owner) {
+      getProfile(stream.owner).then(p => setProfile(p));
+    }
+  }, [stream]);
 
   return (
     <Popover isOpen placement="top">
@@ -111,8 +118,8 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams, isWeeks }) => {
           >
             {streamAmount}
           </Text>
-          {stream && stream.ownerUser.id && stream.ownerUser.imageUrl ? (
-            <Link to={`/profile/${stream.ownerUser.id}`}>
+          {stream && stream.owner ? (
+            <Link to={`/profile/${stream.owner}`}>
               <HStack spacing={1}>
                 <Flex
                   borderRadius="50%"
@@ -121,7 +128,7 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams, isWeeks }) => {
                   h="1.5rem"
                   overflow="hidden"
                   background="white"
-                  bgImage={`url(${stream.ownerUser.imageUrl})`}
+                  bgImage={profile && `url(${profile.imageUrl})`}
                   bgSize="cover"
                   bgRepeat="no-repeat"
                   bgPosition="center center"
@@ -131,9 +138,9 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams, isWeeks }) => {
                   fontSize="xs"
                   fontFamily="Roboto Mono, monospace"
                 >
-                  {stream.ownerUser.name
-                    ? stream.ownerUser.name
-                    : `${stream.ownerUser.id.slice(0, 7).toUpperCase()}...`}
+                  {profile?.name
+                    ? profile.name
+                    : `${stream.owner.slice(0, 7).toUpperCase()}...`}
                 </Text>
               </HStack>
             </Link>

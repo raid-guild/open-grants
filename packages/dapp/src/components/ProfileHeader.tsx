@@ -12,7 +12,8 @@ import { AmountDisplay } from 'components/AmountDisplay';
 import { Link } from 'components/Link';
 import { CONFIG } from 'config';
 import { CopyIcon } from 'icons/CopyIcon';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { BoxProfile, getProfile } from 'utils/3box';
 import { copyToClipboard, formatValue } from 'utils/helpers';
 import { Profile } from 'utils/types';
 
@@ -21,17 +22,23 @@ type Props = {
   profile: Profile;
   loggedInUser: boolean;
 };
+
 export const ProfileHeader: React.FC<Props> = ({
   rank,
   profile,
   loggedInUser,
 }) => {
-  const name = profile.name ? profile.name.split(' ')[0] : 'User';
   const addressDisplay = useBreakpointValue({
     base: `${profile.id.slice(0, 12).toUpperCase()}...`,
     sm: `${profile.id.slice(0, 24).toUpperCase()}...`,
     md: profile.id,
   });
+  const [boxProfile, setBoxProfile] = useState<BoxProfile | undefined>();
+  useEffect(() => {
+    getProfile(profile.id).then(p => setBoxProfile(p));
+  }, [profile]);
+
+  const name = boxProfile && boxProfile.name ? boxProfile.name : 'User';
   return (
     <VStack
       px={{ base: '1rem', sm: '2rem' }}

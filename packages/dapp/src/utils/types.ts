@@ -9,12 +9,6 @@ export enum Sort {
 export type Stream = {
   id: string;
   owner: string;
-  ownerUser: {
-    id: string;
-    name: string | null | undefined;
-    imageHash: string | null | undefined;
-    imageUrl: string;
-  };
   funded: BigNumber;
   withdrawn: BigNumber;
   released: BigNumber;
@@ -53,9 +47,6 @@ export type Grant = {
 
 export type Profile = {
   id: string;
-  name: string;
-  imageHash: string;
-  imageUrl: string;
   grantsReceived: Array<Grant>;
   grantsFunded: Array<Grant>;
   streams: Array<Stream>;
