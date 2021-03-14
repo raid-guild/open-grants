@@ -4,16 +4,13 @@ import {
   ByteArray,
   Bytes,
   ipfs,
-  box,
   json,
   log,
-  TypedMap,
-  JSONValue,
 } from '@graphprotocol/graph-ts';
 
 import { EtherVesting } from '../generated/EtherVesting/EtherVesting';
 import { UnmanagedGrant } from '../generated/UnmanagedGrant/UnmanagedGrant';
-import { User, Fund } from '../generated/schema';
+import { User } from '../generated/schema';
 
 class GrantObject {
   uri: Bytes;
@@ -169,33 +166,33 @@ export function getUser(address: Bytes): User {
   if (user == null) {
     user = newUser(address);
   }
-  let profile = box.profile(user.address.toHexString()) as TypedMap<
-    string,
-    JSONValue
-  >;
+  // let profile = box.profile(user.address.toHexString()) as TypedMap<
+  //   string,
+  //   JSONValue
+  // >;
 
-  let profileName = profile.get('name');
-  if (profileName) {
-    user.name = profileName.toString();
-  }
-  let profileEmoji = profile.get('emoji');
-  if (profileEmoji) {
-    user.emoji = profileEmoji.toString();
-  }
+  // let profileName = profile.get('name');
+  // if (profileName) {
+  //   user.name = profileName.toString();
+  // }
+  // let profileEmoji = profile.get('emoji');
+  // if (profileEmoji) {
+  //   user.emoji = profileEmoji.toString();
+  // }
 
-  let profileImages = profile.get('image');
-  if (profileImages) {
-    let profileImagesArray = profileImages.toArray();
-    if (profileImagesArray.length > 0) {
-      let profileImage = profileImagesArray[0].toObject().get('contentUrl');
-      if (profileImage) {
-        let profileImageHash = profileImage.toObject().get('/');
-        if (profileImageHash) {
-          user.imageHash = profileImageHash.toString();
-        }
-      }
-    }
-  }
+  // let profileImages = profile.get('image');
+  // if (profileImages) {
+  //   let profileImagesArray = profileImages.toArray();
+  //   if (profileImagesArray.length > 0) {
+  //     let profileImage = profileImagesArray[0].toObject().get('contentUrl');
+  //     if (profileImage) {
+  //       let profileImageHash = profileImage.toObject().get('/');
+  //       if (profileImageHash) {
+  //         user.imageHash = profileImageHash.toString();
+  //       }
+  //     }
+  //   }
+  // }
   log.debug('Updated User {}', [address.toHexString()]);
   return user as User;
 }

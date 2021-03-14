@@ -9,6 +9,7 @@ import { LogNewGrant } from '../generated/UnmanagedGrantFactory/UnmanagedGrantFa
 import { /* getRecentFunds, */ fetchGrantInfo, getUser } from './helpers';
 
 export function handleLogNewGrant(event: LogNewGrant): void {
+  log.debug('New Grant {}', [event.params.grant.toHexString()]);
   let fetchedGrant = fetchGrantInfo(event.params.grant);
   if (fetchedGrant.name.length == 0) return;
 
@@ -35,7 +36,7 @@ export function handleLogNewGrant(event: LogNewGrant): void {
   grant.streams = new Array<string>();
 
   grant.save();
-  log.debug('New Grant {}', [grant.id]);
+  log.debug('New Grant Recorded id: {}; name: {}', [grant.id, grant.name]);
 
   let grantees = event.params.grantees as Array<Bytes>;
   for (let i = 0; i < grantees.length; ++i) {

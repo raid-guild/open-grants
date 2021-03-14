@@ -12,6 +12,7 @@ import { fetchStreamInfo, getUser } from './helpers';
 export function handleLogEtherVestingCreated(
   event: LogEtherVestingCreated,
 ): void {
+  log.debug('New Stream {}', [event.params.vestingContract.toHexString()]);
   let stream = new Stream(event.params.vestingContract.toHexString());
   stream.factoryAddress = event.address;
   stream.owner = event.transaction.from;
@@ -70,6 +71,7 @@ export function handleLogEtherVestingCreated(
   }
 
   stream.save();
+  log.debug('New Stream Recorded id: {}', [stream.id]);
 }
 
 export function handleLogFunding(event: LogFunding): void {
