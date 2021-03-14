@@ -5,7 +5,7 @@ import {
   useDisclosure,
   useToast,
   VStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { CreateGrantModal } from 'components/CreateGrantModal';
 import { GranteesInput } from 'components/GranteesInput';
 import { GrantTextInput } from 'components/GrantTextInput';

@@ -1,4 +1,4 @@
-import { Flex, Grid, HStack, Text } from '@chakra-ui/core';
+import { Flex, Grid, HStack, Text } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { BoxProfile, getProfile } from 'utils/3box';
 import { formatValue, getVestedAmount } from 'utils/helpers';

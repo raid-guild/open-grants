@@ -7,7 +7,7 @@ import {
   Stack,
   Text,
   useBreakpointValue,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { GrantChartPlot } from 'components/GrantChartPlot';
 import { BigNumber, utils } from 'ethers';
 import React, { useMemo, useState } from 'react';
@@ -61,7 +61,7 @@ export const GrantChart: React.FC<Props> = ({ grant }) => {
         (xDomain[1] - currentTime) / (xDomain[1] - xDomain[0]),
       ];
 
-  const chartHeight = useBreakpointValue({ base: 320, sm: 420 });
+  const chartHeight = useBreakpointValue({ base: 320, sm: 420 }) || 320;
   const [mouseLeave, setMouseLeave] = useState(true);
 
   return (

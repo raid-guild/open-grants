@@ -13,8 +13,8 @@
     "deploy-mainnet": "graph deploy dan13ram/open-grants --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.18.0",
-    "@graphprotocol/graph-ts": "0.18.0"
+    "@graphprotocol/graph-cli": "0.20.0",
+    "@graphprotocol/graph-ts": "0.20.0"
   },
   "devDependencies": {
     "mustache": "^4.1.0"

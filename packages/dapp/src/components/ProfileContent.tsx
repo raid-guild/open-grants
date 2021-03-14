@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid, Text, VStack } from '@chakra-ui/core';
+import { Flex, SimpleGrid, Text, VStack } from '@chakra-ui/react';
 import { GrantDetails } from 'components/GrantDetails';
 import { GrantTile } from 'components/GrantTile';
 import { StreamTile } from 'components/StreamTile';

@@ -5,18 +5,22 @@ import {
   AlertTitle,
   Flex,
   useDisclosure,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import HeaderBG from 'assets/header.jpg';
 import { Header } from 'components/Header';
 import { NavBar } from 'components/NavBar';
 import { CONFIG } from 'config';
 import { SearchContextProvider } from 'contexts/SearchContext';
 import { Web3Context } from 'contexts/Web3Context';
+import { useGraphHealth } from 'hooks/useGraphHealth';
 import React, { useContext } from 'react';
 
 export const Layout: React.FC = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isSupportedNetwork } = useContext(Web3Context);
+  useGraphHealth(
+    'Cannot access latest grants data. Wait for a few minutes and reload the application',
+  );
   if (!isSupportedNetwork) {
     return (
       <Flex
@@ -49,8 +53,7 @@ export const Layout: React.FC = ({ children }) => {
             mr={0}
           />
           <AlertTitle
-            mt={4}
-            mb={1}
+            my={4}
             fontSize={{ base: '1.5rem', sm: '2rem', md: '3rem' }}
           >
             Unsupported Network!

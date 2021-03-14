@@ -1,4 +1,4 @@
-import { Flex, HStack, Text } from '@chakra-ui/core';
+import { Flex, HStack, Text } from '@chakra-ui/react';
 import { FeaturedIcon } from 'icons/FeaturedIcon';
 // import { InNeedIcon } from 'icons/InNeedIcon';
 import { LatestIcon } from 'icons/LatestIcon';

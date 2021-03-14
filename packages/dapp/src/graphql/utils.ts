@@ -1,4 +1,3 @@
-import { CONFIG } from 'config';
 import { BigNumber } from 'ethers';
 import {
   Fund as FundGraph,
@@ -15,14 +14,6 @@ export const parseStream = (input: StreamDetailsFragment): Stream => {
   const output: Stream = {
     id: input.id.toLowerCase(),
     owner: input.owner.toLowerCase(),
-    ownerUser: {
-      id: input.ownerUser.id,
-      name: input.ownerUser.name,
-      imageHash: input.ownerUser.imageHash,
-      imageUrl: input.ownerUser.imageHash
-        ? `${CONFIG.ipfsEndpoint}/ipfs/${input.ownerUser.imageHash}`
-        : `https://avatars.dicebear.com/api/jdenticon/${input.ownerUser.id.toLowerCase()}.svg`,
-    },
     funded: BigNumber.from(input.funded),
     withdrawn: BigNumber.from(input.withdrawn),
     released: BigNumber.from(input.released),
@@ -146,14 +137,7 @@ export const parseGrant = (
 
 type ProfileFragment = Pick<
   UserGraph,
-  | 'id'
-  | 'funded'
-  | 'earned'
-  | 'pledged'
-  | 'withdrawn'
-  | 'streamed'
-  | 'name'
-  | 'imageHash'
+  'id' | 'funded' | 'earned' | 'pledged' | 'withdrawn' | 'streamed'
 > & {
   grantsReceived: Array<GrantDetailsFragment>;
   grantsFunded: Array<GrantDetailsFragment>;
@@ -163,11 +147,6 @@ type ProfileFragment = Pick<
 export const parseProfile = (input: ProfileFragment): Profile => {
   return {
     id: input.id.toLowerCase(),
-    name: input.name ? input.name : '',
-    imageHash: input.imageHash ? input.imageHash : '',
-    imageUrl: input.imageHash
-      ? `url(${CONFIG.ipfsEndpoint}/ipfs/${input.imageHash})`
-      : `url(https://avatars.dicebear.com/api/jdenticon/${input.id}.svg)`,
     grantsReceived: input.grantsReceived.map(grant => parseGrant(grant, false)),
     grantsFunded: input.grantsFunded.map(grant => parseGrant(grant, false)),
     streams: input.streams.map(s => parseStream(s)),

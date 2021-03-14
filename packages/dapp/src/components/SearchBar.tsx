@@ -13,13 +13,44 @@ import {
   useBreakpointValue,
   useDisclosure,
   VStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import HeaderBG from 'assets/header.jpg';
 import { Link } from 'components/Link';
-import { CONFIG } from 'config';
 import { SearchContext } from 'contexts/SearchContext';
 import { SearchIcon } from 'icons/SearchIcon';
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { BoxProfile, getProfile } from 'utils/3box';
+
+const UserProfile: React.FC<{ account: string }> = ({ account }) => {
+  const [profile, setProfile] = useState<BoxProfile | undefined>();
+  useEffect(() => {
+    if (account) {
+      getProfile(account).then(p => setProfile(p));
+    }
+  }, [account]);
+  const accountString = `${account.slice(0, 7).toUpperCase()}...`;
+  return (
+    <HStack w="100%" key={account}>
+      <Link to={`/profile/${account}`} w="100%">
+        <Flex w="100%" justify="space-between" align="center">
+          <Text>{profile?.name ? profile.name : accountString}</Text>
+          <Flex
+            borderRadius="50%"
+            border="1px solid #E6E6E6"
+            w="2rem"
+            h="2rem"
+            overflow="hidden"
+            background="white"
+            bgImage={profile && `url(${profile.imageUrl})`}
+            bgSize="cover"
+            bgRepeat="no-repeat"
+            bgPosition="center center"
+          />
+        </Flex>
+      </Link>
+    </HStack>
+  );
+};
 
 export const SearchBar: React.FC = () => {
   const { search, setSearch, result, fetching } = useContext(SearchContext);
@@ -130,43 +161,18 @@ export const SearchBar: React.FC = () => {
                       </Link>
                     </HStack>
                   ))}
-                {result.users.length > 0 && (
+                {result.users && result.users.length > 0 && (
                   <>
                     {result.grants.length > 0 && <Divider />}
                     {result.users.map(u => (
-                      <HStack w="100%" key={u.id}>
-                        <Link to={`/profile/${u.id}`} w="100%">
-                          <Flex w="100%" justify="space-between" align="center">
-                            <Text>
-                              {u.name
-                                ? u.name
-                                : `${u.id.slice(0, 7).toUpperCase()}...`}
-                            </Text>
-                            <Flex
-                              borderRadius="50%"
-                              border="1px solid #E6E6E6"
-                              w="2rem"
-                              h="2rem"
-                              overflow="hidden"
-                              background="white"
-                              bgImage={
-                                u.imageHash
-                                  ? `url(${CONFIG.ipfsEndpoint}/ipfs/${u.imageHash})`
-                                  : `url(https://avatars.dicebear.com/api/jdenticon/${u.id}.svg)`
-                              }
-                              bgSize="cover"
-                              bgRepeat="no-repeat"
-                              bgPosition="center center"
-                            />
-                          </Flex>
-                        </Link>
-                      </HStack>
+                      <UserProfile key={u.id} account={u.id} />
                     ))}
                   </>
                 )}
-                {result.grants.length === 0 && result.users.length === 0 && (
-                  <Text>Your search returned no results</Text>
-                )}
+                {result.grants.length === 0 &&
+                  (!result.users || result.users.length === 0) && (
+                    <Text>Your search returned no results</Text>
+                  )}
               </>
             ) : (
               <Text>Search for any user or grant</Text>

@@ -2,7 +2,7 @@ import {
   Box,
   Button as ChakraButton,
   Link as ChakraLink,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import React from 'react';
 import {
   Link as RouterLink,
@@ -10,11 +10,11 @@ import {
   useHistory,
 } from 'react-router-dom';
 
-type LinkProps = React.ComponentProps<typeof ChakraButton> &
+type LinkButtonProps = React.ComponentProps<typeof ChakraButton> &
   Omit<React.ComponentProps<typeof ChakraLink>, keyof RouterLinkProps> &
   RouterLinkProps;
 
-export const LinkButton: React.FC<LinkProps> = ({
+export const LinkButton: React.FC<LinkButtonProps> = ({
   children,
   to,
   replace,
@@ -38,6 +38,8 @@ export const LinkButton: React.FC<LinkProps> = ({
     </RouterLink>
   );
 };
+
+type LinkProps = React.ComponentProps<typeof ChakraLink> & RouterLinkProps;
 
 export const Link: React.FC<LinkProps> = ({
   children,

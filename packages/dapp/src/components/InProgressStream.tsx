@@ -1,4 +1,4 @@
-import { Flex, Grid, HStack, Image, Text } from '@chakra-ui/core';
+import { Flex, Grid, HStack, Image, Text } from '@chakra-ui/react';
 import DoneSVG from 'assets/done.svg';
 import LoadingSVG from 'assets/loading.svg';
 import { Link } from 'components/Link';

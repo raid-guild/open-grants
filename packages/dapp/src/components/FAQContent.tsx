@@ -11,7 +11,7 @@ import {
   Spacer,
   Text,
   VStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import DiscordIcon from 'assets/discord.svg';
 import GithubIcon from 'assets/github.svg';
 import TwitterIcon from 'assets/twitter.svg';

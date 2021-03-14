@@ -3,10 +3,9 @@ import {
   GrantNameFragment,
   SearchQuery,
   SearchQueryVariables,
-  UserNameFragment,
 } from 'graphql/autogen/types';
 import { client } from 'graphql/client';
-import { GrantName, UserName } from 'graphql/fragments';
+import { GrantName } from 'graphql/fragments';
 import { isAddress } from 'utils/helpers';
 
 const searchQuery = gql`
@@ -19,16 +18,7 @@ const searchQuery = gql`
     ) {
       ...GrantName
     }
-    users(
-      first: $first
-      where: { name_contains: $search }
-      orderBy: name
-      orderDirection: desc
-    ) {
-      ...UserName
-    }
   }
-  ${UserName}
   ${GrantName}
 `;
 
@@ -42,22 +32,16 @@ const addressSearchQuery = gql`
     ) {
       ...GrantName
     }
-    users(
-      first: $first
-      where: { address_contains: $search }
-      orderBy: name
-      orderDirection: desc
-    ) {
-      ...UserName
+    users(first: $first, where: { address_contains: $search }) {
+      id
     }
   }
-  ${UserName}
   ${GrantName}
 `;
 
 export type SearchResult = {
   grants: Array<GrantNameFragment>;
-  users: Array<UserNameFragment>;
+  users?: Array<{ id: string }>;
 };
 
 export const search = async (

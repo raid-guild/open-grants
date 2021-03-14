@@ -86,9 +86,6 @@ type User @entity {
   pledged: BigInt!
   withdrawn: BigInt!
   streamed: BigInt!
-  name: String
-  emoji: String
-  imageHash: String
 }
 
 # type _Schema_

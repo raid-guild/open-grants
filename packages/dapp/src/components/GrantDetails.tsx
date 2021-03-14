@@ -7,7 +7,7 @@ import {
   useBreakpointValue,
   useDisclosure,
   useToast,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { FundGrantModal } from 'components/FundGrantModal';
 import { Link, LinkButton } from 'components/Link';
 import { CONFIG } from 'config';

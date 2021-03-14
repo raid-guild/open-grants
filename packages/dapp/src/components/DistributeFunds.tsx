@@ -6,7 +6,7 @@ import {
   Text,
   useToast,
   VStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { GrantStream } from 'components/GrantStream';
 import { InProgressStream } from 'components/InProgressStream';
 import { Link } from 'components/Link';

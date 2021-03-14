@@ -1,4 +1,4 @@
-import { VStack } from '@chakra-ui/core';
+import { VStack } from '@chakra-ui/react';
 import { FAQContent } from 'components/FAQContent';
 import { FAQHeader } from 'components/FAQHeader';
 import React from 'react';

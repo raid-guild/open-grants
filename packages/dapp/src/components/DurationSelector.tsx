@@ -5,7 +5,7 @@ import {
   InputLeftElement,
   InputRightElement,
   SimpleGrid,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { ONEMONTH, ONEYEAR } from 'utils/constants';
 

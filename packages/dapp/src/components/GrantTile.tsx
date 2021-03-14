@@ -7,7 +7,7 @@ import {
   useDisclosure,
   useToast,
   VStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import TileBG from 'assets/tile-background.svg';
 import { FundGrantModal } from 'components/FundGrantModal';
 import { Link, LinkButton } from 'components/Link';

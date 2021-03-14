@@ -1,4 +1,4 @@
-import { Image, Text, VStack } from '@chakra-ui/core';
+import { Image, Text, VStack } from '@chakra-ui/react';
 import EthereumCrystalImage from 'assets/eth-crystal-wave.png';
 import HeaderBG from 'assets/header.jpg';
 import { LinkButton } from 'components/Link';

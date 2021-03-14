@@ -6,7 +6,7 @@ import {
   useDisclosure,
   useToast,
   VStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { Link } from 'components/Link';
 import { StopStreamModal } from 'components/StopStreamModal';
 import { CONFIG } from 'config';

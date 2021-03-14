@@ -10,7 +10,7 @@ import {
   Text,
   useBreakpointValue,
   VStack,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react';
 import { GrantRecipient } from 'components/GrantRecipient';
 import { Link } from 'components/Link';
 import { LoadingModal } from 'components/LoadingModal';
@@ -61,10 +61,11 @@ export const CreateGrantModal: React.FC<Props> = ({
       awaitGrantAddress(ethersProvider, tx).then(g => setGrantAddress(g));
     }
   }, [tx, ethersProvider]);
-  const faq = useBreakpointValue({
-    base: 'Questions? View FAQ',
-    sm: 'Questions? View the grant FAQ',
-  });
+  const faq =
+    useBreakpointValue({
+      base: 'Questions? View FAQ',
+      sm: 'Questions? View the grant FAQ',
+    }) || 'Questions? View FAQ';
   const initialRef = useRef(null);
   return (
     <Modal

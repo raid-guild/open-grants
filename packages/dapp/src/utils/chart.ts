@@ -35,12 +35,6 @@ const reduceStreams = (input: Array<Stream>): Array<Stream> => {
     {
       id: 'squashed',
       owner: 'squashed',
-      ownerUser: {
-        id: '',
-        name: '',
-        imageUrl: '',
-        imageHash: '',
-      },
       funded: BigNumber.from(0),
       withdrawn: BigNumber.from(0),
       released: BigNumber.from(0),

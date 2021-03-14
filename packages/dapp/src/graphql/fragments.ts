@@ -19,11 +19,6 @@ export const GrantDetails = gql`
     streams {
       id
       owner
-      ownerUser {
-        id
-        name
-        imageHash
-      }
       released
       funded
       withdrawn
@@ -43,11 +38,6 @@ export const StreamDetails = gql`
   fragment StreamDetails on Stream {
     id
     owner
-    ownerUser {
-      id
-      name
-      imageHash
-    }
     released
     funded
     withdrawn
@@ -70,14 +60,6 @@ export const UserDetails = gql`
     streamed
     withdrawn
     earned
-  }
-`;
-
-export const UserName = gql`
-  fragment UserName on User {
-    id
-    name
-    imageHash
   }
 `;
 
