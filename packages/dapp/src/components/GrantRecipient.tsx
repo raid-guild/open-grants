@@ -1,5 +1,6 @@
-import { Flex, Grid, HStack, Text } from '@chakra-ui/react';
+import { Flex, Grid, HStack, Text, Tooltip } from '@chakra-ui/react';
 import { Link } from 'components/Link';
+import { InfoIcon } from 'icons/InfoIcon';
 import React, { useEffect, useState } from 'react';
 import { BoxProfile, getProfile } from 'utils/3box';
 
@@ -7,12 +8,16 @@ type RecipientProps = {
   account: string;
   amount: number;
   total: number;
+  description?: string;
+  showDescription?: boolean;
 };
 
 export const GrantRecipient: React.FC<RecipientProps> = ({
   account,
   amount,
   total,
+  description = '',
+  showDescription = false,
 }) => {
   const percent = ((amount * 100) / total).toFixed(2);
   const [profile, setProfile] = useState<BoxProfile | undefined>();
@@ -22,41 +27,48 @@ export const GrantRecipient: React.FC<RecipientProps> = ({
     }
   }, [account]);
   return (
-    <Grid
-      w="100%"
-      gap={4}
-      templateColumns="5fr 1fr"
-      color="dark"
-      borderBottom="1px solid #EAECEF"
-      minH="3rem"
-      padding=".5rem 0 .5rem 0"
-    >
-      <Link to={`/profile/${account}`}>
-        <HStack spacing={4}>
-          <Flex
-            borderRadius="50%"
-            border="1px solid #E6E6E6"
-            w="2.5rem"
-            h="2.5rem"
-            overflow="hidden"
-            background="white"
-            bgImage={profile && `url(${profile.imageUrl})`}
-            bgSize="cover"
-            bgRepeat="no-repeat"
-            bgPosition="center center"
-          />
-          <Text fontFamily="Roboto Mono, monospace">
-            {profile && profile.name
-              ? profile.name
-              : `${account.slice(0, 7).toUpperCase()}...`}
+    <Flex direction="column" w="100%" borderBottom="1px solid #EAECEF">
+      <Grid
+        w="100%"
+        gap={4}
+        templateColumns="5fr 1fr"
+        color="dark"
+        minH="3rem"
+        padding=".5rem 0 .5rem 0"
+      >
+        <Link to={`/profile/${account}`}>
+          <HStack spacing={4}>
+            <Flex
+              borderRadius="50%"
+              border="1px solid #E6E6E6"
+              w="2.5rem"
+              h="2.5rem"
+              overflow="hidden"
+              background="white"
+              bgImage={profile && `url(${profile.imageUrl})`}
+              bgSize="cover"
+              bgRepeat="no-repeat"
+              bgPosition="center center"
+            />
+            <Text fontFamily="Roboto Mono, monospace">
+              {profile && profile.name
+                ? profile.name
+                : `${account.slice(0, 7).toUpperCase()}...`}
+            </Text>
+            {description && !showDescription && (
+              <Tooltip label={description} placement="auto-start">
+                <InfoIcon boxSize="0.75rem" />
+              </Tooltip>
+            )}
+          </HStack>
+        </Link>
+        <HStack>
+          <Text textAlign="center" w="100%" fontFamily="Roboto Mono, monospace">
+            {`${percent}%`}
           </Text>
         </HStack>
-      </Link>
-      <HStack>
-        <Text textAlign="center" w="100%" fontFamily="Roboto Mono, monospace">
-          {`${percent}%`}
-        </Text>
-      </HStack>
-    </Grid>
+      </Grid>
+      {showDescription && description && <Text w="100%">{description}</Text>}
+    </Flex>
   );
 };

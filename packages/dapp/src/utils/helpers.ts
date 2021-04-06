@@ -89,3 +89,7 @@ export const isAddress = (value: string): string | false => {
     return false;
   }
 };
+
+export const timeout = (ms: number): Promise<number> => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};

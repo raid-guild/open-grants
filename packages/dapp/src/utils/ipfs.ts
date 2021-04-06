@@ -14,11 +14,18 @@ const ipfsTheGraph = new IPFSClient({
   'api-path': '/ipfs/api/v0/',
 });
 
+export type Grantee = {
+  address: string;
+  amount: string;
+  description: string;
+};
+
 export type Metadata = {
   name: string;
   description: string;
   link: string;
   contactLink: string;
+  grantees: Grantee[];
 };
 
 export const uploadMetadata = async (metadata: Metadata): Promise<string> => {
@@ -32,5 +39,6 @@ export const uploadMetadata = async (metadata: Metadata): Promise<string> => {
   const { hash } = node[0];
   await ipfsTheGraph.pin.add(hash);
   const bytes = Buffer.from(Base58.decode(hash));
-  return `0x${bytes.slice(2).toString('hex')}`;
+  const hexString = `0x${bytes.slice(2).toString('hex')}`;
+  return hexString;
 };

@@ -1,6 +1,7 @@
 import { CONFIG } from 'config';
 import { Contract, providers, utils } from 'ethers';
-import { sortGrantees } from 'utils/helpers';
+import { getGrant } from 'graphql/getGrant';
+import { sortGrantees, timeout } from 'utils/helpers';
 import { Metadata, uploadMetadata } from 'utils/ipfs';
 
 const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
@@ -38,7 +39,7 @@ export const createGrant = async (
   );
 };
 
-export const awaitGrantAddress = async (
+export const fetchGrantAddressFromNetwork = async (
   ethersProvider: providers.Web3Provider,
   tx: providers.TransactionResponse,
 ): Promise<string> => {
@@ -53,7 +54,27 @@ export const awaitGrantAddress = async (
       event.data,
       event.topics,
     );
-    return decodedLog.grant;
+    return decodedLog.grant.toLowerCase();
   }
   return '';
+};
+
+export const awaitGrantAddress = async (
+  ethersProvider: providers.Web3Provider,
+  tx: providers.TransactionResponse,
+): Promise<string> => {
+  const grantAddress = await fetchGrantAddressFromNetwork(ethersProvider, tx);
+  let grant = await getGrant(grantAddress);
+  if (!grant) {
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      timeout(2000);
+      // eslint-disable-next-line no-await-in-loop
+      grant = await getGrant(grantAddress);
+      if (grant) {
+        break;
+      }
+    }
+  }
+  return grantAddress;
 };

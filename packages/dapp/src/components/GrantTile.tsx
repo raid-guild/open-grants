@@ -22,6 +22,16 @@ type Props = {
   grant: Grant;
   myGrant?: boolean;
 };
+
+const truncateText = (text: string, maxLength: number): string => {
+  let truncated = text;
+
+  if (truncated.length > maxLength - 3) {
+    truncated = `${truncated.substr(0, maxLength - 3)}...`;
+  }
+  return truncated;
+};
+
 export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { ethersProvider, isSupportedNetwork } = useContext(Web3Context);
@@ -76,10 +86,10 @@ export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
             mb={6}
             style={{ whiteSpace: 'pre-wrap' }}
           >
-            {grant.name}
+            {truncateText(grant.name, 32)}
           </Link>
           <Text fontSize="sm" mb={8}>
-            {grant.description}
+            {truncateText(grant.description, 144)}
           </Text>
           <Spacer />
           <SimpleGrid columns={2} spacing={6} mb={6}>

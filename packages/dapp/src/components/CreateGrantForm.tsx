@@ -8,24 +8,34 @@ import {
 } from '@chakra-ui/react';
 import { CreateGrantModal } from 'components/CreateGrantModal';
 import { GranteesInput } from 'components/GranteesInput';
-import { GrantTextInput } from 'components/GrantTextInput';
+import { GrantTextareaInput, GrantTextInput } from 'components/GrantTextInput';
 import { Link } from 'components/Link';
 import { CONFIG } from 'config';
 import { Web3Context } from 'contexts/Web3Context';
 import { utils } from 'ethers';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { URL_REGEX } from 'utils/constants';
+import { Grantee } from 'utils/ipfs';
 
-const reduceAddresses = (isValid: boolean, str: string): boolean => {
-  return isValid && str !== '' && utils.isAddress(str);
-};
-
-const reduceEmpty = (isValid: boolean, str: string): boolean => {
-  return isValid && str !== '';
-};
-
-const reduceTotal = (total: number, str: string): number => {
-  return total + Number(str);
+const reduceGrantees = (
+  {
+    granteeSet,
+    isValid,
+    total,
+  }: { granteeSet: Set<string>; isValid: boolean; total: number },
+  { address, amount }: Grantee,
+): { granteeSet: Set<string>; isValid: boolean; total: number } => {
+  granteeSet.add(address);
+  return {
+    granteeSet,
+    isValid:
+      isValid &&
+      address !== '' &&
+      utils.isAddress(address) &&
+      amount !== '' &&
+      !Number.isNaN(amount),
+    total: total + Number(amount) || 0,
+  };
 };
 
 export const CreateGrantForm: React.FC = () => {
@@ -34,26 +44,30 @@ export const CreateGrantForm: React.FC = () => {
   const [description, setDescription] = useState<string>('');
   const [link, setLink] = useState<string>('');
   const [contactLink, setContactLink] = useState<string>('');
-  const [grantees, setGrantees] = useState<Array<string>>(['']);
-  const [amounts, setAmounts] = useState<Array<string>>(['']);
-  const [total, setTotal] = useState<number>(1);
+  const [grantees, setGrantees] = useState<Array<Grantee>>([
+    { address: '', amount: '', description: '' },
+  ]);
+  const [numGrantees, setNumGrantees] = useState<number>(1);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-  const [isValid, setValid] = useState(false);
-
-  useEffect(() => {
-    const valid =
+  const isFormValid = useMemo(() => {
+    const { granteeSet, isValid, total } = grantees.reduce(reduceGrantees, {
+      granteeSet: new Set<string>(),
+      isValid: true,
+      total: 0.0,
+    });
+    return (
       name !== '' &&
       description !== '' &&
       URL_REGEX.test(link) &&
       URL_REGEX.test(contactLink) &&
-      grantees.reduce(reduceAddresses, true) &&
-      amounts.reduce(reduceEmpty, true) &&
-      amounts.reduce(reduceTotal, 0.0) === 100.0;
-    setValid(valid);
-  }, [name, description, link, contactLink, grantees, amounts, setValid]);
+      isValid &&
+      total === 100.0 &&
+      granteeSet.size === grantees.length
+    );
+  }, [name, description, link, contactLink, grantees]);
 
-  const submitForm = async () => {
+  const submitForm = useCallback(async () => {
     if (!ethersProvider) {
       toast({
         status: 'error',
@@ -68,7 +82,7 @@ export const CreateGrantForm: React.FC = () => {
         title: 'Error',
         description: `Please connect wallet to ${CONFIG.network.name}`,
       });
-    } else if (!isValid) {
+    } else if (!isFormValid) {
       toast({
         status: 'error',
         isClosable: true,
@@ -78,7 +92,8 @@ export const CreateGrantForm: React.FC = () => {
     } else {
       onOpen();
     }
-  };
+  }, [ethersProvider, isSupportedNetwork, isFormValid, onOpen, toast]);
+
   return (
     <VStack
       w="100%"
@@ -117,13 +132,13 @@ export const CreateGrantForm: React.FC = () => {
         setValue={setName}
         maxLength={48}
       />
-      <GrantTextInput
+      <GrantTextareaInput
         title="What do you aim to achieve? How will it benefit the Ethereum ecosystem?"
-        description="Max 240 characters"
+        description="Max 500 characters"
         label="Description"
         value={description}
         setValue={setDescription}
-        maxLength={240}
+        maxLength={500}
       />
       <GrantTextInput
         title="Where can funders learn about the details of your project? eg: website, blog post, document"
@@ -149,10 +164,8 @@ export const CreateGrantForm: React.FC = () => {
       <GranteesInput
         grantees={grantees}
         setGrantees={setGrantees}
-        amounts={amounts}
-        setAmounts={setAmounts}
-        total={total}
-        setTotal={setTotal}
+        total={numGrantees}
+        setTotal={setNumGrantees}
       />
       <Button
         w="100%"
@@ -164,13 +177,10 @@ export const CreateGrantForm: React.FC = () => {
         size="lg"
         fontSize="md"
         onClick={() => {
-          setTotal(t => t + 1);
+          setNumGrantees(t => t + 1);
           const newGrantees = grantees.slice();
-          newGrantees.push('');
+          newGrantees.push({ address: '', amount: '', description: '' });
           setGrantees(newGrantees);
-          const newAmounts = amounts.slice();
-          newAmounts.push('');
-          setAmounts(newAmounts);
         }}
       >
         Add another grantee
@@ -182,7 +192,7 @@ export const CreateGrantForm: React.FC = () => {
         textTransform="uppercase"
         boxShadow="0px 4px 4px rgba(61, 82, 71, 0.25)"
         letterSpacing="0.115em"
-        disabled={!isValid}
+        disabled={!isFormValid}
         onClick={submitForm}
       >
         Create Grant
@@ -193,9 +203,9 @@ export const CreateGrantForm: React.FC = () => {
           description,
           link,
           contactLink,
+          grantees,
         }}
         grantees={grantees}
-        amounts={amounts}
         isOpen={isOpen}
         onClose={onClose}
       />
