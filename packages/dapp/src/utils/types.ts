@@ -6,6 +6,20 @@ export enum Sort {
   Trending,
 }
 
+export type Grantee = {
+  address: string;
+  amount: string | number;
+  description: string;
+};
+
+export type GrantMetadata = {
+  name: string;
+  description: string;
+  link: string;
+  contactLink: string;
+  grantees: Grantee[];
+};
+
 export type Stream = {
   id: string;
   owner: string;
@@ -32,8 +46,7 @@ export type Grant = {
   id: string;
   createdBy: string;
   timestamp: number;
-  grantees: Array<string>;
-  amounts: Array<number>;
+  grantees: Array<Grantee>;
   name: string;
   description: string;
   link: string;

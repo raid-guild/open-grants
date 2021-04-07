@@ -6,6 +6,7 @@ import {
   ipfs,
   json,
   log,
+  JSONValue,
 } from '@graphprotocol/graph-ts';
 
 import { EtherVesting } from '../generated/EtherVesting/EtherVesting';
@@ -19,6 +20,7 @@ class GrantObject {
   description: string;
   link: string;
   contactLink: string;
+  grantees: string;
 
   constructor() {
     this.uri = new Bytes(1);
@@ -27,6 +29,7 @@ class GrantObject {
     this.description = '';
     this.link = '';
     this.contactLink = '';
+    this.grantees = '';
   }
 }
 
@@ -58,7 +61,7 @@ export function fetchGrantInfo(address: Address): GrantObject {
     let hexHash = addQm(uri.value) as Bytes;
     let base58Hash = hexHash.toBase58();
     let getIPFSData = ipfs.cat(base58Hash);
-    log.debug('IPFS uri {} hash {}', [uri.value.toHexString(), base58Hash]);
+    log.warning('IPFS uri {} hash {}', [uri.value.toHexString(), base58Hash]);
     if (getIPFSData != null) {
       let data = json.fromBytes(getIPFSData as Bytes).toObject();
       let name = data.get('name');
@@ -76,6 +79,35 @@ export function fetchGrantInfo(address: Address): GrantObject {
       let contactLink = data.get('contactLink');
       if (contactLink != null) {
         grantObject.contactLink = contactLink.toString();
+      }
+      log.warning('extracting object', []);
+      let grantees = data.get('grantees');
+      if (grantees != null) {
+        log.warning('extracting grantees', []);
+        let jsonString = '[';
+        let granteesArray = grantees.toArray();
+        for (let j = 0; j < granteesArray.length; j++) {
+          let granteeData = granteesArray[j].toObject();
+          let granteeAddress = granteeData.get('address');
+          let amount = granteeData.get('amount');
+          let description = granteeData.get('description');
+          if (granteeAddress != null && amount != null && description != null) {
+            if (jsonString != '[') {
+              jsonString = jsonString + ',';
+            }
+            jsonString =
+              jsonString +
+              '{"address":"' +
+              granteeAddress.toString() +
+              '", "amount":"' +
+              amount.toString() +
+              '","description":"' +
+              description.toString() +
+              '"}';
+          }
+        }
+        jsonString = jsonString + ']';
+        grantObject.grantees = jsonString;
       }
     }
   }

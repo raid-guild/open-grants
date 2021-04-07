@@ -15,7 +15,7 @@ import { Web3Context } from 'contexts/Web3Context';
 import { utils } from 'ethers';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { URL_REGEX } from 'utils/constants';
-import { Grantee } from 'utils/ipfs';
+import { Grantee } from 'utils/types';
 
 const reduceGrantees = (
   {

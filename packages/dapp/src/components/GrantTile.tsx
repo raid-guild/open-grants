@@ -138,7 +138,7 @@ export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
               </Flex>
             </Link>
           )}
-          {displayGrantees.map(a => (
+          {displayGrantees.map(({ address: a }) => (
             <ProfileImage account={a} key={a} />
           ))}
         </Flex>

@@ -13,6 +13,8 @@ This project is a monorepo created with [Yarn Workspaces](https://classic.yarnpk
 open-grants
 ├── .firebaserc
 ├── .github
+│   ├── ISSUE_TEMPLATE
+│   │   └── add-featured-grant.md
 │   └── workflows
 │       ├── check.yml
 │       ├── deploy-kovan.yml
@@ -139,14 +141,17 @@ open-grants
 │   │   │   ├── Routes.tsx
 │   │   │   ├── assets
 │   │   │   │   ├── chest.svg
+│   │   │   │   ├── discord.svg
 │   │   │   │   ├── done.svg
 │   │   │   │   ├── eth-crystal-wave.png
 │   │   │   │   ├── eth-icon.png
+│   │   │   │   ├── github.svg
 │   │   │   │   ├── header.jpg
 │   │   │   │   ├── loading.svg
 │   │   │   │   ├── navbar.jpg
 │   │   │   │   ├── success.svg
 │   │   │   │   ├── tile-background.svg
+│   │   │   │   ├── twitter.svg
 │   │   │   │   ├── waves.svg
 │   │   │   │   ├── whale.svg
 │   │   │   │   └── whaleLoader__data.json
@@ -209,12 +214,15 @@ open-grants
 │   │   │   │   ├── getRank.ts
 │   │   │   │   ├── search.ts
 │   │   │   │   └── utils.ts
+│   │   │   ├── hooks
+│   │   │   │   └── useGraphHealth.ts
 │   │   │   ├── icons
 │   │   │   │   ├── ArrowDownIcon.tsx
 │   │   │   │   ├── CloseIcon.tsx
 │   │   │   │   ├── CopyIcon.tsx
 │   │   │   │   ├── FeaturedIcon.tsx
 │   │   │   │   ├── InNeedIcon.tsx
+│   │   │   │   ├── InfoIcon.tsx
 │   │   │   │   ├── LatestIcon.tsx
 │   │   │   │   ├── QuestionIcon.tsx
 │   │   │   │   ├── SearchIcon.tsx
@@ -239,6 +247,7 @@ open-grants
 │   │   │       ├── chart.ts
 │   │   │       ├── constants.ts
 │   │   │       ├── grants.ts
+│   │   │       ├── graphHealth.ts
 │   │   │       ├── helpers.ts
 │   │   │       ├── ipfs.ts
 │   │   │       ├── streams.ts

@@ -18,6 +18,7 @@ type Grant @entity {
   funded: BigInt!
   recentFunds: BigInt!
   donors: [Bytes!]!
+  granteesData: String!
 }
 
 type Fund @entity {

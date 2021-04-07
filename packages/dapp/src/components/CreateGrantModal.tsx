@@ -21,10 +21,10 @@ import { Web3Context } from 'contexts/Web3Context';
 import { providers } from 'ethers';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { awaitGrantAddress, createGrant } from 'utils/grants';
-import { Grantee, Metadata } from 'utils/ipfs';
+import { Grantee, GrantMetadata } from 'utils/types';
 
 type Props = {
-  metadata: Metadata;
+  metadata: GrantMetadata;
   grantees: Array<Grantee>;
   isOpen: boolean;
   onClose: () => void;
@@ -50,7 +50,7 @@ export const CreateGrantModal: React.FC<Props> = ({
         await createGrant(
           ethersProvider,
           grantees.map(({ address }) => address),
-          grantees.map(({ amount }) => amount),
+          grantees.map(({ amount }) => amount.toString()),
           metadata,
         ),
       );

@@ -8,13 +8,12 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { ErrorAlert } from 'components/ErrorAlert';
+import { GrantTextInput } from 'components/GrantTextInput';
 import { utils } from 'ethers';
 import { CloseIcon } from 'icons/CloseIcon';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Grantee } from 'utils/ipfs';
-
-import { ErrorAlert } from './ErrorAlert';
-import { GrantTextInput } from './GrantTextInput';
+import { Grantee } from 'utils/types';
 
 type Props = {
   total: number;

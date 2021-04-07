@@ -8,7 +8,7 @@ type RecipientProps = {
   account: string;
   amount: number;
   total: number;
-  description?: string;
+  description: string;
   showDescription?: boolean;
 };
 
@@ -16,7 +16,7 @@ export const GrantRecipient: React.FC<RecipientProps> = ({
   account,
   amount,
   total,
-  description = '',
+  description,
   showDescription = false,
 }) => {
   const percent = ((amount * 100) / total).toFixed(2);

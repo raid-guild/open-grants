@@ -6,7 +6,7 @@ import {
   User as UserGraph,
   UserDetailsFragment,
 } from 'graphql/autogen/types';
-import { Funder, Grant, Profile, Stream, User } from 'utils/types';
+import { Funder, Grant, Grantee, Profile, Stream, User } from 'utils/types';
 
 type FundFragment = Pick<FundGraph, 'donor' | 'amount'>;
 
@@ -93,16 +93,39 @@ export const parseFunders = (
   });
 };
 
+type GranteeDescriptions = {
+  [grantee: string]: string;
+};
+
+const reduceDescriptions = (output: GranteeDescriptions, input: Grantee) => {
+  return {
+    ...output,
+    [input.address.toLowerCase()]: input.description,
+  };
+};
+
 export const parseGrant = (
   input: GrantDetailsFragment,
   funders = false,
 ): Grant => {
+  const granteesData: Grantee[] = input.granteesData
+    ? JSON.parse(input.granteesData)
+    : [];
+  const granteeDescriptions: GranteeDescriptions = granteesData.reduce(
+    reduceDescriptions,
+    {},
+  );
   const output: Grant = {
     id: input.id.toLowerCase(),
     createdBy: input.createdBy.toLowerCase(),
     timestamp: input.timestamp,
-    grantees: input.grantees.map(g => g.toLowerCase()),
-    amounts: input.amounts.map(a => Number(a)),
+    grantees: input.grantees.map(
+      (g: string, i: number): Grantee => ({
+        address: g.toLowerCase(),
+        amount: Number(input.amounts[i]),
+        description: granteeDescriptions[g.toLowerCase()],
+      }),
+    ),
     name: input.name,
     description: input.description,
     link: input.link,

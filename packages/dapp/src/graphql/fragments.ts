@@ -6,6 +6,7 @@ export const GrantDetails = gql`
     createdBy
     timestamp
     grantees
+    granteesData
     amounts
     funded
     name

@@ -2,7 +2,8 @@ import { CONFIG } from 'config';
 import { Contract, providers, utils } from 'ethers';
 import { getGrant } from 'graphql/getGrant';
 import { sortGrantees, timeout } from 'utils/helpers';
-import { Metadata, uploadMetadata } from 'utils/ipfs';
+import { uploadMetadata } from 'utils/ipfs';
+import { GrantMetadata } from 'utils/types';
 
 const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
 const ZERO_HASH = '0x';
@@ -16,7 +17,7 @@ export const createGrant = async (
   ethersProvider: providers.Web3Provider,
   oldGrantees: Array<string>,
   oldAmounts: Array<string>,
-  metadata: Metadata,
+  metadata: GrantMetadata,
 ): Promise<providers.TransactionResponse> => {
   const metadataHash = await uploadMetadata(metadata);
   const [grantees, amounts] = sortGrantees(

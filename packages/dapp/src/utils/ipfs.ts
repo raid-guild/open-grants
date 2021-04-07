@@ -1,5 +1,6 @@
 import Base58 from 'base-58';
 import IPFSClient from 'ipfs-http-client';
+import { GrantMetadata } from 'utils/types';
 
 const ipfsInfura = new IPFSClient({
   host: 'ipfs.infura.io',
@@ -14,21 +15,9 @@ const ipfsTheGraph = new IPFSClient({
   'api-path': '/ipfs/api/v0/',
 });
 
-export type Grantee = {
-  address: string;
-  amount: string;
-  description: string;
-};
-
-export type Metadata = {
-  name: string;
-  description: string;
-  link: string;
-  contactLink: string;
-  grantees: Grantee[];
-};
-
-export const uploadMetadata = async (metadata: Metadata): Promise<string> => {
+export const uploadMetadata = async (
+  metadata: GrantMetadata,
+): Promise<string> => {
   if (!metadata.name) return '0x';
   const objectString = JSON.stringify(metadata);
   const bufferedString = Buffer.from(objectString);
