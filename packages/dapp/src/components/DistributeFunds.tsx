@@ -32,7 +32,8 @@ export const DistributeFunds: React.FC<Props> = ({ grant }) => {
   const toast = useToast();
   const [selected, setSelected] = useState<Array<Stream>>([]);
   const [inProgress, setInProgress] = useState<Array<ProgressStream>>([]);
-  const [streams, setStreams] = useState<Array<Stream>>(grant.streams);
+  const allStreams = grant.streams.filter(s => !s.isRevoked);
+  const [streams, setStreams] = useState<Array<Stream>>(allStreams);
   const [selectedAmount, setSelectedAmount] = useState<BigNumber>(
     BigNumber.from(0),
   );
