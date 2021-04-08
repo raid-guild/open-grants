@@ -1,15 +1,7 @@
 import { CONFIG } from 'config';
 import { BigNumber } from 'ethers';
 import { isAddress } from 'utils/helpers';
-import { Profile } from 'utils/types';
-
-export type BoxProfile = {
-  address: string;
-  name: string;
-  emoji: string;
-  imageHash: string;
-  imageUrl: string;
-};
+import { BoxProfile, Profile } from 'utils/types';
 
 export const getProfile = async (account: string): Promise<BoxProfile> => {
   const address = account.toLowerCase();

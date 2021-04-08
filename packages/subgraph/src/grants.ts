@@ -21,23 +21,6 @@ export function handleLogNewGrant(event: LogNewGrant): void {
   grant.grantAddress = event.params.grant;
   grant.grantees = event.params.grantees as Array<Bytes>;
   grant.amounts = event.params.amounts;
-
-  grant.funded = fetchedGrant.totalFunded;
-  grant.recentFunds = fetchedGrant.totalFunded;
-  grant.uri = fetchedGrant.uri;
-  grant.name = fetchedGrant.name;
-  grant.description = fetchedGrant.description;
-  grant.link = fetchedGrant.link;
-  grant.contactLink = fetchedGrant.contactLink;
-
-  grant.donors = new Array<Bytes>();
-  grant.funds = new Array<string>();
-  grant.payments = new Array<string>();
-  grant.streams = new Array<string>();
-
-  grant.save();
-  log.debug('New Grant Recorded id: {}; name: {}', [grant.id, grant.name]);
-
   let grantees = event.params.grantees as Array<Bytes>;
   for (let i = 0; i < grantees.length; ++i) {
     let grantee = grantees[i];
@@ -47,6 +30,23 @@ export function handleLogNewGrant(event: LogNewGrant): void {
     user.grantsReceived = grantsReceived;
     user.save();
   }
+
+  grant.funded = fetchedGrant.totalFunded;
+  grant.recentFunds = fetchedGrant.totalFunded;
+  grant.uri = fetchedGrant.uri;
+  grant.name = fetchedGrant.name;
+  grant.description = fetchedGrant.description;
+  grant.link = fetchedGrant.link;
+  grant.contactLink = fetchedGrant.contactLink;
+  grant.granteesData = fetchedGrant.grantees;
+
+  grant.donors = new Array<Bytes>();
+  grant.funds = new Array<string>();
+  grant.payments = new Array<string>();
+  grant.streams = new Array<string>();
+
+  grant.save();
+  log.debug('New Grant Recorded id: {}; name: {}', [grant.id, grant.name]);
 }
 
 export function handleLogFunding(event: LogFunding): void {

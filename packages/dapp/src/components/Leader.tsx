@@ -1,9 +1,9 @@
 import { Flex, Grid, HStack, Text } from '@chakra-ui/react';
 import { Link } from 'components/Link';
 import React, { useEffect, useState } from 'react';
-import { BoxProfile, getProfile } from 'utils/3box';
+import { getProfile } from 'utils/3box';
 import { formatValue } from 'utils/helpers';
-import { User } from 'utils/types';
+import { BoxProfile, User } from 'utils/types';
 
 type LeaderProps = {
   rank: number;

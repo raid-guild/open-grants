@@ -1,7 +1,8 @@
 import { Flex } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BoxProfile, getProfile } from 'utils/3box';
+import { getProfile } from 'utils/3box';
+import { BoxProfile } from 'utils/types';
 
 type Props = {
   account: string;

@@ -1,8 +1,8 @@
 import { Flex, Grid, HStack, Text } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { BoxProfile, getProfile } from 'utils/3box';
+import { getProfile } from 'utils/3box';
 import { formatValue, getVestedAmount } from 'utils/helpers';
-import { Stream } from 'utils/types';
+import { BoxProfile, Stream } from 'utils/types';
 
 type StreamProps = {
   selected: Array<Stream>;

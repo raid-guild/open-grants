@@ -2,23 +2,26 @@ import { Flex, Grid, HStack, Text } from '@chakra-ui/react';
 import { GrantRecipient } from 'components/GrantRecipient';
 import { Link } from 'components/Link';
 import React from 'react';
-import { sortGranteesByAmount } from 'utils/helpers';
+import { Grantee } from 'utils/types';
 
 type Props = {
   grantAddress: string;
-  grantees: Array<string>;
-  amounts: Array<number>;
+  grantees: Array<Grantee>;
   page?: boolean;
 };
 
 export const GrantRecipients: React.FC<Props> = ({
   grantAddress,
   grantees: oldGrantees,
-  amounts: oldAmounts,
   page = false,
 }) => {
-  const [grantees, amounts] = sortGranteesByAmount(oldGrantees, oldAmounts);
-  const total = amounts.reduce((t, a) => t + a, 0);
+  const grantees = oldGrantees.sort((a, b) => {
+    if (a.amount < b.amount) return 1;
+    if (a.amount === b.amount) return 0;
+    return -1;
+  });
+
+  const total = grantees.reduce((t, { amount }) => t + Number(amount), 0.0);
   const displayGrantees = page ? grantees : grantees.slice(0, 5);
   return (
     <Flex
@@ -68,12 +71,13 @@ export const GrantRecipients: React.FC<Props> = ({
         </HStack>
       </Grid>
       {displayGrantees.length > 0 ? (
-        displayGrantees.map((grantee, id) => (
+        displayGrantees.map(({ address, amount, description }) => (
           <GrantRecipient
-            account={grantee}
-            amount={amounts[id]}
+            account={address}
+            amount={Number(amount)}
+            description={description}
             total={total}
-            key={grantee}
+            key={address}
           />
         ))
       ) : (

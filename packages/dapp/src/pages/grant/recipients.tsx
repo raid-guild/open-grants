@@ -33,12 +33,7 @@ const GrantPage: React.FC<Props> = ({
   return (
     <VStack w="100%" mb={16}>
       <GrantHeader grant={grant} />
-      <GrantRecipients
-        grantAddress={grant.id}
-        grantees={grant.grantees}
-        amounts={grant.amounts}
-        page
-      />
+      <GrantRecipients grantAddress={grant.id} grantees={grant.grantees} page />
     </VStack>
   );
 };

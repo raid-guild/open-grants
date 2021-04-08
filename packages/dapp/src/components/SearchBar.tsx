@@ -19,7 +19,8 @@ import { Link } from 'components/Link';
 import { SearchContext } from 'contexts/SearchContext';
 import { SearchIcon } from 'icons/SearchIcon';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { BoxProfile, getProfile } from 'utils/3box';
+import { getProfile } from 'utils/3box';
+import { BoxProfile } from 'utils/types';
 
 const UserProfile: React.FC<{ account: string }> = ({ account }) => {
   const [profile, setProfile] = useState<BoxProfile | undefined>();

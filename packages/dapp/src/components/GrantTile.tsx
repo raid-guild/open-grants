@@ -15,13 +15,14 @@ import { ProfileImage } from 'components/ProfileImage';
 import { CONFIG } from 'config';
 import { Web3Context } from 'contexts/Web3Context';
 import React, { useContext } from 'react';
-import { formatValue } from 'utils/helpers';
+import { formatValue, truncateText } from 'utils/helpers';
 import { Grant } from 'utils/types';
 
 type Props = {
   grant: Grant;
   myGrant?: boolean;
 };
+
 export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { ethersProvider, isSupportedNetwork } = useContext(Web3Context);
@@ -76,10 +77,10 @@ export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
             mb={6}
             style={{ whiteSpace: 'pre-wrap' }}
           >
-            {grant.name}
+            {truncateText(grant.name, 32)}
           </Link>
           <Text fontSize="sm" mb={8}>
-            {grant.description}
+            {truncateText(grant.description, 144)}
           </Text>
           <Spacer />
           <SimpleGrid columns={2} spacing={6} mb={6}>
@@ -128,7 +129,7 @@ export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {
               </Flex>
             </Link>
           )}
-          {displayGrantees.map(a => (
+          {displayGrantees.map(({ address: a }) => (
             <ProfileImage account={a} key={a} />
           ))}
         </Flex>
