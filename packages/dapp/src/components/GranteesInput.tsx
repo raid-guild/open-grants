@@ -221,7 +221,7 @@ const GranteeInput: React.FC<InputProps> = ({
         )}
       </Grid>
       <GrantTextInput
-        label="Recipient Name"
+        label="Grantee Name (Optional)"
         value={grantees[i].description}
         setValue={desc => {
           const newGrantees = grantees.slice();

@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const GrantTextInput: React.FC<Props> = ({
-  title,
+  title = '',
   description = '',
   label,
   value,
@@ -28,7 +28,7 @@ export const GrantTextInput: React.FC<Props> = ({
 
   return (
     <Flex direction="column" w="100%">
-      {title && (
+      {(title || description) && (
         <Flex
           justify="space-between"
           align="center"
