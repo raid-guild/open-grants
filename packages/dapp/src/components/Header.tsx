@@ -15,7 +15,8 @@ import { SearchBar } from 'components/SearchBar';
 import { Web3Context } from 'contexts/Web3Context';
 import { ArrowDownIcon } from 'icons/ArrowDownIcon';
 import React, { useContext, useEffect, useState } from 'react';
-import { BoxProfile, getProfile } from 'utils/3box';
+import { getProfile } from 'utils/3box';
+import { BoxProfile } from 'utils/types';
 
 type Props = {
   onOpen: () => void;

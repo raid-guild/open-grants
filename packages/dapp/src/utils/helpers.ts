@@ -1,6 +1,6 @@
 import { getAddress } from '@ethersproject/address';
 import { BigNumber, utils } from 'ethers';
-import { Stream } from 'utils/types';
+import { BoxProfile, Stream } from 'utils/types';
 
 export const getVestedAmount = (
   input: Stream,
@@ -65,4 +65,38 @@ export const isAddress = (value: string): string | false => {
 
 export const timeout = (ms: number): Promise<number> => {
   return new Promise(resolve => setTimeout(resolve, ms));
+};
+
+export const truncateText = (text: string, maxLength: number): string => {
+  let truncated = text;
+
+  if (truncated.length > maxLength - 3) {
+    truncated = `${truncated.substr(0, maxLength - 3)}...`;
+  }
+  return truncated;
+};
+
+export const getDisplayAddress = (address: string, maxLength = 10): string => {
+  const firstLength = Math.floor(maxLength / 2) + 1;
+  const lastLength = firstLength - maxLength;
+  return `0x${address.slice(2, firstLength).toUpperCase()}...${address
+    .slice(lastLength)
+    .toUpperCase()}`;
+};
+
+export const getDisplayName = (
+  profile: BoxProfile | undefined,
+  account: string,
+  description?: string,
+): string => {
+  if (profile?.name) {
+    return profile.name;
+  }
+  if (description) {
+    return truncateText(description, 24);
+  }
+  if (account) {
+    return getDisplayAddress(account);
+  }
+  return '';
 };

@@ -13,9 +13,9 @@ import { Link } from 'components/Link';
 import { CONFIG } from 'config';
 import { CopyIcon } from 'icons/CopyIcon';
 import React, { useEffect, useState } from 'react';
-import { BoxProfile, getProfile } from 'utils/3box';
+import { getProfile } from 'utils/3box';
 import { copyToClipboard, formatValue } from 'utils/helpers';
-import { Profile } from 'utils/types';
+import { BoxProfile, Profile } from 'utils/types';
 
 type Props = {
   rank: number;

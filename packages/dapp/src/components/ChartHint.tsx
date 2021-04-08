@@ -12,10 +12,10 @@ import {
 import { Link } from 'components/Link';
 import { utils } from 'ethers';
 import React, { useEffect, useState } from 'react';
-import { BoxProfile, getProfile } from 'utils/3box';
+import { getProfile } from 'utils/3box';
 import { DataPoint } from 'utils/chart';
 import { getVestedAmount } from 'utils/helpers';
-import { Stream } from 'utils/types';
+import { BoxProfile, Stream } from 'utils/types';
 
 type HintProps = {
   value: DataPoint & { stream: number };
@@ -59,7 +59,7 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams, isWeeks }) => {
   }, [stream]);
 
   return (
-    <Popover isOpen placement="top">
+    <Popover isOpen placement="top-start">
       <PopoverTrigger>
         <Box
           w="1rem"
@@ -78,9 +78,10 @@ export const ChartHint: React.FC<HintProps> = ({ value, streams, isWeeks }) => {
         maxW={w}
         w={w}
         background="#D7FFEF"
+        transform="translate(-45%, 0) !important"
         p={2}
       >
-        <PopoverArrow />
+        <PopoverArrow background="#D7FFEF" />
         <Flex
           w="100%"
           h="100%"

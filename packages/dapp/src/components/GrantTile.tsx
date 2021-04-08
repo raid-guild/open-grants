@@ -15,21 +15,12 @@ import { ProfileImage } from 'components/ProfileImage';
 import { CONFIG } from 'config';
 import { Web3Context } from 'contexts/Web3Context';
 import React, { useContext } from 'react';
-import { formatValue } from 'utils/helpers';
+import { formatValue, truncateText } from 'utils/helpers';
 import { Grant } from 'utils/types';
 
 type Props = {
   grant: Grant;
   myGrant?: boolean;
-};
-
-const truncateText = (text: string, maxLength: number): string => {
-  let truncated = text;
-
-  if (truncated.length > maxLength - 3) {
-    truncated = `${truncated.substr(0, maxLength - 3)}...`;
-  }
-  return truncated;
 };
 
 export const GrantTile: React.FC<Props> = ({ grant, myGrant = false }) => {

@@ -78,3 +78,11 @@ export type User = {
   withdrawn: BigNumber;
   streamed: BigNumber;
 };
+
+export type BoxProfile = {
+  address: string;
+  name: string;
+  emoji: string;
+  imageHash: string;
+  imageUrl: string;
+};
