@@ -3,10 +3,11 @@ import gql from 'fake-tag';
 import {
   FeaturedGrantsQuery,
   FeaturedGrantsQueryVariables,
-  FundedSortedGrantsQuery,
-  FundedSortedGrantsQueryVariables,
+  GrantDetailsFragment,
   TimeSortedGrantsQuery,
   TimeSortedGrantsQueryVariables,
+  TrendingSortedGrantsQuery,
+  TrendingSortedGrantsQueryVariables,
 } from 'graphql/autogen/types';
 import { client } from 'graphql/client';
 import { GrantDetails } from 'graphql/fragments';
@@ -27,8 +28,8 @@ const timeSortedQuery = gql`
   ${GrantDetails}
 `;
 
-const fundedSortedQuery = gql`
-  query FundedSortedGrants($first: Int) {
+const trendingSortedQuery = gql`
+  query TrendingSortedGrants($first: Int) {
     grants(
       first: $first
       orderBy: funded
@@ -73,8 +74,8 @@ const fetchData = async (sort: Sort, first: number) => {
     case Sort.Trending:
     default:
       return client
-        .query<FundedSortedGrantsQuery, FundedSortedGrantsQueryVariables>(
-          fundedSortedQuery,
+        .query<TrendingSortedGrantsQuery, TrendingSortedGrantsQueryVariables>(
+          trendingSortedQuery,
           {
             first,
           },
@@ -97,5 +98,5 @@ export const getGrants = async (
     return [];
   }
 
-  return data.grants.map(grant => parseGrant(grant));
+  return data.grants.map((grant: GrantDetailsFragment) => parseGrant(grant));
 };

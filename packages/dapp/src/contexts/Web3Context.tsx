@@ -11,6 +11,7 @@ type Web3ContextType = {
   connectWeb3: () => Promise<void>;
   disconnect: () => void;
   account: string;
+  loading: boolean;
   isSupportedNetwork: boolean;
 };
 
@@ -19,6 +20,7 @@ export const Web3Context = createContext<Web3ContextType>({
   connectWeb3: async () => {},
   disconnect: () => undefined,
   account: '',
+  loading: false,
   isSupportedNetwork: true,
 });
 
@@ -31,17 +33,14 @@ const providerOptions = {
   },
 };
 
+const web3Modal = new Web3Modal({
+  cacheProvider: true,
+  providerOptions,
+});
+
 export const Web3ContextProvider: React.FC = ({ children }) => {
-  const [web3Modal, setWeb3Modal] = useState<Web3Modal>();
   const [account, setAccount] = useState<string>('');
-  useEffect(() => {
-    setWeb3Modal(
-      new Web3Modal({
-        cacheProvider: true,
-        providerOptions,
-      }),
-    );
-  }, []);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const [
     ethersProvider,
@@ -68,36 +67,38 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
   };
 
   const connectWeb3 = useCallback(async () => {
-    if (web3Modal) {
-      const modalProvider = await web3Modal.connect();
+    setLoading(true);
+    const modalProvider = await web3Modal.connect();
 
-      setWeb3Provider(new Web3(modalProvider), true);
+    setWeb3Provider(new Web3(modalProvider), true);
 
-      // Subscribe to accounts change
-      modalProvider.on('accountsChanged', (accounts: Array<string>) => {
-        setAccount(accounts[0]);
-      });
+    // Subscribe to accounts change
+    modalProvider.on('accountsChanged', (accounts: Array<string>) => {
+      setAccount(accounts[0]);
+    });
 
-      // Subscribe to chainId change
-      modalProvider.on('chainChanged', () => {
-        setWeb3Provider(new Web3(modalProvider));
-      });
-    }
-  }, [web3Modal]);
+    // Subscribe to chainId change
+    modalProvider.on('chainChanged', () => {
+      setWeb3Provider(new Web3(modalProvider));
+    });
+    setLoading(false);
+  }, []);
 
   const disconnect = useCallback(async () => {
-    web3Modal?.clearCachedProvider();
+    web3Modal.clearCachedProvider();
     setAccount('');
     setEthersProvider(null);
-  }, [web3Modal]);
+  }, []);
 
   useEffect(() => {
     if (window.ethereum) window.ethereum.autoRefreshOnNetworkChange = false;
-    if (web3Modal?.cachedProvider) {
+    if (web3Modal.cachedProvider) {
       // eslint-disable-next-line no-console
       connectWeb3().catch(console.error);
+    } else {
+      setLoading(false);
     }
-  }, [web3Modal, connectWeb3]);
+  }, [connectWeb3]);
 
   return (
     <Web3Context.Provider
@@ -106,6 +107,7 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
         connectWeb3,
         disconnect,
         account,
+        loading,
         isSupportedNetwork,
       }}
     >
