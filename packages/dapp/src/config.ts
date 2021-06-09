@@ -9,7 +9,10 @@ export const CONFIG =
         ipfsEndpoint: 'https://ipfs.infura.io',
         boxEndpoint: 'https://ipfs.3box.io',
         explorerEndpoint: 'https://etherscan.io',
-        featuredGrants: ['0x53e7daa8e3aa23cd30c75b2f599c303bada17064'],
+        featuredGrants: [
+          '0x0dc5be1ec768b7a1bbc20b2b6129536184d85766',
+          '0x53e7daa8e3aa23cd30c75b2f599c303bada17064',
+        ],
         graphHealthUrl: 'https://api.thegraph.com/index-node/graphql',
       }
     : {
