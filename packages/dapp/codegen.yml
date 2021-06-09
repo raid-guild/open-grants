@@ -1,5 +1,5 @@
 overwrite: true
-schema: 'https://api.thegraph.com/subgraphs/name/dan13ram/kovan-grants-platform'
+schema: 'https://api.thegraph.com/subgraphs/name/dan13ram/open-grants'
 generates:
   ./src/graphql/autogen/types.tsx:
     documents:
