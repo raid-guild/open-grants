@@ -14,4 +14,4 @@ assignees: ''
 
 ## Why Feature This Grant
 
-Please include a short note on why your grant must be featured on the [OpenGrants platform](opengrants.com)
+Please include a short note on why your grant must be featured on the [OpenGrants platform](https://opengrants.com)
