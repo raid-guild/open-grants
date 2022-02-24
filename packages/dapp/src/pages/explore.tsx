@@ -12,10 +12,10 @@ const getSortedGrants = (sort: Sort, grants: Grant[]): Grant[] => {
   switch (sort) {
     case Sort.Featured:
       return grants.sort((a, b) => {
-        if (a.vested.lt(b.vested)) {
+        if (a.timestamp < b.timestamp) {
           return 1;
         }
-        if (a.vested.eq(b.vested)) {
+        if (a.timestamp === b.timestamp) {
           return 0;
         }
         return -1;
