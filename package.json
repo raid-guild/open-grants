@@ -81,5 +81,7 @@
     "packages/!(contracts|subgraph)/**/*.{js,jsx,ts,tsx}": "eslint --fix",
     "*.{ts,tsx,js,jsx,json,yml,yaml,md}": "prettier --write"
   },
-  "dependencies": {}
+  "dependencies": {
+    "node": "12.22.5"
+  }
 }
